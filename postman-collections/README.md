@@ -1,8 +1,10 @@
 # Postman Collections
 
-This folder contains [Postman collections](https://www.postman.com/collection/) and [Postman Environment](https://learning.postman.com/docs/sending-requests/managing-environments) files for the Oracle Hospitality APIs.
+This folder contains:
 
-See the **rest-api-specs** folder for the API specifications.
+- [Postman collections](https://www.postman.com/collection/) with many different API call samples on how to perform different functional workflows (e.g. digital check-in and checkout)
+- [Postman Environment](https://learning.postman.com/docs/sending-requests/managing-environments) defining the main environment variables required to use the postman collections against our Hospitality APIs.
+- [Workflows](WORKFLOWS.md) document describing the different workflows supported in the  postman collections.
 
 ## Get Help
 
