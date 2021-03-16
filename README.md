@@ -19,4 +19,8 @@ Ask questions on by sending us an email to <hospitality_apis_ww_group@oracle.com
 
 This project and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl)
 
-See [LICENSE.md](LICENSE.txt) for more details.
+See [LICENSE.md](LICENSE.md) for more details.
+
+## Copyright
+
+Copyright c 2021 Oracle and/or its affiliates.
