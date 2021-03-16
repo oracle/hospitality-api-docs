@@ -1,0 +1,487 @@
+{
+  "swagger" : "2.0",
+  "externalDocs" : {
+    "description" : "Find out more about Oracle Hospitality",
+    "url" : "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  },
+  "info" : {
+    "title" : "OPERA Cloud Front Desk Master Data Management API",
+    "description" : "APIs to cater for Master Data Configuration for Front Office Operations in OPERA Cloud.<br /><br /><p>Copyright c 2021 Oracle and/or its affiliates</p><p>The Universal Permissive License UPL, Version 1.0</p><p>Subject to the condition set forth below, permission is hereby granted to any person obtaining a copy of this software, associated documentation and/or data collectively the &#34;Software&#34;, free of charge and under any and all copyright rights in the Software, and any and all patent rights owned or freely licensable by each licensor hereunder covering either i the unmodified Software as contributed to or provided by such licensor, or ii the Larger Works as defined below, to deal in both</p><p>a the Software, and</p><p>b any piece of software and/or hardware listed in the lrgrwrks.txt file if one is included with the Software each a &#34;Larger Work&#34; to which the Software is contributed by such licensors,</p><p>without restriction, including without limitation the rights to copy, create derivative works of, display, perform, and distribute the Software and make, use, sell, offer for sale, import, export, have made, and have sold the Software and the Larger Works, and to sublicense the foregoing rights on either these or other terms.</p><p>This license is subject to the following condition:</p><p>The above copyright notice and either this complete permission notice or at a minimum a reference to the UPL must be included in all copies or substantial portions of the Software.</p><p>THE SOFTWARE IS PROVIDED &#34;AS IS&#34;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>",
+    "version" : "21.1",
+    "contact" : {
+      "email" : "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license" : {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    },
+    "termsOfService" : "https://www.oracle.com/legal/terms.html"
+  },
+  "schemes" : [ "https" ],
+  "basePath" : "/fof/config/v1",
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/hotels/{hotelId}/exchangeRates/{currencyCode}" : {
+      "get" : {
+        "summary" : "Operation to fetch FuturePastExchangeRates.",
+        "description" : "Operation to Fetch Future Past Exchange Rates. <p><strong>OperationId:</strong>getFuturePastExchangeRates</p>",
+        "operationId" : "getFuturePastExchangeRates",
+        "parameters" : [ {
+          "name" : "currencyCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Currency Code in OPERA"
+        }, {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Unique ID of the hotel in OPERA"
+        }, {
+          "name" : "exchangeTypes",
+          "in" : "query",
+          "enum" : [ "Cash", "Settlement", "Posting", "Check", "TACommission", "Membership", "Certificate" ],
+          "x-example" : "Cash",
+          "required" : true,
+          "type" : "string",
+          "description" : "E-certificate conversion.",
+          "uniqueItems" : true
+        }, {
+          "name" : "dateRangeStart",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dateRangeEnd",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Collection of exchange rates and their information.",
+            "schema" : {
+              "$ref" : "#/definitions/futurePastExchangeRates"
+            },
+            "examples" : {
+              "application/json" : [ {
+                "exchangeType" : [ "Cash" ],
+                "currency" : {
+                  "code" : "AUD"
+                },
+                "baseCurrency" : {
+                  "code" : "USD"
+                },
+                "beginDate" : "2020-09-01",
+                "buyRate" : "1",
+                "buyCommission" : "0",
+                "status" : "Future"
+              }, {
+                "exchangeType" : [ "Cash" ],
+                "currency" : {
+                  "code" : "AUD"
+                },
+                "baseCurrency" : {
+                  "code" : "USD"
+                },
+                "beginDate" : "2020-01-01 00:28:45.0",
+                "buyRate" : "1.34",
+                "buyCommission" : "0",
+                "status" : "Current"
+              }, {
+                "exchangeType" : [ "Cash" ],
+                "currency" : {
+                  "code" : "AUD"
+                },
+                "baseCurrency" : {
+                  "code" : "USD"
+                },
+                "beginDate" : "2016-09-01 13:04:40.0",
+                "buyRate" : "5",
+                "buyCommission" : "5",
+                "status" : "Past"
+              } ]
+            }
+          },
+          "204" : {
+            "description" : "FuturePastExchangeRates not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "CashieringConfig" ]
+      }
+    }
+  },
+  "parameters" : {
+    "authKey" : {
+      "name" : "authorization",
+      "description" : "Bearer token that needs to be passed which is generated post user authentication",
+      "type" : "string",
+      "in" : "header",
+      "required" : true
+    },
+    "x-app-key" : {
+      "name" : "x-app-key",
+      "description" : "Client or Partner’s Application Key",
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in" : "header",
+      "required" : true
+    },
+    "x-hotelid" : {
+      "name" : "x-hotelid",
+      "type" : "string",
+      "description" : "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in" : "header",
+      "required" : true
+    },
+    "x-externalsystem" : {
+      "name" : "x-externalsystem",
+      "type" : "string",
+      "maxLength" : 80,
+      "description" : "External system code.",
+      "in" : "header",
+      "x-example" : "DISCRS"
+    },
+    "Accept-Language" : {
+      "name" : "Accept-Language",
+      "type" : "string",
+      "description" : "Language code",
+      "in" : "header"
+    }
+  },
+  "responses" : {
+    "400" : {
+      "description" : "Bad Request",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "401" : {
+      "description" : "Unauthorized"
+    },
+    "403" : {
+      "description" : "Forbidden"
+    },
+    "404" : {
+      "description" : "Resource not found",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "405" : {
+      "description" : "Method not allowed"
+    },
+    "406" : {
+      "description" : "Not acceptable."
+    },
+    "413" : {
+      "description" : "Request Entity Too Large"
+    },
+    "414" : {
+      "description" : "Request URI Too Large"
+    },
+    "415" : {
+      "description" : "Unsupported Media Type"
+    },
+    "500" : {
+      "description" : "System Error",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "502" : {
+      "description" : "Bad Gateway"
+    },
+    "503" : {
+      "description" : "Service Unavailable"
+    }
+  },
+  "definitions" : {
+    "futurePastExchangeRates" : {
+      "type" : "array",
+      "description" : "Collection of exchange rates and their information.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/exchangeRateType"
+      }
+    },
+    "exchangeRateType" : {
+      "type" : "object",
+      "description" : "Exchange rate configuration type.",
+      "properties" : {
+        "hotelId" : {
+          "description" : "Property where exchange rate is set.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "exchangeType" : {
+          "description" : "Type for exchange calculation.",
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/currencyExchangeType"
+          }
+        },
+        "currency" : {
+          "description" : "Currency code.",
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "baseCurrency" : {
+          "description" : "Exchange rate base currency.",
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "beginDate" : {
+          "description" : "Date on which the rate is to become active.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "buyRate" : {
+          "description" : "Buy Rate for foreign currency.",
+          "type" : "number"
+        },
+        "buyCommission" : {
+          "description" : "Percentage of the amount that is to be a commission for the currency buy operation.",
+          "type" : "number"
+        },
+        "sellRate" : {
+          "description" : "Sell Rate for foreign currency.",
+          "type" : "number"
+        },
+        "sellCommission" : {
+          "description" : "Percentage of the amount that is to be a commission for the currency sell operation.",
+          "type" : "number"
+        },
+        "comment" : {
+          "description" : "Comments associated with the exchange rate.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "status" : {
+          "description" : "Status past, present, or future.",
+          "$ref" : "#/definitions/statusTypes"
+        }
+      }
+    },
+    "currencyExchangeType" : {
+      "type" : "string",
+      "description" : "E-certificate conversion.",
+      "enum" : [ "Cash", "Settlement", "Posting", "Check", "TACommission", "Membership", "Certificate" ]
+    },
+    "codeDescriptionType" : {
+      "type" : "object",
+      "description" : "This contains a generic code and description information.",
+      "properties" : {
+        "code" : {
+          "description" : "Code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "description.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        }
+      }
+    },
+    "statusTypes" : {
+      "type" : "string",
+      "description" : "Defines status in terms of time.",
+      "enum" : [ "Future", "Current", "Past" ]
+    },
+    "exceptionDetailType" : {
+      "title" : "Error Detail",
+      "description" : "Complex type that contains error details for a REST call.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail" : {
+          "type" : "string",
+          "description" : "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode" : {
+          "type" : "string",
+          "description" : "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath" : {
+          "type" : "string",
+          "description" : "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails" : {
+          "description" : "Details of the error message, consisting of a hierarchical tree structure.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/errorInstance"
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        }
+      },
+      "required" : [ "type", "title" ]
+    },
+    "errorInstance" : {
+      "title" : "Error Instance Details",
+      "description" : "Complex type that contains error instance details for a REST call.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail" : {
+          "type" : "string",
+          "description" : "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode" : {
+          "type" : "string",
+          "description" : "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath" : {
+          "type" : "string",
+          "description" : "Path to the problem at the resource or property level."
+        }
+      },
+      "required" : [ "type", "title" ]
+    },
+    "links" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink" : {
+      "type" : "object",
+      "description" : "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties" : {
+        "href" : {
+          "description" : "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type" : "string"
+        },
+        "rel" : {
+          "description" : "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type" : "string"
+        },
+        "templated" : {
+          "description" : "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type" : "boolean",
+          "default" : false
+        },
+        "method" : {
+          "description" : "HTTP method for requesting the target of the link.",
+          "type" : "string",
+          "enum" : [ "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD" ]
+        },
+        "targetSchema" : {
+          "description" : "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type" : "string"
+        },
+        "operationId" : {
+          "description" : "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Exact copy of the \"summary\" field on the linked operation.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "href", "rel", "method", "operationId" ]
+    }
+  },
+  "tags" : [ {
+    "name" : "CashieringConfig",
+    "description" : "Cashiering configurations affect the control and management of financial transactions at your property. You can configure cashiering components for articles for sale, cancellation handling, deposits, folios, settlements, exchange rates, payment methods and so on."
+  } ]
+}
