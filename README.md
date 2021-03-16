@@ -13,7 +13,7 @@ Ask questions on by sending us an email to <hospitality_apis_ww_group@oracle.com
 ## Get Involved
 
 * Learn how to [contribute](CONTRIBUTING.md)
-* See [issues](https://github.com/oracle/hospitality-apis/issues) for issues you can help with.
+* See [issues](https://github.com/oracle/hospitality-api-docs/issues) for issues you can help with.
 
 ## License
 
