@@ -1,4 +1,6 @@
-# This folder contains Swagger 2.0 specifications for the Oracle Hospitality APIs
+# Oracle Hospitality REST API Specifications
+
+This folder contains the [OAS 2.0](https://swagger.io/specification/v2/) specifications for the Oracle Hospitality RES APIs.
 
 An easy to read version is available here: [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/).
 
