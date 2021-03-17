@@ -1,4 +1,6 @@
-# This folder contains Swagger 2.0 specifications for the Oracle Hospitality APIs
+# Oracle Hospitality REST API Specifications
+
+This folder contains the [OAS 2.0](https://swagger.io/specification/v2/) specifications for the Oracle Hospitality RES APIs.
 
 An easy to read version is available here: [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/).
 
@@ -8,14 +10,18 @@ Ask questions on by sending us an email to <hospitality_apis_ww_group@oracle.com
 
 ## Get Involved
 
-* Learn how to [contribute](../CONTRIBUTING.md)
-* See [issues](https://github.com/oracle/hospitality-api-docs/issues) for issues you can help with.
+- Learn how to [contribute](../CONTRIBUTING.md)
+- See [issues](https://github.com/oracle/hospitality-api-docs/issues) for issues you can help with.
+
+## Reporting Security Vulnerabilities
+
+Please do NOT raise a GitHub Issue to report a security vulnerability. Refer to [SECURITY](../SECURITY.md) for details on how to report security vulnerabilities.
 
 ## License
 
-This project and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl)
+This project and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl).
 
-See [LICENSE.md](../LICENSE.md) for more details.
+See [LICENSE](../LICENSE.txt) for more details.
 
 ## Copyright
 
