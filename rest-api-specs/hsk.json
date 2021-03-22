@@ -1,0 +1,3967 @@
+{
+  "swagger" : "2.0",
+  "externalDocs" : {
+    "description" : "Find out more about Oracle Hospitality",
+    "url" : "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  },
+  "info" : {
+    "title" : "OPERA Cloud Housekeeping Service API",
+    "description" : "APIs to cater for Housekeeping functionality in OPERA Cloud. <br /><br />Housekeeping enables you to schedule daily room cleaning, maintenance, and housekeeping staff activities. It provides information on room status, out of order/out of service rooms, and forecasting.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.</p>",
+    "version" : "21.1",
+    "contact" : {
+      "email" : "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license" : {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    },
+    "termsOfService" : "https://www.oracle.com/legal/terms.html"
+  },
+  "schemes" : [ "https" ],
+  "basePath" : "/hsk/v1",
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/hotels/{hotelId}/housekeepingOverview" : {
+      "get" : {
+        "summary" : "Get the housekeeping rooms overview",
+        "description" : "Use this API to find the status of rooms in a hotel.  You can narrow your results by specifying types of room, status of room and/or dates in the request.  The results will give you a list of rooms, and their current housekeeping details.  You could then go ahead and update any of these rooms by using postOutOfOrderRoom for example. <p><strong>OperationId:</strong>getHousekeepingOverview</p>",
+        "operationId" : "getHousekeepingOverview",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code for which Housekeeping overview needs to be fetched"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "name" : "housekeepingRoomStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Simple type for room status instructions to be used in requests for fetching housekeeping rooms. Valid status values are Clean, Dirty, Pickup, Inspected, OutOfOrder, OutOfService.",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Clean", "Dirty", "Pickup", "Inspected", "OutOfOrder", "OutOfService" ]
+          },
+          "required" : false
+        }, {
+          "name" : "frontOfficeRoomStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Simple type for front office room status instructions to be used in requests for fetching housekeeping rooms. Valid values are Vacant and Occupied.",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Vacant", "Occupied" ]
+          },
+          "required" : false
+        }, {
+          "name" : "turndownStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Simple type for turndown status instructions to be used in requests for fetching housekeeping rooms. Valid status values are Required, Not Required and Completed.",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Required", "NotRequired", "Compeleted" ]
+          },
+          "required" : false
+        }, {
+          "name" : "roomParityStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Simple type for room parity instructions to be used in requests for fetching housekeeping rooms. Valid status values are Odd and Even.",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Odd", "Even" ]
+          },
+          "required" : false
+        }, {
+          "name" : "serviceRequestStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Open", "PendingFollowUp", "Closed", "DoNotDisturb", "MakeUpRoom" ]
+          },
+          "required" : false
+        }, {
+          "name" : "roomAssignmentStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Assigned", "Unassigned" ]
+          },
+          "required" : false
+        }, {
+          "name" : "fetchInstructions",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Simple type for housekeeping instructions that can be used in requests for partial operations.",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "Summary", "ResvInfo", "TurndownInfo" ]
+          },
+          "required" : false
+        }, {
+          "name" : "fromRoomNumber",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "toRoomNumber",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "floor",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "The floor of room to be fetched.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "roomType",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Room Type of the Room.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "roomClass",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Room Class of the Room.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "building",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Building of the Room.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "roomFeatures",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Features of the Room.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "daySection",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "AM Sections of the Room.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "eveningSection",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "PM Sections of the Room.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "reservationStatus",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "The status of the reservation to which this Room is assigned.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "guestServiceRequest",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "description" : "Possible values for the Guest Service Status.",
+          "uniqueItems" : true,
+          "enum" : [ "DoNotDisturb", "MakeUpRoom", "NoStatusSelected" ]
+        }, {
+          "name" : "roomIdText",
+          "in" : "query",
+          "required" : false,
+          "description" : "Wild Card entry for Room numbers to be Fetched.",
+          "type" : "string"
+        }, {
+          "name" : "excludeCombo",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates we need to exclude the combo rooms while fetching the housekeeping details.",
+          "type" : "boolean"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/housekeepingBoard"
+            },
+            "examples" : {
+              "application/json" : {
+                "housekeepingRoomInfo" : {
+                  "housekeepingRooms" : {
+                    "room" : [ {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDK"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      }, {
+                        "code" : "OCVIEW"
+                      } ],
+                      "roomId" : "112",
+                      "roomSection" : {
+                        "daySectionCode" : "101",
+                        "eveningSectionCode" : "101"
+                      },
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "114",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "115",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "116",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "117",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "118",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "119",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "120",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    }, {
+                      "roomType" : {
+                        "pseudoRoom" : false,
+                        "roomClass" : "ALL",
+                        "roomType" : "STDQ"
+                      },
+                      "floor" : "01,LF",
+                      "roomFeatures" : [ {
+                        "code" : "FTV"
+                      } ],
+                      "roomId" : "121",
+                      "housekeeping" : {
+                        "housekeepingRoomStatus" : {
+                          "reservationStatusList" : [ "NotReserved" ],
+                          "housekeepingRoomStatus" : "Dirty",
+                          "frontOfficeStatus" : "Vacant",
+                          "housekeepingStatus" : "Vacant"
+                        },
+                        "roomPersons" : {
+                          "frontOfficePersons" : "0",
+                          "houseKeepingPersons" : "0"
+                        }
+                      }
+                    } ],
+                    "hotelId" : "HOTEL1"
+                  },
+                  "totalPages" : "1",
+                  "offset" : "20",
+                  "limit" : "20",
+                  "hasMore" : true,
+                  "totalResults" : "9"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "HousekeepingOverview not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      }
+    },
+    "/hotels/{hotelId}/rooms/outOfOrderRooms" : {
+      "get" : {
+        "summary" : "Get Out of Order Rooms",
+        "description" : "Use this API to get a list of rooms for a hotel that are Out of Order.  You can narrow down your results with search criteria such as Room class, Room Type, date range. <p><strong>OperationId:</strong>getOutOfOrderRooms</p>",
+        "operationId" : "getOutOfOrderRooms",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code for which Out Of Order rooms needs to be fetched."
+        }, {
+          "name" : "startDate",
+          "in" : "query",
+          "required" : true,
+          "description" : "The start date for which the out of order / out of service rooms are to be fetched.",
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "roomId",
+          "in" : "query",
+          "required" : false,
+          "description" : "Room number to be Fetched.",
+          "type" : "string"
+        }, {
+          "name" : "endDate",
+          "in" : "query",
+          "required" : false,
+          "description" : "The end date for which the out of order / out of service rooms are to be fetched.",
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "roomTypes",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "The room type of out of order / out of service rooms to be fetched.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "roomClasses",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false,
+          "description" : "The room class of out of order / out of service rooms to be fetched."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/rooms"
+            },
+            "examples" : {
+              "application/json" : {
+                "housekeepingRooms" : {
+                  "room" : [ {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "DLX"
+                    },
+                    "roomId" : "1016",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfOrder",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "WIN",
+                      "reasonDescription" : "Window Cleaning",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfOrder",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-15"
+                    } ]
+                  }, {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "DLX"
+                    },
+                    "roomId" : "1185",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfOrder",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "AC",
+                      "reasonDescription" : "Air Conditioning Issue",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfOrder",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-15"
+                    } ]
+                  }, {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "STD"
+                    },
+                    "roomId" : "2004",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfOrder",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "AC",
+                      "reasonDescription" : "Air Conditioning Issue",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfOrder",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-15"
+                    } ]
+                  } ],
+                  "hotelId" : "HOTEL1"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "OutOfOrderRooms not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      },
+      "put" : {
+        "summary" : "Complete rooms Out Of Order",
+        "description" : "Use this API when one or more rooms are no longer Out Of Order, and can now be available for a guest to stay in.  Specify in the request what status the room(s) should be returned to, such as clean, Inspected, dirty or Pickup. <p><strong>OperationId:</strong>completeOutOfOrderRooms</p>",
+        "operationId" : "completeOutOfOrderRooms",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code for which Out Of Order rooms needs to be returned to Clean, Inspected, Dirty or Pickup status."
+        }, {
+          "name" : "completeRoomRepair",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/completeRoomRepair"
+            }, {
+              "example" : {
+                "criteria" : {
+                  "roomRepairByRoomNumber" : [ {
+                    "roomId" : "001",
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "Fixed issue in shower",
+                      "returnStatus" : "Clean",
+                      "reasonCode" : "SHOWER",
+                      "reasonDescription" : "Shower not working well",
+                      "newDateRange" : {
+                        "start" : "2020-10-01",
+                        "end" : "2020-10-01"
+                      },
+                      "start" : "2020-10-01",
+                      "end" : "2020-12-31"
+                    }
+                  } ],
+                  "roomRangeList" : {
+                    "roomIds" : [ "001" ],
+                    "range" : {
+                      "roomRange" : {
+                        "fromRoomNumber" : "001",
+                        "toRoomNumber" : "001"
+                      }
+                    },
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "Fixed issue in shower",
+                      "returnStatus" : "OutOfOrder",
+                      "reasonCode" : "SHOWER",
+                      "reasonDescription" : "Shower not working well",
+                      "newDateRange" : {
+                        "start" : "2020-10-01",
+                        "end" : "2020-10-01"
+                      },
+                      "start" : "2020-10-01",
+                      "end" : "2020-12-31"
+                    }
+                  }
+                }
+              }
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema" : {
+              "$ref" : "#/definitions/completeRoomRepairStatus"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      },
+      "post" : {
+        "summary" : "Set multiple rooms to Out Of Order",
+        "description" : "This API allows you to initially set rooms to 'Out Of Order' housekeeping status and update existing outOfOrderRooms. <p><strong>OperationId:</strong>postOutOfOrderRooms</p>",
+        "operationId" : "postOutOfOrderRooms",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code of Room(s) which is to be set as Out Of Order."
+        }, {
+          "name" : "roomRepairOutOfOrder",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/roomRepairOutOfOrder"
+            }, {
+              "example" : {
+                "criteria" : {
+                  "roomRangeList" : {
+                    "roomIds" : [ "1011", "1015" ],
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "Windows now fixed By John",
+                      "returnStatus" : "PickUP",
+                      "reasonCode" : "WIN",
+                      "reasonDescription" : "Resolved",
+                      "newDateRange" : {
+                        "start" : "2020-11-30",
+                        "end" : "2020-11-30"
+                      },
+                      "start" : "2020-11-30",
+                      "end" : "2020-11-30"
+                    }
+                  }
+                }
+              }
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      }
+    },
+    "/hotels/{hotelId}/rooms/outOfServiceRooms" : {
+      "put" : {
+        "summary" : "Complete Rooms Out of Service",
+        "description" : "Use this API when one or more rooms are no longer Out Of Service, and can now be available for a guest to stay in.  Specify in the request what status the room(s) should be returned to, such as clean, Inspected, dirty or Pickup. <p><strong>OperationId:</strong>completeOutOfServiceRooms</p>",
+        "operationId" : "completeOutOfServiceRooms",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code for which Out Of Service rooms needs to be returned to Clean, Inspected, Dirty or Pickup status."
+        }, {
+          "name" : "completeRoomRepair",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/completeRoomRepair"
+            }, {
+              "example" : {
+                "criteria" : {
+                  "roomRepairByRoomNumber" : [ {
+                    "roomId" : "2011",
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "test",
+                      "returnStatus" : "Clean",
+                      "reasonCode" : "PLUMB",
+                      "reasonDescription" : "Plumbing Issue",
+                      "newDateRange" : {
+                        "start" : "2020-12-05",
+                        "end" : "2020-12-05"
+                      },
+                      "start" : "2020-12-05",
+                      "end" : "2020-12-10"
+                    }
+                  }, {
+                    "roomId" : "2012",
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "test",
+                      "returnStatus" : "Clean",
+                      "reasonCode" : "PLUMB",
+                      "reasonDescription" : "Plumbing Issue",
+                      "newDateRange" : {
+                        "start" : "2020-12-05",
+                        "end" : "2020-12-05"
+                      },
+                      "start" : "2020-12-05",
+                      "end" : "2020-12-10"
+                    }
+                  } ],
+                  "roomRangeList" : {
+                    "roomIds" : [ "2011", "2012" ],
+                    "range" : {
+                      "roomRange" : {
+                        "fromRoomNumber" : "2011",
+                        "toRoomNumber" : "2012"
+                      }
+                    },
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "test",
+                      "returnStatus" : "OutOfOrder",
+                      "reasonCode" : "PLUMB",
+                      "reasonDescription" : "Plumbing Issue",
+                      "newDateRange" : {
+                        "start" : "2020-12-05",
+                        "end" : "2020-12-05"
+                      },
+                      "start" : "2020-12-05",
+                      "end" : "2020-12-10"
+                    }
+                  }
+                }
+              }
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema" : {
+              "$ref" : "#/definitions/completeRoomRepairStatus"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      },
+      "get" : {
+        "summary" : "Get Out of Service Rooms",
+        "description" : "Use this API to get a list of rooms for a hotel that are Out of Service.  You can narrow down your results with search criteria such as Room class, Room Type, date range. <p><strong>OperationId:</strong>getOutOfServiceRooms</p>",
+        "operationId" : "getOutOfServiceRooms",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code for which Out Of Service rooms needs to be fetched."
+        }, {
+          "name" : "startDate",
+          "in" : "query",
+          "required" : true,
+          "description" : "The start date for which the out of order / out of service rooms are to be fetched.",
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "roomId",
+          "in" : "query",
+          "required" : false,
+          "description" : "Room number to be Fetched.",
+          "type" : "string"
+        }, {
+          "name" : "endDate",
+          "in" : "query",
+          "required" : false,
+          "description" : "The end date for which the out of order / out of service rooms are to be fetched.",
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "roomTypes",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "The room type of out of order / out of service rooms to be fetched.",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false
+        }, {
+          "name" : "roomClasses",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 4000
+          },
+          "required" : false,
+          "description" : "The room class of out of order / out of service rooms to be fetched."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "",
+            "schema" : {
+              "$ref" : "#/definitions/rooms"
+            },
+            "examples" : {
+              "application/json" : {
+                "housekeepingRooms" : {
+                  "room" : [ {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "DLX"
+                    },
+                    "roomId" : "1017",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfService",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "PLUMB",
+                      "reasonDescription" : "Plumbing Issue",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfService",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-17"
+                    } ]
+                  }, {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "DLX"
+                    },
+                    "roomId" : "1033",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfService",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "WIN",
+                      "reasonDescription" : "Window Cleaning",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfService",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-15"
+                    } ]
+                  }, {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "DLX"
+                    },
+                    "roomId" : "1039",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfService",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "WIN",
+                      "reasonDescription" : "Window Cleaning",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfService",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-15"
+                    } ]
+                  }, {
+                    "roomType" : {
+                      "pseudoRoom" : false,
+                      "roomClass" : "ALL",
+                      "roomType" : "STD"
+                    },
+                    "roomId" : "2001",
+                    "housekeeping" : {
+                      "housekeepingRoomStatus" : {
+                        "housekeepingRoomStatus" : "OutOfService",
+                        "frontOfficeStatus" : "Vacant",
+                        "housekeepingStatus" : "Vacant"
+                      }
+                    },
+                    "outOfOrder" : [ {
+                      "returnStatus" : "Inspected",
+                      "reasonCode" : "WIN",
+                      "reasonDescription" : "Window Cleaning",
+                      "newDateRange" : {
+                        "start" : "2020-07-15",
+                        "end" : "2020-07-15"
+                      },
+                      "housekeepingRoomStatus" : "OutOfService",
+                      "start" : "2020-07-15",
+                      "end" : "2020-07-16"
+                    } ]
+                  } ],
+                  "hotelId" : "HOTEL1"
+                }
+              }
+            }
+          },
+          "204" : {
+            "description" : "OutOfServiceRooms not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      },
+      "post" : {
+        "summary" : "Set multiple rooms to Out Of Service",
+        "description" : "This API allows you to initially set rooms to 'Out Of Service' housekeeping status and update existing outOfServiceRooms. <p><strong>OperationId:</strong>postOutOfServiceRooms</p>",
+        "operationId" : "postOutOfServiceRooms",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code of Room(s) which is to be set as Out Of Service."
+        }, {
+          "name" : "roomRepairOutOfService",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/roomRepairOutOfService"
+            }, {
+              "example" : {
+                "criteria" : {
+                  "roomRangeList" : {
+                    "roomIds" : [ "1008", "1017" ],
+                    "roomOutOfOrder" : {
+                      "repairRemarks" : "HHPRT5665",
+                      "returnStatus" : "Clean",
+                      "reasonCode" : "WIN",
+                      "reasonDescription" : "clean",
+                      "newDateRange" : {
+                        "start" : "2020-07-27",
+                        "end" : "2020-07-27"
+                      },
+                      "start" : "2020-07-27",
+                      "end" : "2020-07-27"
+                    }
+                  }
+                }
+              }
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      }
+    },
+    "/hotels/{hotelId}/rooms/status" : {
+      "put" : {
+        "summary" : "Update Housekeeping Room Status",
+        "description" : "Use this API to update the housekeeping room status for multiple rooms.  Statuses typically include Inspected, Clean, Pickup or Dirty. <p><strong>OperationId:</strong>putRoomRelatedStatus</p>",
+        "operationId" : "putRoomRelatedStatus",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000,
+          "description" : "Hotel Code for which housekeeping room status, housekeeping status or turndown status have to be modified"
+        }, {
+          "name" : "housekeepingRoomStatusCriteria",
+          "in" : "body",
+          "required" : true,
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/housekeepingRoomStatusCriteria"
+            }, {
+              "example" : {
+                "roomList" : [ {
+                  "roomId" : "112"
+                }, {
+                  "roomId" : "114"
+                } ],
+                "housekeepingStatus" : "Vacant",
+                "housekeepingRoomStatus" : "Clean"
+              }
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema" : {
+              "$ref" : "#/definitions/housekeepingRoomStatus"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "Housekeeping" ]
+      }
+    }
+  },
+  "parameters" : {
+    "authKey" : {
+      "name" : "authorization",
+      "description" : "Bearer token that needs to be passed which is generated post user authentication",
+      "type" : "string",
+      "in" : "header",
+      "required" : true
+    },
+    "x-app-key" : {
+      "name" : "x-app-key",
+      "description" : "Client or Partner’s Application Key",
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in" : "header",
+      "required" : true
+    },
+    "x-hotelid" : {
+      "name" : "x-hotelid",
+      "type" : "string",
+      "description" : "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in" : "header",
+      "required" : true
+    },
+    "x-externalsystem" : {
+      "name" : "x-externalsystem",
+      "type" : "string",
+      "maxLength" : 80,
+      "description" : "External system code.",
+      "in" : "header",
+      "x-example" : ""
+    },
+    "Accept-Language" : {
+      "name" : "Accept-Language",
+      "type" : "string",
+      "description" : "Language code",
+      "in" : "header"
+    }
+  },
+  "responses" : {
+    "400" : {
+      "description" : "Bad Request",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "401" : {
+      "description" : "Unauthorized"
+    },
+    "403" : {
+      "description" : "Forbidden"
+    },
+    "404" : {
+      "description" : "Resource not found",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "405" : {
+      "description" : "Method not allowed"
+    },
+    "406" : {
+      "description" : "Not acceptable."
+    },
+    "413" : {
+      "description" : "Request Entity Too Large"
+    },
+    "414" : {
+      "description" : "Request URI Too Large"
+    },
+    "415" : {
+      "description" : "Unsupported Media Type"
+    },
+    "500" : {
+      "description" : "System Error",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "502" : {
+      "description" : "Bad Gateway"
+    },
+    "503" : {
+      "description" : "Service Unavailable"
+    }
+  },
+  "definitions" : {
+    "housekeepingBoard" : {
+      "type" : "object",
+      "properties" : {
+        "housekeepingRoomInfo" : {
+          "description" : "Collection of Housekeeping Rooms and their information as well as paging attributes.",
+          "type" : "object",
+          "properties" : {
+            "housekeepingRooms" : {
+              "description" : "List of rooms and the room status.",
+              "$ref" : "#/definitions/hotelRoomsType"
+            },
+            "totalPages" : {
+              "description" : "Evaluated total page count based on the requested max fetch count.",
+              "type" : "integer"
+            },
+            "offset" : {
+              "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+              "type" : "integer"
+            },
+            "limit" : {
+              "description" : "Indicates maximum number of records a Web Service should return.",
+              "type" : "integer"
+            },
+            "hasMore" : {
+              "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type" : "boolean"
+            },
+            "totalResults" : {
+              "description" : "Total number of rows queried",
+              "type" : "integer"
+            },
+            "count" : {
+              "description" : "Total number of rows returned",
+              "type" : "integer"
+            }
+          }
+        },
+        "housekeepingRoomStatusInfoList" : {
+          "description" : "Collection of Housekeeping Room Status Information.",
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/housekeepingRoomStatusInfo"
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelRoomsType" : {
+      "type" : "object",
+      "description" : "Collection of Room record that contain Housekeeping and Out Of Order information.",
+      "properties" : {
+        "room" : {
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/roomType"
+          }
+        },
+        "hotelId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "roomType" : {
+      "type" : "object",
+      "description" : "This type represents the primary room attributes.",
+      "properties" : {
+        "roomType" : {
+          "description" : "Room type basic information of the room.",
+          "$ref" : "#/definitions/roomTypeShortInfoType"
+        },
+        "floor" : {
+          "description" : "Floor of the Room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "floorDescription" : {
+          "description" : "Description for the Floor of the Room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "roomFeatures" : {
+          "description" : "Room Features for the room.",
+          "$ref" : "#/definitions/roomFeaturesType"
+        },
+        "roomDescription" : {
+          "description" : "Detail Long Description Of The Room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the room.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "smokingPreference" : {
+          "description" : "This indicates room smoking preference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "smokingPreferenceDescription" : {
+          "description" : "This indicates the description of the room smoking preference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "building" : {
+          "description" : "Building associated with the room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "roomAssignmentRating" : {
+          "description" : "Assignment Rating associated with the room.",
+          "$ref" : "#/definitions/ratePlanRatingType"
+        },
+        "isAccessible" : {
+          "description" : "Indicates whether the room is accessibility compliant.",
+          "type" : "boolean"
+        },
+        "roomId" : {
+          "description" : "Code of the room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "meetingRoom" : {
+          "description" : "Indicates whether the room is a Meeting Room",
+          "type" : "boolean"
+        },
+        "roomSection" : {
+          "description" : "Room sections of the room.",
+          "$ref" : "#/definitions/roomSectionType"
+        },
+        "housekeeping" : {
+          "description" : "Identifies the Housekeeping information..",
+          "$ref" : "#/definitions/housekeepingType"
+        },
+        "outOfOrder" : {
+          "description" : "Identifies the room Out of Order/Out of Service information.",
+          "$ref" : "#/definitions/roomsOutOfOrderType"
+        },
+        "discrepancy" : {
+          "description" : "Identifies the room discrepancy information.",
+          "$ref" : "#/definitions/roomDiscrepanciesType"
+        },
+        "componentRoomNumber" : {
+          "description" : "This flag indicates component room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "connectingRooms" : {
+          "description" : "This flag indicates connecting rooms.",
+          "$ref" : "#/definitions/roomRoomsType"
+        },
+        "componentRooms" : {
+          "description" : "This flag indicates component rooms.",
+          "$ref" : "#/definitions/roomRoomsType"
+        },
+        "attendant" : {
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/currentServicingAttendantType"
+          }
+        },
+        "hold" : {
+          "description" : "Hold attributes if any.",
+          "$ref" : "#/definitions/roomHoldType"
+        },
+        "turndownInfo" : {
+          "$ref" : "#/definitions/turndownInfoType"
+        },
+        "resvInfo" : {
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/reservationShortInfoType"
+          }
+        },
+        "componentRoomNumbers" : {
+          "description" : "List of component room numbers.",
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          }
+        }
+      }
+    },
+    "roomTypeShortInfoType" : {
+      "type" : "object",
+      "description" : "Basic information of room type.",
+      "properties" : {
+        "pseudoRoom" : {
+          "description" : "Indicates if room is a pseudoRoom. This is read-only.",
+          "type" : "boolean"
+        },
+        "isSuiteRoom" : {
+          "description" : "Indicates if room is a isSuiteRoom. This is read-only.",
+          "type" : "boolean"
+        },
+        "roomClass" : {
+          "description" : "Room Class of the room. This is read-only.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "shortDescription" : {
+          "description" : "Short Description of room type.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "houseKeeping" : {
+          "description" : "Indicates if room type of the room is flagged as housekeeping. This is read-only.",
+          "type" : "boolean"
+        },
+        "smokingPreference" : {
+          "description" : "Specifies the smoking preference for room type of the room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "minimumOccupancy" : {
+          "description" : "Minimum occupancy for the room type.",
+          "type" : "integer"
+        },
+        "maximumOccupancy" : {
+          "description" : "Maximum occupancy for the room type.",
+          "type" : "integer"
+        },
+        "roomFeatures" : {
+          "description" : "Room Features for the room.",
+          "$ref" : "#/definitions/roomFeaturesType"
+        },
+        "isAccessible" : {
+          "description" : "Indicates if room type is isAccessible.",
+          "type" : "boolean"
+        },
+        "roomType" : {
+          "description" : "Room type of the room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "meetingRoom" : {
+          "description" : "Indicates whether function space can be meeting room.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "roomFeaturesType" : {
+      "type" : "array",
+      "description" : "A recurring element that identifies the room features.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/roomFeatureType"
+      }
+    },
+    "roomFeatureType" : {
+      "type" : "object",
+      "description" : "Room Feature Information.",
+      "properties" : {
+        "code" : {
+          "description" : "A code representing a room feature.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "A code representing a room feature.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "orderSequence" : {
+          "description" : "Display Order sequence.",
+          "type" : "number"
+        },
+        "quantity" : {
+          "description" : "Indicates quantity.",
+          "type" : "integer"
+        }
+      }
+    },
+    "translationTextType2000" : {
+      "type" : "object",
+      "description" : "Contains Multiple translated texts and language codes.",
+      "properties" : {
+        "defaultText" : {
+          "description" : "Default text with Character length from 0 to 2000.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "translatedTexts" : {
+          "description" : "List of translated text and language codes.",
+          "$ref" : "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType" : {
+      "type" : "array",
+      "description" : "Language code for the translation.",
+      "maxItems" : 4000,
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string",
+            "description" : "Used for Character Strings, length 0 to 2000.",
+            "minLength" : 0,
+            "maxLength" : 2000
+          },
+          "language" : {
+            "description" : "Language identification.",
+            "type" : "string",
+            "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description" : "Language code for the translation."
+      }
+    },
+    "ratePlanRatingType" : {
+      "type" : "string",
+      "description" : "Possible Rate plan rating values.",
+      "enum" : [ "MostImportant", "Important", "SomewhatImportant", "LessImportant", "LeastImportant", "NoValueSet" ]
+    },
+    "roomSectionType" : {
+      "type" : "object",
+      "properties" : {
+        "daySectionCode" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "eveningSectionCode" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "housekeepingType" : {
+      "type" : "object",
+      "description" : "Identifies the Housekeeping information.",
+      "properties" : {
+        "housekeepingRoomStatus" : {
+          "description" : "The Room status information per the reservation and housekeeping.",
+          "$ref" : "#/definitions/roomStatusType"
+        },
+        "roomPersons" : {
+          "description" : "The Room person information per the reservation and housekeeping.",
+          "$ref" : "#/definitions/roomPersonsType"
+        },
+        "guestServiceRequest" : {
+          "$ref" : "#/definitions/guestHousekeepingServiceRequestType"
+        },
+        "cleaningPriority" : {
+          "description" : "Cleaning priority for the room, if a priority was set.",
+          "$ref" : "#/definitions/roomCleaningPriorityType"
+        },
+        "roomCondition" : {
+          "description" : "Condition of the room, if a condition was set.",
+          "$ref" : "#/definitions/roomConditionType"
+        },
+        "linenChange" : {
+          "description" : "Indicates if a linen change is necessary.",
+          "type" : "boolean"
+        },
+        "facilityTaskCode" : {
+          "description" : "Facility task Code/ Task Code assigned to the room for the day.",
+          "$ref" : "#/definitions/codeListType"
+        }
+      }
+    },
+    "roomStatusType" : {
+      "type" : "object",
+      "properties" : {
+        "reservationStatusList" : {
+          "description" : "List of status of the reservation to which this Room is assigned..",
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/housekeepingRoomReservationStatusType"
+          }
+        },
+        "housekeepingRoomStatus" : {
+          "description" : "Status of the room (Dirty/Clean/Inspected/Pickup).",
+          "$ref" : "#/definitions/housekeepingRoomStatusType"
+        },
+        "frontOfficeStatus" : {
+          "description" : "Front office status ( Occupied/Vacant ).",
+          "$ref" : "#/definitions/frontOfficeRoomStatusType"
+        },
+        "housekeepingStatus" : {
+          "description" : "Housekeeping status ( Occupied/Vacant ).",
+          "$ref" : "#/definitions/frontOfficeRoomStatusType"
+        }
+      }
+    },
+    "housekeepingRoomReservationStatusType" : {
+      "type" : "string",
+      "description" : "Room Reservation status types used in housekeeping. These may be different from the actual reservation statuses as these relate to the current reservation for the room.",
+      "enum" : [ "Arrival", "Arrived", "DayUse", "DueOut", "Departed", "NotReserved", "StayOver" ]
+    },
+    "housekeepingRoomStatusType" : {
+      "type" : "string",
+      "description" : "Simple type for room status instructions to be used in requests for fetching housekeeping rooms. Valid status values are Clean, Dirty, Pickup, Inspected, OutOfOrder, OutOfService.",
+      "enum" : [ "Clean", "Dirty", "Pickup", "Inspected", "OutOfOrder", "OutOfService" ]
+    },
+    "frontOfficeRoomStatusType" : {
+      "type" : "string",
+      "description" : "Simple type for front office room status instructions to be used in requests for fetching housekeeping rooms. Valid values are Vacant and Occupied.",
+      "enum" : [ "Vacant", "Occupied" ]
+    },
+    "roomPersonsType" : {
+      "type" : "object",
+      "properties" : {
+        "frontOfficePersons" : {
+          "type" : "integer"
+        },
+        "houseKeepingPersons" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "guestHousekeepingServiceRequestType" : {
+      "type" : "string",
+      "description" : "Possible values for the Guest Service Status.",
+      "enum" : [ "DoNotDisturb", "MakeUpRoom", "NoStatusSelected" ]
+    },
+    "roomCleaningPriorityType" : {
+      "type" : "object",
+      "description" : "Type to indicate the cleaning priority for a room.",
+      "properties" : {
+        "prioritySequence" : {
+          "description" : "Priority sequence of the room for cleaning.",
+          "type" : "integer"
+        }
+      }
+    },
+    "roomConditionType" : {
+      "type" : "object",
+      "description" : "Condition to be assigned on the room.",
+      "properties" : {
+        "roomCondition" : {
+          "description" : "Code and Decription of Condition to be assigned on the room.",
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "assignmentType" : {
+          "description" : "Determine if room, after applying condition, is available or not in Room Assignment listing.",
+          "$ref" : "#/definitions/roomConditionAssigmentType"
+        },
+        "remarks" : {
+          "description" : "Remarks on room condition assignment.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        }
+      }
+    },
+    "codeDescriptionType" : {
+      "type" : "object",
+      "description" : "This contains a generic code and description information.",
+      "properties" : {
+        "code" : {
+          "description" : "Code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "description.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        }
+      }
+    },
+    "roomConditionAssigmentType" : {
+      "type" : "string",
+      "description" : "Simple type for Room Condition assignment type. Valid values are Available and NotAvailable Only.",
+      "enum" : [ "Available", "NotAvailable" ]
+    },
+    "codeListType" : {
+      "type" : "array",
+      "maxItems" : 4000,
+      "items" : {
+        "type" : "string",
+        "minLength" : 0,
+        "maxLength" : 20
+      }
+    },
+    "roomsOutOfOrderType" : {
+      "type" : "array",
+      "description" : "Date Range and reasons for a room being Out of Order/Out Of Service (If the room is OO/OS).",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/roomOutOfOrderType"
+      }
+    },
+    "roomOutOfOrderType" : {
+      "type" : "object",
+      "description" : "Out Of Order and Out Of Service Room information.",
+      "properties" : {
+        "repairRemarks" : {
+          "description" : "Notes or Remarks on the OO/OS room",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "returnStatus" : {
+          "description" : "Room Status which will be used on completion of OO/OS.",
+          "$ref" : "#/definitions/housekeepingRoomStatusType"
+        },
+        "reasonCode" : {
+          "description" : "Reason Code why the room is OO/OS.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "reasonDescription" : {
+          "description" : "Reason Description why the room is OO/OS.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "newDateRange" : {
+          "description" : "The new start date and end date, if the dates were changed as part of an update. This would be blank for new OO/OS rooms.",
+          "$ref" : "#/definitions/dateRangeType"
+        },
+        "housekeepingRoomStatus" : {
+          "description" : "The out of order or out of service room status OO/OS.",
+          "$ref" : "#/definitions/housekeepingRoomStatusType"
+        },
+        "start" : {
+          "description" : "The starting value of the date range.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "end" : {
+          "description" : "The ending value of the date range.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        }
+      }
+    },
+    "dateRangeType" : {
+      "type" : "object",
+      "description" : "Date Range with Start and End dates.",
+      "properties" : {
+        "start" : {
+          "description" : "The starting value of the date range.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "end" : {
+          "description" : "The ending value of the date range.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        }
+      }
+    },
+    "roomDiscrepanciesType" : {
+      "type" : "array",
+      "description" : "Room Discrepancies between front office and housekeeping room status and number of persons in the room.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/roomDiscrepancyType"
+      }
+    },
+    "roomDiscrepancyType" : {
+      "type" : "string",
+      "description" : "Simple type for discrepant room status instructions to be used in requests for fetching housekeeping and front office room discrepancy. Valid values are Sleep, Skip, Person Discrepancy, Due Out Only.",
+      "enum" : [ "Sleep", "Skip", "PersonDiscrepancy" ]
+    },
+    "roomRoomsType" : {
+      "type" : "array",
+      "description" : "Collection of rooms.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/roomRoomType"
+      }
+    },
+    "roomRoomType" : {
+      "type" : "object",
+      "description" : "This type represents the primary room attributes.",
+      "properties" : {
+        "roomType" : {
+          "description" : "Room type basic information of the room.",
+          "$ref" : "#/definitions/roomTypeShortInfoType"
+        },
+        "floor" : {
+          "description" : "Floor of the Room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "floorDescription" : {
+          "description" : "Description for the Floor of the Room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "roomFeatures" : {
+          "description" : "Room Features for the room.",
+          "$ref" : "#/definitions/roomFeaturesType"
+        },
+        "roomDescription" : {
+          "description" : "Detail Long Description Of The Room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the room.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "smokingPreference" : {
+          "description" : "This indicates room smoking preference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "smokingPreferenceDescription" : {
+          "description" : "This indicates the description of the room smoking preference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "building" : {
+          "description" : "Building associated with the room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "roomAssignmentRating" : {
+          "description" : "Assignment Rating associated with the room.",
+          "$ref" : "#/definitions/ratePlanRatingType"
+        },
+        "isAccessible" : {
+          "description" : "Indicates whether the room is accessibility compliant.",
+          "type" : "boolean"
+        },
+        "roomId" : {
+          "description" : "Code of the room.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "meetingRoom" : {
+          "description" : "Indicates whether the room is a Meeting Room",
+          "type" : "boolean"
+        },
+        "roomCondition" : {
+          "description" : "Code and description of condition assigned on the room.",
+          "$ref" : "#/definitions/codeDescriptionType"
+        }
+      }
+    },
+    "currentServicingAttendantType" : {
+      "type" : "object",
+      "description" : "The Attendant Name and ID of the attendant servicing the room.",
+      "properties" : {
+        "section" : {
+          "description" : "Section Code the attendant has been assigned.",
+          "$ref" : "#/definitions/housekeepingSectionType"
+        },
+        "floor" : {
+          "description" : "The Floor which is assigned to the attendant.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "attendantId" : {
+          "description" : "Attendant's unique identifier.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "attendantName" : {
+          "description" : "Attendant's name.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "hotelId" : {
+          "description" : "Property where the attendant belongs.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "activeFlag" : {
+          "description" : "Indicates if the Attendant is active.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 1
+        },
+        "sunday" : {
+          "type" : "boolean"
+        },
+        "monday" : {
+          "type" : "boolean"
+        },
+        "tuesday" : {
+          "type" : "boolean"
+        },
+        "wednesday" : {
+          "type" : "boolean"
+        },
+        "thursday" : {
+          "type" : "boolean"
+        },
+        "friday" : {
+          "type" : "boolean"
+        },
+        "saturday" : {
+          "type" : "boolean"
+        },
+        "appUser" : {
+          "description" : "The App User Name and ID of the user who started the service.",
+          "$ref" : "#/definitions/applicationUserType"
+        },
+        "startTime" : {
+          "description" : "The start time of the service.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "status" : {
+          "description" : "Status of the respective Housekeeping Attendant.",
+          "$ref" : "#/definitions/servicingAttendantStatusType"
+        }
+      }
+    },
+    "housekeepingSectionType" : {
+      "type" : "object",
+      "description" : "Information regarding Housekeeping Sections.",
+      "properties" : {
+        "hotelId" : {
+          "description" : "Property where this section is defined.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "code" : {
+          "description" : "The Housekeeping Section Code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Section.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "sectionGroup" : {
+          "description" : "Housekeeping Section Group.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "targetCredits" : {
+          "description" : "Target Credit for each task sheet created for this section when auto task assignment is broken out by section.",
+          "type" : "integer"
+        },
+        "rooms" : {
+          "description" : "Rooms count for this section code. This is auto populated while creating/fetching record.",
+          "type" : "integer"
+        },
+        "roomCredits" : {
+          "description" : "Number of housekeeping credits. This is auto populated while creating/fetching record.",
+          "type" : "integer"
+        },
+        "sequence" : {
+          "description" : "Display sequence when task assignment is automatically broken out by Section Group.",
+          "type" : "integer"
+        },
+        "inactive" : {
+          "description" : "Indicates if the Section Code is active.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "applicationUserType" : {
+      "type" : "object",
+      "properties" : {
+        "hotel" : {
+          "description" : "Hotel where user belongs.",
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "appUser" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 60
+        },
+        "lDAPUser" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 60
+        },
+        "actAs" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "actAt" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "userDefaultLanguage" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "appUserId" : {
+          "$ref" : "#/definitions/uniqueID_Type"
+        },
+        "cashierId" : {
+          "type" : "integer"
+        },
+        "cashierTitle" : {
+          "description" : "Cashier title.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "department" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 60
+        },
+        "departmentLocation" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 60
+        },
+        "salesRepCode" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "expiryDate" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "disabledUntil" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "passwordChangeDate" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "userInfo" : {
+          "$ref" : "#/definitions/employeeInfoType"
+        },
+        "userSessionInfo" : {
+          "description" : "This is only used during log-in.",
+          "$ref" : "#/definitions/userSessionInfoType"
+        },
+        "attendantInfo" : {
+          "$ref" : "#/definitions/attendantType"
+        }
+      }
+    },
+    "uniqueID_Type" : {
+      "type" : "object",
+      "description" : "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties" : {
+        "id" : {
+          "description" : "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "type" : {
+          "description" : "A reference to the type of object defined by the UniqueID element.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "employeeInfoType" : {
+      "type" : "object",
+      "properties" : {
+        "personName" : {
+          "$ref" : "#/definitions/personNameType"
+        },
+        "profileId" : {
+          "$ref" : "#/definitions/uniqueID_Type"
+        },
+        "addressInfo" : {
+          "$ref" : "#/definitions/addressInfoType"
+        },
+        "emailInfo" : {
+          "$ref" : "#/definitions/emailInfoType"
+        },
+        "phoneInfo" : {
+          "$ref" : "#/definitions/telephoneInfoType"
+        },
+        "department" : {
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "gender" : {
+          "description" : "Identifies the gender.",
+          "type" : "string",
+          "enum" : [ "Male", "Female", "Unknown" ]
+        },
+        "birthDate" : {
+          "description" : "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "birthDateMasked" : {
+          "description" : "Indicates the date of birth as masked.",
+          "type" : "string",
+          "maxLength" : 2000
+        }
+      }
+    },
+    "personNameType" : {
+      "type" : "object",
+      "description" : "This provides name information for a person.",
+      "properties" : {
+        "namePrefix" : {
+          "description" : "Salutation of honorific (e.g. Mr., Mrs., Ms., Miss, Dr.)",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "givenName" : {
+          "description" : "Given name, first name or names.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "middleName" : {
+          "description" : "The middle name of the person name.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "surname" : {
+          "description" : "Family name, last name. May also be used for full name if the sending system does not have the ability to separate a full name into its parts, e.g. the surname element may be used to pass the full name.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "nameSuffix" : {
+          "description" : "Hold various name suffixes and letters (e.g. Jr., Sr., III, Ret., Esq.)",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "nameTitle" : {
+          "description" : "Degree or honors (e.g., Ph.D., M.D.)",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "nameTitleSuffix" : {
+          "description" : "Title Suffix. Must be populated if ADVANCED_TITLE is on.",
+          "type" : "integer"
+        },
+        "envelopeGreeting" : {
+          "description" : "Envelope Greeting of the profile",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "salutation" : {
+          "description" : "Salutation of the profile",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "nameType" : {
+          "description" : "Type of name of the individual, such as former, nickname, alternate or alias name.",
+          "$ref" : "#/definitions/personNameTypeType"
+        },
+        "language" : {
+          "description" : "Language identification.",
+          "type" : "string",
+          "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "externalSystem" : {
+          "description" : "When name type is external, indicates the external system the name belongs to.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        }
+      }
+    },
+    "personNameTypeType" : {
+      "type" : "string",
+      "description" : "Person's name in an external system.",
+      "enum" : [ "Primary", "Alternate", "Incognito", "External", "Phonetic" ]
+    },
+    "addressInfoType" : {
+      "type" : "object",
+      "description" : "Provides address information.",
+      "properties" : {
+        "address" : {
+          "description" : "Address details for the profile.",
+          "$ref" : "#/definitions/addressType"
+        },
+        "id" : {
+          "description" : "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "type" : {
+          "description" : "A reference to the type of object defined by the UniqueID element.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "addressType" : {
+      "type" : "object",
+      "description" : "Provides address information.",
+      "properties" : {
+        "isValidated" : {
+          "description" : "Indicator to define if the Address is validated by the Address Validation System.",
+          "type" : "boolean"
+        },
+        "addressLine" : {
+          "description" : "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
+          "type" : "array",
+          "maxItems" : 4,
+          "items" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 80
+          }
+        },
+        "cityName" : {
+          "description" : "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "postalCode" : {
+          "description" : "Post Office Code number.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 15
+        },
+        "cityExtension" : {
+          "description" : "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "county" : {
+          "description" : "County or District Name (e.g., Fairfax). This is read only.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "state" : {
+          "description" : "State or Province name (e.g., Texas).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "country" : {
+          "description" : "Country name (e.g., Ireland).",
+          "$ref" : "#/definitions/countryNameType"
+        },
+        "language" : {
+          "description" : "Language identification.",
+          "type" : "string",
+          "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "type" : {
+          "description" : "Defines the type of address (e.g. home, business, other).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "typeDescription" : {
+          "description" : "Describes the type code",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "primaryInd" : {
+          "description" : "When true, indicates a primary information.",
+          "type" : "boolean"
+        },
+        "updateReservations" : {
+          "description" : "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
+          "type" : "boolean"
+        },
+        "barCode" : {
+          "description" : "The postal barcode for the address.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        },
+        "createDateTime" : {
+          "description" : "Time stamp of the creation.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "creatorId" : {
+          "description" : "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "lastModifyDateTime" : {
+          "description" : "Time stamp of last modification.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "lastModifierId" : {
+          "description" : "Identifies the last software system or person to modify a record.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "purgeDate" : {
+          "description" : "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        }
+      }
+    },
+    "countryNameType" : {
+      "type" : "object",
+      "description" : "Code for a country or a nationality.",
+      "properties" : {
+        "value" : {
+          "type" : "string",
+          "description" : "Used for Character Strings, length 0 to 200.",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "code" : {
+          "description" : "Code for a country or a nationality.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "emailInfoType" : {
+      "type" : "object",
+      "description" : "Information on an email for the customer.",
+      "properties" : {
+        "email" : {
+          "description" : "eMail deatils for the profile.",
+          "$ref" : "#/definitions/emailType"
+        },
+        "id" : {
+          "description" : "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "type" : {
+          "description" : "A reference to the type of object defined by the UniqueID element.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "emailType" : {
+      "type" : "object",
+      "description" : "Information on an email for the customer.",
+      "properties" : {
+        "emailAddress" : {
+          "description" : "Defines the e-mail address.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "type" : {
+          "description" : "Defines the purpose of the e-mail address (e.g. personal, business, listserve).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "typeDescription" : {
+          "description" : "Describes the Type code",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "emailFormat" : {
+          "description" : "Supported Email format.",
+          "type" : "string",
+          "enum" : [ "Html", "Text" ]
+        },
+        "primaryInd" : {
+          "description" : "When true, indicates a primary information.",
+          "type" : "boolean"
+        },
+        "orderSequence" : {
+          "description" : "Display Order sequence.",
+          "type" : "number"
+        },
+        "createDateTime" : {
+          "description" : "Time stamp of the creation.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "creatorId" : {
+          "description" : "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "lastModifyDateTime" : {
+          "description" : "Time stamp of last modification.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "lastModifierId" : {
+          "description" : "Identifies the last software system or person to modify a record.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "purgeDate" : {
+          "description" : "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        }
+      }
+    },
+    "telephoneInfoType" : {
+      "type" : "object",
+      "description" : "Information on a telephone number for the customer.",
+      "properties" : {
+        "telephone" : {
+          "description" : "Phone details for the profile.",
+          "$ref" : "#/definitions/telephoneType"
+        },
+        "id" : {
+          "description" : "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "type" : {
+          "description" : "A reference to the type of object defined by the UniqueID element.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "telephoneType" : {
+      "type" : "object",
+      "description" : "Information on a telephone number for the customer.",
+      "properties" : {
+        "phoneTechType" : {
+          "description" : "Indicates type of technology associated with this telephone number, such as Voice, Data, Fax, Pager, Mobile, TTY, etc.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "phoneUseType" : {
+          "description" : "Describes the type of telephone number, in the context of its general use (e.g. Home, Business, Emergency Contact, Travel Arranger, Day, Evening).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "phoneUseTypeDescription" : {
+          "description" : "Description of the PhoneUseType code",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "phoneNumber" : {
+          "description" : "Telephone number assigned to a single location.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "extension" : {
+          "description" : "Extension to reach a specific party at the phone number.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "primaryInd" : {
+          "description" : "When true, indicates a primary information.",
+          "type" : "boolean"
+        },
+        "orderSequence" : {
+          "description" : "Display Order sequence.",
+          "type" : "number"
+        },
+        "createDateTime" : {
+          "description" : "Time stamp of the creation.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "creatorId" : {
+          "description" : "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "lastModifyDateTime" : {
+          "description" : "Time stamp of last modification.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "lastModifierId" : {
+          "description" : "Identifies the last software system or person to modify a record.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        },
+        "purgeDate" : {
+          "description" : "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        }
+      }
+    },
+    "userSessionInfoType" : {
+      "type" : "object",
+      "properties" : {
+        "businessDate" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "systemDate" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "terminal" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "runningApp" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "shareProfiles" : {
+          "type" : "boolean"
+        },
+        "hotel" : {
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "cro" : {
+          "$ref" : "#/definitions/codeDescriptionType"
+        },
+        "chain" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "cROCountryCode" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "sessionDefaults" : {
+          "$ref" : "#/definitions/userSessionDefaultsType"
+        },
+        "parameters" : {
+          "$ref" : "#/definitions/parametersType"
+        }
+      }
+    },
+    "userSessionDefaultsType" : {
+      "type" : "object",
+      "properties" : {
+        "dbDateFormat" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "oracleDateFormat" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "oracleTimeFormat" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "javaDateFormat" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "javaTimeFormat" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "currencyCode" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "currencyFormat" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "defaultLanguage" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "baseLanguage" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "parametersType" : {
+      "type" : "array",
+      "description" : "Collection of generic Name-Value-Pair parameters.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/parameterType"
+      }
+    },
+    "parameterType" : {
+      "type" : "object",
+      "description" : "Name value pair type that will hold generic parameter information. Only use this type when the parameters being passed are too dynamic to be defined.",
+      "properties" : {
+        "parameterName" : {
+          "description" : "Name of the parameter.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "parameterValue" : {
+          "description" : "Value of the parameter.",
+          "type" : "string",
+          "maxLength" : 2000
+        }
+      }
+    },
+    "attendantType" : {
+      "type" : "object",
+      "properties" : {
+        "attendantId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "hotelId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "servicingAttendantStatusType" : {
+      "type" : "string",
+      "description" : "Possible values for the Status of a Servicing Attendant.",
+      "enum" : [ "Standby", "Break", "Working", "Completed" ]
+    },
+    "roomHoldType" : {
+      "type" : "object",
+      "properties" : {
+        "holdUntil" : {
+          "description" : "The date and time when hold will expire.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "holdUser" : {
+          "description" : "User who placed room on hold.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "comments" : {
+          "description" : "Comments of the room hold.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        }
+      }
+    },
+    "turndownInfoType" : {
+      "type" : "object",
+      "properties" : {
+        "turndownStatusInfo" : {
+          "$ref" : "#/definitions/turndownStatusType"
+        }
+      }
+    },
+    "turndownStatusType" : {
+      "type" : "string",
+      "description" : "Simple type for turndown status instructions to be used in requests for fetching housekeeping rooms. Valid status values are Required, Not Required and Completed.",
+      "enum" : [ "Required", "NotRequired", "Compeleted" ]
+    },
+    "reservationShortInfoType" : {
+      "type" : "object",
+      "properties" : {
+        "guestName" : {
+          "description" : "Guest name that is registered for the reservation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "reservationId" : {
+          "$ref" : "#/definitions/reservationId"
+        },
+        "reservationStatusInfo" : {
+          "$ref" : "#/definitions/housekeepingRoomReservationStatusType"
+        },
+        "stayDateInfo" : {
+          "$ref" : "#/definitions/stayDateInfoType"
+        },
+        "vipStatus" : {
+          "description" : "VIP status of the guest.",
+          "$ref" : "#/definitions/vIPStatusType"
+        },
+        "profileId" : {
+          "description" : "ProfileId of the guest.",
+          "$ref" : "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "reservationId" : {
+      "type" : "object",
+      "description" : "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties" : {
+        "url" : {
+          "description" : "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "type" : {
+          "description" : "A reference to the type of object defined by the UniqueID element.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "instance" : {
+          "description" : "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "idContext" : {
+          "description" : "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "id" : {
+          "description" : "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "idExtension" : {
+          "description" : "Additional identifying value assigned by the creating system.",
+          "type" : "integer"
+        }
+      }
+    },
+    "stayDateInfoType" : {
+      "type" : "object",
+      "description" : "Room attached with stay detail information",
+      "properties" : {
+        "timeSpan" : {
+          "$ref" : "#/definitions/timeSpanType"
+        },
+        "expectedTimes" : {
+          "$ref" : "#/definitions/resExpectedTimesType"
+        }
+      }
+    },
+    "timeSpanType" : {
+      "type" : "object",
+      "description" : "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties" : {
+        "startDate" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "endDate" : {
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "duration" : {
+          "type" : "string"
+        }
+      }
+    },
+    "resExpectedTimesType" : {
+      "type" : "object",
+      "description" : "Holds the Arrival and Departure Time Information",
+      "properties" : {
+        "reservationExpectedArrivalTime" : {
+          "description" : "Arrival Time",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "reservationExpectedDepartureTime" : {
+          "description" : "Departure Time",
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "vIPStatusType" : {
+      "type" : "object",
+      "description" : "VIP status of the customer.",
+      "properties" : {
+        "value" : {
+          "type" : "string",
+          "description" : "Used for Character Strings, length 0 to 2000.",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "code" : {
+          "description" : "VIP status of the customer.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "housekeepingRoomStatusInfo" : {
+      "type" : "object",
+      "description" : "Housekeeping Room Status Info Type",
+      "properties" : {
+        "housekeepingRoomStatus" : {
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "numberOfRooms" : {
+          "type" : "integer"
+        },
+        "code" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "links" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink" : {
+      "type" : "object",
+      "description" : "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties" : {
+        "href" : {
+          "description" : "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type" : "string"
+        },
+        "rel" : {
+          "description" : "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type" : "string"
+        },
+        "templated" : {
+          "description" : "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type" : "boolean",
+          "default" : false
+        },
+        "method" : {
+          "description" : "HTTP method for requesting the target of the link.",
+          "type" : "string",
+          "enum" : [ "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD" ]
+        },
+        "targetSchema" : {
+          "description" : "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type" : "string"
+        },
+        "operationId" : {
+          "description" : "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Exact copy of the \"summary\" field on the linked operation.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "href", "rel", "method", "operationId" ]
+    },
+    "warningsType" : {
+      "type" : "array",
+      "description" : "Used in conjunction with the Success element to define a business error.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/warningType"
+      }
+    },
+    "warningType" : {
+      "type" : "object",
+      "description" : "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties" : {
+        "value" : {
+          "type" : "string",
+          "description" : "Property Value"
+        },
+        "shortText" : {
+          "description" : "An abbreviated version of the error in textual format.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "code" : {
+          "description" : "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "docURL" : {
+          "description" : "If present, this URL refers to an online description of the error that occurred.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "status" : {
+          "description" : "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "tag" : {
+          "description" : "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "recordId" : {
+          "description" : "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "type" : {
+          "description" : "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "language" : {
+          "description" : "Language identification.",
+          "type" : "string",
+          "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph" : {
+          "description" : "Reference Place Holder used as an index for this warning.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 8
+        }
+      }
+    },
+    "exceptionDetailType" : {
+      "title" : "Error Detail",
+      "description" : "Complex type that contains error details for a REST call.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail" : {
+          "type" : "string",
+          "description" : "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode" : {
+          "type" : "string",
+          "description" : "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath" : {
+          "type" : "string",
+          "description" : "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails" : {
+          "description" : "Details of the error message, consisting of a hierarchical tree structure.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/errorInstance"
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        }
+      },
+      "required" : [ "type", "title" ]
+    },
+    "errorInstance" : {
+      "title" : "Error Instance Details",
+      "description" : "Complex type that contains error instance details for a REST call.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail" : {
+          "type" : "string",
+          "description" : "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode" : {
+          "type" : "string",
+          "description" : "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath" : {
+          "type" : "string",
+          "description" : "Path to the problem at the resource or property level."
+        }
+      },
+      "required" : [ "type", "title" ]
+    },
+    "rooms" : {
+      "type" : "object",
+      "properties" : {
+        "housekeepingRooms" : {
+          "description" : "List of rooms and the room status.",
+          "$ref" : "#/definitions/hotelRoomsType"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "completeRoomRepair" : {
+      "type" : "object",
+      "properties" : {
+        "criteria" : {
+          "type" : "object",
+          "description" : "Criteria to complete the out of order status of a room and bring the room back into rotation. A list or range of rooms can be provided.",
+          "properties" : {
+            "roomRepairByRoomNumber" : {
+              "type" : "array",
+              "description" : "Completing an existing OO/OS room by room number.",
+              "maxItems" : 4000,
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "roomId" : {
+                    "type" : "string",
+                    "minLength" : 0,
+                    "maxLength" : 20
+                  },
+                  "roomOutOfOrder" : {
+                    "type" : "object",
+                    "description" : "Out Of Order and Out Of Service Room information.",
+                    "properties" : {
+                      "repairRemarks" : {
+                        "description" : "Notes or Remarks on the OO/OS room",
+                        "type" : "string",
+                        "minLength" : 0,
+                        "maxLength" : 2000
+                      },
+                      "returnStatus" : {
+                        "description" : "Room Status which will be used on completion of OO/OS.",
+                        "$ref" : "#/definitions/housekeepingRoomStatusType"
+                      },
+                      "reasonCode" : {
+                        "description" : "Reason Code why the room is OO/OS.",
+                        "type" : "string",
+                        "minLength" : 0,
+                        "maxLength" : 20
+                      },
+                      "reasonDescription" : {
+                        "description" : "Reason Description why the room is OO/OS.",
+                        "type" : "string",
+                        "minLength" : 0,
+                        "maxLength" : 80
+                      },
+                      "newDateRange" : {
+                        "description" : "The new start date and end date, if the dates were changed as part of an update. This would be blank for new OO/OS rooms.",
+                        "$ref" : "#/definitions/dateRangeType"
+                      },
+                      "start" : {
+                        "description" : "The starting value of the date range.",
+                        "type" : "string",
+                        "format" : "date"
+                      },
+                      "end" : {
+                        "description" : "The ending value of the date range.",
+                        "type" : "string",
+                        "format" : "date"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "roomRangeList" : {
+              "type" : "object",
+              "properties" : {
+                "roomIds" : {
+                  "$ref" : "#/definitions/roomIds"
+                },
+                "range" : {
+                  "type" : "object",
+                  "properties" : {
+                    "roomRange" : {
+                      "$ref" : "#/definitions/roomRangeType"
+                    }
+                  }
+                },
+                "roomOutOfOrder" : {
+                  "type" : "object",
+                  "description" : "Out Of Order and Out Of Service Room information.",
+                  "properties" : {
+                    "repairRemarks" : {
+                      "description" : "Notes or Remarks on the OO/OS room",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 2000
+                    },
+                    "returnStatus" : {
+                      "description" : "Room Status which will be used on completion of OO/OS.",
+                      "$ref" : "#/definitions/housekeepingRoomStatusType"
+                    },
+                    "reasonCode" : {
+                      "description" : "Reason Code why the room is OO/OS.",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 20
+                    },
+                    "reasonDescription" : {
+                      "description" : "Reason Description why the room is OO/OS.",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 80
+                    },
+                    "newDateRange" : {
+                      "description" : "The new start date and end date, if the dates were changed as part of an update. This would be blank for new OO/OS rooms.",
+                      "$ref" : "#/definitions/dateRangeType"
+                    },
+                    "start" : {
+                      "description" : "The starting value of the date range.",
+                      "type" : "string",
+                      "format" : "date"
+                    },
+                    "end" : {
+                      "description" : "The ending value of the date range.",
+                      "type" : "string",
+                      "format" : "date"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomIds" : {
+      "type" : "array",
+      "description" : "Collection of room numbers to be process.",
+      "maxItems" : 4000,
+      "items" : {
+        "type" : "string",
+        "minLength" : 0,
+        "maxLength" : 20
+      }
+    },
+    "roomRangeType" : {
+      "type" : "object",
+      "properties" : {
+        "fromRoomNumber" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "toRoomNumber" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "completeRoomRepairStatus" : {
+      "type" : "object",
+      "description" : "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties" : {
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomRepairOutOfOrder" : {
+      "type" : "object",
+      "properties" : {
+        "criteria" : {
+          "type" : "object",
+          "description" : "Criteria to set the room or a collection of rooms out of order. The criteria can include a collection of rooms or a range of rooms along with the date range.",
+          "properties" : {
+            "roomRangeList" : {
+              "type" : "object",
+              "properties" : {
+                "roomIds" : {
+                  "type" : "array",
+                  "description" : "Collection of room numbers to be process.",
+                  "maxItems" : 4000,
+                  "items" : {
+                    "type" : "string",
+                    "minLength" : 0,
+                    "maxLength" : 20
+                  }
+                },
+                "roomOutOfOrder" : {
+                  "type" : "object",
+                  "description" : "Out Of Order and Out Of Service Room information.",
+                  "properties" : {
+                    "repairRemarks" : {
+                      "description" : "Notes or Remarks on the OO/OS room",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 2000
+                    },
+                    "returnStatus" : {
+                      "description" : "Room Status which will be used on completion of OO/OS.",
+                      "$ref" : "#/definitions/housekeepingRoomStatusType"
+                    },
+                    "reasonCode" : {
+                      "description" : "Reason Code why the room is OO/OS.",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 20
+                    },
+                    "reasonDescription" : {
+                      "description" : "Reason Description why the room is OO/OS.",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 80
+                    },
+                    "newDateRange" : {
+                      "description" : "The new start date and end date, if the dates were changed as part of an update. This would be blank for new OO/OS rooms.",
+                      "$ref" : "#/definitions/dateRangeType"
+                    },
+                    "start" : {
+                      "description" : "The starting value of the date range.",
+                      "type" : "string",
+                      "format" : "date"
+                    },
+                    "end" : {
+                      "description" : "The ending value of the date range.",
+                      "type" : "string",
+                      "format" : "date"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "status" : {
+      "type" : "object",
+      "description" : "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties" : {
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        }
+      }
+    },
+    "roomRepairOutOfService" : {
+      "type" : "object",
+      "properties" : {
+        "criteria" : {
+          "type" : "object",
+          "description" : "Criteria to set the room or a collection of rooms out of service. The criteria can include a collection of rooms or a range of rooms along with the date range.",
+          "properties" : {
+            "roomRangeList" : {
+              "type" : "object",
+              "properties" : {
+                "roomIds" : {
+                  "type" : "array",
+                  "description" : "Collection of room numbers to be process.",
+                  "maxItems" : 4000,
+                  "items" : {
+                    "type" : "string",
+                    "minLength" : 0,
+                    "maxLength" : 20
+                  }
+                },
+                "roomOutOfOrder" : {
+                  "type" : "object",
+                  "description" : "Out Of Order and Out Of Service Room information.",
+                  "properties" : {
+                    "repairRemarks" : {
+                      "description" : "Notes or Remarks on the OO/OS room",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 2000
+                    },
+                    "returnStatus" : {
+                      "description" : "Room Status which will be used on completion of OO/OS.",
+                      "$ref" : "#/definitions/housekeepingRoomStatusType"
+                    },
+                    "reasonCode" : {
+                      "description" : "Reason Code why the room is OO/OS.",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 20
+                    },
+                    "reasonDescription" : {
+                      "description" : "Reason Description why the room is OO/OS.",
+                      "type" : "string",
+                      "minLength" : 0,
+                      "maxLength" : 80
+                    },
+                    "newDateRange" : {
+                      "description" : "The new start date and end date, if the dates were changed as part of an update. This would be blank for new OO/OS rooms.",
+                      "$ref" : "#/definitions/dateRangeType"
+                    },
+                    "start" : {
+                      "description" : "The starting value of the date range.",
+                      "type" : "string",
+                      "format" : "date"
+                    },
+                    "end" : {
+                      "description" : "The ending value of the date range.",
+                      "type" : "string",
+                      "format" : "date"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "housekeepingRoomStatusCriteria" : {
+      "type" : "object",
+      "properties" : {
+        "roomList" : {
+          "description" : "Collection of room numbers for which the status is to be updated.",
+          "type" : "array",
+          "maxItems" : 4000,
+          "items" : {
+            "$ref" : "#/definitions/roomInformationType"
+          }
+        },
+        "housekeepingStatus" : {
+          "description" : "The new Housekeeping status that will be assigned.",
+          "$ref" : "#/definitions/frontOfficeRoomStatusType"
+        },
+        "housekeepingRoomStatus" : {
+          "description" : "The new Room status that will be assigned.",
+          "$ref" : "#/definitions/housekeepingRoomStatusType"
+        },
+        "turndownStatus" : {
+          "$ref" : "#/definitions/turndownStatusType"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomInformationType" : {
+      "type" : "object",
+      "description" : "Room Information needed in updating the status.",
+      "properties" : {
+        "roomId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "reservationId" : {
+          "$ref" : "#/definitions/reservationId"
+        }
+      }
+    },
+    "housekeepingRoomStatus" : {
+      "type" : "object",
+      "description" : "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties" : {
+        "warnings" : {
+          "description" : "Refer to Generic common types document.",
+          "$ref" : "#/definitions/warningsType"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        }
+      }
+    }
+  },
+  "tags" : [ {
+    "name" : "Housekeeping",
+    "description" : "These APIs allows for retrieving and managing a room's housekeeping data and front office status, for example update room 101 to be Out Of Order.  Additionally, you can view room discrepancies between housekeeping and front office statuses, view and update task sheets and create a room service request."
+  } ]
+}
