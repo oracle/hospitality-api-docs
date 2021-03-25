@@ -1,24 +1,28 @@
 # Oracle Hospitality OPERA Cloud Rest APIs Commonly Used Work Flows
 
-To help our partners and customers we have put together a 'cheat-sheet' to help guide you and suggest which APIs to use. There are over 3000 API's available, and you're welcome to use any of them, however we hope this document will give you a head start and good suggestions to cover common business scenarios for hotels.
+To help our partners and customers we have put together a 'cheat-sheet' to help guide you and suggest which APIs to use. There are over 3000 APIs available, and you're welcome to use any of them, however we hope this document will give you a head start and good suggestions to cover common business scenarios for hotels.
 
-Following the common workflows covered in this document:
+For a great walkthrough of these workflows register to watch this on demand video [Live Demonstration of Contactless APIs](https://videohub.oracle.com/media/Oracle+Hospitality+Innovation+WeekA+Live+Demonstration+of+Contactless+APIs/1_ujwqu9rd).
+
+Note that some of these APIs are v0 - these are our Early Adopter APIs.  To find out what these are and how to get access to these register to watch this on demand video [Why be an OHIP Early Adopter](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).
+
+The following common workflows are covered in this document:
 
 [1. Search Availability and make a Reservation](#1-search-availability-and-make-a-reservation)
 
 [2. Check in a Guest](#2-check-in-a-guest)
 
-[3. Offer the Guest an Upgrade](#3-offer-the-guest-an-upgrade)
+[3. Upsell a Reservation](#3-upsell-a-reservation)
 
 [4. In House Guest](#4-in-house-guest)
 
 [5. Check out a Guest](#5-check-out-a-guest)
 
-## 1. Search Availability and make a Reservation
+## 1. Check Availability and book a Reservation
 
 Flow:
 
-1. Search for Property Availability
+1. Search for Hotel Availability
 2. Get Rate Plan Information
 3. Get Packages and/or Inventory Items
 4. Get Cancel, Deposit& Guarantee Policies
@@ -27,7 +31,7 @@ Flow:
 
 | **Business case** | **Rest api** | **Module** |
 | --- | --- | --- |
-| **Search Availability** for a property. This API is used to request availability at a property, showing you the room types and rate plans that are available. With the response, you can choose which rate code& room type combination you wish to make a booking for, and use these room type code and rate plan codes in the `postReservation` request. | getHotelAvailability | Availability (PAR) |
+| **Search Availability** for a property. This API is used to request availability at a property, showing you the room types and rate plans that are available. With the response, you can choose which rate code & room type combination you wish to make a booking for, and use these room type code and rate plan codes in the `postReservation` request. | getHotelAvailability | Availability (PAR) |
 | **Get Rate Plan Information** – specify the Rate Plan Code in the path to retrieve more details about the rate plan, such as the Rate Long Description, commission and market code. | getRatePlan | Rates (RTP) |
 | **Get available Packages**. Often a guest wants to 'add-on' to their reservation, and add extras such as buffet breakfast, or a box of chocolates. Use this API to find the available packages and their price. You can then use the package codes in either `postReservation` or `putReservation` to add these packages to a reservation. | getPackages | Rates (RTP) |
 | **Get Guarantee Policies** – these policies can be used to display to a guest, to see how they will guarantee their booking. A hotel might allow a 6PM policy, which might not require a credit card, or they might only allow a Guarantee to CC policy. | getGuaranteePolicies | Availability (PAR) |
@@ -60,7 +64,9 @@ Flow:
 | **Check in a Guest** | postCheckIn | Front Office (FOF) |
 | **Cancel (revert) a checked-in guest.** This will revert the status of the reservation to "Due-In". | deleteCheckIns | Front Office (FOF) |
 
-## 3. Offer the Guest an Upgrade
+## 3. Upsell a Reservation
+
+Offer the guest an upgrade.
 
 Flow:
 
