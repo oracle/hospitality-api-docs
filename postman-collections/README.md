@@ -6,9 +6,13 @@ This folder contains:
 - [Postman Environment](https://learning.postman.com/docs/sending-requests/managing-environments) defining the main environment variables required to use the postman collections against our Hospitality APIs.
 - [Workflows](WORKFLOWS.md) document describing the different workflows supported in the  postman collections.
 
+To understand these Postman collections register to watch this free on demand  [Understanding Apiary Documentation & Postman Collections](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po) is available to watch on demand.
+
+Note that some of these APIs are v0 - these are our Early Adopter APIs.  To find out what these are and how to get access to these register to watch this on demand video [Why be an OHIP Early Adopter](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).
+
 ## Get Help
 
-Ask questions on by sending us an email to <hospitality_apis_ww_group@oracle.com>.
+Ask questions by sending us an email to <hospitality_apis_ww_group@oracle.com>.
 
 ## Get Involved
 
