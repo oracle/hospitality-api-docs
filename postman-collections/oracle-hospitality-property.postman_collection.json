@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "d4ee12d2-9f06-43ce-b2b4-6e113f4018b9",
+		"_postman_id": "673c5711-9294-4b52-96a6-06e144a99e5e",
 		"name": "ORACLE Hospitality OPERA Cloud Rest APIs",
-		"description": "This Postman Collection offers many API call samples on how to perform different functional workflows against Oracle Hospitality REST APIs and OHIP (e.g. digital check-in and checkout). For more information visit <https://www.oracle.com/industries/hospitality/integration-platform/>. This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.",
+		"description": "This Postman Collection offers many API call samples on how to perform different functional workflows against Oracle Hospitality REST APIs and OHIP (e.g. digital check-in and checkout). For more information visit [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/). New to OHIP?  Watch this free on demand video about [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  To find out more about this Postman collection watch this free on demand video [Understanding Apiary Documentation & Postman Collections](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  Note that some of the APIs in this Postman collection are Early Adopter APIs (v0).  To find out about becoming an Early Adopter watch this free on demand video [Why be an OHIP Early Adopter](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  Explanations of the common workflows are available in [this workflows document](https://github.com/oracle/hospitality-api-docs/blob/main/postman-collections/WORKFLOWS.md).  This document and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -17,9 +17,7 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);\r",
-									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"RefreshToken\", jsonData.refresh_token);"
+									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -432,6 +430,18 @@
 						},
 						{
 							"name": "Post Activity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"ActivityId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2892,6 +2902,18 @@
 						},
 						{
 							"name": "Post Block (minimal data) (V0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"BlockId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -5863,6 +5885,18 @@
 						},
 						{
 							"name": "Post Event (V0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"EventId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -6124,6 +6158,84 @@
 							"response": []
 						},
 						{
+							"name": "getFunctionSpaces (v0)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-hotelid",
+										"value": "{{HotelId}}"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"evm",
+										"config",
+										"v0",
+										"hotels",
+										"{{HotelId}}",
+										"functionSpaces"
+									],
+									"query": [
+										{
+											"key": "itemClassCode",
+											"value": "FOOD",
+											"disabled": true
+										},
+										{
+											"key": "usedForEvents",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "itemName",
+											"value": "balloon",
+											"disabled": true
+										},
+										{
+											"key": "startDateTime",
+											"value": "2021-01-17",
+											"disabled": true
+										},
+										{
+											"key": "eventTypecodes",
+											"value": "CAR",
+											"disabled": true
+										},
+										{
+											"key": "itemCode",
+											"value": "2200203545",
+											"disabled": true
+										},
+										{
+											"key": "endDateTime",
+											"value": "2020-11-17",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "fetchFunctionSpaceEventTypes (v0)",
 							"request": {
 								"auth": {
@@ -6272,6 +6384,47 @@
 											"value": "2020-11-17",
 											"disabled": true
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getCateringMenus (v0)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-hotelid",
+										"value": "{{HotelId}}"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringMenus",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"evm",
+										"config",
+										"v0",
+										"hotels",
+										"{{HotelId}}",
+										"cateringMenus"
 									]
 								}
 							},
@@ -8000,6 +8153,64 @@
 									]
 								},
 								"description": "Use this API to add/assign a room number to a guests reservation. This is required before they can check into the property."
+							},
+							"response": []
+						},
+						{
+							"name": "autoAssignRoom (v0)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-hotelid",
+										"value": "{{HotelId}}",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"criteria\": {\r\n        \"reservationCriteria\": [\r\n            [\r\n                {\r\n                    \"type\": \"Reservation\",\r\n                    \"idContext\": \"OPERA\",\r\n                    \"id\": \"{{ReservationId}}\"\r\n                }\r\n            ]\r\n        ],\r\n        \"roomSelectionCriteria\": {\r\n            \"includeDepartureRooms\": false,\r\n            \"useAssociatedProfilePreferences\": false,\r\n            \"hotelId\": \"{{HotelId}}\",\r\n            \"roomStatusFilter\": {\r\n                \"hotelRoomStatusList\": [\r\n                    \"Inspected\"\r\n                ]\r\n            },\r\n            \"roomRange\": {},\r\n            \"hotelRoomDateRange\": {\r\n                \"startDate\": \"2021-04-25\"\r\n            },\r\n            \"offset\": \"0\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/autoRoomAssignments",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"fof",
+										"v0",
+										"hotels",
+										"{{HotelId}}",
+										"reservations",
+										"autoRoomAssignments"
+									]
+								}
 							},
 							"response": []
 						},
@@ -15601,6 +15812,53 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get OPERA version number",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-hotelid",
+										"value": "{{HotelId}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/lov/v1/services/listOfValues/status",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"lov",
+										"v1",
+										"services",
+										"listOfValues",
+										"status"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -15939,6 +16197,18 @@
 								},
 								{
 									"name": "Post Guest Profile (Create Profile)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ProfileId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -15994,6 +16264,18 @@
 								},
 								{
 									"name": "Post Guest Profile - add correspondance / privacy Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ProfileId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -16049,6 +16331,18 @@
 								},
 								{
 									"name": "Post Guest Profile - with phone and email",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ProfileId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -16104,6 +16398,18 @@
 								},
 								{
 									"name": "Post Company Profile (Create Profile)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"CompanyId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -17985,6 +18291,18 @@
 								},
 								{
 									"name": "PostReservation",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ReservationId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -18042,6 +18360,18 @@
 								},
 								{
 									"name": "Post Reservation minimal details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ReservationId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -18099,6 +18429,18 @@
 								},
 								{
 									"name": "Post Reservation - address, email and comments",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ReservationId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -18156,6 +18498,18 @@
 								},
 								{
 									"name": "Post Reservation with external reference",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ReservationId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -18213,6 +18567,18 @@
 								},
 								{
 									"name": "postReservation w/ comment",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ReservationId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -18272,6 +18638,18 @@
 								},
 								{
 									"name": "Create Reservation with existing profile",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+													"postman.setEnvironmentVariable(\"ReservationId\", data);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -24382,7 +24760,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\r\n  \"startDate\": \"2021-06-30\",\r\n\r\n  \"endDate\": \"2021-07-30\"\r\n\r\n}",
+									"raw": "{\r\n  \"startDate\": \"2021-06-30\",\r\n  \"endDate\": \"2021-07-30\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -24541,7 +24919,7 @@
 							"response": []
 						},
 						{
-							"name": "Asynch Reservation summary POST Copy",
+							"name": "Asynch Reservation summary POST",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -24578,7 +24956,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"criteria\": {\r\n    \"hotelId\": \"PROP2\",\r\n    \"timeSpan\": {\r\n      \"startDate\": \"2016-06-30\",\r\n      \"endDate\": \"2016-07-30\"\r\n    }\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"criteria\": {\r\n    \"hotelId\": \"{{HotelId}}\",\r\n    \"timeSpan\": {\r\n      \"startDate\": \"2016-06-30\",\r\n      \"endDate\": \"2016-07-30\"\r\n    }\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -26022,6 +26400,18 @@
 						},
 						{
 							"name": "Create Reservation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"ReservationId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -26080,6 +26470,18 @@
 						},
 						{
 							"name": "Create Reservation with existing profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"ReservationId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -26138,6 +26540,18 @@
 						},
 						{
 							"name": "Create Reservation with Package",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"ReservationId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -29261,6 +29675,18 @@
 						},
 						{
 							"name": "04. Booking - postReservation (with existing profile)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var data = pm.response.headers.get(\"Location\").split(\"/\").pop();\r",
+											"postman.setEnvironmentVariable(\"ReservationId\", data);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
