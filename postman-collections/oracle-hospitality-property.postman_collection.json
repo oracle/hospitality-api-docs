@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "673c5711-9294-4b52-96a6-06e144a99e5e",
+		"_postman_id": "a0fefa6a-02ca-4e4f-93ec-c8e1c4a0c1e6",
 		"name": "ORACLE Hospitality OPERA Cloud Rest APIs",
 		"description": "This Postman Collection offers many API call samples on how to perform different functional workflows against Oracle Hospitality REST APIs and OHIP (e.g. digital check-in and checkout). For more information visit [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/). New to OHIP?  Watch this free on demand video about [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  To find out more about this Postman collection watch this free on demand video [Understanding Apiary Documentation & Postman Collections](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  Note that some of the APIs in this Postman collection are Early Adopter APIs (v0).  To find out about becoming an Early Adopter watch this free on demand video [Why be an OHIP Early Adopter](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  Explanations of the common workflows are available in [this workflows document](https://github.com/oracle/hospitality-api-docs/blob/main/postman-collections/WORKFLOWS.md).  This document and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -10,14 +10,18 @@
 			"name": "OAuth Token",
 			"item": [
 				{
-					"name": "Get OAuth Token",
+					"name": "Get OAuth Token //initialiize currentdate",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);"
+									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);\r",
+									"//Set currentdate and currentdateplus1 variables\r",
+									"var moment = require('moment');\r",
+									"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))"
 								],
 								"type": "text/javascript"
 							}
@@ -1036,17 +1040,13 @@
 							"response": []
 						},
 						{
-							"name": "Get Hotel Availability (v0) //initialiize currentdate",
+							"name": "Get Hotel Availability (v0)",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"var moment = require('moment');\r",
-											"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")));\r",
-											"\r",
-											"var moment = require('moment');\r",
-											"pm.environment.set('currentdateplus1', moment().add(1,'days').format((\"YYYY-MM-DD\")));"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -1415,178 +1415,7 @@
 									]
 								}
 							},
-							"response": [
-								{
-									"name": "getAvailableUpsells (v0) not working in 21.1 - ticket open",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Content-Type",
-												"name": "Content-Type",
-												"type": "text",
-												"value": "application/json"
-											},
-											{
-												"key": "x-hotelid",
-												"type": "text",
-												"value": "{{HotelId}}"
-											},
-											{
-												"key": "x-app-key",
-												"value": "{{AppKey}}",
-												"type": "text"
-											}
-										],
-										"url": {
-											"raw": "{{HostName}}/par/v1/hotels/{{HotelId}}/availableUpsells?numberOfRooms=1&ratePlanCode=DAY3&roomType=STDK&startDate=2016-08-07&endDate=2016-08-08&fixedRate=true&reservationStatus=Reserved&reservationId={{ReservationId}}",
-											"host": [
-												"{{HostName}}"
-											],
-											"path": [
-												"par",
-												"v1",
-												"hotels",
-												"{{HotelId}}",
-												"availableUpsells"
-											],
-											"query": [
-												{
-													"key": "guaranteeCode",
-													"value": "6PM",
-													"disabled": true
-												},
-												{
-													"key": "marketCode",
-													"value": "ASSN",
-													"disabled": true
-												},
-												{
-													"key": "numberOfRooms",
-													"value": "1"
-												},
-												{
-													"key": "ratePlanCode",
-													"value": "DAY3"
-												},
-												{
-													"key": "roomType",
-													"value": "STDK"
-												},
-												{
-													"key": "startDate",
-													"value": "2016-08-07"
-												},
-												{
-													"key": "endDate",
-													"value": "2016-08-08"
-												},
-												{
-													"key": "fixedRate",
-													"value": "true"
-												},
-												{
-													"key": "reservationStatus",
-													"value": "Reserved"
-												},
-												{
-													"key": "reservationIdType",
-													"value": "Reservation",
-													"disabled": true
-												},
-												{
-													"key": "reservationId",
-													"value": "{{ReservationId}}"
-												},
-												{
-													"key": "endDate",
-													"value": "",
-													"disabled": true
-												}
-											]
-										}
-									},
-									"status": "Bad Request",
-									"code": 400,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Date",
-											"value": "Tue, 09 Feb 2021 19:41:38 GMT"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "SAMEORIGIN"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "DENY"
-										},
-										{
-											"key": "Strict-Transport-Security",
-											"value": "max-age=31536000; includeSubDomains"
-										},
-										{
-											"key": "Strict-Transport-Security",
-											"value": "max-age=31536000 ; includeSubDomains"
-										},
-										{
-											"key": "Cache-Control",
-											"value": "no-cache, no-store, max-age=0, must-revalidate"
-										},
-										{
-											"key": "Pragma",
-											"value": "no-cache"
-										},
-										{
-											"key": "Content-Length",
-											"value": "164"
-										},
-										{
-											"key": "Expires",
-											"value": "0"
-										},
-										{
-											"key": "X-ORACLE-DMS-ECID",
-											"value": "005iiltanL3AHRSLyEh8iW0001Vj000015"
-										},
-										{
-											"key": "Content-Encoding",
-											"value": "gzip"
-										},
-										{
-											"key": "X-ORACLE-DMS-RID",
-											"value": "0:1"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "1; mode=block"
-										},
-										{
-											"key": "Vary",
-											"value": "Accept-Encoding"
-										},
-										{
-											"key": "Connection",
-											"value": "close"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json;charset=UTF-8"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"type\": \"Bad Request\",\n    \"o:errorDetails\": [\n        {\n            \"type\": \"Bad Request\",\n            \"title\": \"Upgrade offers are not available\",\n            \"detail\": \"Upgrade offers are not available\",\n            \"o:errorCode\": \"PAR10128\",\n            \"language\": \"en\"\n        },\n        {\n            \"title\": \"Upgrade amount is not viable\",\n            \"detail\": \"Upgrade amount is not viable\",\n            \"o:errorCode\": \"PAR10132\",\n            \"language\": \"en\"\n        }\n    ]\n}"
-								}
-							]
+							"response": []
 						},
 						{
 							"name": "get Analyze Rate Availability (V0)",
@@ -4032,13 +3861,6 @@
 										"reservations",
 										"{{ReservationId}}",
 										"folios"
-									],
-									"query": [
-										{
-											"key": null,
-											"value": "",
-											"disabled": true
-										}
 									]
 								}
 							},
@@ -4720,7 +4542,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Room Amenities (v0)",
+							"name": "getRoomAmenities (v0)",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -5183,217 +5005,6 @@
 										{
 											"key": "startDate",
 											"value": "",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get snacks (v0) WIP",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "x-hotelid",
-										"type": "text",
-										"value": "{{HotelId}}"
-									},
-									{
-										"key": "x-app-key",
-										"type": "text",
-										"value": "{{AppKey}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HostName}}/ent/config/v0/snacks?fetchInactive=true",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"ent",
-										"config",
-										"v0",
-										"snacks"
-									],
-									"query": [
-										{
-											"key": "fetchInactive",
-											"value": "true"
-										},
-										{
-											"key": "wildCar",
-											"value": "d",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get beverages (v0) WIP",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "x-hotelid",
-										"type": "text",
-										"value": "{{HotelId}}"
-									},
-									{
-										"key": "x-app-key",
-										"type": "text",
-										"value": "{{AppKey}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HostName}}/ent/config/v0/beverages",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"ent",
-										"config",
-										"v0",
-										"beverages"
-									],
-									"query": [
-										{
-											"key": "fetchInactive",
-											"value": "true",
-											"disabled": true
-										},
-										{
-											"key": "wildCar",
-											"value": "d",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get newspapers (v0) WIP",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"type": "text",
-										"value": "application/json"
-									},
-									{
-										"key": "x-hotelid",
-										"type": "text",
-										"value": "{{HotelId}}"
-									},
-									{
-										"key": "x-app-key",
-										"type": "text",
-										"value": "{{AppKey}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HostName}}/ent/config/V0/newspapers?fetchInactive=true",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"ent",
-										"config",
-										"V0",
-										"newspapers"
-									],
-									"query": [
-										{
-											"key": "fetchInactive",
-											"value": "true"
-										},
-										{
-											"key": "wildCard",
-											"value": "d",
 											"disabled": true
 										}
 									]
@@ -6542,7 +6153,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"criteria\": {\r\n    \"combineShareInstruction\": {\r\n      \"distributionType\": \"Full\",\r\n      \"overrideInventoryCheck\": true,\r\n      \"roomMoveCheckedinResv\": true,\r\n      \"overrideMaxOccupancyCheck\": true\r\n    },\r\n    \"hotelId\": \"PROP2\",\r\n    \"shareToReservation\": {\r\n      \"reservationIdList\": [\r\n        {\r\n          \"id\": \"718682\",\r\n          \"type\": \"Reservation\"\r\n        }\r\n      ]\r\n    },\r\n    \"existingReservationId\": {\r\n      \"id\": \"715432\",\r\n      \"type\": \"Reservation\"\r\n    }\r\n  }\r\n}",
+											"raw": "",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -10336,7 +9947,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"externalSystemsInfo\": [\r\n        {\r\n            \"externalSystemHotelCodesList\": [\r\n                {\r\n                    \"hotelId\": \"{{HotelId}}\",\r\n                    \"inactive\": false,\r\n                    \"actionType\": \"CREATED\"\r\n                }\r\n            ],\r\n            \"externalSystemCode\": {\r\n                \"code\": \"KATE\"\r\n            },\r\n            \"description\": \"KATE\",\r\n            \"displaySequence\": 12,\r\n            \"internalActivityInterface\": false,\r\n            \"active\": false\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"externalSystemsInfo\": [\r\n        {\r\n            \"externalSystemHotelCodesList\": [\r\n                {\r\n                    \"hotelId\": \"{{HotelId}}\",\r\n                    \"inactive\": false,\r\n                    \"actionType\": \"CREATED\"\r\n                }\r\n            ],\r\n            \"externalSystemCode\": {\r\n                \"code\": \"{{$randomCompanyName}}\"\r\n            },\r\n            \"description\": \"{{$randomCompanyName}}\",\r\n            \"displaySequence\": 12,\r\n            \"internalActivityInterface\": false,\r\n            \"active\": false\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -14489,7 +14100,7 @@
 										},
 										{
 											"key": "parameterValue",
-											"value": "PROP1",
+											"value": "{{HotelId}}",
 											"disabled": true
 										}
 									]
@@ -14645,7 +14256,7 @@
 							"response": []
 						},
 						{
-							"name": "LOV Owner Codes (WIP)",
+							"name": "LOV Owner Codes",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -16020,72 +15631,6 @@
 									"response": []
 								},
 								{
-									"name": "Get Guest Profile by ID w/Instructions Copy",
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{Token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "GET",
-										"header": [
-											{
-												"key": "x-app-key",
-												"type": "text",
-												"value": "{{AppKey}}"
-											},
-											{
-												"key": "x-hotelid",
-												"type": "text",
-												"value": "{{HotelId}}"
-											}
-										],
-										"url": {
-											"raw": "{{HostName}}/crm/v1/profiles/{{ProfileId}}?fetchInstructions=Address&fetchInstructions=Keyword",
-											"host": [
-												"{{HostName}}"
-											],
-											"path": [
-												"crm",
-												"v1",
-												"profiles",
-												"{{ProfileId}}"
-											],
-											"query": [
-												{
-													"key": "fetchInstructions",
-													"value": "Address"
-												},
-												{
-													"key": "fetchInstructions",
-													"value": "Keyword"
-												},
-												{
-													"key": "fetchInstructions",
-													"value": "Preference",
-													"disabled": true
-												},
-												{
-													"key": "fetchInstructions",
-													"value": "Membership",
-													"disabled": true
-												},
-												{
-													"key": "fetchInstructions",
-													"value": "Correspondence",
-													"disabled": true
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
 									"name": "Get Guest Profile by ID",
 									"request": {
 										"auth": {
@@ -16112,7 +15657,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/crm/v1/profiles/{{ProfileId}}?fetchInstructions=Communication&fetchInstructions=Preference",
+											"raw": "{{HostName}}/crm/v1/profiles/{{ProfileId}}",
 											"host": [
 												"{{HostName}}"
 											],
@@ -16121,16 +15666,6 @@
 												"v1",
 												"profiles",
 												"{{ProfileId}}"
-											],
-											"query": [
-												{
-													"key": "fetchInstructions",
-													"value": "Communication"
-												},
-												{
-													"key": "fetchInstructions",
-													"value": "Preference"
-												}
 											]
 										}
 									},
@@ -16241,7 +15776,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"guestDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"Ben\",\n                    \"middleName\": \"A\",\n                    \"surname\": \"Smith\",\n                    \"nameSuffix\": \"\",\n                    \"nameTitle\": \"Mr\",\n                    \"envelopeGreeting\": \"\",\n                    \"salutation\": \"\",\n                    \"nameType\": \"PRIMARY\",\n                    \"language\": \"E\"\n                }\n            ],\n            \"language\": \"E\",\n            \"nationality\": \"US\"\n        },\n        \"profileType\": \"GUEST\",\n        \"statusCode\": \"ACTIVE\",\n        \"registeredProperty\": \"{{HotelId}}\",\n        \"markForHistory\": false\n    }\n}\u0000",
+											"raw": "{\n    \"guestDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"Ben\",\n                    \"middleName\": \"A\",\n                    \"surname\": \"Smith\",\n                    \"nameSuffix\": \"\",\n                    \"nameTitle\": \"Mr\",\n                    \"envelopeGreeting\": \"\",\n                    \"salutation\": \"\",\n                    \"nameType\": \"PRIMARY\",\n                    \"language\": \"E\"\n                }\n            ],\n            \"language\": \"E\",\n            \"nationality\": \"US\"\n        },\n        \"profileType\": \"GUEST\",\n        \"statusCode\": \"ACTIVE\",\n        \"registeredProperty\": \"{{HotelId}}\",\n        \"markForHistory\": false\n    }\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -16308,7 +15843,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"profileDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"Jane\",\n                    \"surname\": \"Smith\",\n                    \"nameType\": \"Primary\"\n                },\n                {\n                    \"nameType\": \"Alternate\"\n                },\n                {\n                    \"nameType\": \"Incognito\"\n                }\n            ],\n            \"alienInfo\": {},\n            \"birthCountry\": {\n                \"code\": \"\"\n            }\n        },\n        \"addresses\": {\n            \"addressInfo\": [\n                {\n                    \"address\": {\n                        \"isValidated\": false,\n                        \"addressLine\": [\n                            \"10 Park Street\",\n                            \"\",\n                            \"\",\n                            \"\"\n                        ],\n                        \"cityName\": \"Park City\",\n                        \"postalCode\": \"84060\",\n                        \"state\": \"UT\",\n                        \"country\": {\n                            \"value\": \"US\"\n                        },\n                        \"language\": \"E\",\n                        \"type\": \"BUSINESS\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"telephones\": {\n            \"telephoneInfo\": [\n                {\n                    \"telephone\": {\n                        \"phoneTechType\": \"PHONE\",\n                        \"phoneUseType\": \"HOME\",\n                        \"phoneNumber\": \"+1 22233334444\",\n                        \"orderSequence\": \"1\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"emails\": {\n            \"emailInfo\": [\n                {\n                    \"email\": {\n                        \"emailAddress\": \"example@eg.com\",\n                        \"type\": \"EMAIL\",\n                        \"typeDescription\": \"Email Address\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"mailingActions\": {\n            \"active\": true\n        },\n        \"privacyInfo\": {\n            \"marketResearchParticipation\": true,\n            \"infoFromThirdParty\": true,\n            \"autoEnrollLoyaltyProgram\": false,\n            \"allowPhone\": true,\n            \"allowSMS\": true,\n            \"allowEmail\": true,\n            \"optInMailingList\": true,\n            \"optInMarketResearch\": true,\n            \"optInThirdParty\": true,\n            \"optInAutoEnrollmentMember\": true,\n            \"optInPhone\": true,\n            \"optInSms\": true,\n            \"optInEmail\": true\n        },\n        \"taxInfo\": {},\n        \"statusCode\": \"Active\",\n        \"requestForHotel\": \"{{HotelId}}\",\n        \"markAsRecentlyAccessed\": true,\n        \"profileType\": \"Guest\"\n    },\n    \"profileIdList\": []\n}",
+											"raw": "{\n    \"profileDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"Jane\",\n                    \"surname\": \"Smith\",\n                    \"nameType\": \"Primary\"\n                },\n                {\n                    \"nameType\": \"Alternate\"\n                },\n                {\n                    \"nameType\": \"Incognito\"\n                }\n            ],\n            \"alienInfo\": {},\n            \"birthCountry\": {\n                \"code\": \"\"\n            }\n        },\n        \"addresses\": {\n            \"addressInfo\": [\n                {\n                    \"address\": {\n                        \"isValidated\": false,\n                        \"addressLine\": [\n                            \"3450 North Triumph Boulevard\",\n                            \"Suite 300\",\n                            \"\",\n                            \"\"\n                        ],\n                        \"cityName\": \"Lehi\",\n                        \"postalCode\": \"84043\",\n                        \"state\": \"UT\",\n                        \"country\": {\n                            \"value\": \"US\"\n                        },\n                        \"language\": \"E\",\n                        \"type\": \"BUSINESS\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"telephones\": {\n            \"telephoneInfo\": [\n                {\n                    \"telephone\": {\n                        \"phoneTechType\": \"PHONE\",\n                        \"phoneUseType\": \"HOME\",\n                        \"phoneNumber\": \"+1 385 555 0102\",\n                        \"orderSequence\": \"1\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"emails\": {\n            \"emailInfo\": [\n                {\n                    \"email\": {\n                        \"emailAddress\": \"example@example.com\",\n                        \"type\": \"EMAIL\",\n                        \"typeDescription\": \"Email Address\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"mailingActions\": {\n            \"active\": true\n        },\n        \"privacyInfo\": {\n            \"marketResearchParticipation\": true,\n            \"infoFromThirdParty\": true,\n            \"autoEnrollLoyaltyProgram\": false,\n            \"allowPhone\": true,\n            \"allowSMS\": true,\n            \"allowEmail\": true,\n            \"optInMailingList\": true,\n            \"optInMarketResearch\": true,\n            \"optInThirdParty\": true,\n            \"optInAutoEnrollmentMember\": true,\n            \"optInPhone\": true,\n            \"optInSms\": true,\n            \"optInEmail\": true\n        },\n        \"taxInfo\": {},\n        \"statusCode\": \"Active\",\n        \"requestForHotel\": \"{{HotelId}}\",\n        \"markAsRecentlyAccessed\": true,\n        \"profileType\": \"Guest\"\n    },\n    \"profileIdList\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -16375,7 +15910,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"profileDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"James\",\n                    \"surname\": \"Smith\",\n                    \"nameType\": \"Primary\"\n                },\n                {\n                    \"nameType\": \"Alternate\"\n                },\n                {\n                    \"nameType\": \"Incognito\"\n                }\n            ],\n            \"alienInfo\": {},\n            \"birthCountry\": {\n                \"code\": \"\"\n            },\n            \"companyInfo\": {},\n            \"currencyCode\": \"USD\",\n            \"language\": \"E\"\n        },\n        \"addresses\": {\n            \"addressInfo\": [\n                {\n                    \"address\": {\n                        \"isValidated\": false,\n                        \"addressLine\": [\n                            \"10 Park Street\",\n                            \"\",\n                            \"\",\n                            \"\"\n                        ],\n                        \"cityName\": \"Park City\",\n                        \"postalCode\": \"84060\",\n                        \"state\": \"UT\",\n                        \"country\": {\n                            \"value\": \"US\"\n                        },\n                        \"language\": \"E\",\n                        \"type\": \"BUSINESS\",\n                        \"updateReservations\": false,\n                        \"primaryInd\": true,\n                        \"primary\": true\n                    }\n                }\n            ]\n        },\n        \"telephones\": {\n            \"telephoneInfo\": [\n                {\n                    \"telephone\": {\n                        \"phoneTechType\": \"PHONE\",\n                        \"phoneUseType\": \"HOME\",\n                        \"phoneNumber\": \"+1 22233334444\",\n                        \"orderSequence\": \"1\",\n                        \"primaryInd\": true,\n                        \"primary\": true\n                    }\n                }\n            ]\n        },\n        \"mailingActions\": {\n            \"active\": true\n        },\n        \"privacyInfo\": {\n            \"marketResearchParticipation\": true,\n            \"infoFromThirdParty\": true,\n            \"autoEnrollLoyaltyProgram\": false,\n            \"allowPhone\": true,\n            \"allowSMS\": true,\n            \"allowEmail\": true,\n            \"optInMailingList\": true,\n            \"optInMarketResearch\": true,\n            \"optInThirdParty\": true,\n            \"optInAutoEnrollmentMember\": true,\n            \"optInPhone\": true,\n            \"optInSms\": true,\n            \"optInEmail\": true\n        },\n        \"taxInfo\": {},\n        \"statusCode\": \"Active\",\n        \"requestForHotel\": \"{{HotelId}}\",\n        \"markAsRecentlyAccessed\": true,\n        \"profileType\": \"Guest\"\n    },\n    \"profileIdList\": []\n}",
+											"raw": "{\n    \"profileDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"James\",\n                    \"surname\": \"Smith\",\n                    \"nameType\": \"Primary\"\n                },\n                {\n                    \"nameType\": \"Alternate\"\n                },\n                {\n                    \"nameType\": \"Incognito\"\n                }\n            ],\n            \"alienInfo\": {},\n            \"birthCountry\": {\n                \"code\": \"\"\n            },\n            \"companyInfo\": {},\n            \"currencyCode\": \"USD\",\n            \"language\": \"E\"\n        },\n        \"addresses\": {\n            \"addressInfo\": [\n                {\n                    \"address\": {\n                        \"isValidated\": false,\n                        \"addressLine\": [\n                            \"3450 North Triumph Boulevard\",\n                            \"Suite 300\",\n                            \"\",\n                            \"\"\n                        ],\n                        \"cityName\": \"Lehi\",\n                        \"postalCode\": \"84043\",\n                        \"state\": \"UT\",\n                        \"country\": {\n                            \"value\": \"US\"\n                        },\n                        \"language\": \"E\",\n                        \"type\": \"BUSINESS\",\n                        \"updateReservations\": false,\n                        \"primaryInd\": true,\n                        \"primary\": true\n                    }\n                }\n            ]\n        },\n        \"telephones\": {\n            \"telephoneInfo\": [\n                {\n                    \"telephone\": {\n                        \"phoneTechType\": \"PHONE\",\n                        \"phoneUseType\": \"HOME\",\n                        \"phoneNumber\": \"+1 385 555 0102\",\n                        \"orderSequence\": \"1\",\n                        \"primaryInd\": true,\n                        \"primary\": true\n                    }\n                }\n            ]\n        },\n        \"mailingActions\": {\n            \"active\": true\n        },\n        \"privacyInfo\": {\n            \"marketResearchParticipation\": true,\n            \"infoFromThirdParty\": true,\n            \"autoEnrollLoyaltyProgram\": false,\n            \"allowPhone\": true,\n            \"allowSMS\": true,\n            \"allowEmail\": true,\n            \"optInMailingList\": true,\n            \"optInMarketResearch\": true,\n            \"optInThirdParty\": true,\n            \"optInAutoEnrollmentMember\": true,\n            \"optInPhone\": true,\n            \"optInSms\": true,\n            \"optInEmail\": true\n        },\n        \"taxInfo\": {},\n        \"statusCode\": \"Active\",\n        \"requestForHotel\": \"{{HotelId}}\",\n        \"markAsRecentlyAccessed\": true,\n        \"profileType\": \"Guest\"\n    },\n    \"profileIdList\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -16497,7 +16032,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"profileDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"Kate\",\n                    \"middleName\": \"Anne\",\n                    \"surname\": \"Jackson\",\n                    \"nameTitle\": \"Mrs\",\n                    \"nameType\": \"primary\",\n                    \"language\": \"E\"\n                }\n            ],\n            \"language\": \"E\",\n            \"privateProfile\": false\n        },\n        \"addresses\": {\n            \"addressInfo\": [\n                {\n                    \"address\": {\n                        \"addressLine\": [\n                            \"1234 Gulf Drive\",\n                            \"Bay Colony\",\n                            \"16th Floor\",\n                            \"Penthouse 1600\"\n                        ],\n                        \"cityName\": \"Naples\",\n                        \"postalCode\": \"34108\",\n                        \"state\": \"FL\",\n                        \"language\": \"E\",\n                        \"type\": \"HOME\",\n                        \"typeDescription\": \"Home Address\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"telephones\": {\n            \"telephoneInfo\": [\n                {\n                    \"telephone\": {\n                        \"phoneTechType\": \"PHONE\",\n                        \"phoneUseType\": \"MOBILE\",\n                        \"phoneUseTypeDescription\": \"Mobile Phone Number\",\n                        \"phoneNumber\": \"+1 415 555 0101\",\n                        \"primaryInd\": true,\n                        \"orderSequence\": \"1\"\n                    }\n                }\n            ]\n        },\n        \"keywords\": {\n            \"keyword\": [\n                {\n                    \"keywordDetail\": {\n                        \"newKeyword\": \"TEST KEYWORD11\"\n                    },\n                    \"type\": \"KEY\",\n                    \"keyword\": \"TEST KEYWORD\"\n                }\n            ],\n            \"hasMore\": false,\n            \"totalResults\": \"1\"\n        },\n        \"statusCode\": \"ACTIVE\",\n        \"markForHistory\": false,\n        \"hasCommission\": false\n    },\n    \"links\": []\n}",
+											"raw": "{\n    \"profileDetails\": {\n        \"customer\": {\n            \"personName\": [\n                {\n                    \"givenName\": \"Kate\",\n                    \"middleName\": \"Anne\",\n                    \"surname\": \"Jackson\",\n                    \"nameTitle\": \"Mrs\",\n                    \"nameType\": \"primary\",\n                    \"language\": \"E\"\n                }\n            ],\n            \"language\": \"E\",\n            \"privateProfile\": false\n        },\n        \"addresses\": {\n            \"addressInfo\": [\n                {\n                    \"address\": {\n                        \"addressLine\": [\n                            \"2640 Golden Gate Parkway\",\n                            \"Suite 300\",\n                            \"\",\n                            \"\"\n                        ],\n                        \"cityName\": \"Naples\",\n                        \"postalCode\": \"34105\",\n                        \"state\": \"FL\",\n                        \"language\": \"E\",\n                        \"type\": \"HOME\",\n                        \"typeDescription\": \"Home Address\",\n                        \"primaryInd\": true\n                    }\n                }\n            ]\n        },\n        \"telephones\": {\n            \"telephoneInfo\": [\n                {\n                    \"telephone\": {\n                        \"phoneTechType\": \"PHONE\",\n                        \"phoneUseType\": \"MOBILE\",\n                        \"phoneUseTypeDescription\": \"Mobile Phone Number\",\n                        \"phoneNumber\": \"+1 415 555 0105\",\n                        \"primaryInd\": true,\n                        \"orderSequence\": \"1\"\n                    }\n                }\n            ]\n        },\n        \"keywords\": {\n            \"keyword\": [\n                {\n                    \"keywordDetail\": {\n                        \"newKeyword\": \"TEST KEYWORD11\"\n                    },\n                    \"type\": \"KEY\",\n                    \"keyword\": \"TEST KEYWORD\"\n                }\n            ],\n            \"hasMore\": false,\n            \"totalResults\": \"1\"\n        },\n        \"statusCode\": \"ACTIVE\",\n        \"markForHistory\": false,\n        \"hasCommission\": false\n    },\n    \"links\": []\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -17153,79 +16688,6 @@
 										}
 									},
 									"response": []
-								},
-								{
-									"name": "getPreferenceForProfile (v0) - WIP",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{Token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "GET",
-										"header": [
-											{
-												"key": "Content-Type",
-												"name": "Content-Type",
-												"type": "text",
-												"value": "application/json"
-											},
-											{
-												"key": "x-app-key",
-												"type": "text",
-												"value": "{{AppKey}}"
-											},
-											{
-												"key": "x-hotelid",
-												"type": "text",
-												"value": "{{HotelId}}"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{HostName}}/crm/v0/profileListOfValues/availablePreferences?hotelId={{HotelId}}&maxFetchSize=10&id=POOL",
-											"host": [
-												"{{HostName}}"
-											],
-											"path": [
-												"crm",
-												"v0",
-												"profileListOfValues",
-												"availablePreferences"
-											],
-											"query": [
-												{
-													"key": "hotelId",
-													"value": "{{HotelId}}"
-												},
-												{
-													"key": "maxFetchSize",
-													"value": "10"
-												},
-												{
-													"key": "id",
-													"value": "POOL"
-												}
-											]
-										}
-									},
-									"response": []
 								}
 							]
 						},
@@ -17267,66 +16729,6 @@
 										"body": {
 											"mode": "raw",
 											"raw": "{\n    \"criteria\": {\n        \"profileIdList\": {\n            \"id\": {{CompanyId}},\n            \"type\": \"Profile\"\n        },\n        \"owners\": {\n            \"ownerCode\": \"SOB\",\n            \"profileId\": {\n                \"idContext\": \"OPERA\",\n                \"id\": {{CompanyId}},\n                \"type\": \"Profile\"\n            },\n            \"hotel\": {\n                \"code\": \"{{HotelId}}\"\n            },\n            \"primary\": false\n        }\n    }\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{HostName}}/crm/v0/profiles/{{CompanyId}}/owners",
-											"host": [
-												"{{HostName}}"
-											],
-											"path": [
-												"crm",
-												"v0",
-												"profiles",
-												"{{CompanyId}}",
-												"owners"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Profile Owners (v0) - WIP",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{Token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "GET",
-										"header": [
-											{
-												"key": "Content-Type",
-												"name": "Content-Type",
-												"type": "text",
-												"value": "application/json"
-											},
-											{
-												"key": "x-app-key",
-												"type": "text",
-												"value": "{{AppKey}}"
-											},
-											{
-												"key": "x-hotelid",
-												"type": "text",
-												"value": "{{HotelId}}"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -17626,7 +17028,7 @@
 							"response": []
 						},
 						{
-							"name": "Get cashiering details for a profile (routing instructions) v0 - WIP",
+							"name": "Get cashiering details for a profile (routing instructions) v0",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -17782,7 +17184,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"blockId\": \"{{BlockId}}\",\r\n    \"fromAddress\": \"example@test.com\",\r\n    \"toAddresses\": [\r\n        \"test1@test.com\"\r\n    ],\r\n    \"subject\": \"Sample Email from external system\",\r\n    \"emailBody\": \"Catch up Call with Customer\",\r\n    \"profileId\": \"{{ProfileId}}\",\r\n    \"hasAttachment\": \"true\",\r\n    \"emailId\": \"1234\",\r\n    \"emailReceiveDate\": \"04/21/2020: 12:00:00\"\r\n}",
+									"raw": "{\r\n    \"blockId\": \"{{BlockId}}\",\r\n    \"fromAddress\": \"example@example.com\",\r\n    \"toAddresses\": [\r\n        \"test1@example.com\"\r\n    ],\r\n    \"subject\": \"Sample Email from external system\",\r\n    \"emailBody\": \"Catch up Call with Customer\",\r\n    \"profileId\": \"{{ProfileId}}\",\r\n    \"hasAttachment\": \"true\",\r\n    \"emailId\": \"1234\",\r\n    \"emailReceiveDate\": \"04/21/2020: 12:00:00\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -18335,7 +17737,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"reservations\": {\r\n        \"reservation\": [\r\n            {\r\n                \"sourceOfSale\": {\r\n                    \"sourceType\": \"PMS\",\r\n                    \"sourceCode\": \"{{HotelId}}\"\r\n                },\r\n                \"roomStay\": {\r\n                    \"roomRates\": [\r\n                        {\r\n                            \"total\": {\r\n                                \"amountBeforeTax\": \"200\"\r\n                            },\r\n                            \"rates\": {\r\n                                \"rate\": [\r\n                                    {\r\n                                        \"base\": {\r\n                                            \"amountBeforeTax\": \"200\",\r\n                                            \"currencyCode\": \"USD\"\r\n                                        },\r\n                                        \"shareDistributionInstruction\": \"Full\",\r\n                                        \"total\": {\r\n                                            \"amountBeforeTax\": \"200\"\r\n                                        },\r\n                                        \"start\": \"2021-04-17\",\r\n                                        \"end\": \"2021-04-19\"\r\n                                    }\r\n                                ]\r\n                            },\r\n                            \"guestCounts\": {\r\n                                \"adults\": \"1\",\r\n                                \"children\": \"0\"\r\n                            },\r\n                            \"roomType\": \"SUP\",\r\n                            \"ratePlanCode\": \"BAR\",\r\n                            \"start\": \"2021-04-17\",\r\n                            \"end\": \"2021-04-19\",\r\n                            \"suppressRate\": true,\r\n                            \"marketCode\": \"LEISURE\",\r\n                            \"marketCodeDescription\": \"Leisure\",\r\n                            \"sourceCode\": \"PHONE\",\r\n                            \"sourceCodeDescription\": \"Phonee\",\r\n                            \"numberOfUnits\": \"1\",\r\n                            \"pseudoRoom\": false,\r\n                            \"roomTypeCharged\": \"SUP\",\r\n                            \"houseUseOnly\": false,\r\n                            \"complimentary\": false,\r\n                            \"fixedRate\": true,\r\n                            \"discountAllowed\": false,\r\n                            \"bogoDiscount\": false\r\n                        }\r\n                    ],\r\n                    \"guestCounts\": {\r\n                        \"adults\": \"1\",\r\n                        \"children\": \"0\"\r\n                    },\r\n                    \"arrivalDate\": \"2021-04-17\",\r\n                    \"departureDate\": \"2021-04-19\",\r\n                    \"guarantee\": {\r\n                        \"guaranteeCode\": \"6PM\",\r\n                        \"shortDescription\": \"6PM Hold\"\r\n                    },\r\n                    \"roomNumberLocked\": false,\r\n                    \"printRate\": false\r\n                },\r\n                \"reservationGuests\": [\r\n                    {\r\n                        \"profileInfo\": {\r\n                            \"profile\": {\r\n                                \"customer\": {\r\n                                    \"personName\": [\r\n                                        {\r\n                                            \"givenName\": \"Sarah\",\r\n                                            \"middleName\": \"\",\r\n                                            \"surname\": \"Smith\",\r\n                                            \"nameType\": \"Primary\"\r\n                                        },\r\n                                        {\r\n                                            \"nameType\": \"External\"\r\n                                        }\r\n                                    ],\r\n                                    \"language\": \"E\"\r\n                                },\r\n                                \"addresses\": {\r\n                                    \"addressInfo\": [\r\n                                        {\r\n                                            \"address\": {\r\n                                                \"addressLine\": [\r\n                                                    \"10 First Street\",\r\n                                                    \"Block A\"\r\n                                                ],\r\n                                                \"cityName\": \"Sydney\",\r\n                                                \"postalCode\": \"2000\",\r\n                                                \"state\": \"NSW\",\r\n                                                \"country\": {\r\n                                                    \"value\": \"AU\",\r\n                                                    \"code\": \"AU\"\r\n                                                },\r\n                                                \"language\": \"EN\",\r\n                                                \"type\": \"HOME\",\r\n                                                \"primaryInd\": true\r\n                                            }\r\n                                        }\r\n                                    ]\r\n                                },\r\n                                \"profileType\": \"Guest\"\r\n                            }\r\n                        },\r\n                        \"primary\": true\r\n                    }\r\n                ],\r\n                \"reservationPaymentMethods\": [\r\n                    {\r\n                        \"paymentMethod\": \"CA\",\r\n                        \"folioView\": \"1\"\r\n                    }\r\n                ],\r\n                \"comments\": [\r\n                    {\r\n                        \"comment\": {\r\n                            \"text\": {\r\n                                \"value\": \"Please ensure I have coffee in my room\"\r\n                            },\r\n                            \"commentTitle\": \"General Notes\",\r\n                            \"notificationLocation\": \"RESERVATION\",\r\n                            \"type\": \"GEN\",\r\n                            \"internal\": false\r\n                        }\r\n                    }\r\n                ],\r\n                \"hotelId\": \"{{HotelId}}\",\r\n                \"roomStayReservation\": true,\r\n                \"reservationStatus\": \"Reserved\",\r\n                \"computedReservationStatus\": \"DueIn\",\r\n                \"walkIn\": false,\r\n                \"printRate\": false,\r\n                \"preRegistered\": false,\r\n                \"upgradeEligible\": false,\r\n                \"allowAutoCheckin\": false,\r\n                \"hasOpenFolio\": false,\r\n                \"allowMobileCheckout\": false,\r\n                \"allowMobileViewFolio\": false,\r\n                \"allowPreRegistration\": false,\r\n                \"optedForCommunication\": false\r\n            }\r\n        ]\r\n    }\r\n}",
+											"raw": "{\r\n    \"reservations\": {\r\n        \"reservation\": [\r\n            {\r\n                \"sourceOfSale\": {\r\n                    \"sourceType\": \"PMS\",\r\n                    \"sourceCode\": \"{{HotelId}}\"\r\n                },\r\n                \"roomStay\": {\r\n                    \"roomRates\": [\r\n                        {\r\n                            \"total\": {\r\n                                \"amountBeforeTax\": \"200\"\r\n                            },\r\n                            \"rates\": {\r\n                                \"rate\": [\r\n                                    {\r\n                                        \"base\": {\r\n                                            \"amountBeforeTax\": \"200\",\r\n                                            \"currencyCode\": \"USD\"\r\n                                        },\r\n                                        \"shareDistributionInstruction\": \"Full\",\r\n                                        \"total\": {\r\n                                            \"amountBeforeTax\": \"200\"\r\n                                        },\r\n                                        \"start\": \"2021-04-17\",\r\n                                        \"end\": \"2021-04-19\"\r\n                                    }\r\n                                ]\r\n                            },\r\n                            \"guestCounts\": {\r\n                                \"adults\": \"1\",\r\n                                \"children\": \"0\"\r\n                            },\r\n                            \"roomType\": \"SUP\",\r\n                            \"ratePlanCode\": \"BAR\",\r\n                            \"start\": \"2021-04-17\",\r\n                            \"end\": \"2021-04-19\",\r\n                            \"suppressRate\": true,\r\n                            \"marketCode\": \"LEISURE\",\r\n                            \"marketCodeDescription\": \"Leisure\",\r\n                            \"sourceCode\": \"PHONE\",\r\n                            \"sourceCodeDescription\": \"Phone\",\r\n                            \"numberOfUnits\": \"1\",\r\n                            \"pseudoRoom\": false,\r\n                            \"roomTypeCharged\": \"SUP\",\r\n                            \"houseUseOnly\": false,\r\n                            \"complimentary\": false,\r\n                            \"fixedRate\": true,\r\n                            \"discountAllowed\": false,\r\n                            \"bogoDiscount\": false\r\n                        }\r\n                    ],\r\n                    \"guestCounts\": {\r\n                        \"adults\": \"1\",\r\n                        \"children\": \"0\"\r\n                    },\r\n                    \"arrivalDate\": \"2021-04-17\",\r\n                    \"departureDate\": \"2021-04-19\",\r\n                    \"guarantee\": {\r\n                        \"guaranteeCode\": \"6PM\",\r\n                        \"shortDescription\": \"6PM Hold\"\r\n                    },\r\n                    \"roomNumberLocked\": false,\r\n                    \"printRate\": false\r\n                },\r\n                \"reservationGuests\": [\r\n                    {\r\n                        \"profileInfo\": {\r\n                            \"profile\": {\r\n                                \"customer\": {\r\n                                    \"personName\": [\r\n                                        {\r\n                                            \"givenName\": \"Sarah\",\r\n                                            \"middleName\": \"\",\r\n                                            \"surname\": \"Smith\",\r\n                                            \"nameType\": \"Primary\"\r\n                                        },\r\n                                        {\r\n                                            \"nameType\": \"External\"\r\n                                        }\r\n                                    ],\r\n                                    \"language\": \"E\"\r\n                                },\r\n                                \"addresses\": {\r\n                                    \"addressInfo\": [\r\n                                        {\r\n                                            \"address\": {\r\n                                                \"addressLine\": [\r\n                                                    \"Riverside Corporate Park\",\r\n                                                    \"4 Julius Avenue\"\r\n                                                ],\r\n                                                \"cityName\": \"North Ryde\",\r\n                                                \"postalCode\": \"2113\",\r\n                                                \"state\": \"NSW\",\r\n                                                \"country\": {\r\n                                                    \"value\": \"AU\",\r\n                                                    \"code\": \"AU\"\r\n                                                },\r\n                                                \"language\": \"EN\",\r\n                                                \"type\": \"HOME\",\r\n                                                \"primaryInd\": true\r\n                                            }\r\n                                        }\r\n                                    ]\r\n                                },\r\n                                \"profileType\": \"Guest\"\r\n                            }\r\n                        },\r\n                        \"primary\": true\r\n                    }\r\n                ],\r\n                \"reservationPaymentMethods\": [\r\n                    {\r\n                        \"paymentMethod\": \"CA\",\r\n                        \"folioView\": \"1\"\r\n                    }\r\n                ],\r\n                \"comments\": [\r\n                    {\r\n                        \"comment\": {\r\n                            \"text\": {\r\n                                \"value\": \"Please ensure I have coffee in my room\"\r\n                            },\r\n                            \"commentTitle\": \"General Notes\",\r\n                            \"notificationLocation\": \"RESERVATION\",\r\n                            \"type\": \"GEN\",\r\n                            \"internal\": false\r\n                        }\r\n                    }\r\n                ],\r\n                \"hotelId\": \"{{HotelId}}\",\r\n                \"roomStayReservation\": true,\r\n                \"reservationStatus\": \"Reserved\",\r\n                \"computedReservationStatus\": \"DueIn\",\r\n                \"walkIn\": false,\r\n                \"printRate\": false,\r\n                \"preRegistered\": false,\r\n                \"upgradeEligible\": false,\r\n                \"allowAutoCheckin\": false,\r\n                \"hasOpenFolio\": false,\r\n                \"allowMobileCheckout\": false,\r\n                \"allowMobileViewFolio\": false,\r\n                \"allowPreRegistration\": false,\r\n                \"optedForCommunication\": false\r\n            }\r\n        ]\r\n    }\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -18473,7 +17875,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"reservations\": {\r\n        \"reservation\": [\r\n            {\r\n                \"sourceOfSale\": {\r\n                    \"sourceType\": \"PMS\",\r\n                    \"sourceCode\": \"{{HotelId}}\"\r\n                },\r\n                \"roomStay\": {\r\n                    \"roomRates\": [\r\n                        {\r\n                            \"total\": {\r\n                                \"amountBeforeTax\": \"200\"\r\n                            },\r\n                            \"rates\": {\r\n                                \"rate\": [\r\n                                    {\r\n                                        \"base\": {\r\n                                            \"amountBeforeTax\": \"200\",\r\n                                            \"currencyCode\": \"USD\"\r\n                                        },\r\n                                        \"shareDistributionInstruction\": \"Full\",\r\n                                        \"total\": {\r\n                                            \"amountBeforeTax\": \"200\"\r\n                                        },\r\n                                        \"start\": \"2021-04-17\",\r\n                                        \"end\": \"2021-04-19\"\r\n                                    }\r\n                                ]\r\n                            },\r\n                            \"guestCounts\": {\r\n                                \"adults\": \"1\",\r\n                                \"children\": \"0\"\r\n                            },\r\n                            \"roomType\": \"{{RoomTypeCode}}\",\r\n                            \"ratePlanCode\": \"{{RatePlanCode}}\",\r\n                            \"start\": \"2021-04-17\",\r\n                            \"end\": \"2021-04-19\",\r\n                            \"suppressRate\": true,\r\n                            \"marketCode\": \"LEISURE\",\r\n                            \"marketCodeDescription\": \"Leisure\",\r\n                            \"sourceCode\": \"PHONE\",\r\n                            \"sourceCodeDescription\": \"Phonee\",\r\n                            \"numberOfUnits\": \"1\",\r\n                            \"pseudoRoom\": false,\r\n                            \"roomTypeCharged\": \"{{RoomTypeCode}}\",\r\n                            \"houseUseOnly\": false,\r\n                            \"complimentary\": false,\r\n                            \"fixedRate\": true,\r\n                            \"discountAllowed\": false,\r\n                            \"bogoDiscount\": false\r\n                        }\r\n                    ],\r\n                    \"guestCounts\": {\r\n                        \"adults\": \"1\",\r\n                        \"children\": \"0\"\r\n                    },\r\n                    \"arrivalDate\": \"2021-04-17\",\r\n                    \"departureDate\": \"2021-04-19\",\r\n                    \"guarantee\": {\r\n                        \"guaranteeCode\": \"6PM\",\r\n                        \"shortDescription\": \"6PM Hold\"\r\n                    },\r\n                    \"roomNumberLocked\": false,\r\n                    \"printRate\": false\r\n                },\r\n                \"reservationGuests\": [\r\n                    {\r\n                        \"profileInfo\": {\r\n                            \"profile\": {\r\n                                \"customer\": {\r\n                                    \"personName\": [\r\n                                        {\r\n                                            \"givenName\": \"Sarah\",\r\n                                            \"middleName\": \"\",\r\n                                            \"surname\": \"Johns\",\r\n                                            \"nameType\": \"Primary\"\r\n                                        },\r\n                                        {\r\n                                            \"nameType\": \"External\"\r\n                                        }\r\n                                    ],\r\n                                    \"language\": \"E\"\r\n                                },\r\n                                \"addresses\": {\r\n                                    \"addressInfo\": [\r\n                                        {\r\n                                            \"address\": {\r\n                                                \"addressLine\": [\r\n                                                    \"10 First Street\",\r\n                                                    \"Block A\"\r\n                                                ],\r\n                                                \"cityName\": \"Sydney\",\r\n                                                \"postalCode\": \"2000\",\r\n                                                \"state\": \"NSW\",\r\n                                                \"country\": {\r\n                                                    \"value\": \"AU\",\r\n                                                    \"code\": \"AU\"\r\n                                                },\r\n                                                \"language\": \"EN\",\r\n                                                \"type\": \"HOME\",\r\n                                                \"primaryInd\": true\r\n                                            }\r\n                                        }\r\n                                    ]\r\n                                },\r\n                                \"emails\": {\r\n                                    \"emailInfo\": [\r\n                                        {\r\n                                            \"email\": {\r\n                                                \"emailAddress\": \"example2@eg.com\",\r\n                                                \"type\": \"EMAIL\",\r\n                                                \"typeDescription\": \"Email Address\",\r\n                                                \"primaryInd\": true\r\n                                            }\r\n                                        }\r\n                                    ]\r\n                                },\r\n                                \"profileType\": \"Guest\"\r\n                            }\r\n                        },\r\n                        \"primary\": true\r\n                    }\r\n                ],\r\n                \"reservationPaymentMethods\": [\r\n                    {\r\n                        \"paymentMethod\": \"CA\",\r\n                        \"folioView\": \"1\"\r\n                    }\r\n                ],\r\n                \"comments\": [\r\n                    {\r\n                        \"comment\": {\r\n                            \"text\": {\r\n                                \"value\": \"Please ensure I have coffee in my room\"\r\n                            },\r\n                            \"commentTitle\": \"General Notes\",\r\n                            \"notificationLocation\": \"RESERVATION\",\r\n                            \"type\": \"GEN\",\r\n                            \"internal\": false\r\n                        }\r\n                    }\r\n                ],\r\n                \"hotelId\": \"{{HotelId}}\",\r\n                \"roomStayReservation\": true,\r\n                \"reservationStatus\": \"Reserved\",\r\n                \"computedReservationStatus\": \"DueIn\",\r\n                \"walkIn\": false,\r\n                \"printRate\": false,\r\n                \"preRegistered\": false,\r\n                \"upgradeEligible\": false,\r\n                \"allowAutoCheckin\": false,\r\n                \"hasOpenFolio\": false,\r\n                \"allowMobileCheckout\": false,\r\n                \"allowMobileViewFolio\": false,\r\n                \"allowPreRegistration\": false,\r\n                \"optedForCommunication\": false\r\n            }\r\n        ]\r\n    }\r\n}",
+											"raw": "{\r\n    \"reservations\": {\r\n        \"reservation\": [\r\n            {\r\n                \"sourceOfSale\": {\r\n                    \"sourceType\": \"PMS\",\r\n                    \"sourceCode\": \"{{HotelId}}\"\r\n                },\r\n                \"roomStay\": {\r\n                    \"roomRates\": [\r\n                        {\r\n                            \"total\": {\r\n                                \"amountBeforeTax\": \"200\"\r\n                            },\r\n                            \"rates\": {\r\n                                \"rate\": [\r\n                                    {\r\n                                        \"base\": {\r\n                                            \"amountBeforeTax\": \"200\",\r\n                                            \"currencyCode\": \"USD\"\r\n                                        },\r\n                                        \"shareDistributionInstruction\": \"Full\",\r\n                                        \"total\": {\r\n                                            \"amountBeforeTax\": \"200\"\r\n                                        },\r\n                                        \"start\": \"2021-04-17\",\r\n                                        \"end\": \"2021-04-19\"\r\n                                    }\r\n                                ]\r\n                            },\r\n                            \"guestCounts\": {\r\n                                \"adults\": \"1\",\r\n                                \"children\": \"0\"\r\n                            },\r\n                            \"roomType\": \"{{RoomTypeCode}}\",\r\n                            \"ratePlanCode\": \"{{RatePlanCode}}\",\r\n                            \"start\": \"2021-04-17\",\r\n                            \"end\": \"2021-04-19\",\r\n                            \"suppressRate\": true,\r\n                            \"marketCode\": \"LEISURE\",\r\n                            \"marketCodeDescription\": \"Leisure\",\r\n                            \"sourceCode\": \"PHONE\",\r\n                            \"sourceCodeDescription\": \"Phone\",\r\n                            \"numberOfUnits\": \"1\",\r\n                            \"pseudoRoom\": false,\r\n                            \"roomTypeCharged\": \"{{RoomTypeCode}}\",\r\n                            \"houseUseOnly\": false,\r\n                            \"complimentary\": false,\r\n                            \"fixedRate\": true,\r\n                            \"discountAllowed\": false,\r\n                            \"bogoDiscount\": false\r\n                        }\r\n                    ],\r\n                    \"guestCounts\": {\r\n                        \"adults\": \"1\",\r\n                        \"children\": \"0\"\r\n                    },\r\n                    \"arrivalDate\": \"2021-04-17\",\r\n                    \"departureDate\": \"2021-04-19\",\r\n                    \"guarantee\": {\r\n                        \"guaranteeCode\": \"6PM\",\r\n                        \"shortDescription\": \"6PM Hold\"\r\n                    },\r\n                    \"roomNumberLocked\": false,\r\n                    \"printRate\": false\r\n                },\r\n                \"reservationGuests\": [\r\n                    {\r\n                        \"profileInfo\": {\r\n                            \"profile\": {\r\n                                \"customer\": {\r\n                                    \"personName\": [\r\n                                        {\r\n                                            \"givenName\": \"Sarah\",\r\n                                            \"middleName\": \"\",\r\n                                            \"surname\": \"Johns\",\r\n                                            \"nameType\": \"Primary\"\r\n                                        },\r\n                                        {\r\n                                            \"nameType\": \"External\"\r\n                                        }\r\n                                    ],\r\n                                    \"language\": \"E\"\r\n                                },\r\n                                \"addresses\": {\r\n                                    \"addressInfo\": [\r\n                                        {\r\n                                            \"address\": {\r\n                                                \"addressLine\": [\r\n                                                    \"Riverside Corporate Park\",\r\n                                                    \"4 Julius Avenue\"\r\n                                                ],\r\n                                                \"cityName\": \"North Ryde\",\r\n                                                \"postalCode\": \"2113\",\r\n                                                \"state\": \"NSW\",\r\n                                                \"country\": {\r\n                                                    \"value\": \"AU\",\r\n                                                    \"code\": \"AU\"\r\n                                                },\r\n                                                \"language\": \"EN\",\r\n                                                \"type\": \"HOME\",\r\n                                                \"primaryInd\": true\r\n                                            }\r\n                                        }\r\n                                    ]\r\n                                },\r\n                                \"emails\": {\r\n                                    \"emailInfo\": [\r\n                                        {\r\n                                            \"email\": {\r\n                                                \"emailAddress\": \"example2@example.com\",\r\n                                                \"type\": \"EMAIL\",\r\n                                                \"typeDescription\": \"Email Address\",\r\n                                                \"primaryInd\": true\r\n                                            }\r\n                                        }\r\n                                    ]\r\n                                },\r\n                                \"profileType\": \"Guest\"\r\n                            }\r\n                        },\r\n                        \"primary\": true\r\n                    }\r\n                ],\r\n                \"reservationPaymentMethods\": [\r\n                    {\r\n                        \"paymentMethod\": \"CA\",\r\n                        \"folioView\": \"1\"\r\n                    }\r\n                ],\r\n                \"comments\": [\r\n                    {\r\n                        \"comment\": {\r\n                            \"text\": {\r\n                                \"value\": \"Please ensure I have coffee in my room\"\r\n                            },\r\n                            \"commentTitle\": \"General Notes\",\r\n                            \"notificationLocation\": \"RESERVATION\",\r\n                            \"type\": \"GEN\",\r\n                            \"internal\": false\r\n                        }\r\n                    }\r\n                ],\r\n                \"hotelId\": \"{{HotelId}}\",\r\n                \"roomStayReservation\": true,\r\n                \"reservationStatus\": \"Reserved\",\r\n                \"computedReservationStatus\": \"DueIn\",\r\n                \"walkIn\": false,\r\n                \"printRate\": false,\r\n                \"preRegistered\": false,\r\n                \"upgradeEligible\": false,\r\n                \"allowAutoCheckin\": false,\r\n                \"hasOpenFolio\": false,\r\n                \"allowMobileCheckout\": false,\r\n                \"allowMobileViewFolio\": false,\r\n                \"allowPreRegistration\": false,\r\n                \"optedForCommunication\": false\r\n            }\r\n        ]\r\n    }\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -20785,66 +20187,6 @@
 										"description": "To preregister reservaiton in OPERA"
 									},
 									"response": []
-								},
-								{
-									"name": "Delete preCheckIn w/ CF# (RevertPreCheckInReservation)",
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{Token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "DELETE",
-										"header": [
-											{
-												"key": "Content-Type",
-												"name": "Content-Type",
-												"type": "text",
-												"value": "application/json"
-											},
-											{
-												"key": "x-hotelid",
-												"value": "{{HotelId}}",
-												"type": "text"
-											},
-											{
-												"key": "x-app-key",
-												"value": "{{AppKey}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"reservation\": {\r\n        \"reservationId\": {\r\n            \"type\": \"Confirmation\",\r\n            \"idContext\": \"OPERA\"\r\n        }\r\n    }\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/preCheckIn",
-											"host": [
-												"{{HostName}}"
-											],
-											"path": [
-												"rsv",
-												"v1",
-												"hotels",
-												"{{HotelId}}",
-												"reservations",
-												"{{ReservationId}}",
-												"preCheckIn"
-											]
-										},
-										"description": "To reverse preregister reservaiton in OPERA"
-									},
-									"response": []
 								}
 							]
 						},
@@ -22634,7 +21976,7 @@
 									"response": []
 								},
 								{
-									"name": "postPackage (v0) (WIP)",
+									"name": "postPackage (v0)",
 									"request": {
 										"auth": {
 											"type": "bearer",
@@ -22661,7 +22003,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"packageCode\": {\r\n        \"header\": {\r\n            \"primaryDetails\": {\r\n                \"description\": \"Fruit and Chocolate Box\",\r\n                \"shortDescription\": \"Fruit and Chocolate\"\r\n            },\r\n            \"transactionDetails\": {\r\n                \"allowance\": false,\r\n                \"packagePostingRules\": {\r\n                    \"transactionCode\": {\r\n                        \"code\": \"1000\",\r\n                        \"type\": \"Inclusive\"\r\n                    }\r\n                }\r\n            },\r\n            \"postingAttributes\": {\r\n                \"inventoryItems\": [],\r\n                \"addToRate\": false,\r\n                \"printSeparateLine\": true,\r\n                \"sellSeparate\": true,\r\n                \"postNextDay\": false,\r\n                \"forecastNextDay\": false,\r\n                \"webBookable\": true,\r\n                \"formulaFunctionArguments\": [],\r\n                \"catering\": false,\r\n                \"postingRhythm\": {\r\n                    \"type\": \"EveryNight\"\r\n                },\r\n                \"priceCalculationRule\": \"FlatRate\"\r\n            }\r\n        },\r\n        \"schedules\": [\r\n            {\r\n                \"newTimeSpan\": {\r\n                    \"startDate\": \"2021-03-03\",\r\n                    \"endDate\": \"2022-07-03\"\r\n                },\r\n                \"schedulePrices\": [\r\n                    {\r\n                        \"unitPrice\": \"35\"\r\n                    },\r\n                    {\r\n                        \"bucket\": \"Bucket2\"\r\n                    },\r\n                    {\r\n                        \"bucket\": \"Bucket3\"\r\n                    }\r\n                ],\r\n                \"newMinNights\": \"1\",\r\n                \"newMaxNights\": \"2\",\r\n                \"newMinPersons\": \"1\",\r\n                \"newMaxPersons\": \"4\"\r\n            }\r\n        ],\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"code\": \"FRUITBOX2\",\r\n        \"adjustOverlappingRange\": true\r\n    }\r\n}",
+											"raw": "{\r\n    \"packageCode\": {\r\n        \"header\": {\r\n            \"primaryDetails\": {\r\n                \"description\": \"Fruit and Chocolate Box\",\r\n                \"shortDescription\": \"Fruit and Chocolate\"\r\n            },\r\n            \"transactionDetails\": {\r\n                \"allowance\": false,\r\n                \"packagePostingRules\": {\r\n                    \"transactionCode\": {\r\n                        \"code\": \"1000\",\r\n                        \"type\": \"Inclusive\"\r\n                    }\r\n                }\r\n            },\r\n            \"postingAttributes\": {\r\n                \"inventoryItems\": [],\r\n                \"addToRate\": false,\r\n                \"printSeparateLine\": true,\r\n                \"sellSeparate\": true,\r\n                \"postNextDay\": false,\r\n                \"forecastNextDay\": false,\r\n                \"webBookable\": true,\r\n                \"formulaFunctionArguments\": [],\r\n                \"catering\": false,\r\n                \"postingRhythm\": {\r\n                    \"type\": \"EveryNight\"\r\n                },\r\n                \"priceCalculationRule\": \"FlatRate\"\r\n            }\r\n        },\r\n        \"schedules\": [\r\n            {\r\n                \"newTimeSpan\": {\r\n                    \"startDate\": \"2021-03-03\",\r\n                    \"endDate\": \"2022-07-03\"\r\n                },\r\n                \"schedulePrices\": [\r\n                    {\r\n                        \"unitPrice\": \"35\"\r\n                    },\r\n                    {\r\n                        \"bucket\": \"Bucket2\"\r\n                    },\r\n                    {\r\n                        \"bucket\": \"Bucket3\"\r\n                    }\r\n                ],\r\n                \"newMinNights\": \"1\",\r\n                \"newMaxNights\": \"2\",\r\n                \"newMinPersons\": \"1\",\r\n                \"newMaxPersons\": \"4\"\r\n            }\r\n        ],\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"code\": \"FRUITBOX\",\r\n        \"adjustOverlappingRange\": true\r\n    }\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -23437,349 +22779,6 @@
 										"hotels",
 										"{{HotelId}}",
 										"promotionCodes"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "getRatePlans (v0) (WIP)",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "x-hotelid",
-										"type": "text",
-										"value": "{{HotelId}}"
-									},
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{HostName}}/rtp/v1/ratePlans?includeRateInformation=false&includeInactive=true&offset=0&sellDate=2021-01-03&hotelId={{HotelId}}",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"rtp",
-										"v1",
-										"ratePlans"
-									],
-									"query": [
-										{
-											"key": "includeRateInformation",
-											"value": "false"
-										},
-										{
-											"key": "includeInactive",
-											"value": "true"
-										},
-										{
-											"key": "offset",
-											"value": "0"
-										},
-										{
-											"key": "sellDate",
-											"value": "2021-01-03"
-										},
-										{
-											"key": "hotelId",
-											"value": "{{HotelId}}"
-										},
-										{
-											"key": "rateCategory",
-											"value": "",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "postRatePlans (V0) WIP",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "x-hotelid",
-										"value": "{{HotelId}}",
-										"type": "text"
-									},
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"ratePlan\": {\r\n        \"primaryDetails\": {\r\n            \"description\": {\r\n                \"defaultText\": \"Rate Code Description Goes Here test\",\r\n                \"translations\": [],\r\n                \"translatedTexts\": []\r\n            },\r\n            \"startSellDate\": \"2021-02-03\",\r\n            \"endSellDate\": \"2021-12-31\",\r\n            \"privilegedRate\": false,\r\n            \"privilegedRateRestriction\": false,\r\n            \"lockStatus\": \"Unlocked\"\r\n        },\r\n        \"classifications\": {\r\n            \"rateCategory\": \"HOTEL\",\r\n            \"marketCode\": \"LEISURE\"\r\n        },\r\n        \"transactionDetails\": {\r\n            \"folioText\": {\r\n                \"defaultText\": \"Accommodation\",\r\n                \"translations\": [],\r\n                \"translatedTexts\": []\r\n            },\r\n            \"transactionCode\": \"1000\",\r\n            \"currencyCode\": \"USD\",\r\n            \"rateIncludesTax\": true\r\n        },\r\n        \"rateCommission\": {},\r\n        \"roomTypeList\": [\r\n            {\r\n                \"code\": \"ECO\"\r\n            },\r\n            {\r\n                \"code\": \"SGL\"\r\n            },\r\n            {\r\n                \"code\": \"DBL\"\r\n            },\r\n            {\r\n                \"code\": \"SUP\"\r\n            },\r\n            {\r\n                \"code\": \"JSUI\"\r\n            },\r\n            {\r\n                \"code\": \"SUI\"\r\n            }\r\n        ],\r\n        \"ratePackages\": {\r\n            \"packages\": [],\r\n            \"packageGroups\": []\r\n        },\r\n        \"controls\": {\r\n            \"sell\": {\r\n                \"minimumStayThrough\": \"1\",\r\n                \"minimumLengthOfStay\": \"1\"\r\n            },\r\n            \"yield\": {\r\n                \"yieldable\": \"NonYieldable\"\r\n            }\r\n        },\r\n        \"distribution\": {\r\n            \"restrictionUpdate\": false,\r\n            \"rateUpdate\": false,\r\n            \"myFidelioUploadAllowed\": false,\r\n            \"channelRateMappingExists\": false,\r\n            \"channelAllowed\": false\r\n        },\r\n        \"ratePlanBasedOnRates\": [\r\n            {\r\n                \"basedOnRatePlanType\": \"None\"\r\n            }\r\n        ],\r\n        \"approvalNotes\": [\r\n            {}\r\n        ],\r\n        \"mobileCheckinAllowed\": false,\r\n        \"mobileCheckoutAllowed\": false,\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"ratePlanCode\": \"NEWRATE\",\r\n        \"supressRate\": false,\r\n        \"printRate\": true,\r\n        \"discountAllowed\": false,\r\n        \"redemption\": false,\r\n        \"bARRate\": false,\r\n        \"daily\": false,\r\n        \"tiered\": false,\r\n        \"dayUse\": false,\r\n        \"dayType\": false,\r\n        \"complimentary\": false,\r\n        \"houseUse\": false,\r\n        \"negotiated\": false,\r\n        \"ownerRate\": false,\r\n        \"membershipEligible\": true,\r\n        \"advancedDailyBase\": false,\r\n        \"advancedDailyRate\": false\r\n    }\r\n}"
-								},
-								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"rtp",
-										"v0",
-										"hotels",
-										"{{HotelId}}",
-										"ratePlans"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "putRatePlans (V0) WIP",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "x-hotelid",
-										"value": "{{HotelId}}",
-										"type": "text"
-									},
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"ratePlan\": {\r\n        \"primaryDetails\": {\r\n            \"description\": {\r\n                \"defaultText\": \"Add the description of rate code here\",\r\n                \"translations\": [],\r\n                \"translatedTexts\": []\r\n            },\r\n            \"startSellDate\": \"2021-07-03\",\r\n            \"endSellDate\": \"2021-08-31\",\r\n            \"privilegedRate\": false,\r\n            \"privilegedRateRestriction\": false,\r\n            \"lockStatus\": \"Unlocked\"\r\n        },\r\n        \"classifications\": {\r\n            \"rateCategory\": \"PHONE\",\r\n            \"marketCode\": \"BUSINESS\"\r\n        },\r\n        \"roomTypeList\": [\r\n            {\r\n                \"code\": \"ECO\"\r\n            },\r\n            {\r\n                \"code\": \"SUP\"\r\n            }\r\n        ],\r\n        \"mobileCheckinAllowed\": false,\r\n        \"mobileCheckoutAllowed\": false,\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"ratePlanCode\": \"RACK\",\r\n        \"supressRate\": false,\r\n        \"printRate\": true,\r\n        \"discountAllowed\": false,\r\n        \"redemption\": false,\r\n        \"bARRate\": false,\r\n        \"daily\": false,\r\n        \"tiered\": false,\r\n        \"dayUse\": false,\r\n        \"dayType\": false,\r\n        \"complimentary\": false,\r\n        \"houseUse\": false,\r\n        \"negotiated\": false,\r\n        \"ownerRate\": false,\r\n        \"membershipEligible\": true,\r\n        \"advancedDailyBase\": false,\r\n        \"advancedDailyRate\": false\r\n    }\r\n}"
-								},
-								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/RACK",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"rtp",
-										"v0",
-										"hotels",
-										"{{HotelId}}",
-										"ratePlans",
-										"RACK"
-									],
-									"query": [
-										{
-											"key": "rateCategory",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "sellDate",
-											"value": null,
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "postRatePlan Schedules (V0) WIP",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "x-hotelid",
-										"value": "{{HotelId}}",
-										"type": "text"
-									},
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"ratePlanScheduleList\": [\r\n        {\r\n            \"roomTypeList\": [\r\n                \"SUP\",\r\n                \"ECO\"\r\n            ],\r\n            \"sunday\": true,\r\n            \"monday\": true,\r\n            \"tuesday\": true,\r\n            \"wednesday\": true,\r\n            \"thursday\": true,\r\n            \"friday\": true,\r\n            \"saturday\": true,\r\n            \"rateAmounts\": {\r\n                \"onePersonRate\": \"300\",\r\n                \"twoPersonRate\": \"300\",\r\n                \"threePersonRate\": \"340\",\r\n                \"fourPersonRate\": \"340\",\r\n                \"fivePersonRate\": \"400\",\r\n                \"rateByAgeBuckets\": [\r\n                    {\r\n                        \"minimumAge\": \"0\",\r\n                        \"maximumAge\": \"3\"\r\n                    },\r\n                    {\r\n                        \"minimumAge\": \"4\",\r\n                        \"maximumAge\": \"10\"\r\n                    },\r\n                    {\r\n                        \"minimumAge\": \"11\",\r\n                        \"maximumAge\": \"17\"\r\n                    }\r\n                ],\r\n                \"overrideFloorAmount\": true\r\n            },\r\n            \"rateAmountBoundaries\": {\r\n                \"minimum\": {\r\n                    \"onePersonRate\": \"300\"\r\n                },\r\n                \"maximum\": {}\r\n            },\r\n            \"classifications\": {},\r\n            \"rateSchedulePackages\": {\r\n                \"packages\": [],\r\n                \"packageGroups\": []\r\n            },\r\n            \"tierID\": \"1\",\r\n            \"eventStartDate\": \"2021-07-03\",\r\n            \"startDate\": \"2021-07-03\",\r\n            \"start\": \"2021-07-03\",\r\n            \"end\": \"2021-07-31\",\r\n            \"endDate\": \"2021-07-31\",\r\n            \"eventEndDate\": \"2021-07-31\"\r\n        }\r\n    ],\r\n    \"hotelId\": \"{{HotelId}}\",\r\n    \"ratePlanCode\": \"{{RatePlanCode}}\"\r\n}"
-								},
-								"url": {
-									"raw": "{{HostName}}/rtp/v0//hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"rtp",
-										"v0",
-										"",
-										"hotels",
-										"{{HotelId}}",
-										"ratePlans",
-										"{{RatePlanCode}}",
-										"schedules"
-									],
-									"query": [
-										{
-											"key": "rateCategory",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "sellDate",
-											"value": null,
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "putRatePlan Schedules (V0) WIP",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "Accept",
-										"type": "text",
-										"value": "application/json;charset=UTF-8"
-									},
-									{
-										"key": "x-hotelid",
-										"value": "{{HotelId}}",
-										"type": "text"
-									},
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"ratePlanScheduleList\": [\r\n        {\r\n            \"ratePlanScheduleId\": {\r\n                \"type\": \"RateSetId\",\r\n                \"idContext\": \"OPERA\",\r\n                \"id\": \"1139238\"\r\n            },\r\n            \"ratePlanScheduleDetail\": {\r\n                \"roomTypeList\": [\r\n                    \"ECO\",\r\n                    \"SUP\"\r\n                ],\r\n                \"sunday\": true,\r\n                \"monday\": true,\r\n                \"tuesday\": true,\r\n                \"wednesday\": true,\r\n                \"thursday\": true,\r\n                \"friday\": true,\r\n                \"saturday\": true,\r\n                \"rateAmounts\": {\r\n                    \"onePersonRate\": \"305\",\r\n                    \"twoPersonRate\": \"305\",\r\n                    \"threePersonRate\": \"344\",\r\n                    \"fourPersonRate\": \"340\",\r\n                    \"fivePersonRate\": \"400\",\r\n                    \"rateByAgeBuckets\": [\r\n                        {\r\n                            \"minimumAge\": \"0\",\r\n                            \"maximumAge\": \"3\"\r\n                        },\r\n                        {\r\n                            \"minimumAge\": \"4\",\r\n                            \"maximumAge\": \"10\"\r\n                        },\r\n                        {\r\n                            \"minimumAge\": \"11\",\r\n                            \"maximumAge\": \"17\"\r\n                        }\r\n                    ],\r\n                    \"overrideFloorAmount\": true\r\n                },\r\n                \"rateAmountBoundaries\": {\r\n                    \"minimum\": {\r\n                        \"onePersonRate\": \"300\"\r\n                    },\r\n                    \"maximum\": {}\r\n                },\r\n                \"classifications\": {},\r\n                \"rateSchedulePackages\": {\r\n                    \"packages\": [],\r\n                    \"packageGroups\": []\r\n                },\r\n                \"tierID\": \"1\",\r\n                \"eventStartDate\": \"2021-07-03\",\r\n                \"startDate\": \"2021-07-03\",\r\n                \"start\": \"2021-07-03\",\r\n                \"end\": \"2021-07-31\",\r\n                \"endDate\": \"2021-07-31\",\r\n                \"eventEndDate\": \"2021-07-31\"\r\n            }\r\n        }\r\n    ],\r\n    \"hotelId\": \"{{HotelId}}\",\r\n    \"ratePlanCode\": \"BAR\"\r\n}"
-								},
-								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"rtp",
-										"v0",
-										"hotels",
-										"{{HotelId}}",
-										"ratePlans",
-										"{{RatePlanCode}}",
-										"schedules"
-									],
-									"query": [
-										{
-											"key": "rateCategory",
-											"value": null,
-											"disabled": true
-										},
-										{
-											"key": "sellDate",
-											"value": null,
-											"disabled": true
-										}
 									]
 								}
 							},
@@ -25510,11 +24509,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"var moment = require('moment');\r",
-											"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")));\r",
-											"\r",
-											"var moment = require('moment');\r",
-											"pm.environment.set('currentdateplus1', moment().add(1,'days').format((\"YYYY-MM-DD\")));"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -26205,11 +25200,7 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"var moment = require('moment');\r",
-											"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")));\r",
-											"\r",
-											"var moment = require('moment');\r",
-											"pm.environment.set('currentdateplus1', moment().add(1,'days').format((\"YYYY-MM-DD\")));"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -27187,13 +26178,6 @@
 										"reservations",
 										"{{ReservationId}}",
 										"split"
-									],
-									"query": [
-										{
-											"key": null,
-											"value": "26098767",
-											"disabled": true
-										}
 									]
 								}
 							},
@@ -27343,7 +26327,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"profileDetails\": {\n    \"addresses\": {\n      \"addressInfo\": [\n        {\n          \"address\": {\n            \"addressLine\": [\n              \"1234 Gulf Drive\",\n              \"Bay Colony\",\n              \"16th Floor\",\n              \"Penthouse 1600\"\n            ],\n            \"cityName\": \"Naples\",\n            \"postalCode\": \"34108\",\n            \"state\": \"FL\",\n            \"language\": \"E\",\n            \"type\": \"HOME\",\n            \"typeDescription\": \"Home Address\",\n            \"primaryInd\": true\n          }\n        }\n      ]\n    },\n    \"telephones\": {\n      \"telephoneInfo\": [\n        {\n          \"telephone\": {\n            \"phoneTechType\": \"PHONE\",\n            \"phoneUseType\": \"MOBILE\",\n            \"phoneUseTypeDescription\": \"Mobile Phone Number\",\n            \"phoneNumber\": \"+1 415 555 0101\",\n            \"primaryInd\": true,\n            \"orderSequence\": \"1\"\n          }\n        }\n      ]\n    },\n    \"statusCode\": \"ACTIVE\",\n    \"markForHistory\": false,\n    \"hasCommission\": false\n  }\n}",
+									"raw": "{\n  \"profileDetails\": {\n    \"addresses\": {\n      \"addressInfo\": [\n        {\n          \"address\": {\n            \"addressLine\": [\n              \"6505 Blue Lagoon Drive\",\n              \"Suite 400\",\n              \"\",\n              \"\"\n            ],\n            \"cityName\": \"Miami\",\n            \"postalCode\": \"33126\",\n            \"state\": \"FL\",\n            \"language\": \"E\",\n            \"type\": \"HOME\",\n            \"typeDescription\": \"Home Address\",\n            \"primaryInd\": true\n          }\n        }\n      ]\n    },\n    \"telephones\": {\n      \"telephoneInfo\": [\n        {\n          \"telephone\": {\n            \"phoneTechType\": \"PHONE\",\n            \"phoneUseType\": \"MOBILE\",\n            \"phoneUseTypeDescription\": \"Mobile Phone Number\",\n            \"phoneNumber\": \"+1 415 555 0101\",\n            \"primaryInd\": true,\n            \"orderSequence\": \"1\"\n          }\n        }\n      ]\n    },\n    \"statusCode\": \"ACTIVE\",\n    \"markForHistory\": false,\n    \"hasCommission\": false\n  }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -28017,13 +27001,6 @@
 										"reservations",
 										"{{ReservationId}}",
 										"upsell"
-									],
-									"query": [
-										{
-											"key": null,
-											"value": "889168",
-											"disabled": true
-										}
 									]
 								}
 							},
@@ -30141,11 +29118,6 @@
 										{
 											"key": "fetchInstructions",
 											"value": "Reservation",
-											"disabled": true
-										},
-										{
-											"key": null,
-											"value": "26098972",
 											"disabled": true
 										}
 									]
