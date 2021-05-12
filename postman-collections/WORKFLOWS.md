@@ -18,6 +18,8 @@ The following common workflows are covered in this document:
 
 [5. Check out a Guest](#5-check-out-a-guest)
 
+[6. Create a Block](#6-create-a-block)
+
 ## 1. Check Availability and book a Reservation
 
 Flow:
@@ -116,6 +118,27 @@ Flow:
 | **Post a payment** to the folio. From the folio details you will be able to see the balance for the guest's stay. You can post a payment to the folio using this operation to bring the balance to $0. | postBillingPayments | Cashiering (CSH) |
 | **Generate Folio Number.** This operation is required once you have brought the folio balance to $0 and is used to generate the folio number and/or bill number. Use postFolios to perform this action. | postFolios | Cashiering (CSH) |
 | **Check out a reservation**. Typically you will only be able to check out a guest if their folio balance is $0. | postCheckOuts | Cashiering (CSH) |
+
+Flow:
+
+1. Search operations in List Of Values module
+2. Get Block Default Code
+3. Create a Block
+4. Update a Block – add notes to a Block
+5. Get Block next status Code
+6. Change Block Status
+7. Create Block Posting Master Reservation
+
+
+| **Business case** | **Rest api** | **Module** |
+| --- | --- | --- |
+| **Search operations in LOV, to use in postBlock request Body –** postBlock requires many values defined by hotels in OPERA Cloud.  To find the values available to use, search using these LOV operations`. | getBlockNewStatuses getBlockReservationTypes getBlockRateCodes getBlockOrigins getBlockBookingTypes | ListOfValues(LOV) |
+| **Get Block Default Code**. This will return the Block Code that you can use in the postBlock operation. | getBlockDefaultCode | Blocks (BLK) |
+| **Post a Block** Use this operation to create a new block.  Once you have created the block, you can then proceed to add rates, grid details, events etc. | postBlock | Blocks (BLK) |
+| **Update a block with notes** Use this operation to update your block by adding notes to it. | putBlock | Blocks (BLK) |
+| **Get Block Next status Code** Use this operation to find out what the next status available is for your block.  Block status have a flow, and only certain statuses can move to the next status. For example, a Definite status can move to an Actual status, but it cant move to a tentative status.  This operation will tell you what statues your block can next move to | getNextStatusCodes | Blocks (BLK) |
+| **Change Block Status** Use this operation to update the status of your block. | putBlockStatus| Blocks (BLK) |
+| **Create Block Posting Master Reservation**. Use this operation to create the posting master Reservation. This is required before any guests can make a reservation against a block.  Posting Master reservations are typically used for Billing (various sales charges can be posted to this PM reservation) and Rooming Lists (the  Posting Master reservation is used as a template for reservations created via rooming list). | postBlockPostingMaster | Blocks (BLK) |
 
 ## Get Help
 
