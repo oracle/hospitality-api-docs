@@ -20,6 +20,10 @@ The following common workflows are covered in this document:
 
 [6. Create a Block](#6-create-a-block)
 
+[7. Create an Event](#7-create-an-Event)
+
+[8. Create a new Rate Plan](#7-create-a-new-RatePlan)
+
 ## 1. Check Availability and book a Reservation
 
 Flow:
@@ -119,6 +123,8 @@ Flow:
 | **Generate Folio Number.** This operation is required once you have brought the folio balance to $0 and is used to generate the folio number and/or bill number. Use postFolios to perform this action. | postFolios | Cashiering (CSH) |
 | **Check out a reservation**. Typically you will only be able to check out a guest if their folio balance is $0. | postCheckOuts | Cashiering (CSH) |
 
+## 6. Create a Block
+
 Flow:
 
 1. Search operations in List Of Values module
@@ -129,7 +135,6 @@ Flow:
 6. Change Block Status
 7. Create Block Posting Master Reservation
 
-
 | **Business case** | **Rest api** | **Module** |
 | --- | --- | --- |
 | **Search operations in LOV, to use in postBlock request Body –** postBlock requires many values defined by hotels in OPERA Cloud.  To find the values available to use, search using these LOV operations`. | getBlockNewStatuses getBlockReservationTypes getBlockRateCodes getBlockOrigins getBlockBookingTypes | ListOfValues(LOV) |
@@ -138,7 +143,69 @@ Flow:
 | **Update a block with notes** Use this operation to update your block by adding notes to it. | putBlock | Blocks (BLK) |
 | **Get Block Next status Code** Use this operation to find out what the next status available is for your block.  Block status have a flow, and only certain statuses can move to the next status. For example, a Definite status can move to an Actual status, but it cant move to a tentative status.  This operation will tell you what statues your block can next move to | getNextStatusCodes | Blocks (BLK) |
 | **Change Block Status** Use this operation to update the status of your block. | putBlockStatus| Blocks (BLK) |
-| **Create Block Posting Master Reservation**. Use this operation to create the posting master Reservation. This is required before any guests can make a reservation against a block.  Posting Master reservations are typically used for Billing (various sales charges can be posted to this PM reservation) and Rooming Lists (the  Posting Master reservation is used as a template for reservations created via rooming list). | postBlockPostingMaster | Blocks (BLK) |
+| **Create Block Posting Master Reservation** Use this operation to create the posting master Reservation. This is required before any guests can make a reservation against a block.  Posting Master reservations are typically used for Billing (various sales charges can be posted to this PM reservation) and Rooming Lists (the  Posting Master reservation is used as a template for reservations created via rooming list). | postBlockPostingMaster | Blocks (BLK) |
+
+## 7. Create an Event
+
+Creating an Event requires a Block to already exist. The following flow will set you on the path to creating a new event in OPERA Cloud.
+
+Flow:
+
+1. Search for CateringEventTypes
+2. Get Event Statuses available
+3. Search Function Space Availability
+4. Search for Rental Codes
+5. Search for room Setup Styles available
+6. Create a new Event with Function Space
+7. Search for available Event Resources (Inventory Items)
+8. Add Event Resources
+9. Add notes to the event (putEvent)
+10. Get Event Resources attached to the Event
+11. Find next available Block Catering Status
+12. Update Event - change the time of the event
+
+| **Business case** | **Rest api** | **Module** |
+| --- | --- | --- |
+| **Search for CateringEventTypes –** Find all available Event Types that are configured for your property.  You can then use this Event Type in the postEvents operation. | getCateringEventTypes | ListOfValues (LOV) |
+| **Get Event Statuses available**. When creating an event, it need to be on a starting status.  Use this operation to find available statuses you can use when posting a new Event. | getCateringEventStatus | ListOfValues (LOV) |
+| **Search Function Space Availability** Use this operation to find available spaces for the dates you require, such as seeing if the BALLROOM would be available to book on the dates you want. | getAvailableSpaces | ListOfValues (LOV) |
+| **Search for Rental Codes** Using the Function Space code from the operation above, you can now find out what Rental Codes are available for this space. | getEventRateCode| ListOfValues (LOV) |
+| **Search for room Setup Styles available** Using the Function Space code, find out what room set up styles are available to use in the postEvent operation, such as Round Tables, ClassRoom set up etc. | getCateringSetupStyles | ListOfValues (LOV) |
+| **Create a new Event with Function Space**. Use this operation to create a new event for the property. | postEvents | Events (EVM) |
+| **Search for Event Resources**. This operation will give you a list of available Event Resources, for example Audio Equipment.  You will need to search using date range of your event. | getInventoryItems| Events Configuration(EVMConfig) |
+| **Add Event Resources to the Event**. This will post the event resources to your Event. | putEventResources | Events (EVM) |
+| **Update an Event - adding notes**. If you need to update your event, use this operation. In this sample message event notes have been added. | putEvents | Events (EVM) |
+| **Get Event Resources on an Event**. To see what event Resources exist on an event, use this operation. | getEventResources | Events (EVM) |
+| **Find next Event Status**. Events move through a flow of statuses, eg from Enquiry, to Tentative, to Definite.  Use this operation to find out what is the next available status you can use on your event.| getblockCatNextStatuses | ListOfValues (LOV) |
+| **Update an Event**. This sample shows an update to the event, such as changing the time. | putEvents | Events (EVM) |
+
+For further detailed information on Event creation, please refer to OPERA Cloud Services User Guide located [here](https://docs.oracle.com/cd/F18689_01/doc.193/f23597/t_osem_creating_events_from_manage_block.htm#OCSUH-task-1-1A51F12A).
+
+## 8. Create a new RatePlan
+
+Flow:
+
+1. Search operations in List Of Values module
+2. Post Rate Plans
+3. Post Rate Plan Packages
+4. Update a Rate Plan
+5. Get LOV - Room Types available for the RatePlan
+6. Create Rate Plan Schedules
+7. Create Rate Plan Schedules with a package attached
+8. Update Rate Plan Schedules
+9. Retrieve Rate Plan Schedules
+
+| **Business case** | **Rest api** | **Module** |
+| --- | --- | --- |
+| **Search operations in LOV, to use in postRatePlans request Body –** postRatePlans requires many values defined by hotels in OPERA Cloud.  To find the values available to use, search using these LOV operations`. | getRateCategories getRoomTypes getMarketCodes getSourceCodes getTransactionCodesConsumption getRatePackageTransactionCodes | ListOfValues(LOV) |
+| **Post Rate Plans**. This will create a new standard rate plan for a property. | postRatePlans | Rates (RTP) |
+| **Post Rate Plan Packages** Use this operation to add a package to a rate plan, for example add Breakfast, or a Round of Golf. | postRatePlanPackages | Rates (RTP) |
+| **Update Rate Plan** Use this operation to update your rate plan by adding notes to it. | putRatePlan | Rates (RTP) |
+| **Get LOV Room Types** Use this operation to find out which room types area available to add to your new rate plan.  You can add all available room types, or a selection.  The room types that exist on the rate plan can then be used to add rate values in postRatePlanSchedules | getRoomTypes | ListOfVales (LOV) |
+| **postRatePlanSchedules** Use this operation to add rate values for each room type to the rateplan.  For example $200 for the STDQ and STDD room types for 1January to 31March. | postRatePlanScheuldes| Rates (RTP) |
+| **postRatePlanSchedules** Use this operation to add rate values for each room type to the rateplan.  However, in addition you can add a package code for the specific ratePlanSchedule. Such as during December, you might add a Package for Chocolate Box | postRatePlanScheuldes | Rates (RTP) |
+| **putRatePlanSchedules** Use this operation to update an existing rate plan schedule | putRatePlanScheuldes | Rates (RTP) |
+| **getRatePlanSchedules** Use this operation to retrieve the rate plan schedules that are already existing | getRatePlanScheuldes | Rates (RTP) |
 
 ## Get Help
 
