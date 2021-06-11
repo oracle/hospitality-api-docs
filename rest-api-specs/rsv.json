@@ -6,8 +6,8 @@
   },
   "info" : {
     "title" : "OPERA Cloud Reservation API",
-    "description" : "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.<br /><br /><p>Copyright c 2021 Oracle and/or its affiliates</p><p>The Universal Permissive License UPL, Version 1.0</p><p>Subject to the condition set forth below, permission is hereby granted to any person obtaining a copy of this software, associated documentation and/or data collectively the &#34;Software&#34;, free of charge and under any and all copyright rights in the Software, and any and all patent rights owned or freely licensable by each licensor hereunder covering either i the unmodified Software as contributed to or provided by such licensor, or ii the Larger Works as defined below, to deal in both</p><p>a the Software, and</p><p>b any piece of software and/or hardware listed in the lrgrwrks.txt file if one is included with the Software each a &#34;Larger Work&#34; to which the Software is contributed by such licensors,</p><p>without restriction, including without limitation the rights to copy, create derivative works of, display, perform, and distribute the Software and make, use, sell, offer for sale, import, export, have made, and have sold the Software and the Larger Works, and to sublicense the foregoing rights on either these or other terms.</p><p>This license is subject to the following condition:</p><p>The above copyright notice and either this complete permission notice or at a minimum a reference to the UPL must be included in all copies or substantial portions of the Software.</p><p>THE SOFTWARE IS PROVIDED &#34;AS IS&#34;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>",
-    "version" : "21.1",
+    "description" : "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.",
+    "version" : "21.1.1",
     "contact" : {
       "email" : "hospitality_apis_ww_grp@oracle.com"
     },
@@ -1615,6 +1615,7 @@
           "in" : "query",
           "type" : "array",
           "collectionFormat" : "multi",
+          "default" : [ "External" ],
           "description" : "Used to identify the source of the identifier (e.g., IATA, ABTA).",
           "items" : {
             "type" : "string"
@@ -5083,6 +5084,7 @@
           "in" : "query",
           "type" : "array",
           "collectionFormat" : "multi",
+          "default" : [ "External" ],
           "description" : "Used to identify the source of the identifier (e.g., IATA, ABTA).",
           "items" : {
             "type" : "string"
@@ -6324,7 +6326,7 @@
       "maxLength" : 80,
       "description" : "External system code.",
       "in" : "header",
-      "x-example" : ""
+      "x-example" : "EXTERNALSYSTEMCODE"
     },
     "Accept-Language" : {
       "name" : "Accept-Language",
@@ -6444,6 +6446,10 @@
         "reservationIdList" : {
           "description" : "Unique identifiers for the reservation for both internal and external systems",
           "$ref" : "#/definitions/reservationIdList"
+        },
+        "externalReferences" : {
+          "description" : "External Reference information for Reservation.",
+          "$ref" : "#/definitions/externalReferencesType"
         },
         "roomStay" : {
           "description" : "Collection of room stays.",
@@ -6680,7 +6686,37 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
+        }
+      }
+    },
+    "externalReferencesType" : {
+      "type" : "array",
+      "description" : "This type contains unique information of external reference.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/externalReferenceType"
+      }
+    },
+    "externalReferenceType" : {
+      "type" : "object",
+      "description" : "This type contains unique information of external reference.",
+      "properties" : {
+        "id" : {
+          "description" : "Unique ID of external reference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "idExtension" : {
+          "description" : "ID extension for external reference.",
+          "type" : "integer"
+        },
+        "idContext" : {
+          "description" : "ID context for external reference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
         }
       }
     },
@@ -7118,7 +7154,7 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
         }
       }
     },
@@ -7530,6 +7566,10 @@
           "$ref" : "#/definitions/cardProcessingType"
         },
         "swiped" : {
+          "type" : "boolean"
+        },
+        "cardPresent" : {
+          "description" : "Flag to determine if the credit card was swiped/manually entered , This element is only used when PAYMENT SERVICE DIRECTIVE(PSD) Opera Control is active.",
           "type" : "boolean"
         },
         "cardOrToken" : {
@@ -8124,7 +8164,7 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
         }
       }
     },
@@ -8212,7 +8252,7 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
         }
       }
     },
@@ -8634,6 +8674,10 @@
           "description" : "Collection of guests who share this reservation.",
           "$ref" : "#/definitions/resSharedGuestListType"
         },
+        "additionalGuestInfo" : {
+          "description" : "Entry Date into the country. (Croatian Requirements).",
+          "$ref" : "#/definitions/resGuestAdditionalInfoType"
+        },
         "reservationProfiles" : {
           "description" : "Collection of guests associated with the reservation.",
           "type" : "object",
@@ -8650,6 +8694,10 @@
         "reservationCommunication" : {
           "description" : "Collection of reservation communication details.",
           "$ref" : "#/definitions/resCommunicationType"
+        },
+        "locators" : {
+          "description" : "Collection of Locators available for that reservation",
+          "$ref" : "#/definitions/reservationLocatorsType"
         },
         "serviceRequests" : {
           "description" : "Collection of Service Requests available for that reservation",
@@ -8714,6 +8762,10 @@
         "reservationPolicies" : {
           "description" : "A collection of Cancellation Penalties objects.",
           "$ref" : "#/definitions/reservationPoliciesType"
+        },
+        "cashiering" : {
+          "description" : "Holds cashiering related information for the reservation.",
+          "$ref" : "#/definitions/resCashieringType"
         },
         "userDefinedFields" : {
           "description" : "Collections of user defined fields.",
@@ -8955,36 +9007,6 @@
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 100
-        }
-      }
-    },
-    "externalReferencesType" : {
-      "type" : "array",
-      "description" : "This type contains unique information of external reference.",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/externalReferenceType"
-      }
-    },
-    "externalReferenceType" : {
-      "type" : "object",
-      "description" : "This type contains unique information of external reference.",
-      "properties" : {
-        "id" : {
-          "description" : "Unique ID of external reference.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 80
-        },
-        "idExtension" : {
-          "description" : "ID extension for external reference.",
-          "type" : "integer"
-        },
-        "idContext" : {
-          "description" : "ID context for external reference.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 80
         }
       }
     },
@@ -10206,7 +10228,7 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
         }
       }
     },
@@ -10358,7 +10380,7 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
         }
       }
     },
@@ -11785,6 +11807,129 @@
         }
       }
     },
+    "resGuestAdditionalInfoType" : {
+      "type" : "object",
+      "properties" : {
+        "portOfEntry" : {
+          "description" : "Entry point into the country. (Croatian Requirements).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "dateOfEntry" : {
+          "description" : "Entry Date into the country. (Croatian Requirements).",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "nextDestination" : {
+          "description" : "Entry Date into the country. (Croatian Requirements).",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "preferredRoomType" : {
+          "description" : "Preferred Room Type of the guest.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "lastStay" : {
+          "description" : "Last Stay information of the guest.",
+          "$ref" : "#/definitions/guestLastStayInfoType"
+        },
+        "purposeOfStay" : {
+          "description" : "Purpose of stay.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "guestClassification" : {
+          "description" : "Guest Classification for the data export.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "guestStatus" : {
+          "description" : "Guest Status for the data export.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        }
+      }
+    },
+    "reservationLocatorsType" : {
+      "type" : "array",
+      "description" : "Holds the Locator Information.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/reservationLocatorType"
+      }
+    },
+    "reservationLocatorType" : {
+      "type" : "object",
+      "description" : "Holds the information for a Reservation Guest Locator",
+      "properties" : {
+        "dateSpan" : {
+          "description" : "Begin and End date range of the Guest Locator.",
+          "$ref" : "#/definitions/dateRangeType"
+        },
+        "timeSpan" : {
+          "description" : "Time span for the Guest Locator.",
+          "$ref" : "#/definitions/dateTimeSpanType"
+        },
+        "locatorText" : {
+          "description" : "The Locator Text for the guest.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "locatorOn" : {
+          "description" : "Date and time of the Guest Locator.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "locatorBy" : {
+          "description" : "User that entered this Guest Locator.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "locatorId" : {
+          "description" : "Unique Id of the Guest Locator ( Locator Id )",
+          "$ref" : "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "dateRangeType" : {
+      "type" : "object",
+      "description" : "Date Range with Start and End dates.",
+      "properties" : {
+        "start" : {
+          "description" : "The starting value of the date range.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        },
+        "end" : {
+          "description" : "The ending value of the date range.",
+          "type" : "string",
+          "format" : "date",
+          "maxLength" : 8
+        }
+      }
+    },
+    "dateTimeSpanType" : {
+      "type" : "object",
+      "description" : "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties" : {
+        "startDateTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "endDateTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
     "serviceRequests" : {
       "type" : "array",
       "description" : "Service request.",
@@ -12438,24 +12583,6 @@
         "endTime" : {
           "description" : "End Time of the Time window.",
           "type" : "string"
-        }
-      }
-    },
-    "dateRangeType" : {
-      "type" : "object",
-      "description" : "Date Range with Start and End dates.",
-      "properties" : {
-        "start" : {
-          "description" : "The starting value of the date range.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
-        },
-        "end" : {
-          "description" : "The ending value of the date range.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
         }
       }
     },
@@ -13241,20 +13368,6 @@
         }
       }
     },
-    "dateTimeSpanType" : {
-      "type" : "object",
-      "description" : "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
-      "properties" : {
-        "startDateTime" : {
-          "type" : "string",
-          "format" : "date-time"
-        },
-        "endDateTime" : {
-          "type" : "string",
-          "format" : "date-time"
-        }
-      }
-    },
     "traceResolveType" : {
       "type" : "object",
       "properties" : {
@@ -13961,7 +14074,7 @@
           "description" : "A reference to the type of object defined by the UniqueID element.",
           "type" : "string",
           "minLength" : 0,
-          "maxLength" : 20
+          "maxLength" : 40
         }
       }
     },
@@ -15261,56 +15374,6 @@
       "description" : "Information regarding associated reservations to the reservation.",
       "properties" : { }
     },
-    "resGuestAdditionalInfoType" : {
-      "type" : "object",
-      "properties" : {
-        "portOfEntry" : {
-          "description" : "Entry point into the country. (Croatian Requirements).",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
-        },
-        "dateOfEntry" : {
-          "description" : "Entry Date into the country. (Croatian Requirements).",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
-        },
-        "nextDestination" : {
-          "description" : "Entry Date into the country. (Croatian Requirements).",
-          "type" : "string",
-          "maxLength" : 2000
-        },
-        "preferredRoomType" : {
-          "description" : "Preferred Room Type of the guest.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
-        },
-        "lastStay" : {
-          "description" : "Last Stay information of the guest.",
-          "$ref" : "#/definitions/guestLastStayInfoType"
-        },
-        "purposeOfStay" : {
-          "description" : "Purpose of stay.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
-        },
-        "guestClassification" : {
-          "description" : "Guest Classification for the data export.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
-        },
-        "guestStatus" : {
-          "description" : "Guest Status for the data export.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
-        }
-      }
-    },
     "awardsType" : {
       "type" : "array",
       "description" : "List of awards.",
@@ -16009,47 +16072,6 @@
         }
       }
     },
-    "reservationLocatorsType" : {
-      "type" : "array",
-      "description" : "Holds the Locator Information.",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/reservationLocatorType"
-      }
-    },
-    "reservationLocatorType" : {
-      "type" : "object",
-      "description" : "Holds the information for a Reservation Guest Locator",
-      "properties" : {
-        "dateSpan" : {
-          "description" : "Begin and End date range of the Guest Locator.",
-          "$ref" : "#/definitions/dateRangeType"
-        },
-        "timeSpan" : {
-          "description" : "Time span for the Guest Locator.",
-          "$ref" : "#/definitions/dateTimeSpanType"
-        },
-        "locatorText" : {
-          "description" : "The Locator Text for the guest.",
-          "type" : "string",
-          "maxLength" : 2000
-        },
-        "locatorOn" : {
-          "description" : "Date and time of the Guest Locator.",
-          "type" : "string",
-          "format" : "date-time"
-        },
-        "locatorBy" : {
-          "description" : "User that entered this Guest Locator.",
-          "type" : "string",
-          "maxLength" : 2000
-        },
-        "locatorId" : {
-          "description" : "Unique Id of the Guest Locator ( Locator Id )",
-          "$ref" : "#/definitions/uniqueID_Type"
-        }
-      }
-    },
     "attachmentsType" : {
       "type" : "array",
       "description" : "Attachment List.",
@@ -16737,6 +16759,10 @@
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 80
+        },
+        "idExtension" : {
+          "description" : "Additional identifying value assigned by the creating system.",
+          "type" : "integer"
         }
       }
     },
@@ -16887,6 +16913,10 @@
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 80
+        },
+        "idExtension" : {
+          "description" : "Additional identifying value assigned by the creating system.",
+          "type" : "integer"
         },
         "style" : {
           "description" : "Name of the confirmation letter style.",
@@ -17377,6 +17407,10 @@
         "reservationIdList" : {
           "description" : "Unique identifiers for the reservation for both internal and external systems",
           "$ref" : "#/definitions/reservationIdList"
+        },
+        "externalReferences" : {
+          "description" : "External Reference information for Reservation.",
+          "$ref" : "#/definitions/externalReferencesType"
         },
         "roomStay" : {
           "description" : "Collection of room stays.",

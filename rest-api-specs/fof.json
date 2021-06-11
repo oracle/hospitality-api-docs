@@ -6,8 +6,8 @@
   },
   "info" : {
     "title" : "OPERA Cloud Front Desk Operations Service",
-    "description" : "APIs to cater for Front Desk Operations and Front Desk Statistic functionality in OPERA Cloud. <br /><br /> Front Desk features some of the most commonly used operations in OPERA Cloud, such as managing guest arrivals, managing in-house guests, and managing guest departures. Some additional tasks you can complete from the Front Desk menu are room searches, room assignments, and quick check outs as well as opening folios, creating registration cards, setting wake up calls, and sending messages to guests.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.</p>",
-    "version" : "21.1",
+    "description" : "APIs to cater for Front Desk Operations and Front Desk Statistic functionality in OPERA Cloud. <br /><br /> Front Desk features some of the most commonly used operations in OPERA Cloud, such as managing guest arrivals, managing in-house guests, and managing guest departures. Some additional tasks you can complete from the Front Desk menu are room searches, room assignments, and quick check outs as well as opening folios, creating registration cards, setting wake up calls, and sending messages to guests.",
+    "version" : "21.1.1",
     "contact" : {
       "email" : "hospitality_apis_ww_grp@oracle.com"
     },
@@ -461,7 +461,7 @@
       "maxLength" : 80,
       "description" : "External system code.",
       "in" : "header",
-      "x-example" : ""
+      "x-example" : "EXTERNALSYSTEMCODE"
     },
     "Accept-Language" : {
       "name" : "Accept-Language",
@@ -1996,6 +1996,10 @@
       "type" : "object",
       "description" : "Provides address information.",
       "properties" : {
+        "isValidated" : {
+          "description" : "Indicator to define if the Address is validated by the Address Validation System.",
+          "type" : "boolean"
+        },
         "addressLine" : {
           "description" : "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
           "type" : "array",
@@ -3758,6 +3762,10 @@
         "swiped" : {
           "type" : "boolean"
         },
+        "cardPresent" : {
+          "description" : "Flag to determine if the credit card was swiped/manually entered , This element is only used when PAYMENT SERVICE DIRECTIVE(PSD) Opera Control is active.",
+          "type" : "boolean"
+        },
         "cardOrToken" : {
           "description" : "This contains information on whether credit card is tokenized (token enabled). A value of 'Token' indicates credit card is token enabled and 'CardNumber' indicates non token environment for this payment card type.",
           "$ref" : "#/definitions/cardNumberTypeType"
@@ -4321,6 +4329,10 @@
         },
         "balance" : {
           "description" : "Balance amount on the reservation.",
+          "$ref" : "#/definitions/currencyAmountType"
+        },
+        "compBalance" : {
+          "description" : "Comp Balance amount",
           "$ref" : "#/definitions/currencyAmountType"
         }
       }
@@ -5131,6 +5143,10 @@
           "description" : "Used to provide PMS and/or CRS identifiers.",
           "$ref" : "#/definitions/reservationIdList"
         },
+        "externalReferences" : {
+          "description" : "External Reference information for Reservation.",
+          "$ref" : "#/definitions/externalReferencesType"
+        },
         "associatedReservations" : {
           "description" : "Information regarding associated reservations.",
           "$ref" : "#/definitions/associatedResType"
@@ -5142,6 +5158,10 @@
         "roomStay" : {
           "description" : "Room stays information.",
           "$ref" : "#/definitions/roomStayType"
+        },
+        "compAuthorizer" : {
+          "description" : "Reservation Comp Authorizer.",
+          "$ref" : "#/definitions/compAuthorizerInfoType"
         },
         "reservationGuests" : {
           "description" : "Collection of guests associated with the reservation.",
@@ -5590,6 +5610,36 @@
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 100
+        }
+      }
+    },
+    "externalReferencesType" : {
+      "type" : "array",
+      "description" : "This type contains unique information of external reference.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/externalReferenceType"
+      }
+    },
+    "externalReferenceType" : {
+      "type" : "object",
+      "description" : "This type contains unique information of external reference.",
+      "properties" : {
+        "id" : {
+          "description" : "Unique ID of external reference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
+        },
+        "idExtension" : {
+          "description" : "ID extension for external reference.",
+          "type" : "integer"
+        },
+        "idContext" : {
+          "description" : "ID context for external reference.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 80
         }
       }
     },
@@ -10269,6 +10319,27 @@
       "type" : "string",
       "enum" : [ "Primary", "NonPrimary" ]
     },
+    "compAuthorizerInfoType" : {
+      "type" : "object",
+      "description" : "Authorizer Information",
+      "properties" : {
+        "authorizerId" : {
+          "$ref" : "#/definitions/uniqueID_Type"
+        },
+        "authorizerUserName" : {
+          "description" : "Application user name of the authorizer",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "authorizerName" : {
+          "description" : "Full name of the authorizer.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        }
+      }
+    },
     "resGuestType" : {
       "type" : "object",
       "description" : "A collection of ResGuest objects, identifying the guests associated with this reservation. Which guests are in which room is determined by each RoomStays ResGuestRPHs collection.",
@@ -12007,6 +12078,12 @@
         },
         "forecastGroup" : {
           "description" : "The Forecast group package belongs to.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "arrangementCode" : {
+          "description" : "Arrangement Code.",
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 20
