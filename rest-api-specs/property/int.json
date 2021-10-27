@@ -1,774 +1,873 @@
 {
-  "swagger" : "2.0",
-  "externalDocs" : {
-    "description" : "Find out more about Oracle Hospitality",
-    "url" : "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
-  },
-  "info" : {
-    "title" : "OPERA Cloud Integration Processor API",
-    "description" : "APIs to get Business Events generated in OPERA Cloud.",
-    "version" : "21.1.1",
-    "contact" : {
-      "email" : "hospitality_apis_ww_grp@oracle.com"
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Integration Processor API",
+    "description": "APIs to get Business Events generated in OPERA Cloud.<br /><br />Compatible with OPERA Cloud release 21.3.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.</p>",
+    "version": "21.3.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
-    "license" : {
+    "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
-    },
-    "termsOfService" : "https://www.oracle.com/legal/terms.html"
+    }
   },
-  "schemes" : [ "https" ],
-  "basePath" : "/int/v1",
-  "produces" : [ "application/json" ],
-  "paths" : {
-    "/externalSystem/{extSystemCode}/businessEvents" : {
-      "get" : {
-        "summary" : "Get business events",
-        "description" : "Business Event messages will sit in a queue.  Use this API to fetch the Business Event messages based on hotel ID and External System.  You will need to pass the External System in the HTTP Header parameters. <p><strong>OperationId:</strong>getBusinessEventsByExternalSystem</p>",
-        "operationId" : "getBusinessEventsByExternalSystem",
-        "parameters" : [ {
-          "name" : "extSystemCode",
-          "in" : "path",
-          "required" : true,
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 2000,
-          "description" : "External system code which will be used to dequeue the events"
-        }, {
-          "name" : "limit",
-          "in" : "query",
-          "default" : 1,
-          "required" : false,
-          "description" : "Number of messages web service should dequeue from the BE queue.",
-          "type" : "integer"
-        }, {
-          "$ref" : "#/parameters/authKey"
-        }, {
-          "$ref" : "#/parameters/x-app-key"
-        }, {
-          "$ref" : "#/parameters/x-hotelid"
-        }, {
-          "$ref" : "#/parameters/x-externalsystem"
-        }, {
-          "$ref" : "#/parameters/Accept-Language"
-        } ],
-        "responses" : {
-          "200" : {
-            "headers" : {
-              "Content-Language" : {
-                "type" : "string",
-                "description" : "Audience language",
-                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example" : "en-GB"
-              }
-            },
-            "description" : "Provides business event message dequeued from BE queue as response",
-            "schema" : {
-              "$ref" : "#/definitions/businessEvents"
-            },
-            "examples" : {
-              "application/json" : {
-                "businessEventData" : [ {
-                  "businessEvent" : {
-                    "header" : {
-                      "moduleName" : 14,
-                      "actionType" : "UPDATE PROFILE",
-                      "actionId" : "561139",
-                      "primaryKey" : "42212",
-                      "publisherId" : "18371",
-                      "createdDateTime" : "2019-11-24 21:30:52.0",
-                      "hotelId" : "HOTEL1"
-                    },
-                    "details" : [ {
-                      "dataElement" : "FIRST NAME"
-                    }, {
-                      "dataElement" : "NAME",
-                      "oldValue" : "Safe Travel",
-                      "newValue" : "Safe Travel One"
-                    }, {
-                      "dataElement" : "IATA NUMBER",
-                      "newValue" : "355453"
-                    }, {
-                      "dataElement" : "EMAIL",
-                      "oldValue" : "info@example.com",
-                      "newValue" : "contactus@example.com"
-                    }, {
-                      "dataElement" : "WEBPAGE"
-                    } ]
-                  },
-                  "businessEventId" : {
-                    "id" : "1971132"
-                  }
-                }, {
-                  "businessEvent" : {
-                    "header" : {
-                      "moduleName" : 14,
-                      "actionType" : "NEW PROFILE",
-                      "actionId" : "561141",
-                      "primaryKey" : "494139",
-                      "publisherId" : "27234",
-                      "createdDateTime" : "2019-11-24 21:43:59.0",
-                      "hotelId" : "HOTEL1"
-                    },
-                    "details" : [ {
-                      "dataElement" : "FIRST NAME",
-                      "newValue" : "William"
-                    }, {
-                      "dataElement" : "EMAIL YN",
-                      "newValue" : "N"
-                    }, {
-                      "dataElement" : "WEBPAGE"
-                    } ]
-                  },
-                  "businessEventId" : {
-                    "id" : "1971133"
-                  }
-                } ]
-              }
-            }
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/int/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/externalSystem/{extSystemCode}/businessEvents": {
+      "get": {
+        "summary": "Get business events",
+        "description": "Business Event messages will sit in a queue.  Use this API to fetch the Business Event messages based on hotel ID and External System.  You will need to pass the External System in the HTTP Header parameters. <p><strong>OperationId:</strong>getBusinessEventsByExternalSystem</p>",
+        "operationId": "getBusinessEventsByExternalSystem",
+        "parameters": [
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "External system code which will be used to dequeue the events"
           },
-          "204" : {
-            "description" : "BusinessEventsByExternalSystem not found."
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 1,
+            "required": false,
+            "description": "Number of messages web service should dequeue from the BE queue.",
+            "type": "integer"
           },
-          "400" : {
-            "$ref" : "#/responses/400"
+          {
+            "$ref": "#/parameters/authKey"
           },
-          "401" : {
-            "$ref" : "#/responses/401"
+          {
+            "$ref": "#/parameters/x-app-key"
           },
-          "403" : {
-            "$ref" : "#/responses/403"
+          {
+            "$ref": "#/parameters/x-hotelid"
           },
-          "404" : {
-            "$ref" : "#/responses/404"
+          {
+            "$ref": "#/parameters/x-externalsystem"
           },
-          "405" : {
-            "$ref" : "#/responses/405"
-          },
-          "406" : {
-            "$ref" : "#/responses/406"
-          },
-          "413" : {
-            "$ref" : "#/responses/413"
-          },
-          "414" : {
-            "$ref" : "#/responses/414"
-          },
-          "415" : {
-            "$ref" : "#/responses/415"
-          },
-          "500" : {
-            "$ref" : "#/responses/500"
-          },
-          "502" : {
-            "$ref" : "#/responses/502"
-          },
-          "503" : {
-            "$ref" : "#/responses/503"
+          {
+            "$ref": "#/parameters/Accept-Language"
           }
-        },
-        "consumes" : [ "application/json;charset=UTF-8" ],
-        "produces" : [ "application/json;charset=UTF-8" ],
-        "tags" : [ "IntegrationProcessor" ]
-      }
-    },
-    "/externalSystem/{extSystemCode}/hotels/{hotelId}/businessEvents" : {
-      "get" : {
-        "summary" : "Get business events by hotel ID",
-        "description" : "Business Event messages will sit in a queue.  Use this API to fetch the Business Event messages based on user access.  You will need to pass the External System in the HTTP Header parameters. <p><strong>OperationId:</strong>getBusinessEvents</p>",
-        "operationId" : "getBusinessEvents",
-        "parameters" : [ {
-          "name" : "hotelId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 2000,
-          "description" : "Unique OPERA Hotel code"
-        }, {
-          "name" : "extSystemCode",
-          "in" : "path",
-          "required" : true,
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 2000,
-          "description" : "External system code which will be used to dequeue the events."
-        }, {
-          "name" : "limit",
-          "in" : "query",
-          "default" : 1,
-          "required" : false,
-          "description" : "Number of messages web service should dequeue from the BE queue.",
-          "type" : "integer"
-        }, {
-          "$ref" : "#/parameters/authKey"
-        }, {
-          "$ref" : "#/parameters/x-app-key"
-        }, {
-          "$ref" : "#/parameters/x-hotelid"
-        }, {
-          "$ref" : "#/parameters/x-externalsystem"
-        }, {
-          "$ref" : "#/parameters/Accept-Language"
-        } ],
-        "responses" : {
-          "200" : {
-            "headers" : {
-              "Content-Language" : {
-                "type" : "string",
-                "description" : "Audience language",
-                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example" : "en-GB"
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               }
             },
-            "description" : "Provides business event message dequeued from BE queue as response",
-            "schema" : {
-              "$ref" : "#/definitions/businessEvents"
+            "description": "Provides business event message dequeued from BE queue as response",
+            "schema": {
+              "$ref": "#/definitions/businessEvents"
             },
-            "examples" : {
-              "application/json" : {
-                "businessEventData" : [ {
-                  "businessEvent" : {
-                    "header" : {
-                      "moduleName" : 14,
-                      "actionType" : "UPDATE PROFILE",
-                      "actionId" : "561139",
-                      "primaryKey" : "42212",
-                      "publisherId" : "18371",
-                      "createdDateTime" : "2019-11-24 21:30:52.0",
-                      "hotelId" : "HOTEL1"
+            "examples": {
+              "application/json": {
+                "businessEventData": [
+                  {
+                    "businessEvent": {
+                      "header": {
+                        "moduleName": 14,
+                        "actionType": "UPDATE PROFILE",
+                        "actionId": "561139",
+                        "primaryKey": "42212",
+                        "publisherId": "18371",
+                        "createdDateTime": "2019-11-24 21:30:52.0",
+                        "hotelId": "HOTEL1"
+                      },
+                      "details": [
+                        {
+                          "dataElement": "FIRST NAME"
+                        },
+                        {
+                          "dataElement": "NAME",
+                          "oldValue": "Safe Travel",
+                          "newValue": "Safe Travel One"
+                        },
+                        {
+                          "dataElement": "IATA NUMBER",
+                          "newValue": "355453"
+                        },
+                        {
+                          "dataElement": "EMAIL",
+                          "oldValue": "info@example.com",
+                          "newValue": "contactus@example.com"
+                        },
+                        {
+                          "dataElement": "WEBPAGE"
+                        }
+                      ]
                     },
-                    "details" : [ {
-                      "dataElement" : "FIRST NAME"
-                    }, {
-                      "dataElement" : "NAME",
-                      "oldValue" : "Safe Travel",
-                      "newValue" : "Safe Travel One"
-                    }, {
-                      "dataElement" : "IATA NUMBER",
-                      "newValue" : "355453"
-                    }, {
-                      "dataElement" : "EMAIL",
-                      "oldValue" : "info@example.com",
-                      "newValue" : "contactus@example.com"
-                    }, {
-                      "dataElement" : "WEBPAGE"
-                    } ]
+                    "businessEventId": {
+                      "id": "1971132"
+                    }
                   },
-                  "businessEventId" : {
-                    "id" : "1971132"
-                  }
-                }, {
-                  "businessEvent" : {
-                    "header" : {
-                      "moduleName" : 14,
-                      "actionType" : "NEW PROFILE",
-                      "actionId" : "561141",
-                      "primaryKey" : "494139",
-                      "publisherId" : "27234",
-                      "createdDateTime" : "2019-11-24 21:43:59.0",
-                      "hotelId" : "HOTEL1"
+                  {
+                    "businessEvent": {
+                      "header": {
+                        "moduleName": 14,
+                        "actionType": "NEW PROFILE",
+                        "actionId": "561141",
+                        "primaryKey": "494139",
+                        "publisherId": "27234",
+                        "createdDateTime": "2019-11-24 21:43:59.0",
+                        "hotelId": "HOTEL1"
+                      },
+                      "details": [
+                        {
+                          "dataElement": "FIRST NAME",
+                          "newValue": "William"
+                        },
+                        {
+                          "dataElement": "EMAIL YN",
+                          "newValue": "N"
+                        },
+                        {
+                          "dataElement": "WEBPAGE"
+                        }
+                      ]
                     },
-                    "details" : [ {
-                      "dataElement" : "FIRST NAME",
-                      "newValue" : "William"
-                    }, {
-                      "dataElement" : "EMAIL YN",
-                      "newValue" : "N"
-                    }, {
-                      "dataElement" : "WEBPAGE"
-                    } ]
-                  },
-                  "businessEventId" : {
-                    "id" : "1971133"
+                    "businessEventId": {
+                      "id": "1971133"
+                    }
                   }
-                } ]
+                ]
               }
             }
           },
-          "204" : {
-            "description" : "BusinessEvents not found."
+          "204": {
+            "description": "BusinessEventsByExternalSystem not found."
           },
-          "400" : {
-            "$ref" : "#/responses/400"
+          "400": {
+            "$ref": "#/responses/400"
           },
-          "401" : {
-            "$ref" : "#/responses/401"
+          "401": {
+            "$ref": "#/responses/401"
           },
-          "403" : {
-            "$ref" : "#/responses/403"
+          "403": {
+            "$ref": "#/responses/403"
           },
-          "404" : {
-            "$ref" : "#/responses/404"
+          "404": {
+            "$ref": "#/responses/404"
           },
-          "405" : {
-            "$ref" : "#/responses/405"
+          "405": {
+            "$ref": "#/responses/405"
           },
-          "406" : {
-            "$ref" : "#/responses/406"
+          "406": {
+            "$ref": "#/responses/406"
           },
-          "413" : {
-            "$ref" : "#/responses/413"
+          "413": {
+            "$ref": "#/responses/413"
           },
-          "414" : {
-            "$ref" : "#/responses/414"
+          "414": {
+            "$ref": "#/responses/414"
           },
-          "415" : {
-            "$ref" : "#/responses/415"
+          "415": {
+            "$ref": "#/responses/415"
           },
-          "500" : {
-            "$ref" : "#/responses/500"
+          "500": {
+            "$ref": "#/responses/500"
           },
-          "502" : {
-            "$ref" : "#/responses/502"
+          "502": {
+            "$ref": "#/responses/502"
           },
-          "503" : {
-            "$ref" : "#/responses/503"
+          "503": {
+            "$ref": "#/responses/503"
           }
         },
-        "consumes" : [ "application/json;charset=UTF-8" ],
-        "produces" : [ "application/json;charset=UTF-8" ],
-        "tags" : [ "IntegrationProcessor" ]
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "IntegrationProcessor"
+        ]
+      }
+    },
+    "/externalSystem/{extSystemCode}/hotels/{hotelId}/businessEvents": {
+      "get": {
+        "summary": "Get business events by hotel ID",
+        "description": "Business Event messages will sit in a queue.  Use this API to fetch the Business Event messages based on user access.  You will need to pass the External System in the HTTP Header parameters. <p><strong>OperationId:</strong>getBusinessEvents</p>",
+        "operationId": "getBusinessEvents",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "External system code which will be used to dequeue the events."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 1,
+            "required": false,
+            "description": "Number of messages web service should dequeue from the BE queue.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Provides business event message dequeued from BE queue as response",
+            "schema": {
+              "$ref": "#/definitions/businessEvents"
+            },
+            "examples": {
+              "application/json": {
+                "businessEventData": [
+                  {
+                    "businessEvent": {
+                      "header": {
+                        "moduleName": 14,
+                        "actionType": "UPDATE PROFILE",
+                        "actionId": "561139",
+                        "primaryKey": "42212",
+                        "publisherId": "18371",
+                        "createdDateTime": "2019-11-24 21:30:52.0",
+                        "hotelId": "HOTEL1"
+                      },
+                      "details": [
+                        {
+                          "dataElement": "FIRST NAME"
+                        },
+                        {
+                          "dataElement": "NAME",
+                          "oldValue": "Safe Travel",
+                          "newValue": "Safe Travel One"
+                        },
+                        {
+                          "dataElement": "IATA NUMBER",
+                          "newValue": "355453"
+                        },
+                        {
+                          "dataElement": "EMAIL",
+                          "oldValue": "info@example.com",
+                          "newValue": "contactus@example.com"
+                        },
+                        {
+                          "dataElement": "WEBPAGE"
+                        }
+                      ]
+                    },
+                    "businessEventId": {
+                      "id": "1971132"
+                    }
+                  },
+                  {
+                    "businessEvent": {
+                      "header": {
+                        "moduleName": 14,
+                        "actionType": "NEW PROFILE",
+                        "actionId": "561141",
+                        "primaryKey": "494139",
+                        "publisherId": "27234",
+                        "createdDateTime": "2019-11-24 21:43:59.0",
+                        "hotelId": "HOTEL1"
+                      },
+                      "details": [
+                        {
+                          "dataElement": "FIRST NAME",
+                          "newValue": "William"
+                        },
+                        {
+                          "dataElement": "EMAIL YN",
+                          "newValue": "N"
+                        },
+                        {
+                          "dataElement": "WEBPAGE"
+                        }
+                      ]
+                    },
+                    "businessEventId": {
+                      "id": "1971133"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "204": {
+            "description": "BusinessEvents not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "IntegrationProcessor"
+        ]
       }
     }
   },
-  "parameters" : {
-    "authKey" : {
-      "name" : "authorization",
-      "description" : "Bearer token that needs to be passed which is generated post user authentication",
-      "type" : "string",
-      "in" : "header",
-      "required" : true
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
     },
-    "x-app-key" : {
-      "name" : "x-app-key",
-      "description" : "Client or Partner’s Application Key",
-      "type" : "string",
-      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-      "in" : "header",
-      "required" : true
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
     },
-    "x-hotelid" : {
-      "name" : "x-hotelid",
-      "type" : "string",
-      "description" : "Mandatory parameter to identify the hotel code where the end user is logged in",
-      "in" : "header",
-      "required" : true
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
     },
-    "x-externalsystem" : {
-      "name" : "x-externalsystem",
-      "type" : "string",
-      "maxLength" : 80,
-      "description" : "External system code.",
-      "in" : "header",
-      "x-example" : "EXTERNALSYSTEMCODE"
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
     },
-    "Accept-Language" : {
-      "name" : "Accept-Language",
-      "type" : "string",
-      "description" : "Language code",
-      "in" : "header"
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
     }
   },
-  "responses" : {
-    "400" : {
-      "description" : "Bad Request",
-      "schema" : {
-        "$ref" : "#/definitions/exceptionDetailType"
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
       }
     },
-    "401" : {
-      "description" : "Unauthorized"
+    "401": {
+      "description": "Unauthorized"
     },
-    "403" : {
-      "description" : "Forbidden"
+    "403": {
+      "description": "Forbidden"
     },
-    "404" : {
-      "description" : "Resource not found",
-      "schema" : {
-        "$ref" : "#/definitions/exceptionDetailType"
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
       }
     },
-    "405" : {
-      "description" : "Method not allowed"
+    "405": {
+      "description": "Method not allowed"
     },
-    "406" : {
-      "description" : "Not acceptable."
+    "406": {
+      "description": "Not acceptable."
     },
-    "413" : {
-      "description" : "Request Entity Too Large"
+    "413": {
+      "description": "Request Entity Too Large"
     },
-    "414" : {
-      "description" : "Request URI Too Large"
+    "414": {
+      "description": "Request URI Too Large"
     },
-    "415" : {
-      "description" : "Unsupported Media Type"
+    "415": {
+      "description": "Unsupported Media Type"
     },
-    "500" : {
-      "description" : "System Error",
-      "schema" : {
-        "$ref" : "#/definitions/exceptionDetailType"
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
       }
     },
-    "502" : {
-      "description" : "Bad Gateway"
+    "502": {
+      "description": "Bad Gateway"
     },
-    "503" : {
-      "description" : "Service Unavailable"
+    "503": {
+      "description": "Service Unavailable"
     }
   },
-  "definitions" : {
-    "businessEvents" : {
-      "type" : "object",
-      "description" : "Provides business event message dequeued from BE queue as response",
-      "properties" : {
-        "businessEventData" : {
-          "description" : "List of BusinessEvents dequeued for given external system",
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/businessEventDataType"
+  "definitions": {
+    "businessEvents": {
+      "type": "object",
+      "description": "Provides business event message dequeued from BE queue as response",
+      "properties": {
+        "businessEventData": {
+          "description": "List of BusinessEvents dequeued for given external system",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/businessEventDataType"
           }
         },
-        "links" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/instanceLink"
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/instanceLink"
           }
         },
-        "warnings" : {
-          "$ref" : "#/definitions/warningsType"
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     },
-    "businessEventDataType" : {
-      "type" : "object",
-      "properties" : {
-        "businessEvent" : {
-          "description" : "Business event type.",
-          "$ref" : "#/definitions/businessEventType"
+    "businessEventDataType": {
+      "type": "object",
+      "properties": {
+        "businessEvent": {
+          "description": "Business event type.",
+          "$ref": "#/definitions/businessEventType"
         },
-        "businessEventId" : {
-          "description" : "Unique identifier of the Business Event ID",
-          "$ref" : "#/definitions/businessEventIDType"
+        "businessEventId": {
+          "description": "Unique identifier of the Business Event ID",
+          "$ref": "#/definitions/businessEventIDType"
         }
       }
     },
-    "businessEventType" : {
-      "type" : "object",
-      "properties" : {
-        "header" : {
-          "description" : "Business event header type.",
-          "$ref" : "#/definitions/businessEventHeaderType"
+    "businessEventType": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "description": "Business event header type.",
+          "$ref": "#/definitions/businessEventHeaderType"
         },
-        "details" : {
-          "description" : "Business event details collection.",
-          "$ref" : "#/definitions/businessEventDetailsType"
+        "details": {
+          "description": "Business event details collection.",
+          "$ref": "#/definitions/businessEventDetailsType"
         }
       }
     },
-    "businessEventHeaderType" : {
-      "type" : "object",
-      "properties" : {
-        "moduleName" : {
-          "description" : "Business event module name.",
-          "$ref" : "#/definitions/businessEventModuleType"
+    "businessEventHeaderType": {
+      "type": "object",
+      "properties": {
+        "moduleName": {
+          "description": "Business event module name.",
+          "$ref": "#/definitions/businessEventModuleType"
         },
-        "actionType" : {
-          "description" : "Business event action type, such as new reservation, update profile, etc.",
-          "type" : "string",
-          "maxLength" : 2000
+        "actionType": {
+          "description": "Business event action type, such as new reservation, update profile, etc.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "actionId" : {
-          "description" : "Unique action instance id of the business event, uniqueness is guaranteed intra-module only.",
-          "type" : "number"
+        "actionId": {
+          "description": "Unique action instance id of the business event, uniqueness is guaranteed intra-module only.",
+          "type": "number"
         },
-        "primaryKey" : {
-          "description" : "Primary key value of the business event, such as resv name id, allotment header id, name id etc.",
-          "type" : "string",
-          "maxLength" : 2000
+        "primaryKey": {
+          "description": "Primary key value of the business event, such as resv name id, allotment header id, name id etc.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "parentActionId" : {
-          "description" : "Action instance id of the parent business event, if the action triggered this event was a side effect of another action.",
-          "type" : "number"
+        "parentActionId": {
+          "description": "Action instance id of the parent business event, if the action triggered this event was a side effect of another action.",
+          "type": "number"
         },
-        "publisherId" : {
-          "description" : "Internal id of the application or system user that triggered this event.",
-          "type" : "number"
+        "publisherId": {
+          "description": "Internal id of the application or system user that triggered this event.",
+          "type": "number"
         },
-        "createdDateTime" : {
-          "description" : "Timestamp of the business event.",
-          "type" : "string",
-          "format" : "date-time"
+        "createdDateTime": {
+          "description": "Timestamp of the business event.",
+          "type": "string",
+          "format": "date-time"
         },
-        "hotelId" : {
-          "description" : "The property this business event is associated with.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "hotelId": {
+          "description": "The property this business event is associated with.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     },
-    "businessEventModuleType" : {
-      "type" : "string",
-      "enum" : [ "Activity", "Availability", "Block", "BlockOffsets", "Cashiering", "Catering", "CateringNotes", "Configuration", "ECertificate", "Enrollment", "Housekeeping", "MrEnrollment", "NightAudit", "OwnerContract", "Profile", "Rate", "Reservation", "StayRecords" ]
+    "businessEventModuleType": {
+      "type": "string",
+      "enum": [
+        "Activity",
+        "Availability",
+        "Block",
+        "BlockOffsets",
+        "Cashiering",
+        "Catering",
+        "CateringNotes",
+        "Configuration",
+        "ECertificate",
+        "Enrollment",
+        "Housekeeping",
+        "MrEnrollment",
+        "NightAudit",
+        "OwnerContract",
+        "Profile",
+        "Rate",
+        "Reservation",
+        "StayRecords"
+      ]
     },
-    "businessEventDetailsType" : {
-      "type" : "array",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/businessEventDetailType"
+    "businessEventDetailsType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/businessEventDetailType"
       }
     },
-    "businessEventDetailType" : {
-      "type" : "object",
-      "properties" : {
-        "dataElement" : {
-          "description" : "Name of the data element, such as arrival date, departure date, etc.",
-          "type" : "string",
-          "maxLength" : 2000
+    "businessEventDetailType": {
+      "type": "object",
+      "properties": {
+        "dataElement": {
+          "description": "Name of the data element, such as arrival date, departure date, etc.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "oldValue" : {
-          "description" : "Value of the element when this action took place. In case of date values, format used is YYYY-MM-DD.",
-          "type" : "string",
-          "maxLength" : 2000
+        "oldValue": {
+          "description": "Value of the element when this action took place. In case of date values, format used is YYYY-MM-DD.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "newValue" : {
-          "description" : "Value of the element after this action took place. In case of date values, format used is YYYY-MM-DD.",
-          "type" : "string",
-          "maxLength" : 2000
+        "newValue": {
+          "description": "Value of the element after this action took place. In case of date values, format used is YYYY-MM-DD.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "scopeFrom" : {
-          "description" : "Begin date from when this value is applicable, such as daily element date, block grid date etc.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
+        "scopeFrom": {
+          "description": "Begin date from when this value is applicable, such as daily element date, block grid date etc.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         },
-        "scopeTo" : {
-          "description" : "End date till when this value is applicable, such as daily element date, block grid date etc.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
+        "scopeTo": {
+          "description": "End date till when this value is applicable, such as daily element date, block grid date etc.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         }
       }
     },
-    "businessEventIDType" : {
-      "type" : "object",
-      "properties" : {
-        "type" : {
-          "description" : "A reference to the type of object defined by the UniqueID element.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+    "businessEventIDType": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "idContext" : {
-          "description" : "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 80
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
         },
-        "id" : {
-          "description" : "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 80
-        }
-      },
-      "description" : "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote)."
-    },
-    "instanceLink" : {
-      "type" : "object",
-      "description" : "Metadata describing link description objects that MAY appear in the JSON instance representation.",
-      "properties" : {
-        "href" : {
-          "description" : "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type" : "string"
-        },
-        "rel" : {
-          "description" : "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type" : "string"
-        },
-        "templated" : {
-          "description" : "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type" : "boolean",
-          "default" : false
-        },
-        "method" : {
-          "description" : "HTTP method for requesting the target of the link.",
-          "type" : "string",
-          "enum" : [ "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD" ]
-        },
-        "targetSchema" : {
-          "description" : "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type" : "string"
-        },
-        "operationId" : {
-          "description" : "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type" : "string"
-        },
-        "title" : {
-          "description" : "Exact copy of the \"summary\" field on the linked operation.",
-          "type" : "string"
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
         }
       },
-      "required" : [ "href", "rel", "method", "operationId" ]
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote)."
     },
-    "warningsType" : {
-      "type" : "array",
-      "description" : "Used in conjunction with the Success element to define a business error.",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/warningType"
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
       }
     },
-    "warningType" : {
-      "type" : "object",
-      "description" : "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
-      "properties" : {
-        "value" : {
-          "type" : "string",
-          "description" : "Property Value"
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
         },
-        "shortText" : {
-          "description" : "An abbreviated version of the error in textual format.",
-          "type" : "string",
-          "maxLength" : 2000
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "code" : {
-          "description" : "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "docURL" : {
-          "description" : "If present, this URL refers to an online description of the error that occurred.",
-          "type" : "string",
-          "maxLength" : 2000
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "status" : {
-          "description" : "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
-          "type" : "string",
-          "maxLength" : 2000
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "tag" : {
-          "description" : "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
-          "type" : "string",
-          "maxLength" : 2000
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
         },
-        "recordId" : {
-          "description" : "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type" : "string",
-          "maxLength" : 2000
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "type" : {
-          "description" : "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "language" : {
-          "description" : "Language identification.",
-          "type" : "string",
-          "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
         },
-        "rph" : {
-          "description" : "Reference Place Holder used as an index for this warning.",
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 8
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
         }
       }
     },
-    "exceptionDetailType" : {
-      "title" : "Error Detail",
-      "description" : "Complex type that contains error details for a REST call.",
-      "type" : "object",
-      "properties" : {
-        "type" : {
-          "type" : "string",
-          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
         },
-        "title" : {
-          "type" : "string",
-          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
         },
-        "status" : {
-          "type" : "integer",
-          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
         },
-        "detail" : {
-          "type" : "string",
-          "description" : "Human-readable description specific to this occurrence of the problem."
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
         },
-        "instance" : {
-          "type" : "string",
-          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
         },
-        "o:errorCode" : {
-          "type" : "string",
-          "description" : "Application error code, which is different from HTTP error code."
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
         },
-        "o:errorPath" : {
-          "type" : "string",
-          "description" : "Path to the problem at the resource or property level."
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         },
-        "o:errorDetails" : {
-          "description" : "Details of the error message, consisting of a hierarchical tree structure.",
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/errorInstance"
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
           }
         },
-        "links" : {
-          "$ref" : "#/definitions/links"
+        "links": {
+          "$ref": "#/definitions/links"
         }
       },
-      "required" : [ "type", "title" ]
+      "required": [
+        "type",
+        "title"
+      ]
     },
-    "errorInstance" : {
-      "title" : "Error Instance Details",
-      "description" : "Complex type that contains error instance details for a REST call.",
-      "type" : "object",
-      "properties" : {
-        "type" : {
-          "type" : "string",
-          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
         },
-        "title" : {
-          "type" : "string",
-          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
         },
-        "status" : {
-          "type" : "integer",
-          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
         },
-        "detail" : {
-          "type" : "string",
-          "description" : "Human-readable description specific to this occurrence of the problem."
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
         },
-        "instance" : {
-          "type" : "string",
-          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
         },
-        "o:errorCode" : {
-          "type" : "string",
-          "description" : "Application error code, which is different from HTTP error code."
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
         },
-        "o:errorPath" : {
-          "type" : "string",
-          "description" : "Path to the problem at the resource or property level."
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         }
       },
-      "required" : [ "type", "title" ]
+      "required": [
+        "type",
+        "title"
+      ]
     },
-    "links" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/definitions/instanceLink"
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
       }
     }
   },
-  "tags" : [ {
-    "name" : "IntegrationProcessor",
-    "description" : "The Integration Processor Service provides a set of operations which help the external customers and vendors to process Business Events generated in OPERA."
-  } ]
+  "tags": [
+    {
+      "name": "IntegrationProcessor",
+      "description": "The Integration Processor Service provides a set of operations which help the external customers and vendors to process Business Events generated in OPERA."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
 }

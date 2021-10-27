@@ -1,0 +1,1236 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Event Configuration API",
+    "description": "This API caters for Event Configuration in OPERA Cloud. <br /><There are operations to post, update, fetch and delete codes such as item inventory, function spaces, menu items and many more.<br /><br />Compatible with OPERA Cloud release 21.3.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.</p>",
+    "version": "21.3.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/evm/config/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/hotels/{hotelId}/roomPools": {
+      "get": {
+        "summary": "Fetch Room Type Pool",
+        "description": "This API allows you to Use this API to get Room Type Pool and the associated Room Types. <p><strong>OperationId:</strong>fetchRoomTypePool</p>",
+        "operationId": "fetchRoomTypePool",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Flag to indicate if inactive room types should be included.",
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "physical",
+            "in": "query",
+            "required": false,
+            "description": "Is it a physical sleep room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "pseudo",
+            "in": "query",
+            "required": false,
+            "description": "Is it a pseudo room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "summaryInfo",
+            "in": "query",
+            "required": false,
+            "description": "Flag to indicate if summary or detailed information should be fetched.",
+            "type": "boolean"
+          },
+          {
+            "name": "roomTypeCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomClassCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomTypePoolCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetch room pool information.",
+            "schema": {
+              "$ref": "#/definitions/roomTypePoolDetails"
+            }
+          },
+          "204": {
+            "description": "fetchRoomTypePool not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create Room Type Pools",
+        "description": "This API allows you to Use this API to create Room Type Pools. <p><strong>OperationId:</strong>createRoomTypePool</p>",
+        "operationId": "createRoomTypePool",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "roomTypePoolCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating new room pool.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomTypePoolCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomPools/{roomPoolCode}": {
+      "delete": {
+        "summary": "Delete  Room Type Pool and Mappings",
+        "description": "Use this API to delete  Room Type Pool and Mappings. <p><strong>OperationId:</strong>removeRoomTypePool</p>",
+        "operationId": "removeRoomTypePool",
+        "parameters": [
+          {
+            "name": "roomPoolCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of room type pool."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "The description of room pool type.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "defaultText",
+            "in": "query",
+            "required": false,
+            "description": "Default text with Character length from 0 to 1000.",
+            "type": "string"
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Language code for the translation.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "sequence",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Sequence for representing room type pool record.",
+            "items": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "name": "inactive",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates the room type is inactive or not.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "numberOfRooms",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Number of rooms for this room type.",
+            "items": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "name": "roomType",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "roomClass",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Room class for the room type code.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "shortDescription",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Short Description of room type.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "activeDate",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Active date of the room type.",
+            "items": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false
+          },
+          {
+            "name": "pseudo",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates if room type is pseudo.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "accessible",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates if room type is accessible.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "sendToInterface",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates if room type is sent to interface.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "sellSequence",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates room types sell sequence.",
+            "items": {
+              "type": "number"
+            },
+            "required": false
+          },
+          {
+            "name": "suite",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates room type is a suite.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "meetingRoom",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates room type is meeting room. This Can be Meeting room flag cannot be unmarked at the property level. Can only be marked for non pseudo room types.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "name": "restricted",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Indicates that the room pool cannot be used to allocate inventory to this room type. Inventory must be allocated directly to the room type itself.",
+            "items": {
+              "type": "boolean"
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "put": {
+        "summary": "Change Room Type Pool ",
+        "description": "Use this API to update Room Type Pool and Associated Room Types. <p><strong>OperationId:</strong>changeRoomTypePool</p>",
+        "operationId": "changeRoomTypePool",
+        "parameters": [
+          {
+            "name": "roomPoolCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of room type pool."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "roomTypePoolToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing existing room pool.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomTypePoolToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "roomTypePoolDetails": {
+      "type": "object",
+      "description": "Response object for fetch room pool information.",
+      "properties": {
+        "roomTypePools": {
+          "description": "Collection of room pool information.",
+          "$ref": "#/definitions/roomTypePoolTypes"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomTypePoolTypes": {
+      "type": "array",
+      "description": "Collection of room type pool and associated room type(s).",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomTypePoolType"
+      }
+    },
+    "roomTypePoolType": {
+      "type": "object",
+      "description": "This type represents complete information of room type pool and Associated Room Type(s).",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code where room pool belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomTypePoolCode": {
+          "description": "Room type pool Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "The description of room pool type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "shortDescription": {
+          "description": "The short description of type room pool.",
+          "$ref": "#/definitions/translationTextType1000"
+        },
+        "sequence": {
+          "description": "Sequence for representing room type pool record.",
+          "type": "integer"
+        },
+        "associatedRoomTypes": {
+          "description": "Pertain associated room type(s) detail information.",
+          "$ref": "#/definitions/roomPoolRoomTypesType"
+        }
+      }
+    },
+    "translationTextType1000": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 1000.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1000
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "roomPoolRoomTypesType": {
+      "type": "array",
+      "description": "Collection of room type pool mapping type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomPoolRoomTypeType"
+      }
+    },
+    "roomPoolRoomTypeType": {
+      "type": "object",
+      "description": "This extension will only use for consuming RoomType and SellSequence elements for consistency.",
+      "properties": {
+        "roomClass": {
+          "description": "Room class for the room type code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "shortDescription": {
+          "description": "Short Description of room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "activeDate": {
+          "description": "Active date of the room type.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "pseudo": {
+          "description": "Indicates if room type is pseudo.",
+          "type": "boolean"
+        },
+        "accessible": {
+          "description": "Indicates if room type is accessible.",
+          "type": "boolean"
+        },
+        "sendToInterface": {
+          "description": "Indicates if room type is sent to interface.",
+          "type": "boolean"
+        },
+        "sellSequence": {
+          "description": "Indicates room types sell sequence.",
+          "type": "number"
+        },
+        "suite": {
+          "description": "Indicates room type is a suite.",
+          "type": "boolean"
+        },
+        "meetingRoom": {
+          "description": "Indicates room type is meeting room. This Can be Meeting room flag cannot be unmarked at the property level. Can only be marked for non pseudo room types.",
+          "type": "boolean"
+        },
+        "roomType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "numberOfRooms": {
+          "description": "Number of rooms for this room type.",
+          "type": "integer"
+        },
+        "inactive": {
+          "description": "Indicates the room type is inactive or not.",
+          "type": "boolean"
+        },
+        "restricted": {
+          "description": "Indicates that the room pool cannot be used to allocate inventory to this room type. Inventory must be allocated directly to the room type itself.",
+          "type": "boolean"
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "roomTypePoolCriteria": {
+      "type": "object",
+      "description": "Request object for creating new room pool.",
+      "properties": {
+        "roomPoolTypes": {
+          "description": "Collection of room pool information.",
+          "$ref": "#/definitions/roomTypePoolTypes"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "roomTypePoolToBeChanged": {
+      "type": "object",
+      "description": "Request object for changing existing room pool.",
+      "properties": {
+        "roomPoolTypes": {
+          "description": "Collection of room pool information.",
+          "$ref": "#/definitions/roomTypePoolTypes"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "HotelConfig",
+      "description": "These APIs will allow you to configure events related configuration related to Administration."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
