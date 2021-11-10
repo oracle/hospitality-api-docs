@@ -10,7 +10,7 @@ Specifications for Oracle Hospitality REST APIs are held in the [rest-api-specs]
 
 ## Get Help
 
-Ask questions on by sending us an email to <hospitality_apis_ww_group@oracle.com>.
+Ask questions on by sending us an email to <hospitality_apis_ww_grp@oracle.com>.
 
 ## Get Involved
 
