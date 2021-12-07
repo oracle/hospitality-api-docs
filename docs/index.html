@@ -1,0 +1,337 @@
+<!--
+ *  Copyright (c) 2021 GraphQL Contributors
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the license found in the
+ *  LICENSE file in the root directory of this source tree.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      OHIP GraphiQL
+    </title>
+    <link rel="icon" type="image/x-icon" href="https://www.oracle.com/webfolder/technetwork/jet/css/images/favicon.ico"/>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #graphiql {
+        height: 100vh;
+      }
+
+      .content {
+        flex: 1;
+        margin: 10px;
+      }
+    </style>
+
+    <!--
+      This GraphiQL example depends on Promise and fetch, which are available in
+      modern browsers, but can be "polyfilled" for older browsers.
+      GraphiQL itself depends on React DOM.
+      If you do not want to rely on a CDN, you can host these files locally or
+      include them directly in your favored resource bunder.
+    -->
+    <script 
+      src="https://unpkg.com/react@17.0.2/umd/react.development.js" 
+      integrity="sha384-xQwCoNcK/7P3Lpv50IZSEbJdpqbToWEODAUyI/RECaRXmOE2apWt7htari8kvKa/" 
+      crossorigin="anonymous">
+    </script>
+    <script 
+      src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js" 
+      integrity="sha384-E9IgxDsnjKgh0777N3lXen7NwXeTsOpLLJhI01SW7idG046SRqJpsW2rJwsOYk0L" 
+      crossorigin="anonymous">
+    </script>
+
+    <script>
+      async function generateHash(apiKey) {
+        const keyUint8 = new TextEncoder().encode(apiKey);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', keyUint8);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+      }
+      function saveInputs() {
+        const url = document.getElementById("urlInput").value;
+        const authToken = document.getElementById("authTokenInput").value;
+        const apiKey = document.getElementById("apiKeyInput").value;
+        if (!url || !authToken || !apiKey) {
+          alert("Please fill all text boxes");
+        } else {
+          generateHash(apiKey).then(socketKey => {
+            sessionStorage.setItem("ohipAsyncSocketKey", socketKey);
+            document.getElementById("socketKeyInput").value = socketKey;
+          });
+          localStorage.setItem("ohipAsyncUrl", url);
+          sessionStorage.setItem("ohipAsyncApiKey", apiKey);
+          
+          sessionStorage.setItem("ohipAsyncAuthToken", authToken);
+
+        }
+      }
+      function clearInputs() {
+        document.getElementById("urlInput").value = "";
+        document.getElementById("socketKeyInput").value = "";
+        document.getElementById("authTokenInput").value = "";
+        document.getElementById("apiKeyInput").value = "";
+        localStorage.removeItem("ohipAsyncUrl");
+        sessionStorage.removeItem("ohipAsyncSocketKey");
+        sessionStorage.removeItem("ohipAsyncApiKey");
+        sessionStorage.removeItem("ohipAsyncAuthToken");
+      }
+      function reloadGraphiql() {
+        const ohipAsyncUrl = document.getElementById("urlInput").value;
+        const ohipAsyncSocketKey = document.getElementById("socketKeyInput").value;
+        const ohipAsyncApiKey = document.getElementById("apiKeyInput").value;
+        const ohipAsyncAuthToken = document.getElementById("authTokenInput").value;
+
+        if (!ohipAsyncUrl || !ohipAsyncSocketKey || !ohipAsyncApiKey || !ohipAsyncAuthToken) {
+          alert("Please populate all fields");
+          return;
+        }
+
+        const wsClient = graphqlWs.createClient({
+          url: `${ohipAsyncUrl}/subscriptions?key=${ohipAsyncSocketKey}`,
+          lazy: true, // connect as soon as the page opens
+          keepAlive: 10000,
+          connectionParams: async () => {
+            return {
+              "Authorization": `Bearer ${ohipAsyncAuthToken}`,
+              "x-app-key": `${ohipAsyncApiKey}`
+            }
+          },
+        });
+
+        function subscribe(payload) {
+          let deferred = null;
+          const pending = [];
+          let throwMe = null,
+            done = false;
+          const dispose = wsClient.subscribe(payload, {
+            next: (data) => {
+              pending.push(data);
+              deferred?.resolve(false);
+            },
+            error: (err) => {
+              if (err instanceof Error) {
+                throwMe = err;
+              } else if (err instanceof CloseEvent) {
+                throwMe = new Error(
+                  `Socket closed with event ${err.code} ${
+                    err.reason || ""
+                  }`.trim()
+                );
+              } else {
+                // GraphQLError[]
+                throwMe = new Error(err.map(({ message }) => message).join(", "));
+              }
+              deferred?.reject(throwMe);
+            },
+            complete: () => {
+              done = true;
+              deferred?.resolve(true);
+            },
+          });
+          return {
+            [Symbol.asyncIterator]() {
+              return this;
+            },
+            async next() {
+              if (done) return { done: true, value: undefined };
+              if (throwMe) throw throwMe;
+              if (pending.length) return { value: pending.shift() };
+              return (await new Promise(
+                (resolve, reject) => (deferred = { resolve, reject })
+              ))
+                ? { done: true, value: undefined }
+                : { value: pending.shift() };
+            },
+            async return() {
+              dispose();
+              return { done: true, value: undefined };
+            },
+          };
+        }
+
+        ReactDOM.render(
+          React.createElement(GraphiQL, {
+            fetcher: subscribe,
+            defaultVariableEditorOpen: true,
+          }),
+          document.getElementById('graphiql'),
+        );
+      }
+    </script>
+
+    <!--
+      These two files can be found in the npm module, however you may wish to
+      copy them directly into your environment, or perhaps include them in your
+      favored resource bundler.
+     -->
+    <link rel="stylesheet" 
+      href="https://unpkg.com/graphiql@1.4.2/graphiql.min.css" 
+      integrity="sha384-utof9i/S6ekurQbrj3zzkIaPi82hS5rSijxRYOPF5M5t1/AtkCxwr2neX+gNB6QJ" 
+      crossorigin="anonymous">
+
+    <link rel="stylesheet" id="redwoodcss" 
+      href="https://static.oracle.com/cdn/jet/11.0.0/default/css/redwood/oj-redwood-min.css" 
+      integrity="sha384-Gw4XBDBe/ZLOYa31klEhzZB2AjqSYKoqkeJBD8nTSdZZ1kAP4nWE+cG3/kP5oD4r" 
+      crossorigin="anonymous">
+     
+    <link rel="stylesheet" id="oraclefont" 
+      href="https://static.oracle.com/cdn/fnd/gallery/2107.3.0/OracleFont/OracleFont.min.css" 
+      integrity="sha384-56A59SmDZ8QJ6HIgLMg7uhLg2ktDf6gse8+AlYwoGI8besCw/C5vmkRmtUSy8WQS" 
+      crossorigin="anonymous">      
+
+    <link rel="stylesheet" id="uxiconfont" 
+      href="https://static.oracle.com/cdn/fnd/gallery/2107.3.0/images/iconfont/ojuxIconFont.min.css" 
+      integrity="sha384-1Bnlygdr8rRLs6tJEyqNeWY6Ym61xOAVSA3EIFri7P2ooz3oTypSjrvuzyb4UjN8" 
+      crossorigin="anonymous">
+  </head>
+
+  <body>
+    <header id="header" role="banner" class="oj-flex-bar oj-sm-align-items-center" style="margin-top: 10px;">
+      <div class="oj-flex-bar-start oj-sm-only-hide oj-flex-item oj-flex oj-sm-flex-direction-column">
+        <span class=" oj-flex-item oj-typography-heading-md oj-typography-bold" style="padding-left: 10px">
+          <span class="oj-flex-item oj-start">
+            <span slot="startIcon" class="oj-ux-ico-oracle"></span>
+          </span>
+        </span>
+        <span class="oj-md-down-hide oj-flex-item oj-typography-body-sm" style="padding-left: 10px">
+          OHIP Inbound Async GraphiQL Tool
+        </span>
+      </div>
+    </header>
+    <div id="inputs">
+        <div class="oj-inputtext oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete" style="padding-left: 10px; max-width: calc(2 * var(--oj-form-layout-column-max-width)); margin-top: 10px;">
+          <div role="presentation" class="oj-text-field-container">
+            <div class="oj-text-field-middle">
+              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="url">
+                <span id="urlHint">URL:</span>
+              </label>
+              <input type="url" class="oj-inputtext-input oj-text-field-input oj-component-initnode" pattern="wss://.*" placeholder="" id="urlInput">
+            </div>
+          </div>
+        </div>
+        <div class="oj-inputtext oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete oj-disabled"  style="max-width: calc(2 * var(--oj-form-layout-column-max-width));padding-left: 10px; margin-top: 10px">
+          <div role="presentation" class="oj-text-field-container">
+            <div class="oj-text-field-middle">
+              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="socketKeyInput">
+                <span id="socketKeyHint">Socket Key:</span>
+              </label>
+              <input type="text" class="oj-inputtext-input oj-text-field-input oj-component-initnode" readonly placeholder id="socketKeyInput">
+            </div>
+          </div>
+        </div>
+        <div class="oj-inputtext oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete"  style="max-width: calc(2 * var(--oj-form-layout-column-max-width));padding-left: 10px; margin-top: 10px">
+          <div role="presentation" class="oj-text-field-container">
+            <div class="oj-text-field-middle">
+              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="authTokenInput">
+                <span id="authTokenHint">Auth Token:</span>
+              </label>
+              <input type="text" class="oj-inputtext-input oj-text-field-input oj-component-initnode" placeholder="" id="authTokenInput" value="">
+            </div>
+          </div>
+        </div>
+        <div class="oj-inputpassword oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete"  style="max-width: calc(2 * var(--oj-form-layout-column-max-width)); padding-left: 10px; margin-top: 10px">
+          <div role="presentation" class="oj-text-field-container">
+            <div class="oj-text-field-middle">
+              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="apiKeyInput">
+                <span id="apiKeyHint">API Key:</span>
+              </label>
+              <input type="password" class="oj-inputpassword-input oj-text-field-input oj-component-initnode" placeholder="" id="apiKeyInput">
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <button onclick="reloadGraphiql()" class="oj-button oj-button-outlined-chrome oj-button-text-icon-start oj-enabled oj-complete oj-default" aria-labelledby="reloadGraphiql" style="margin-left: 10px;">
+            <div class="oj-button-label">
+              <span class="oj-button-icon oj-start">
+                <span slot="startIcon" class="oj-ux-ico-restart"></span>
+              </span>
+              <span>
+                <span class="oj-button-text" id="reloadGraphiql">
+                  Start
+                </span>
+              </span>
+            </div>
+          </button>
+          <button onclick="saveInputs()" class="oj-button oj-button-outlined-chrome oj-button-text-icon-start oj-enabled oj-complete oj-default" aria-labelledby="saveInputs" style="margin-left: 10px;">
+            <div class="oj-button-label">
+              <span class="oj-button-icon oj-start">
+                <span slot="startIcon" class="oj-ux-ico-save"></span>
+              </span>
+              <span>
+                <span class="oj-button-text" id="saveInputs">
+                  Save
+                </span>
+              </span>
+            </div>
+          </button>
+          <button onclick="clearInputs()" class="oj-button oj-button-outlined-chrome oj-button-text-icon-start oj-enabled oj-complete oj-default" aria-labelledby="clearInputs" style="margin-left: 10px;">
+            <div class="oj-button-label">
+              <span class="oj-button-icon oj-start">
+                <span slot="startIcon" class="oj-ux-ico-delete-circle"></span>
+              </span>
+              <span>
+                <span class="oj-button-text" id="clearInputs">
+                  Clear
+                </span>
+              </span>
+            </div>
+          </button>
+        </div>
+      <hr>
+    </div>
+    <div id="graphiql" class="content">
+
+    </div>
+    <hr>
+    <footer id="def" role="contentinfo" class="oj-sm-padding-2x-horizontal" style="height: 5vh;">
+      <div class="oj-flex-bar oj-sm-margin-2x-top">
+        <div class="oj-flex-bar-start">
+          <div class="oj-text-sm oj-sm-margin-2x-top oj-link-standalone oj-link-subtle-primary">
+            Copyright © 2014, 2021 Oracle and/or its affiliates All rights reserved.
+          </div>
+        </div>
+        <div class="oj-flex-bar-end">
+          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="aboutOracle" href="https://www.oracle.com/us/corporate/index.html#menu-about">
+            About Oracle
+          </a>
+          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="contactUs" href="https://www.oracle.com/us/corporate/contact/index.html">
+            Contact Us
+          </a>
+          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="legalNotices" href="https://www.oracle.com/us/legal/index.html">
+            Legal Notices
+          </a>
+          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="termsOfUseAndPrivacy" href="https://www.oracle.com/us/legal/privacy/">
+            Terms of Use and Privacy
+          </a>
+        </div>
+      </div>
+    </footer>
+    <script>
+      document.getElementById("urlInput").value = localStorage.getItem("ohipAsyncUrl");
+      document.getElementById("socketKeyInput").value = sessionStorage.getItem("ohipAsyncSocketKey");
+      document.getElementById("apiKeyInput").value = sessionStorage.getItem("ohipAsyncApiKey");
+      document.getElementById("authTokenInput").value = sessionStorage.getItem("ohipAsyncAuthToken");
+    </script>
+
+    <script src="https://unpkg.com/graphiql@1.4.2/graphiql.min.js" 
+      integrity="sha384-J66SJ/f9ysdOJbaOO8Hssim6BR6AfWfUWcPUNW8pfm1z+KJy9zPpfsI7HUoM/E5C" 
+      crossorigin="anonymous">
+    </script>    
+    <script src="https://unpkg.com/graphql-ws@5.3.0/umd/graphql-ws.min.js" 
+      integrity="sha384-iQAYdKZcjrb5rKLc3sFgVP+TiGhRnGJBAQo77LjRfRVtTEhi430qwuYXzhjhnNga" 
+      crossorigin="anonymous">
+    </script>
+  </body>
+</html>
