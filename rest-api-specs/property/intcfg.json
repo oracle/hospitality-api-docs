@@ -1,0 +1,3465 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Integration Configuration API",
+    "description": "APIs catering to Integration Configuration in OPERA Cloud.  Operations such as get Hotel Interface Types, or get UDF mappings can be found in this module.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright (c) 2021 Oracle and/or its affiliates.</p>",
+    "version": "21.5.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/int/config/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/deliveryMethods": {
+      "get": {
+        "summary": "Operation to fetch delivery methods.",
+        "description": " <p><strong>OperationId:</strong>getDeliveryMethods</p>",
+        "operationId": "getDeliveryMethods",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "description": "Property code.",
+            "type": "string"
+          },
+          {
+            "name": "croCode",
+            "in": "query",
+            "required": false,
+            "description": "CRO code.",
+            "type": "string"
+          },
+          {
+            "name": "usages",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Settings for Text Message Delivery of Queue Reservation status",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "General",
+                "QueueReservation",
+                "Confirmation",
+                "GuestMessage",
+                "BillingFolio",
+                "QueueRush"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "If true this will include inactive records(This is only applicable for general SMTP delivery method ).",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response to request to fetch the delivery method for a property/HUB/Chain and its configurations.",
+            "schema": {
+              "$ref": "#/definitions/fetchedDeliveryMethods"
+            }
+          },
+          "204": {
+            "description": "DeliveryMethods not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "put": {
+        "summary": "Operation to change delivery methods.",
+        "description": " <p><strong>OperationId:</strong>putDeliveryMethods</p>",
+        "operationId": "putDeliveryMethods",
+        "parameters": [
+          {
+            "name": "changeDeliveryMethods",
+            "in": "body",
+            "required": true,
+            "description": "Request to change the delivery method for a property/HUB/Chain and its configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changeDeliveryMethods"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/changedDeliveryMethods"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Operation to remove delivery methods.",
+        "description": " <p><strong>OperationId:</strong>deleteDeliveryMethods</p>",
+        "operationId": "deleteDeliveryMethods",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Settings for Text Message Delivery of Queue Reservation status",
+            "uniqueItems": true,
+            "enum": [
+              "General",
+              "QueueReservation",
+              "Confirmation",
+              "GuestMessage",
+              "BillingFolio",
+              "QueueRush"
+            ]
+          },
+          {
+            "name": "options",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "SFTP delivery configurations",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Email",
+                "Fax",
+                "TextMessage",
+                "Sftp"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "configurationId",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Unique id associated with this configuration",
+            "items": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "post": {
+        "summary": "Operation to create delivery methods.",
+        "description": " <p><strong>OperationId:</strong>postDeliveryMethods</p>",
+        "operationId": "postDeliveryMethods",
+        "parameters": [
+          {
+            "name": "createDeliveryMethods",
+            "in": "body",
+            "required": true,
+            "description": "Request to create the delivery method for a property/HUB/Chain and its configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/createDeliveryMethods"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/deviceLocations": {
+      "get": {
+        "summary": "Get the template device locations",
+        "description": "Use this API to get the template device locations. <p><strong>OperationId:</strong>getTemplateDeviceLocations</p>",
+        "operationId": "getTemplateDeviceLocations",
+        "parameters": [
+          {
+            "name": "fetchInactive",
+            "in": "query",
+            "default": "false",
+            "required": false,
+            "description": "Determines wether to fetch inactive records or not.",
+            "type": "boolean"
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching template Device locations.",
+            "schema": {
+              "$ref": "#/definitions/templateDeviceLocationsDetails"
+            }
+          },
+          "204": {
+            "description": "TemplateDeviceLocations not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create the template device locations",
+        "description": "Use this API to create the template device locations. <p><strong>OperationId:</strong>postTemplateDeviceLocations</p>",
+        "operationId": "postTemplateDeviceLocations",
+        "parameters": [
+          {
+            "name": "templateDeviceLocationsCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating template Device locations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/templateDeviceLocationsCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
+    "/deviceLocations/{deviceLocationId}": {
+      "put": {
+        "summary": "Change the template device locations",
+        "description": "Use this API to update the template device locations. <p><strong>OperationId:</strong>changeTemplateDeviceLocations</p>",
+        "operationId": "changeTemplateDeviceLocations",
+        "parameters": [
+          {
+            "name": "deviceLocationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of device location."
+          },
+          {
+            "name": "templateDeviceLocationsToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing template Device locations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/templateDeviceLocationsToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete the template device locations",
+        "description": "Use this API to delete the template device locations. <p><strong>OperationId:</strong>removeTemplateDeviceLocations</p>",
+        "operationId": "removeTemplateDeviceLocations",
+        "parameters": [
+          {
+            "name": "deviceLocationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of device location."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
+    "/externalSystems/{externalSystemCode}/hotels/{hotelId}/publishers": {
+      "post": {
+        "summary": "Operation to create publishers.",
+        "description": " <p><strong>OperationId:</strong>postPublishers</p>",
+        "operationId": "postPublishers",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Id used to find a property in OPERA."
+          },
+          {
+            "name": "externalSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Code used to find External System in OPERA."
+          },
+          {
+            "name": "createPublishers",
+            "in": "body",
+            "required": true,
+            "description": "Request to create publishers.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/createPublishers"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Operation to remove publisher.",
+        "description": " <p><strong>OperationId:</strong>deletePublisher</p>",
+        "operationId": "deletePublisher",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Id used to find a property in OPERA."
+          },
+          {
+            "name": "externalSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Code used to find External System in OPERA."
+          },
+          {
+            "name": "subscriberHotelId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/externalSystems/{externalSystemCode}/publishers": {
+      "get": {
+        "summary": "Operation to fetch publishers.",
+        "description": " <p><strong>OperationId:</strong>getPublishers</p>",
+        "operationId": "getPublishers",
+        "parameters": [
+          {
+            "name": "externalSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Code used to find External System in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response to request to fetch the external systems",
+            "schema": {
+              "$ref": "#/definitions/fetchedPublishers"
+            }
+          },
+          "204": {
+            "description": "Publishers not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/hotelInterfaceTypes": {
+      "get": {
+        "summary": "Operation to fetch hotel interfaces.",
+        "description": " <p><strong>OperationId:</strong>getHotelInterfaces</p>",
+        "operationId": "getHotelInterfaces",
+        "parameters": [
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "interfaceTypes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "uniqueItems": true,
+            "description": "XML Posting Interface",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Bms",
+                "Cas",
+                "Ccw",
+                "Dls",
+                "Eft",
+                "Exp",
+                "Mak",
+                "Mbs",
+                "Msc",
+                "Pbx",
+                "Pos",
+                "Svs",
+                "Tik",
+                "Vid",
+                "Vms",
+                "Www",
+                "Xml"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "logosCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "If true this will set the criteria to include inactive records.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for retrieving Hotel Interfaces.",
+            "schema": {
+              "$ref": "#/definitions/fetchedHotelInterfaces"
+            }
+          },
+          "204": {
+            "description": "HotelInterfaces not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/hotelInerface": {
+      "delete": {
+        "summary": "Operation to remove hotel interface.",
+        "description": " <p><strong>OperationId:</strong>deleteHotelInterface</p>",
+        "operationId": "deleteHotelInterface",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "logo",
+            "in": "query",
+            "required": false,
+            "description": "Hotel Interface Logo. On the database, this is also referred as DBF Logo. This is a three letter code followed by an underscore(_). This tells us which DBF files and log files with the prefix that IFC7 is going to create.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/interfaceRights": {
+      "put": {
+        "summary": "Operation to change interface right.",
+        "description": " <p><strong>OperationId:</strong>putInterfaceRight</p>",
+        "operationId": "putInterfaceRight",
+        "parameters": [
+          {
+            "name": "changeInterfaceRight",
+            "in": "body",
+            "required": true,
+            "description": "Request object for updating a Hotel Interface Right. It will create the Hotel Interface Right if it does not exist on the database.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changeInterfaceRight"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/changedInterfaceRight"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Operation to remove interface right.",
+        "description": " <p><strong>OperationId:</strong>deleteInterfaceRight</p>",
+        "operationId": "deleteInterfaceRight",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "description": "Hotel Code to which the Interface Right belongs to.",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "idExtension",
+            "in": "query",
+            "required": false,
+            "description": "Additional identifying value assigned by the creating system.",
+            "type": "integer"
+          },
+          {
+            "name": "idContext",
+            "in": "query",
+            "required": false,
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "right",
+            "in": "query",
+            "required": false,
+            "description": "Internal code for each allowed right of a Hotel Interface record.",
+            "type": "integer"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "description": "User defined code for an Interface Right.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "User defined description for an Interface Right.",
+            "type": "string"
+          },
+          {
+            "name": "interfaceRightDescription",
+            "in": "query",
+            "required": false,
+            "description": "System Description of an allowed Interface Right.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "get": {
+        "summary": "Operation to fetch interface rights.",
+        "description": " <p><strong>OperationId:</strong>getInterfaceRights</p>",
+        "operationId": "getInterfaceRights",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X."
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "idExtension",
+            "in": "query",
+            "required": false,
+            "description": "Additional identifying value assigned by the creating system.",
+            "type": "integer"
+          },
+          {
+            "name": "idContext",
+            "in": "query",
+            "required": false,
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Collection of Hotel Interface Tasks.",
+            "schema": {
+              "$ref": "#/definitions/fetchedInterfaceRights"
+            }
+          },
+          "204": {
+            "description": "InterfaceRights not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/interfaces/{interfaceId}/databases/{databaseId}/availableResorts": {
+      "get": {
+        "summary": "Operation to fetch external database available properties.",
+        "description": " <p><strong>OperationId:</strong>getExternalDatabaseAvailableProperties</p>",
+        "operationId": "getExternalDatabaseAvailableProperties",
+        "parameters": [
+          {
+            "name": "databaseId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "OPERA Id for Databsase"
+          },
+          {
+            "name": "interfaceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "OPERA Id for interface"
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Flag that indicates to include inactive records.",
+            "type": "boolean"
+          },
+          {
+            "name": "interfaceCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for retrieving the Available properties for External Databases.",
+            "schema": {
+              "$ref": "#/definitions/fetchedExternalDatabaseAvailableProperties"
+            }
+          },
+          "204": {
+            "description": "ExternalDatabaseAvailableProperties not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    },
+    "/udfMappings": {
+      "get": {
+        "summary": "Operation to send a response to the Look up of UDFs.",
+        "description": "Operation to send a response to the Look-up of UDFs. <p><strong>OperationId:</strong>getUDFMappings</p>",
+        "operationId": "getUDFMappings",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the Type for Reservation and Profile Type.",
+            "type": "string"
+          },
+          {
+            "name": "uDFName",
+            "in": "query",
+            "required": false,
+            "description": "Name of the user-defined function (UDF) field.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Message received on an UDFs Lookup.",
+            "schema": {
+              "$ref": "#/definitions/fetchedUDFMappings"
+            }
+          },
+          "204": {
+            "description": "UDFMappings not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      },
+      "put": {
+        "summary": "Operation to send a response to the Change in UDF.",
+        "description": "Operation to send a response to the Change in UDF. <p><strong>OperationId:</strong>putUDFMapping</p>",
+        "operationId": "putUDFMapping",
+        "parameters": [
+          {
+            "name": "changeUDFMapping",
+            "in": "body",
+            "required": true,
+            "description": "Self-contained Request object that is used when Updating UDFMapping.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changeUDFMapping"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/changedUDFMapping"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ExternalSystemsConfig"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "fetchedDeliveryMethods": {
+      "type": "object",
+      "description": "Response to request to fetch the delivery method for a property/HUB/Chain and its configurations.",
+      "properties": {
+        "deliveryMethods": {
+          "description": "Collection of all delivery method types.",
+          "$ref": "#/definitions/configuredExternalDeliveryMethodsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "configuredExternalDeliveryMethodsType": {
+      "type": "object",
+      "description": "External system configuration delivery methods for a property(chain or hub).",
+      "properties": {
+        "general": {
+          "$ref": "#/definitions/generalDeliveryMethodType"
+        },
+        "queueReservation": {
+          "$ref": "#/definitions/queueReservationDeliveryMethodType"
+        },
+        "confirmation": {
+          "$ref": "#/definitions/confirmationDeliveryMethodType"
+        },
+        "guestMessage": {
+          "$ref": "#/definitions/guestMessageDeliveryMethodType"
+        },
+        "billingFolio": {
+          "$ref": "#/definitions/billingFolioDeliveryMethodType"
+        },
+        "queueRush": {
+          "$ref": "#/definitions/queueRushDeliveryMethodType"
+        }
+      }
+    },
+    "generalDeliveryMethodType": {
+      "type": "object",
+      "description": "General delivery method SFTPConfigurationType configuration, settings for Email and Fax Delivery of General Letters",
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/emailDeliveryConfigurationType"
+        },
+        "fax": {
+          "$ref": "#/definitions/faxDeliveryConfigurationType"
+        },
+        "sftpConfigurations": {
+          "$ref": "#/definitions/sftpConfigurationsListType"
+        }
+      }
+    },
+    "emailDeliveryConfigurationType": {
+      "type": "object",
+      "description": "Email content configuration template",
+      "properties": {
+        "fromAddress": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "userId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "userPassword": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "serverName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "body": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "format": {
+          "description": "EMAIL Format: HTML, RTF, PDF. Fax Format: TIF",
+          "$ref": "#/definitions/emailDeliveryFormatType"
+        },
+        "type": {
+          "description": "Deliver Type, possible values: AR, BILLING, CONFIRMATION, LEADS, OWS, OVOS.",
+          "$ref": "#/definitions/emailDeliveryMethodType"
+        },
+        "hotelId": {
+          "description": "Hotel code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "activateDelivery": {
+          "description": "This option must be selected in order to activate emailing from an SMTP compliant email server",
+          "type": "boolean"
+        },
+        "hTMLFormatDelivery": {
+          "description": "Available for Confirmation Letters only and when Activate Email Delivery is selected",
+          "type": "boolean"
+        },
+        "attachICalender": {
+          "type": "boolean"
+        }
+      }
+    },
+    "emailDeliveryFormatType": {
+      "type": "string",
+      "description": "Email delivery format",
+      "enum": [
+        "Htmlcss",
+        "Pdf",
+        "Rtf",
+        "Tif"
+      ]
+    },
+    "emailDeliveryMethodType": {
+      "type": "string",
+      "description": "Email delivery method type",
+      "enum": [
+        "Billing",
+        "Confirmation",
+        "General",
+        "Other"
+      ]
+    },
+    "faxDeliveryConfigurationType": {
+      "type": "object",
+      "description": "Email content configuration template",
+      "properties": {
+        "fromAddress": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "userId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "userPassword": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "serverName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "body": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "format": {
+          "description": "EMAIL Format: HTML, RTF, PDF. Fax Format: TIF",
+          "$ref": "#/definitions/emailDeliveryFormatType"
+        },
+        "type": {
+          "description": "Deliver Type, possible values: AR, BILLING, CONFIRMATION, LEADS, OWS, OVOS.",
+          "$ref": "#/definitions/emailDeliveryMethodType"
+        },
+        "hotelId": {
+          "description": "Hotel code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "faxPrefix": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "faxSuffix": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "faxDomain": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "activateEmailToFax": {
+          "description": "This option must be selected in order to activate faxing from an SMTP compliant fax server",
+          "type": "boolean"
+        }
+      }
+    },
+    "sftpConfigurationsListType": {
+      "type": "array",
+      "description": "Type that holds sftp configurations",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/sftpConfigurationType"
+      }
+    },
+    "sftpConfigurationType": {
+      "type": "object",
+      "description": "Information which uniquely identifies SFTP Configuration",
+      "properties": {
+        "configurationId": {
+          "description": "Unique id associated with this configuration",
+          "type": "integer"
+        },
+        "destination": {
+          "description": "SFTP destination",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the destination, such as Shift Reports.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "inactive": {
+          "description": "Indicates whether the configuration is inactive or not.",
+          "type": "boolean"
+        },
+        "hotelId": {
+          "description": "Hotel code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "queueReservationDeliveryMethodType": {
+      "type": "object",
+      "description": "Queue reservation delivery method configuration, settings for Text Message Delivery of Queue Reservation status",
+      "properties": {
+        "textMessage": {
+          "$ref": "#/definitions/textMessageDeliveryConfigurationType"
+        }
+      }
+    },
+    "textMessageDeliveryConfigurationType": {
+      "type": "object",
+      "description": "Text message delivery configuration",
+      "properties": {
+        "userId": {
+          "description": "Partner or User ID, Text field for Partner ID or User ID for the delivery provider, Name of the Text Messaging Provider.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "serverName": {
+          "description": "Text field for Service type or email server address for the SMTP.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "account": {
+          "description": "Text field for Service ID or email account for the SMTP as advised by Text Messaging Provider.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "password": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "timeOut": {
+          "description": "Number field for Delivery time out in seconds for the message. Any message exceeding this limit will be timed out. Add word Seconds using small grey font next to the number box.",
+          "type": "integer"
+        },
+        "url": {
+          "description": "Text field for URL address or the Text Messaging Provider.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "uRLParameter": {
+          "description": "Url parameter(format) is supported by Text Messaging Provider, it can be either an XML or TEXT format.",
+          "$ref": "#/definitions/urlFormatType"
+        },
+        "format": {
+          "description": "Text field for entering any special formatting for the delivery, or multi select LOV type, for example the one used for Address Format for selection of SID fields, to allow users choosing from a list of tags that may be used to customize this field.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "message": {
+          "description": "Text field for entering the Text Message for delivery.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "type": {
+          "description": "Type of Delivery Method HTTP/SMTP: HTTP for URL, SMTP for Email",
+          "$ref": "#/definitions/textDeliveryMethodType"
+        },
+        "hotelId": {
+          "description": "Hotel code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "urlFormatType": {
+      "type": "string",
+      "description": "Url content format",
+      "enum": [
+        "Xml",
+        "Text"
+      ]
+    },
+    "textDeliveryMethodType": {
+      "type": "string",
+      "description": "Text delivery method type",
+      "enum": [
+        "Url",
+        "Email"
+      ]
+    },
+    "confirmationDeliveryMethodType": {
+      "type": "object",
+      "description": "Confirmation letter delivery method configuration, settings for Text Message, Email and Fax Delivery of Confirmation Letters",
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/emailDeliveryConfigurationType"
+        },
+        "fax": {
+          "$ref": "#/definitions/faxDeliveryConfigurationType"
+        },
+        "textMessage": {
+          "$ref": "#/definitions/textMessageDeliveryConfigurationType"
+        }
+      }
+    },
+    "guestMessageDeliveryMethodType": {
+      "type": "object",
+      "description": "Guest text message configuration, settings for Text Message Delivery of Guest Messages",
+      "properties": {
+        "textMessage": {
+          "$ref": "#/definitions/textMessageDeliveryConfigurationType"
+        }
+      }
+    },
+    "billingFolioDeliveryMethodType": {
+      "type": "object",
+      "description": "Billing folio delivery method configuration, settings for Email and Fax Delivery of Guest Folios",
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/emailDeliveryConfigurationType"
+        },
+        "fax": {
+          "$ref": "#/definitions/faxDeliveryConfigurationType"
+        }
+      }
+    },
+    "queueRushDeliveryMethodType": {
+      "type": "object",
+      "description": "Queue rush delivery method configuration, settings for Text Message Delivery of Queue Reservation status",
+      "properties": {
+        "textMessage": {
+          "$ref": "#/definitions/textMessageDeliveryConfigurationType"
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "changeDeliveryMethods": {
+      "type": "object",
+      "description": "Request to change the delivery method for a property/HUB/Chain and its configurations.",
+      "properties": {
+        "deliveryMethods": {
+          "description": "Collection of delivery method types to change.",
+          "$ref": "#/definitions/configuredExternalDeliveryMethodsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "changedDeliveryMethods": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "createDeliveryMethods": {
+      "type": "object",
+      "description": "Request to create the delivery method for a property/HUB/Chain and its configurations.",
+      "properties": {
+        "deliveryMethods": {
+          "description": "Collection of delivery method types to create.",
+          "$ref": "#/definitions/configuredExternalDeliveryMethodsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateDeviceLocationsDetails": {
+      "type": "object",
+      "description": "Response object for fetching template Device locations.",
+      "properties": {
+        "templateDeviceLocations": {
+          "description": "Collection of template Device locations.",
+          "$ref": "#/definitions/templateDeviceLocationsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateDeviceLocationsType": {
+      "type": "array",
+      "description": "List of Device locations at template level.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/templateDeviceLocationType"
+      }
+    },
+    "templateDeviceLocationType": {
+      "type": "object",
+      "description": "Contains Common Master configuration detail.",
+      "properties": {
+        "code": {
+          "description": "Common Master unique code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Description of the Master code.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "displayOrder": {
+          "description": "Common Master record sequence number.",
+          "type": "number"
+        }
+      }
+    },
+    "translationTextType2000": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "templateDeviceLocationsCriteria": {
+      "type": "object",
+      "description": "Request object for creating template Device locations.",
+      "properties": {
+        "templateDeviceLocations": {
+          "description": "Template Device locations to be created.",
+          "$ref": "#/definitions/templateDeviceLocationsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateDeviceLocationsToBeChanged": {
+      "type": "object",
+      "description": "Request object for changing template Device locations.",
+      "properties": {
+        "templateDeviceLocations": {
+          "description": "Template Device locations to be changed.",
+          "$ref": "#/definitions/templateDeviceLocationsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "createPublishers": {
+      "type": "object",
+      "description": "Request to create publishers.",
+      "properties": {
+        "subscriber": {
+          "description": "Subcriber external system information.",
+          "$ref": "#/definitions/externalSystemType"
+        },
+        "publishers": {
+          "description": "Collection of publisher external systems information.",
+          "$ref": "#/definitions/publishersType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "externalSystemType": {
+      "type": "object",
+      "description": "External System Information",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "externalSystemCode": {
+          "$ref": "#/definitions/externalSystemCodeType"
+        }
+      }
+    },
+    "externalSystemCodeType": {
+      "type": "object",
+      "description": "External System Code",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "publishersType": {
+      "type": "array",
+      "description": "Information of all the publishers for a given subscriber.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/externalSystemType"
+      }
+    },
+    "fetchedPublishers": {
+      "type": "object",
+      "description": "Response to request to fetch the external systems",
+      "properties": {
+        "publishers": {
+          "description": "Collection of publisher external systems information.",
+          "$ref": "#/definitions/publishersType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fetchedHotelInterfaces": {
+      "type": "object",
+      "description": "Response object for retrieving Hotel Interfaces.",
+      "properties": {
+        "hotelInterfaces": {
+          "description": "Collection of Hotel Interfaces.",
+          "$ref": "#/definitions/hotelInterfacesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelInterfacesType": {
+      "type": "array",
+      "description": "Collection of Hotel Interfaces.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/hotelInterfaceType"
+      }
+    },
+    "hotelInterfaceType": {
+      "type": "object",
+      "properties": {
+        "interfaceId": {
+          "description": "Unique DB internal number of a Hotel Interface record.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "hotelId": {
+          "description": "Hotel Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "interfaceName": {
+          "description": "Name of the Hotel Interface",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "interfaceType": {
+          "description": "Three letter code for each interface that identifies the interface.",
+          "$ref": "#/definitions/hotelInterfaceTypeType"
+        },
+        "logo": {
+          "description": "Hotel Interface Logo. On the database, this is also referred as DBF Logo. This is a three letter code followed by an underscore(_). This tells us which DBF files and log files with the prefix that IFC7 is going to create.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "machineName": {
+          "description": "Unique machine name of the running IFC.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "status": {
+          "description": "The current status of the IFC.",
+          "$ref": "#/definitions/hotelInterfaceStatusType"
+        },
+        "activeFlag": {
+          "description": "Indicator if the Hotel Interface is active or not. This is different from the Interface Status, which is either STOPPED or RUNNING.",
+          "type": "boolean"
+        }
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "hotelInterfaceTypeType": {
+      "type": "string",
+      "enum": [
+        "Bms",
+        "Cas",
+        "Ccw",
+        "Dls",
+        "Eft",
+        "Exp",
+        "Mak",
+        "Mbs",
+        "Msc",
+        "Pbx",
+        "Pos",
+        "Svs",
+        "Tik",
+        "Vid",
+        "Vms",
+        "Www",
+        "Xml"
+      ],
+      "description": "XML Posting Interface"
+    },
+    "hotelInterfaceStatusType": {
+      "type": "string",
+      "description": "Status of the Hotel Interface either STOPPED or RUNNING.",
+      "enum": [
+        "Stopped",
+        "Running",
+        "Waiting",
+        "StopInitiated",
+        "StartInitiated",
+        "RebootInitiated",
+        "Other"
+      ]
+    },
+    "changeInterfaceRight": {
+      "type": "object",
+      "description": "Request object for updating a Hotel Interface Right. It will create the Hotel Interface Right if it does not exist on the database.",
+      "properties": {
+        "details": {
+          "$ref": "#/definitions/interfaceRightType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "interfaceRightType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code to which the Interface Right belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "interfaceId": {
+          "description": "Unique DB internal number of a Hotel Interface record.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "right": {
+          "description": "Internal code for each allowed right of a Hotel Interface record.",
+          "type": "integer"
+        },
+        "code": {
+          "description": "User defined code for an Interface Right.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 5
+        },
+        "description": {
+          "description": "User defined description for an Interface Right.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "interfaceRightDescription": {
+          "description": "System Description of an allowed Interface Right.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        }
+      }
+    },
+    "changedInterfaceRight": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fetchedInterfaceRights": {
+      "type": "array",
+      "description": "Collection of Hotel Interface Rights.",
+      "items": {
+        "$ref": "#/definitions/interfaceRightType"
+      }
+    },
+    "fetchedExternalDatabaseAvailableProperties": {
+      "type": "object",
+      "description": "Response object for retrieving the Available properties for External Databases.",
+      "properties": {
+        "availailableProperties": {
+          "$ref": "#/definitions/externalDatabaseAssociatedHotelsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "externalDatabaseAssociatedHotelsType": {
+      "type": "array",
+      "description": "Collection of Hotel for external database.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/externalDatabaseAssociatedHotelType"
+      }
+    },
+    "externalDatabaseAssociatedHotelType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "Pertain associated hotel code for external database.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelName": {
+          "description": "Pertain associated hotel code for external database.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        }
+      }
+    },
+    "fetchedUDFMappings": {
+      "type": "object",
+      "description": "Message received on an UDFs Lookup.",
+      "properties": {
+        "uDFMappings": {
+          "description": "Criteria for fetching UDFs.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uDFMappingType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "uDFMappingType": {
+      "type": "object",
+      "description": "Generic self-contained request object that is used when updating and fetching UDFs.",
+      "properties": {
+        "uDFName": {
+          "description": "Name of the user-defined function (UDF) field.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "uDFLabel": {
+          "description": "Label the user-defined function (UDF) field shared with external system which will be send in the request message for mapping of actual UDF Name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "active": {
+          "description": "A flag to indicate whether the UDF mapping is active in the Interface system or not.",
+          "type": "boolean"
+        },
+        "updateAllowed": {
+          "description": "A flag to indicate whether the update is allowed in the Interface system or not.",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the Type for Reservation and Profile Type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "changeUDFMapping": {
+      "type": "object",
+      "description": "Self-contained Request object that is used when Updating UDFMapping.",
+      "properties": {
+        "uDFMapping": {
+          "$ref": "#/definitions/uDFMappingType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "changedUDFMapping": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "ExternalSystemsConfig"
+    },
+    {
+      "name": "ChainConfig",
+      "description": "These APIs will allow you to do external configuration under Administration."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
