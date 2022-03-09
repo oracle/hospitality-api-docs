@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "OPERA Cloud Back Office Operations API",
-    "description": "APIs to cater for Back Office Operations functionality in OPERA Cloud. <br /><br /> A common BackOffice industry term is End of Day.  This closes and balances each day's business activities. It reconciles guest folios and processes credit card transactions. The End of Day routine rolls the business date forward and prints final reports.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright (c) 2021 Oracle and/or its affiliates.</p>",
+    "title": "OPERA Cloud Reservation Master Data Management API",
+    "description": "APIs to cater for Reservation Configuration in OPERA Cloud. In this module you can retrieve, create, modify or delete configuration related to Reservations, Blocks and Leisure Management.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright (c) 2021 Oracle and/or its affiliates.</p>",
     "version": "21.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
@@ -16,25 +16,59 @@
   "schemes": [
     "https"
   ],
-  "basePath": "/bof/v1",
+  "basePath": "/rsv/config/v1",
   "produces": [
     "application/json"
   ],
   "paths": {
-    "/hotels/{hotelId}/businessDate": {
+    "/guaranteeCodes": {
       "get": {
-        "summary": "Fetch end of day business dates",
-        "description": "Use this API to find out the current business date of a specified hotel. <p><strong>OperationId:</strong>getBusinessDate</p>",
-        "operationId": "getBusinessDate",
+        "summary": "Get Guarantee Codes",
+        "description": "Use this API to get Guarantee Codes. <p><strong>OperationId:</strong>getGuaranteeCodes</p>",
+        "operationId": "getGuaranteeCodes",
         "parameters": [
           {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique ID that identifies a single hotel property."
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "guaranteeCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "inactive",
+            "in": "query",
+            "required": false,
+            "description": "Is Guarantee Code Inactive?",
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -62,23 +96,13 @@
                 "x-example": "en-GB"
               }
             },
-            "description": "Response for fetching active end of day status for multiple hotels.",
+            "description": "Response for fetch Guarantee Codes.",
             "schema": {
-              "$ref": "#/definitions/businessDate"
-            },
-            "examples": {
-              "application/json": {
-                "hotels": [
-                  {
-                    "hotelId": "HOTEL1",
-                    "businessDate": "2020-04-05"
-                  }
-                ]
-              }
+              "$ref": "#/definitions/guaranteeCodesDetails"
             }
           },
           "204": {
-            "description": "BusinessDate not found."
+            "description": "GuaranteeCodes not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -124,7 +148,7 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "BackOfficeOperations"
+          "HotelConfig"
         ]
       }
     }
@@ -215,13 +239,40 @@
     }
   },
   "definitions": {
-    "businessDate": {
+    "guaranteeCodesDetails": {
       "type": "object",
-      "description": "Response for fetching active end of day status for multiple hotels.",
+      "description": "Response for fetch Guarantee Codes.",
       "properties": {
-        "hotels": {
-          "description": "Collection of hotels and its active end of days.",
-          "$ref": "#/definitions/hotelActiveEndOfDaysType"
+        "guaranteeCodes": {
+          "description": "Collection of Guarantee Codes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/guaranteeCodesType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
         },
         "links": {
           "$ref": "#/definitions/links"
@@ -231,30 +282,172 @@
         }
       }
     },
-    "hotelActiveEndOfDaysType": {
-      "type": "array",
-      "description": "Collection of hotels and its active end of days.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/hotelActiveEndOfDayType"
+    "guaranteeCodesType": {
+      "type": "object",
+      "description": "The Collection of Guarantee Codes Type.",
+      "properties": {
+        "guaranteeCode": {
+          "description": "Guarantee Code details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/guaranteeConfigType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel code for fetched template Guarantee Codes.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
       }
     },
-    "hotelActiveEndOfDayType": {
+    "guaranteeConfigType": {
       "type": "object",
-      "description": "Defines hotel and its active end of days.",
+      "description": "Specifies Guarantee Code attributes.",
       "properties": {
-        "hotelId": {
-          "description": "Hotel code of the active end of days.",
+        "description": {
+          "description": "Description of the Guarantee Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "requirements": {
+          "description": "Specifies various requirements for the guarantee code.",
+          "$ref": "#/definitions/guaranteeRequirementsType"
+        },
+        "shortDescription": {
+          "description": "Brief description of the Guarantee Code.",
+          "$ref": "#/definitions/translationTextType80"
+        },
+        "paymentTypes": {
+          "description": "Specifies various payment types for the guarantee code.",
+          "$ref": "#/definitions/paymentTypesType"
+        },
+        "guaranteeCode": {
+          "description": "Code assigned to the Guarantee.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
-        "businessDate": {
-          "description": "Current open business date of hotel.",
+        "onHold": {
+          "description": "If true indicates this Guarantee Code is used only to hold the inventory during reservation process.",
+          "type": "boolean"
+        },
+        "reserveInventory": {
+          "description": "If true indicates inventory will be reserved/deducted when reservation uses this Guarantee Code.",
+          "type": "boolean"
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
+        },
+        "lateArrival": {
+          "description": "Represents the late arrival time.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "maxLength": 2000
+        },
+        "massCancellation": {
+          "description": "Defines the Auto mass cancellation criteria (i.e. number of days pending before auto cancellation).",
+          "type": "object",
+          "properties": {
+            "autoCancel": {
+              "description": "If true indicates, the reservations having this Guarantee Code will be auto canceled for which the credit card info is missing for number of days specified in pending days.",
+              "type": "boolean"
+            },
+            "pendingDays": {
+              "description": "Number of days, with in which the credit card info should be received for the reservation, using this guarnatee code, to avoid auto cancellation.",
+              "type": "integer"
+            }
+          }
+        },
+        "inactive": {
+          "description": "Indicates the reservation type is inactive or not.",
+          "type": "boolean"
         }
+      }
+    },
+    "guaranteeRequirementsType": {
+      "type": "object",
+      "description": "Specifies various requirement for the guarantee code.",
+      "properties": {
+        "requirementCode": {
+          "description": "Requirement Code.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "cancellation": {
+          "description": "When true indicates cancellation on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "phoneNumber": {
+          "description": "When true indicates phone number on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "address": {
+          "description": "When true indicates address on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "creditCard": {
+          "description": "When true indicates Credit Card on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "arrivalTime": {
+          "description": "When true indicates arrival Time on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "deposit": {
+          "description": "When true indicates deposit is required for this guarantee code.",
+          "type": "boolean"
+        }
+      }
+    },
+    "translationTextType80": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 80.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "paymentTypesType": {
+      "type": "array",
+      "description": "Payment card code like AX,VI etc.",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
       }
     },
     "links": {
@@ -470,8 +663,8 @@
   },
   "tags": [
     {
-      "name": "BackOfficeOperations",
-      "description": "This module provides APIs to service Back Office operations for property, such as managing end-of-day, getting the properties current business date, and perform cashier closure."
+      "name": "HotelConfig",
+      "description": "These APIs will allow you to configure reservation related configuration related to Administration."
     }
   ],
   "externalDocs": {

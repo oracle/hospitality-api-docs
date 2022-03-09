@@ -1,881 +1,1043 @@
 {
-  "swagger" : "2.0",
-  "externalDocs" : {
-    "description" : "Find out more about Oracle Hospitality",
-    "url" : "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
-  },
-  "info" : {
-    "title" : "OPERA Cloud Inventory API",
-    "description" : "APIs to cater for Inventory functionality in OPERA Cloud.  This includes sell limits for date ranges, viewing and updating the properties inventory, as well as item inventory (such as rollaways, microwaves etc.).",
-    "version" : "21.1.1",
-    "contact" : {
-      "email" : "hospitality_apis_ww_grp@oracle.com"
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Inventory API",
+    "description": "APIs to cater for Inventory functionality in OPERA Cloud.  This includes sell limits for date ranges, viewing and updating the properties inventory, as well as item inventory (such as rollaways, microwaves etc.).<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (http://oss.oracle.com/licenses/upl). Copyright (c) 2021 Oracle and/or its affiliates.</p>",
+    "version": "21.5.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
-    "license" : {
+    "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
-    },
-    "termsOfService" : "https://www.oracle.com/legal/terms.html"
+    }
   },
-  "schemes" : [ "https" ],
-  "basePath" : "/inv/v1",
-  "produces" : [ "application/json" ],
-  "paths" : {
-    "/hotels/{hotelId}/hotelInventory" : {
-      "get" : {
-        "summary" : "Get hotel inventory",
-        "description" : "You can use this API to retrieve the inventory for a specified hotel. Narrow down your results using the query parameters such as a date range, room type, room class, and/or tentative inventory included. <p><strong>OperationId:</strong>getHotelInventory</p>",
-        "operationId" : "getHotelInventory",
-        "parameters" : [ {
-          "name" : "hotelId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 2000,
-          "description" : "Unique ID of the hotel where hotel inventory is searched."
-        }, {
-          "name" : "dateRangeStart",
-          "in" : "query",
-          "required" : true,
-          "type" : "string",
-          "format" : "date"
-        }, {
-          "name" : "dateRangeEnd",
-          "in" : "query",
-          "required" : true,
-          "type" : "string",
-          "format" : "date"
-        }, {
-          "name" : "roomCountRequested",
-          "in" : "query",
-          "required" : true,
-          "description" : "Number of rooms requested.",
-          "type" : "integer"
-        }, {
-          "name" : "includeTentativeInventory",
-          "in" : "query",
-          "required" : false,
-          "description" : "If set to true, includes non-deduct/Tentative rooms for a date range.",
-          "type" : "boolean"
-        }, {
-          "name" : "dailyInventory",
-          "in" : "query",
-          "required" : false,
-          "description" : "If false minimum inventory for the date range is requested, otherwise inventory is requested for every day.",
-          "type" : "boolean"
-        }, {
-          "name" : "houseLevel",
-          "in" : "query",
-          "required" : false,
-          "description" : "Indicates that House level inventory is requested.",
-          "type" : "boolean"
-        }, {
-          "name" : "roomTypes",
-          "in" : "query",
-          "type" : "array",
-          "collectionFormat" : "multi",
-          "description" : "Room Type Code.",
-          "items" : {
-            "type" : "string",
-            "maxItems" : 4000
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/inv/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/hotels/{hotelId}/hotelInventory": {
+      "get": {
+        "summary": "Get hotel inventory",
+        "description": "You can use this API to retrieve the inventory for a specified hotel. Narrow down your results using the query parameters such as a date range, room type, room class, and/or tentative inventory included. <p><strong>OperationId:</strong>getHotelInventory</p>",
+        "operationId": "getHotelInventory",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where hotel inventory is searched."
           },
-          "required" : false
-        }, {
-          "name" : "roomClasses",
-          "in" : "query",
-          "type" : "array",
-          "collectionFormat" : "multi",
-          "description" : "Room Class Code.",
-          "items" : {
-            "type" : "string",
-            "maxItems" : 4000
+          {
+            "name": "dateRangeStart",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date"
           },
-          "required" : false
-        }, {
-          "$ref" : "#/parameters/authKey"
-        }, {
-          "$ref" : "#/parameters/x-app-key"
-        }, {
-          "$ref" : "#/parameters/x-hotelid"
-        }, {
-          "$ref" : "#/parameters/x-externalsystem"
-        }, {
-          "$ref" : "#/parameters/Accept-Language"
-        } ],
-        "responses" : {
-          "200" : {
-            "headers" : {
-              "Content-Language" : {
-                "type" : "string",
-                "description" : "Audience language",
-                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example" : "en-GB"
+          {
+            "name": "dateRangeEnd",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "roomCountRequested",
+            "in": "query",
+            "required": true,
+            "description": "Number of rooms requested.",
+            "type": "integer"
+          },
+          {
+            "name": "includeTentativeInventory",
+            "in": "query",
+            "required": false,
+            "description": "If set to true, includes non-deduct/Tentative rooms for a date range.",
+            "type": "boolean"
+          },
+          {
+            "name": "dailyInventory",
+            "in": "query",
+            "required": false,
+            "description": "If false minimum inventory for the date range is requested, otherwise inventory is requested for every day.",
+            "type": "boolean"
+          },
+          {
+            "name": "houseLevel",
+            "in": "query",
+            "required": false,
+            "description": "Indicates that House level inventory is requested.",
+            "type": "boolean"
+          },
+          {
+            "name": "roomTypes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Room Type Code.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomClasses",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Room Class Code.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               }
             },
-            "description" : "A response for Hotel Inventories meeting the search criteria. Returns inventory classified on room type, class and house level for a given property.",
-            "schema" : {
-              "$ref" : "#/definitions/hotelInventory"
+            "description": "A response for Hotel Inventories meeting the search criteria. Returns inventory classified on room type, class and house level for a given property.",
+            "schema": {
+              "$ref": "#/definitions/hotelInventory"
             }
           },
-          "204" : {
-            "description" : "HotelInventory not found."
+          "204": {
+            "description": "HotelInventory not found."
           },
-          "400" : {
-            "$ref" : "#/responses/400"
+          "400": {
+            "$ref": "#/responses/400"
           },
-          "401" : {
-            "$ref" : "#/responses/401"
+          "401": {
+            "$ref": "#/responses/401"
           },
-          "403" : {
-            "$ref" : "#/responses/403"
+          "403": {
+            "$ref": "#/responses/403"
           },
-          "404" : {
-            "$ref" : "#/responses/404"
+          "404": {
+            "$ref": "#/responses/404"
           },
-          "405" : {
-            "$ref" : "#/responses/405"
+          "405": {
+            "$ref": "#/responses/405"
           },
-          "406" : {
-            "$ref" : "#/responses/406"
+          "406": {
+            "$ref": "#/responses/406"
           },
-          "413" : {
-            "$ref" : "#/responses/413"
+          "413": {
+            "$ref": "#/responses/413"
           },
-          "414" : {
-            "$ref" : "#/responses/414"
+          "414": {
+            "$ref": "#/responses/414"
           },
-          "415" : {
-            "$ref" : "#/responses/415"
+          "415": {
+            "$ref": "#/responses/415"
           },
-          "500" : {
-            "$ref" : "#/responses/500"
+          "500": {
+            "$ref": "#/responses/500"
           },
-          "502" : {
-            "$ref" : "#/responses/502"
+          "502": {
+            "$ref": "#/responses/502"
           },
-          "503" : {
-            "$ref" : "#/responses/503"
+          "503": {
+            "$ref": "#/responses/503"
           }
         },
-        "consumes" : [ "application/json;charset=UTF-8" ],
-        "produces" : [ "application/json;charset=UTF-8" ],
-        "tags" : [ "Inventory" ]
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Inventory"
+        ]
       }
     },
-    "/hotels/{hotelId}/inventoryStatistics" : {
-      "get" : {
-        "summary" : "Get a hotels Inventory Statistics",
-        "description" : "This will fetch a hotels inventory statistics for a specified date range that you can provided in the request. <p><strong>OperationId:</strong>getInventoryStatistics</p>",
-        "operationId" : "getInventoryStatistics",
-        "parameters" : [ {
-          "name" : "hotelId",
-          "in" : "path",
-          "required" : true,
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 2000,
-          "description" : "Unique ID of the hotel where inventory statistics are searched."
-        }, {
-          "name" : "dateRangeEnd",
-          "in" : "query",
-          "required" : true,
-          "description" : "The ending value of the date range.",
-          "type" : "string",
-          "format" : "date"
-        }, {
-          "name" : "reportCode",
-          "in" : "query",
-          "enum" : [ "DetailedAvailabiltySummary", "RoomCalendarStatistics", "SellLimitSummary", "RoomsAvailabilitySummary" ],
-          "required" : true,
-          "description" : "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
-          "type" : "string"
-        }, {
-          "name" : "dateRangeStart",
-          "in" : "query",
-          "required" : true,
-          "description" : "The starting value of the date range.",
-          "type" : "string",
-          "format" : "date"
-        }, {
-          "name" : "parameterName",
-          "in" : "query",
-          "type" : "array",
-          "collectionFormat" : "multi",
-          "description" : "Name of the parameter.",
-          "items" : {
-            "type" : "string",
-            "enum" : [ "CancelledYN", "Channel", "DeductRoomsYN", "GroupBy", "HouseArrPersonsYN", "HouseArrRoomsYN", "HouseAvailPercYN", "HouseAvailRoomsExcludingOverbookingYN", "HouseAvailRoomsYN", "HouseAvailTenPercYN", "HouseBlkDeductNpuYN", "HouseBlkDeductPuYN", "HouseBlkTentNpuYN", "HouseBlkTentPuYN", "HouseDayUsePersonYN", "HouseDayUseRoomYN", "HouseDepPersonsYN", "HouseDepRoomsYN", "HouseInventoryRoomsYN", "HouseMaxAvailabilityExcludingOverbookingYN", "HouseMaxAvailabilityYN", "HouseMaxOccupancyYN", "HouseMinAvailabilityExcludingOverbookingYN", "HouseMinAvailabilityYN", "HouseOccPercYN", "HouseOccTenPercYN", "HouseOccupancyYN", "HouseOOOYN", "HouseOOSRoomsYN", "HouseOverBookingYN", "HousePeopleInHouseYN", "HousePhysicalRoomsYN", "HouseRoomsSoldYN", "HouseSellLimitYN", "HouseTentRoomsExcludingOverbookingYN", "HouseTentRoomsSoldYN", "HouseTentRoomsYN", "OutOfOrderRoomsYN", "RestrictionsYN", "RoomArrPersonsYN", "RoomArrRoomsYN", "RoomAvailRoomsExcludingOverbookingYN", "RoomAvailRoomsYN", "RoomBlkDeductNpuYN", "RoomBlkDeductPuYN", "RoomBlkTentNpuYN", "RoomBlkTentPuYN", "RoomCancelledYN", "RoomClassList", "RoomDayUsePersonYN", "RoomDayUseRoomYN", "RoomDepPersonsYN", "RoomDepRoomsYN", "RoomInventoryRoomsYN", "RoomMaxAvailabilityExcludingOverbookingYN", "RoomMaxAvailabilityYN", "RoomMaxOccupancyYN", "RoomMinAvailabilityExcludingOverbookingYN", "RoomMinAvailabilityYN", "RoomOccupancyYN", "RoomOOOYN", "RoomOOSRoomsYN", "RoomOverBookingYN", "RoomPeopleInHouseYN", "RoomPhysicalRoomsYN", "RoomRestrictionsYN", "RoomRoomsSoldYN", "RoomSellLimitYN", "RoomTentRoomsExcludingOverbookingYN", "RoomTentRoomsYN", "RoomTentYN", "RoomTypeWildCardList" ]
+    "/hotels/{hotelId}/inventoryStatistics": {
+      "get": {
+        "summary": "Get a hotels Inventory Statistics",
+        "description": "This will fetch a hotels inventory statistics for a specified date range that you can provided in the request. <p><strong>OperationId:</strong>getInventoryStatistics</p>",
+        "operationId": "getInventoryStatistics",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where inventory statistics are searched."
           },
-          "required" : false
-        }, {
-          "name" : "parameterValue",
-          "in" : "query",
-          "type" : "array",
-          "collectionFormat" : "multi",
-          "description" : "Value of the parameter.",
-          "items" : {
-            "type" : "string"
+          {
+            "name": "dateRangeEnd",
+            "in": "query",
+            "required": true,
+            "description": "The ending value of the date range.",
+            "type": "string",
+            "format": "date"
           },
-          "required" : false
-        }, {
-          "$ref" : "#/parameters/authKey"
-        }, {
-          "$ref" : "#/parameters/x-app-key"
-        }, {
-          "$ref" : "#/parameters/x-hotelid"
-        }, {
-          "$ref" : "#/parameters/x-externalsystem"
-        }, {
-          "$ref" : "#/parameters/Accept-Language"
-        } ],
-        "responses" : {
-          "200" : {
-            "headers" : {
-              "Content-Language" : {
-                "type" : "string",
-                "description" : "Audience language",
-                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example" : "en-GB"
+          {
+            "name": "reportCode",
+            "in": "query",
+            "enum": [
+              "DetailedAvailabiltySummary",
+              "RoomCalendarStatistics",
+              "SellLimitSummary",
+              "RoomsAvailabilitySummary"
+            ],
+            "required": true,
+            "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
+            "type": "string"
+          },
+          {
+            "name": "dateRangeStart",
+            "in": "query",
+            "required": true,
+            "description": "The starting value of the date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "parameterName",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Name of the parameter.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "CancelledYN",
+                "Channel",
+                "DeductRoomsYN",
+                "GroupBy",
+                "HouseArrPersonsYN",
+                "HouseArrRoomsYN",
+                "HouseAvailPercYN",
+                "HouseAvailRoomsExcludingOverbookingYN",
+                "HouseAvailRoomsYN",
+                "HouseAvailTenPercYN",
+                "HouseBlkDeductNpuYN",
+                "HouseBlkDeductPuYN",
+                "HouseBlkTentNpuYN",
+                "HouseBlkTentPuYN",
+                "HouseDayUsePersonYN",
+                "HouseDayUseRoomYN",
+                "HouseDepPersonsYN",
+                "HouseDepRoomsYN",
+                "HouseInventoryRoomsYN",
+                "HouseMaxAvailabilityExcludingOverbookingYN",
+                "HouseMaxAvailabilityYN",
+                "HouseMaxOccupancyYN",
+                "HouseMinAvailabilityExcludingOverbookingYN",
+                "HouseMinAvailabilityYN",
+                "HouseOccPercYN",
+                "HouseOccTenPercYN",
+                "HouseOccupancyYN",
+                "HouseOOOYN",
+                "HouseOOSRoomsYN",
+                "HouseOverBookingYN",
+                "HousePeopleInHouseYN",
+                "HousePhysicalRoomsYN",
+                "HouseRoomsSoldYN",
+                "HouseSellLimitYN",
+                "HouseTentRoomsExcludingOverbookingYN",
+                "HouseTentRoomsSoldYN",
+                "HouseTentRoomsYN",
+                "OutOfOrderRoomsYN",
+                "RestrictionsYN",
+                "RoomArrPersonsYN",
+                "RoomArrRoomsYN",
+                "RoomAvailRoomsExcludingOverbookingYN",
+                "RoomAvailRoomsYN",
+                "RoomBlkDeductNpuYN",
+                "RoomBlkDeductPuYN",
+                "RoomBlkTentNpuYN",
+                "RoomBlkTentPuYN",
+                "RoomCancelledYN",
+                "RoomClassList",
+                "RoomDayUsePersonYN",
+                "RoomDayUseRoomYN",
+                "RoomDepPersonsYN",
+                "RoomDepRoomsYN",
+                "RoomInventoryRoomsYN",
+                "RoomMaxAvailabilityExcludingOverbookingYN",
+                "RoomMaxAvailabilityYN",
+                "RoomMaxOccupancyYN",
+                "RoomMinAvailabilityExcludingOverbookingYN",
+                "RoomMinAvailabilityYN",
+                "RoomOccupancyYN",
+                "RoomOOOYN",
+                "RoomOOSRoomsYN",
+                "RoomOverBookingYN",
+                "RoomPeopleInHouseYN",
+                "RoomPhysicalRoomsYN",
+                "RoomRestrictionsYN",
+                "RoomRoomsSoldYN",
+                "RoomSellLimitYN",
+                "RoomTentRoomsExcludingOverbookingYN",
+                "RoomTentRoomsYN",
+                "RoomTentYN",
+                "RoomTypeWildCardList"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "parameterValue",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Value of the parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               }
             },
-            "description" : "Object that holds the details of inventory Statistics.",
-            "schema" : {
-              "$ref" : "#/definitions/inventoryStatistics"
+            "description": "Object that holds the details of inventory Statistics.",
+            "schema": {
+              "$ref": "#/definitions/inventoryStatistics"
             },
-            "examples" : {
-              "application/json" : [ {
-                "statistics" : [ {
-                  "statisticDate" : [ {
-                    "statisticDate" : "2020-01-25",
-                    "weekendDate" : false
-                  }, {
-                    "statisticDate" : "2020-01-26",
-                    "weekendDate" : false
-                  } ],
-                  "statCode" : "HOTEL1",
-                  "statCategoryCode" : "HotelCode"
-                }, {
-                  "statisticDate" : [ {
-                    "inventory" : [ {
-                      "value" : "1",
-                      "code" : "SequenceId"
-                    } ],
-                    "statisticDate" : "2020-01-25",
-                    "weekendDate" : false
-                  }, {
-                    "inventory" : [ {
-                      "value" : "1",
-                      "code" : "SequenceId"
-                    } ],
-                    "statisticDate" : "2020-01-26",
-                    "weekendDate" : false
-                  } ],
-                  "statCode" : "CSTND",
-                  "statCategoryCode" : "HotelRoomCode",
-                  "statCodeClass" : "STDCOMP",
-                  "description" : "Component Room - Standard"
-                }, {
-                  "statisticDate" : [ {
-                    "statisticDate" : "2020-01-25",
-                    "weekendDate" : false
-                  }, {
-                    "statisticDate" : "2020-01-26",
-                    "weekendDate" : false
-                  } ],
-                  "statCode" : "STD",
-                  "statCategoryCode" : "HotelRoomCode",
-                  "statCodeClass" : "ALL",
-                  "description" : "Standard Room"
-                } ],
-                "hotelName" : "HOTEL1",
-                "reportCode" : "RoomsAvailabilitySummary"
-              } ]
+            "examples": {
+              "application/json": [
+                {
+                  "statistics": [
+                    {
+                      "statisticDate": [
+                        {
+                          "statisticDate": "2020-01-25",
+                          "weekendDate": false
+                        },
+                        {
+                          "statisticDate": "2020-01-26",
+                          "weekendDate": false
+                        }
+                      ],
+                      "statCode": "HOTEL1",
+                      "statCategoryCode": "HotelCode"
+                    },
+                    {
+                      "statisticDate": [
+                        {
+                          "inventory": [
+                            {
+                              "value": "1",
+                              "code": "SequenceId"
+                            }
+                          ],
+                          "statisticDate": "2020-01-25",
+                          "weekendDate": false
+                        },
+                        {
+                          "inventory": [
+                            {
+                              "value": "1",
+                              "code": "SequenceId"
+                            }
+                          ],
+                          "statisticDate": "2020-01-26",
+                          "weekendDate": false
+                        }
+                      ],
+                      "statCode": "CSTND",
+                      "statCategoryCode": "HotelRoomCode",
+                      "statCodeClass": "STDCOMP",
+                      "description": "Component Room - Standard"
+                    },
+                    {
+                      "statisticDate": [
+                        {
+                          "statisticDate": "2020-01-25",
+                          "weekendDate": false
+                        },
+                        {
+                          "statisticDate": "2020-01-26",
+                          "weekendDate": false
+                        }
+                      ],
+                      "statCode": "STD",
+                      "statCategoryCode": "HotelRoomCode",
+                      "statCodeClass": "ALL",
+                      "description": "Standard Room"
+                    }
+                  ],
+                  "hotelName": "HOTEL1",
+                  "reportCode": "RoomsAvailabilitySummary"
+                }
+              ]
             }
           },
-          "204" : {
-            "description" : "InventoryStatistics not found."
+          "204": {
+            "description": "InventoryStatistics not found."
           },
-          "400" : {
-            "$ref" : "#/responses/400"
+          "400": {
+            "$ref": "#/responses/400"
           },
-          "401" : {
-            "$ref" : "#/responses/401"
+          "401": {
+            "$ref": "#/responses/401"
           },
-          "403" : {
-            "$ref" : "#/responses/403"
+          "403": {
+            "$ref": "#/responses/403"
           },
-          "404" : {
-            "$ref" : "#/responses/404"
+          "404": {
+            "$ref": "#/responses/404"
           },
-          "405" : {
-            "$ref" : "#/responses/405"
+          "405": {
+            "$ref": "#/responses/405"
           },
-          "406" : {
-            "$ref" : "#/responses/406"
+          "406": {
+            "$ref": "#/responses/406"
           },
-          "413" : {
-            "$ref" : "#/responses/413"
+          "413": {
+            "$ref": "#/responses/413"
           },
-          "414" : {
-            "$ref" : "#/responses/414"
+          "414": {
+            "$ref": "#/responses/414"
           },
-          "415" : {
-            "$ref" : "#/responses/415"
+          "415": {
+            "$ref": "#/responses/415"
           },
-          "500" : {
-            "$ref" : "#/responses/500"
+          "500": {
+            "$ref": "#/responses/500"
           },
-          "502" : {
-            "$ref" : "#/responses/502"
+          "502": {
+            "$ref": "#/responses/502"
           },
-          "503" : {
-            "$ref" : "#/responses/503"
+          "503": {
+            "$ref": "#/responses/503"
           }
         },
-        "consumes" : [ "application/json;charset=UTF-8" ],
-        "produces" : [ "application/json;charset=UTF-8" ],
-        "tags" : [ "INVStats" ]
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "INVStats"
+        ]
       }
     }
   },
-  "parameters" : {
-    "authKey" : {
-      "name" : "authorization",
-      "description" : "Bearer token that needs to be passed which is generated post user authentication",
-      "type" : "string",
-      "in" : "header",
-      "required" : true
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
     },
-    "x-app-key" : {
-      "name" : "x-app-key",
-      "description" : "Client or Partner’s Application Key",
-      "type" : "string",
-      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-      "in" : "header",
-      "required" : true
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
     },
-    "x-hotelid" : {
-      "name" : "x-hotelid",
-      "type" : "string",
-      "description" : "Mandatory parameter to identify the hotel code where the endDate user is logged in",
-      "in" : "header",
-      "required" : true
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the endDate user is logged in",
+      "in": "header",
+      "required": true
     },
-    "x-externalsystem" : {
-      "name" : "x-externalsystem",
-      "type" : "string",
-      "maxLength" : 80,
-      "description" : "External system code.",
-      "in" : "header",
-      "x-example" : "EXTERNALSYSTEMCODE"
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
     },
-    "Accept-Language" : {
-      "name" : "Accept-Language",
-      "type" : "string",
-      "description" : "Language code",
-      "in" : "header"
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
     }
   },
-  "responses" : {
-    "400" : {
-      "description" : "Bad Request",
-      "schema" : {
-        "$ref" : "#/definitions/exceptionDetailType"
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
       }
     },
-    "401" : {
-      "description" : "Unauthorized"
+    "401": {
+      "description": "Unauthorized"
     },
-    "403" : {
-      "description" : "Forbidden"
+    "403": {
+      "description": "Forbidden"
     },
-    "404" : {
-      "description" : "Resource not found",
-      "schema" : {
-        "$ref" : "#/definitions/exceptionDetailType"
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
       }
     },
-    "405" : {
-      "description" : "Method not allowed"
+    "405": {
+      "description": "Method not allowed"
     },
-    "406" : {
-      "description" : "Not acceptable."
+    "406": {
+      "description": "Not acceptable."
     },
-    "413" : {
-      "description" : "Request Entity Too Large"
+    "413": {
+      "description": "Request Entity Too Large"
     },
-    "414" : {
-      "description" : "Request URI Too Large"
+    "414": {
+      "description": "Request URI Too Large"
     },
-    "415" : {
-      "description" : "Unsupported Media Type"
+    "415": {
+      "description": "Unsupported Media Type"
     },
-    "500" : {
-      "description" : "System Error",
-      "schema" : {
-        "$ref" : "#/definitions/exceptionDetailType"
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
       }
     },
-    "502" : {
-      "description" : "Bad Gateway"
+    "502": {
+      "description": "Bad Gateway"
     },
-    "503" : {
-      "description" : "Service Unavailable"
+    "503": {
+      "description": "Service Unavailable"
     }
   },
-  "definitions" : {
-    "hotelInventory" : {
-      "type" : "object",
-      "description" : "A response for Hotel Inventories meeting the search criteria. Returns inventory classified on room type, class and house level for a given property.",
-      "properties" : {
-        "hotelInventories" : {
-          "description" : "Refer to Inventory common types document.",
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/hotelInventoryType"
+  "definitions": {
+    "hotelInventory": {
+      "type": "object",
+      "description": "A response for Hotel Inventories meeting the search criteria. Returns inventory classified on room type, class and house level for a given property.",
+      "properties": {
+        "hotelInventories": {
+          "description": "Refer to Inventory common types document.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hotelInventoryType"
           }
         },
-        "links" : {
-          "$ref" : "#/definitions/links"
+        "links": {
+          "$ref": "#/definitions/links"
         },
-        "warnings" : {
-          "$ref" : "#/definitions/warningsType"
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     },
-    "hotelInventoryType" : {
-      "type" : "object",
-      "description" : "A collection of Reservation objects and Unique IDs of Reservation.",
-      "properties" : {
-        "houseInventory" : {
-          "description" : "Collection of House level Inventory counts for the date ranges.",
-          "$ref" : "#/definitions/inventoryCountsListType"
+    "hotelInventoryType": {
+      "type": "object",
+      "description": "A collection of Reservation objects and Unique IDs of Reservation.",
+      "properties": {
+        "houseInventory": {
+          "description": "Collection of House level Inventory counts for the date ranges.",
+          "$ref": "#/definitions/inventoryCountsListType"
         },
-        "roomTypeInventories" : {
-          "description" : "Collection of Room type level Inventory counts for the date ranges.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/inventoryLevelCountsListType"
+        "roomTypeInventories": {
+          "description": "Collection of Room type level Inventory counts for the date ranges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/inventoryLevelCountsListType"
           }
         },
-        "roomClassInventories" : {
-          "description" : "Collection of Room Class level Inventory counts for the date ranges.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/inventoryLevelCountsListType"
+        "roomClassInventories": {
+          "description": "Collection of Room Class level Inventory counts for the date ranges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/inventoryLevelCountsListType"
           }
         }
       }
     },
-    "inventoryCountsListType" : {
-      "type" : "array",
-      "description" : "Collection of Inventory counts for the date ranges.",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/inventoryCountsType"
+    "inventoryCountsListType": {
+      "type": "array",
+      "description": "Collection of Inventory counts for the date ranges.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/inventoryCountsType"
       }
     },
-    "inventoryCountsType" : {
-      "type" : "object",
-      "description" : "Inventory counts for the given date range.",
-      "properties" : {
-        "available" : {
-          "description" : "Indicates whether enough inventory is available or not.",
-          "type" : "boolean"
+    "inventoryCountsType": {
+      "type": "object",
+      "description": "Inventory counts for the given date range.",
+      "properties": {
+        "available": {
+          "description": "Indicates whether enough inventory is available or not.",
+          "type": "boolean"
         },
-        "availableCount" : {
-          "description" : "Available Inventory count.",
-          "type" : "integer"
+        "availableCount": {
+          "description": "Available Inventory count.",
+          "type": "integer"
         },
-        "availableTentativeCount" : {
-          "description" : "Available Tentative Inventory count.",
-          "type" : "integer"
+        "availableTentativeCount": {
+          "description": "Available Tentative Inventory count.",
+          "type": "integer"
         },
-        "startDate" : {
-          "description" : "The starting value of the date range.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
+        "startDate": {
+          "description": "The starting value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         },
-        "endDate" : {
-          "description" : "The ending value of the date range.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
+        "endDate": {
+          "description": "The ending value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         }
       }
     },
-    "inventoryLevelCountsListType" : {
-      "type" : "object",
-      "description" : "Collection of Inventory counts for the date ranges.",
-      "properties" : {
-        "inventoryCounts" : {
-          "description" : "Collection of Inventory counts for the date ranges.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/inventoryCountsType"
+    "inventoryLevelCountsListType": {
+      "type": "object",
+      "description": "Collection of Inventory counts for the date ranges.",
+      "properties": {
+        "inventoryCounts": {
+          "description": "Collection of Inventory counts for the date ranges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/inventoryCountsType"
           }
         },
-        "code" : {
-          "description" : "Inventory Group/Level code.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "code": {
+          "description": "Inventory Group/Level code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "sequence" : {
-          "description" : "Integer Group/Level order sequence number.",
-          "type" : "integer"
+        "sequence": {
+          "description": "Integer Group/Level order sequence number.",
+          "type": "integer"
         }
       }
     },
-    "links" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/definitions/instanceLink"
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
       }
     },
-    "instanceLink" : {
-      "type" : "object",
-      "description" : "Metadata describing link description objects that MAY appear in the JSON instance representation.",
-      "properties" : {
-        "href" : {
-          "description" : "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type" : "string"
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
         },
-        "rel" : {
-          "description" : "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type" : "string"
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
         },
-        "templated" : {
-          "description" : "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type" : "boolean",
-          "default" : false
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
         },
-        "method" : {
-          "description" : "HTTP method for requesting the target of the link.",
-          "type" : "string",
-          "enum" : [ "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD" ]
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
         },
-        "targetSchema" : {
-          "description" : "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type" : "string"
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
         },
-        "operationId" : {
-          "description" : "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type" : "string"
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
         },
-        "title" : {
-          "description" : "Exact copy of the \"summary\" field on the linked operation.",
-          "type" : "string"
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
         }
       },
-      "required" : [ "href", "rel", "method", "operationId" ]
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
     },
-    "warningsType" : {
-      "type" : "array",
-      "description" : "Used in conjunction with the Success element to define a business error.",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/warningType"
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
       }
     },
-    "warningType" : {
-      "type" : "object",
-      "description" : "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
-      "properties" : {
-        "value" : {
-          "type" : "string",
-          "description" : "Property Value"
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
         },
-        "shortText" : {
-          "description" : "An abbreviated version of the error in textual format.",
-          "type" : "string",
-          "maxLength" : 2000
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "code" : {
-          "description" : "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "docURL" : {
-          "description" : "If present, this URL refers to an online description of the error that occurred.",
-          "type" : "string",
-          "maxLength" : 2000
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "status" : {
-          "description" : "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
-          "type" : "string",
-          "maxLength" : 2000
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "tag" : {
-          "description" : "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
-          "type" : "string",
-          "maxLength" : 2000
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
         },
-        "recordId" : {
-          "description" : "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type" : "string",
-          "maxLength" : 2000
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
         },
-        "type" : {
-          "description" : "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "language" : {
-          "description" : "Language identification.",
-          "type" : "string",
-          "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
         },
-        "rph" : {
-          "description" : "Reference Place Holder used as an index for this warning.",
-          "type" : "string",
-          "minLength" : 1,
-          "maxLength" : 8
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
         }
       }
     },
-    "exceptionDetailType" : {
-      "title" : "Error Detail",
-      "description" : "Complex type that contains error details for a REST call.",
-      "type" : "object",
-      "properties" : {
-        "type" : {
-          "type" : "string",
-          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
         },
-        "title" : {
-          "type" : "string",
-          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
         },
-        "status" : {
-          "type" : "integer",
-          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
         },
-        "detail" : {
-          "type" : "string",
-          "description" : "Human-readable description specific to this occurrence of the problem."
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
         },
-        "instance" : {
-          "type" : "string",
-          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
         },
-        "o:errorCode" : {
-          "type" : "string",
-          "description" : "Application error code, which is different from HTTP error code."
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
         },
-        "o:errorPath" : {
-          "type" : "string",
-          "description" : "Path to the problem at the resource or property level."
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         },
-        "o:errorDetails" : {
-          "description" : "Details of the error message, consisting of a hierarchical tree structure.",
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/errorInstance"
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
           }
         },
-        "links" : {
-          "$ref" : "#/definitions/links"
+        "links": {
+          "$ref": "#/definitions/links"
         }
       },
-      "required" : [ "type", "title" ]
+      "required": [
+        "type",
+        "title"
+      ]
     },
-    "errorInstance" : {
-      "title" : "Error Instance Details",
-      "description" : "Complex type that contains error instance details for a REST call.",
-      "type" : "object",
-      "properties" : {
-        "type" : {
-          "type" : "string",
-          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
         },
-        "title" : {
-          "type" : "string",
-          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
         },
-        "status" : {
-          "type" : "integer",
-          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
         },
-        "detail" : {
-          "type" : "string",
-          "description" : "Human-readable description specific to this occurrence of the problem."
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
         },
-        "instance" : {
-          "type" : "string",
-          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
         },
-        "o:errorCode" : {
-          "type" : "string",
-          "description" : "Application error code, which is different from HTTP error code."
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
         },
-        "o:errorPath" : {
-          "type" : "string",
-          "description" : "Path to the problem at the resource or property level."
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         }
       },
-      "required" : [ "type", "title" ]
+      "required": [
+        "type",
+        "title"
+      ]
     },
-    "inventoryStatistics" : {
-      "type" : "array",
-      "description" : "List of inventory statistics that is grouped by statistic date.",
-      "maxItems" : 4000,
-      "items" : {
-        "$ref" : "#/definitions/statisticType"
+    "inventoryStatistics": {
+      "type": "array",
+      "description": "List of inventory statistics that is grouped by statistic date.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/statisticType"
       }
     },
-    "statisticType" : {
-      "type" : "object",
-      "description" : "Defines all details needed to create a statistical report.",
-      "properties" : {
-        "statistics" : {
-          "description" : "Statistic Codes.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/statisticCodeType"
+    "statisticType": {
+      "type": "object",
+      "description": "Defines all details needed to create a statistical report.",
+      "properties": {
+        "statistics": {
+          "description": "Statistic Codes.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticCodeType"
           }
         },
-        "hotelName" : {
-          "description" : "A text field used to communicate the proper name of the hotel.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 80
+        "hotelName": {
+          "description": "A text field used to communicate the proper name of the hotel.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
         },
-        "reportCode" : {
-          "description" : "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 100
+        "reportCode": {
+          "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
         },
-        "description" : {
-          "description" : "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 2000
+        "description": {
+          "description": "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         }
       }
     },
-    "statisticCodeType" : {
-      "type" : "object",
-      "description" : "Defines the codes and corresponding categories for which the data in the other elements has been gathered.",
-      "properties" : {
-        "statisticDate" : {
-          "description" : "Collection of statistic summary data.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/statisticSetType"
+    "statisticCodeType": {
+      "type": "object",
+      "description": "Defines the codes and corresponding categories for which the data in the other elements has been gathered.",
+      "properties": {
+        "statisticDate": {
+          "description": "Collection of statistic summary data.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticSetType"
           }
         },
-        "statCode" : {
-          "description" : "Actual code used by the system to collect the statistics (e.g. CORP, RACK if category is Market Segment).",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 20
+        "statCode": {
+          "description": "Actual code used by the system to collect the statistics (e.g. CORP, RACK if category is Market Segment).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "statCategoryCode" : {
-          "description" : "Category Code category of StatCode attribute (e.g. Market Segment).",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
+        "statCategoryCode": {
+          "description": "Category Code category of StatCode attribute (e.g. Market Segment).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
         },
-        "statCodeClass" : {
-          "description" : "Class grouping of StatCode attribute.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
+        "statCodeClass": {
+          "description": "Class grouping of StatCode attribute.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
         },
-        "description" : {
-          "description" : "Statistic code description.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 2000
+        "description": {
+          "description": "Statistic code description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         }
       }
     },
-    "statisticSetType" : {
-      "type" : "object",
-      "description" : "An instance of a statistic, which is a set containing revenue category and number category summaries.",
-      "properties" : {
-        "revenue" : {
-          "description" : "Collection of RevenueCategorySummary elements. Used if revenue values reported.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/revenueCategorySummaryType"
+    "statisticSetType": {
+      "type": "object",
+      "description": "An instance of a statistic, which is a set containing revenue category and number category summaries.",
+      "properties": {
+        "revenue": {
+          "description": "Collection of RevenueCategorySummary elements. Used if revenue values reported.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/revenueCategorySummaryType"
           }
         },
-        "inventory" : {
-          "description" : "Collection of CountCategorySummary elements. Used if count values reported.",
-          "type" : "array",
-          "maxItems" : 4000,
-          "items" : {
-            "$ref" : "#/definitions/numericCategorySummaryType"
+        "inventory": {
+          "description": "Collection of CountCategorySummary elements. Used if count values reported.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/numericCategorySummaryType"
           }
         },
-        "statisticDate" : {
-          "description" : "Date of the statistic.",
-          "type" : "string",
-          "format" : "date",
-          "maxLength" : 8
+        "statisticDate": {
+          "description": "Date of the statistic.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         },
-        "weekendDate" : {
-          "description" : "Determines whether statistic date is a weekend date.",
-          "type" : "boolean"
+        "weekendDate": {
+          "description": "Determines whether statistic date is a weekend date.",
+          "type": "boolean"
         }
       }
     },
-    "revenueCategorySummaryType" : {
-      "type" : "object",
-      "description" : "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.",
-      "properties" : {
-        "code" : {
-          "description" : "The representation of a revenue category.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
+    "revenueCategorySummaryType": {
+      "type": "object",
+      "description": "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.",
+      "properties": {
+        "code": {
+          "description": "The representation of a revenue category.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
         },
-        "amount" : {
-          "description" : "A monetary amount.",
-          "type" : "number"
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
         },
-        "currencyCode" : {
-          "description" : "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type" : "string",
-          "minLength" : 3,
-          "maxLength" : 3
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         }
       }
     },
-    "numericCategorySummaryType" : {
-      "type" : "object",
-      "description" : "This element has count data for each count category such as number of guests, rooms occupied, etc.",
-      "properties" : {
-        "value" : {
-          "description" : "The total count for the category in NumericCategoryCode.",
-          "type" : "number"
+    "numericCategorySummaryType": {
+      "type": "object",
+      "description": "This element has count data for each count category such as number of guests, rooms occupied, etc.",
+      "properties": {
+        "value": {
+          "description": "The total count for the category in NumericCategoryCode.",
+          "type": "number"
         },
-        "code" : {
-          "description" : "The representation of a numeric category such as Guests : Number of guests, RoomsOcc : Rooms occupied.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 40
+        "code": {
+          "description": "The representation of a numeric category such as Guests : Number of guests, RoomsOcc : Rooms occupied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
         }
       }
     }
   },
-  "tags" : [ {
-    "name" : "Inventory",
-    "description" : "The Inventory APIs provide the ability to fetch Hotel Room Type Inventory and manage overbooking/sell limits at different levels. It also contains operations to get item inventory for a property."
-  }, {
-    "name" : "INVStats"
-  } ]
+  "tags": [
+    {
+      "name": "Inventory",
+      "description": "The Inventory APIs provide the ability to fetch Hotel Room Type Inventory and manage overbooking/sell limits at different levels. It also contains operations to get item inventory for a property."
+    },
+    {
+      "name": "INVStats"
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
 }
