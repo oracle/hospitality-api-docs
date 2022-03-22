@@ -19,7 +19,7 @@ Please do NOT raise a GitHub Issue to report a security vulnerability. Refer to 
 
 ## License
 
-This project and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl).
+This project and all content within is available under the [Universal Permissive License v 1.0](https://oss.oracle.com/licenses/upl).
 
 See [LICENSE](../LICENSE.txt) for more details.
 
