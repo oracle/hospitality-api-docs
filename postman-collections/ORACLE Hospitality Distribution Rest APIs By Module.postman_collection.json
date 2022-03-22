@@ -1,0 +1,2286 @@
+{
+	"info": {
+		"_postman_id": "cc828a29-3a5d-45c2-9fd3-9d21fbb385e4",
+		"name": "ORACLE Hospitality Distribution Rest APIs By Module",
+		"description": "#### ORACLE Hospitality Distribution Rest APIs\r\n\r\nThis Postman Collection offers many API call samples for the Oracle Hospitality Distribution REST APIs. For more information on Oracle Distribution visit [Oracle Hospitality Distribution](https://www.oracle.com/au/industries/hospitality/products/hotel-channel-management-software/) .",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "get Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token\", data.access_token);\r",
+									"//Set currentdate and currentdateplus1 variables\r",
+									"var moment = require('moment');\r",
+									"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdate-time', moment().format((\"YYMMDDHHMISS\")))\r",
+									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus2', moment().add(2, 'days').format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus3', moment().add(3, 'days').format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus4', moment().add(4, 'days').format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus30', moment().add(30, 'days').format((\"YYYY-MM-DD\")))\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded;charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-app-key",
+								"value": "{{AppKey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{Username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{Password}}",
+									"type": "text"
+								},
+								{
+									"key": "content-type",
+									"value": "application/x-www-form-urlencoded;charset=UTF-8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostName}}/hdpba/oauth2/v0/token",
+							"host": [
+								"{{HostName}}"
+							],
+							"path": [
+								"hdpba",
+								"oauth2",
+								"v0",
+								"token"
+							]
+						},
+						"description": "This is required to access the OPERA Cloud Distribution REST APIs.\n\n  \nThe username and password for Distribution API are provided by Oracle Hospitality Distribution channel onboarding process, by Oracle.\n\n### Obtaining a token\n\nTo obtain a token include the following body parameters:\n\n*   **username**. set this to your OPERA Cloud Distribution username.\n*   **password**. Set this to your OPERA Cloud Distribution user's password."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Distribution APIs by Module",
+			"item": [
+				{
+					"name": "Distribiution Book (BOOK)",
+					"item": [
+						{
+							"name": "post Reservation  (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer  {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2020-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus2}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus2}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    }\n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 200,\n                    \"amountBeforeTax\": 20.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"5\" ,\n                     \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Mr and Mrs\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"909-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"Street 1183 Bel Meadow Drive\"\n                                            ],\n                                            \"cityName\": \"Los Angeles\",\n                                            \"postalCode\": 90017,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"CA\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345671\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345672\",\n                                \"type\": \"Source\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Source\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel POS\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"ORA123\",\n                                \"type\": \"Company\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Company\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Oracle Corp\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                {\n                    \"paymentMethod\": \"5\",\n                    \"folioView\": \"1\",\n                    \"paymentCard\": {\n                        \"cardType\": \"AX\",\n                        \"cardNumber\": \"371449635398431\",\n                        \"expirationDate\": \"06/25\",\n                        \"cardHolderName\": \"SomeChannel VirtualCard\"\n                    }\n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from NCSP\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/book/v0/hotels/{{HotelCode}}/reservations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"book",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations"
+									]
+								},
+								"description": "Sample wiht a single night with guest CC on folio 1"
+							},
+							"response": []
+						},
+						{
+							"name": "post Reservation (v0)  -> with Rate changes, VCC on folio 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer  {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2020-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus4}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"{{currencyCode}}\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus1}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    },\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 300,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus2}}\",\n                                    \"end\": \"{{currentdateplus2}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus2}}\",\n                        \"end\": \"{{currentdateplus2}}\"\n                    },\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus3}}\",\n                                    \"end\": \"{{currentdateplus3}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus3}}\",\n                        \"end\": \"{{currentdateplus3}}\"\n                    }\n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 700,\n                    \"amountBeforeTax\": 67.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"5\",\n                    \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Mr and Mrs\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"909-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"Street 1183 Bel Meadow Drive\"\n                                            ],\n                                            \"cityName\": \"Los Angeles\",\n                                            \"postalCode\": 90017,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"CA\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"NCSP\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"NCSP\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                 {\n                    \"paymentMethod\": \"1\",\n                    \"folioView\": \"1\"\n                }\n                ,\n                {\n                    \"paymentMethod\": \"5\",\n                    \"folioView\": \"2\",\n                    \"paymentCard\": {\n                        \"cardType\": \"VI\",\n                        \"cardNumber\": \"4444333322221111\",\n                        \"expirationDate\": \"06/25\",\n                        \"cardHolderName\": \"SomeChannel VirtualCard\"\n                    }\n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from NCSP\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/book/v0/hotels/{{HotelCode}}/reservations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"book",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "put Reservation (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer  {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2020-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus3}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"{{currencyCode}}\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus1}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    },\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 300,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus2}}\",\n                                    \"end\": \"{{currentdateplus2}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus2}}\",\n                        \"end\": \"{{currentdateplus2}}\"\n                    } \n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 700,\n                    \"amountBeforeTax\": 67.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"5\",\n                    \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Ms\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"909-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"Street 1183 Bel Meadow Drive\"\n                                            ],\n                                            \"cityName\": \"Los Angeles\",\n                                            \"postalCode\": 90017,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"CA\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                  {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345671\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345672\",\n                                \"type\": \"Source\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Source\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel POS\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"ORACLE\",\n                                \"type\": \"Company\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Company\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Oracle Corp\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                 {\n                    \"paymentMethod\": \"1\",\n                    \"folioView\": \"1\"\n                }\n                ,\n                {\n                    \"paymentMethod\": \"5\",\n                    \"folioView\": \"2\",\n                    \"paymentCard\": {\n                        \"cardType\": \"VI\",\n                        \"cardNumber\": \"4444333322221111\",\n                        \"expirationDate\": \"06/25\",\n                        \"cardHolderName\": \"SomeChannel VirtualCard\"\n                    }\n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from channel\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/book/v0/hotels/{{HotelCode}}/reservations/{{ConfirmationNum}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"book",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations",
+										"{{ConfirmationNum}}"
+									]
+								},
+								"description": "Sample message to modify to 2 nights, with rate changes"
+							},
+							"response": []
+						},
+						{
+							"name": "post Cancel Reservation (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer  {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2020-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus3}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"{{currencyCode}}\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus1}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    },\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 300,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus2}}\",\n                                    \"end\": \"{{currentdateplus2}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus2}}\",\n                        \"end\": \"{{currentdateplus2}}\"\n                    } \n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 700,\n                    \"amountBeforeTax\": 67.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"5\",\n                    \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Ms\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"909-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"Street 1183 Bel Meadow Drive\"\n                                            ],\n                                            \"cityName\": \"Los Angeles\",\n                                            \"postalCode\": 90017,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"CA\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                  {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345671\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345672\",\n                                \"type\": \"Source\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Source\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel POS\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"ORACLE\",\n                                \"type\": \"Company\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Company\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Oracle Corp\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                 {\n                    \"paymentMethod\": \"1\",\n                    \"folioView\": \"1\"\n                }\n                ,\n                {\n                    \"paymentMethod\": \"5\",\n                    \"folioView\": \"2\",\n                    \"paymentCard\": {\n                        \"cardType\": \"VI\",\n                        \"cardNumber\": \"4444333322221111\",\n                        \"expirationDate\": \"06/25\",\n                        \"cardHolderName\": \"SomeChannel VirtualCard\"\n                    }\n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from channel\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/book/v0/hotels/{{HotelCode}}/reservations/{{ConfirmationNum}}/cancellations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"book",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations",
+										"{{ConfirmationNum}}",
+										"cancellations"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Distribution Reservation Notification (RESNOTIF)",
+					"item": [
+						{
+							"name": "post Reservation Notif (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer  {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2020-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus2}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus1}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    }\n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 200,\n                    \"amountBeforeTax\": 20.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"5\" ,\n                     \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Mr and Mrs\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"123-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"3450 North Triumph Boulevard\"\n                                            ],\n                                            \"cityName\": \"Lehi\",\n                                            \"postalCode\": 84043,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"UT\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345671\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345672\",\n                                \"type\": \"Source\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Source\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel POS\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"ORA123\",\n                                \"type\": \"Company\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Company\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Oracle Corp\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                {\n                    \"paymentMethod\": \"5\",\n                    \"folioView\": \"1\",\n                    \"paymentCard\": {\n                        \"cardType\": \"AX\",\n                        \"cardNumber\": \"371449635398431\",\n                        \"expirationDate\": \"06/25\",\n                        \"cardHolderName\": \"SomeChannel VirtualCard\"\n                    }\n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from NCSP\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/resnotif/v0/hotels/{{HotelCode}}/reservations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"resnotif",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations"
+									]
+								},
+								"description": "Sample with a single night, with guest CC on folio 1"
+							},
+							"response": []
+						},
+						{
+							"name": "post Reservation Notif (v0) -> Single Night Non Guaranteed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer  {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json; charset=utf-8"
+									},
+									{
+										"key": "x-channelCode",
+										"type": "text",
+										"value": "{{channelCode}}"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2021-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus2}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus1}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    }\n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 200,\n                    \"amountBeforeTax\": 20.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"38\" ,\n                     \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Mr and Mrs\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"123-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"3450 North Triumph Boulevard\"\n                                            ],\n                                            \"cityName\": \"Lehi\",\n                                            \"postalCode\": 84043,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"UT\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345671\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"12345672\",\n                                \"type\": \"Source\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Source\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Smith Travel POS\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"ORA123\",\n                                \"type\": \"Company\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"Company\",\n                            \"companyInfo\": {\n                                \"companyName\": \"Oracle Corporation\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                {\n                    \"paymentMethod\": \"38\",\n                    \"folioView\": \"1\" \n                     \n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from ABC\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/resnotif/v0/hotels/{{HotelCode1}}/reservations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"resnotif",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"reservations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post Reservation Notif (v0) -> Create 3 nights, rate changes, VCC on folio 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer  {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"reservations\": [\n        {\n            \"reservationIdList\": [\n                {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}2\",\n                    \"idExtension\": \"1\"\n                }\n            ],\n            \"lastModifyDateTime\": \"2020-07-01T12:21:00-07:00\",\n            \"roomStay\": {\n                \"arrivalDate\": \"{{currentdateplus1}}\",\n                \"departureDate\": \"{{currentdateplus4}}\",\n                \"roomRates\": [\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"{{currencyCode}}\"\n                                    },\n                                    \"start\": \"{{currentdateplus1}}\",\n                                    \"end\": \"{{currentdateplus1}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus1}}\",\n                        \"end\": \"{{currentdateplus1}}\"\n                    },\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 300,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus2}}\",\n                                    \"end\": \"{{currentdateplus2}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus2}}\",\n                        \"end\": \"{{currentdateplus2}}\"\n                    },\n                    {\n                        \"rates\": {\n                            \"rate\": [\n                                {\n                                    \"base\": {\n                                        \"amountBeforeTax\": 200,\n                                        \"currencyCode\": \"USD\"\n                                    },\n                                    \"start\": \"{{currentdateplus3}}\",\n                                    \"end\": \"{{currentdateplus3}}\"\n                                }\n                            ]\n                        },\n                        \"guestCounts\": {\n                            \"childAges\": [\n                                4,\n                                9,\n                                17\n                            ],\n                            \"adults\": 2,\n                            \"children\": 3\n                        },\n                        \"roomType\": \"{{RoomTypeCode}}\",\n                        \"ratePlanCode\": \"{{RatePlanCode}}\",\n                        \"suppressRate\": false,\n                        \"numberOfUnits\": 1,\n                        \"start\": \"{{currentdateplus3}}\",\n                        \"end\": \"{{currentdateplus3}}\"\n                    }\n                ],\n                \"guestCounts\": {\n                    \"adults\": 2,\n                    \"children\": 3\n                },\n                \"total\": {\n                    \"amountAfterTax\": 700,\n                    \"amountBeforeTax\": 67.09,\n                    \"currencyCode\": \"USD\"\n                },\n                \"guarantee\": {\n                    \"guaranteeCode\": \"5\",\n                    \"onHold\": false\n                },\n                \"printRate\": false\n            },\n            \"reservationGuests\": [\n                {\n                    \"profileInfo\": {\n                        \"profile\": {\n                            \"customer\": {\n                                \"personName\": [\n                                    {\n                                        \"surname\": \"Smith\",\n                                        \"givenName\": \"Mary\",\n                                        \"nameTitle\": \"Mr and Mrs\",\n                                        \"nameType\": \"Primary\",\n                                        \"email\": \"customer@email.com\",\n                                        \"phoneNumber\": \"123-410-3186\",\n                                        \"address\": {\n                                            \"addressLine\": [\n                                                \"3450 North Triumph Boulevarde\"\n                                            ],\n                                            \"cityName\": \"Lehi\",\n                                            \"postalCode\": 84043,\n                                            \"country\": {\n                                                \"code\": \"US\"\n                                            },\n                                            \"state\": \"UT\"\n                                        }\n                                    }\n                                ],\n                                \"language\": \"en-us\"\n                            },\n                            \"profileType\": \"Guest\"\n                        }\n                    },\n                    \"primary\": true\n                },\n                {\n                    \"profileInfo\": {\n                        \"profileIdList\": [\n                            {\n                                \"id\": \"NCSP\",\n                                \"type\": \"TravelAgent\"\n                            }\n                        ],\n                        \"profile\": {\n                            \"profileType\": \"TravelAgent\",\n                            \"companyInfo\": {\n                                \"companyName\": \"NCSP\"\n                            }\n                        }\n                    }\n                }\n            ],\n            \"reservationPaymentMethods\": [\n                 {\n                    \"paymentMethod\": \"1\",\n                    \"folioView\": \"1\"\n                }\n                ,\n                {\n                    \"paymentMethod\": \"5\",\n                    \"folioView\": \"2\",\n                    \"paymentCard\": {\n                        \"cardType\": \"VI\",\n                        \"cardNumber\": \"1234123412341234\",\n                        \"expirationDate\": \"06/25\",\n                        \"cardHolderName\": \"ABC VirtualCard\"\n                    }\n                }\n            ],\n            \"hotelCode\": \"{{HotelCode1}}\",\n            \"messageId\": \"22922909\",\n            \"comments\": [\n                {\n                    \"comment\": {\n                        \"text\": {\n                            \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n                        },\n                        \"commentTitle\": \"Notes from ABC\",\n                        \"notificationLocation\": \"RESERVATION\",\n                        \"type\": \"GEN\",\n                        \"internal\": true,\n                        \"confidential\": false,\n                        \"overrideInternal\": false\n                    }\n                }\n            ],\n            \"printRate\": false,\n            \"optedForCommunication\": false\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/resnotif/v0/hotels/{{HotelCode1}}/reservations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"resnotif",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"reservations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "put Reservation Notif (v0)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"reservations\": [\n      {\n        \"reservationIdList\": [\n            {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n        ],\n        \"lastModifyDateTime\" : \"2020-07-01T12:21:00-07:00\",\n        \"roomStay\": {\n          \"arrivalDate\": \"{{currentdateplus1}}\",\n          \"departureDate\": \"{{currentdateplus2}}\",\n          \"roomRates\": [\n            {\n              \"rates\": {\n                \"rate\": [\n                  {\n                    \"base\": {\n                      \"amountBeforeTax\": 333,\n                      \"currencyCode\": \"{{currencyCode}}\"\n                    },\n                    \"start\": \"{{currentdateplus1}}\",\n                    \"end\": \"{{currentdateplus2}}\"\n                  }\n                ]\n              },\n              \"guestCounts\": {\n                \"childAges\": [\n                  4,\n                  9,\n                  17\n                ],\n                \"adults\": 2,\n                \"children\": 3\n              },\n              \"roomType\": \"{{RoomTypeCode}}\",\n              \"ratePlanCode\":\"{{RatePlanCode}}\",\n              \"suppressRate\": false,\n              \"numberOfUnits\": 1,\n              \"start\": \"{{currentdateplus1}}\",\n              \"end\": \"{{currentdateplus2}}\"\n            }\n          ],\n          \"guestCounts\": {\n            \"adults\": 2,\n            \"children\": 3\n          },\n          \"total\": {\n            \"amountAfterTax\": 300,\n            \"amountBeforeTax\": 220.09,\n            \"currencyCode\": \"USD\"\n          },\n          \"guarantee\": {\n            \"guaranteeCode\": \"CC\",\n            \"onHold\": false\n          },\n          \"printRate\": false\n        },\n        \"reservationGuests\": [\n          {\n            \"profileInfo\": {\n              \"profile\": {\n                \"customer\": {\n                  \"personName\": [\n                    {\n                      \"givenName\": \"Thomas\",\n                      \"surname\": \"Test\",\n                      \"nameTitle\": \"Mr and Mrs\",\n                      \"nameType\": \"Primary\",\n                      \"email\": \"customer@email.com\",\n                      \"phoneNumber\": \"+13213331112\"\n                    }\n                  ],\n                  \"language\": \"en-us\"\n                },\n                \"profileType\": \"Guest\"\n              }\n            },\n            \"primary\": true\n          },\n          {\n            \"profileInfo\": {\n              \"profileIdList\": [\n                {\n                  \"id\": \"ABC\",\n                  \"type\": \"TravelAgent\"\n                }\n              ],\n              \"profile\": {\n                \"profileType\": \"TravelAgent\",\n                \"companyInfo\": {\n                  \"companyName\": \"ABC Company\"\n                }\n              }\n            }\n          }\n        ],\n        \"reservationPaymentMethods\": [\n       {\n        \"paymentMethod\":\"5\",\n        \"folioView\":\"2\",\n        \"paymentCard\":{\n          \"cardType\":\"AX\",\n          \"cardNumber\":\"1234123412341234\",\n          \"expirationDate\":\"06/25\",\n          \"cardHolderName\":\"ABC VirtualCard\"\n        }\n       }\n        ],\n        \"hotelCode\": \"{{HotelCode1}}\",\n        \"messageId\": \"22922909\",\n        \"comments\": [\n          {\n            \"comment\": {\n              \"text\": {\n                \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n              },\n              \"commentTitle\": \"Notes from ABC\",\n              \"notificationLocation\": \"RESERVATION\",\n              \"type\": \"GEN\",\n              \"internal\": true,\n              \"confidential\": false,\n              \"overrideInternal\": false\n            }\n          }\n        ],\n        \"printRate\": false,\n        \"optedForCommunication\": false\n      }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/resnotif/v0/hotels/{{HotelCode}}/reservations/{{ConfirmationNum}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"resnotif",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations",
+										"{{ConfirmationNum}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post Cancel Reservation Notif (v0)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"reservations\": [\n      {\n        \"reservationIdList\": [\n        {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n        ],\n        \"lastModifyDateTime\" : \"2020-07-01T12:21:00-07:00\",\n        \"roomStay\": {\n          \"arrivalDate\": \"{{currentdateplus1}}\",\n          \"departureDate\": \"{{currentdateplus2}}\",\n          \"roomRates\": [\n            {\n              \"rates\": {\n                \"rate\": [\n                  {\n                    \"base\": {\n                      \"amountBeforeTax\": 333,\n                      \"currencyCode\": \"{{currencyCode}}\"\n                    },\n                    \"start\": \"{{currentdateplus1}}\",\n                    \"end\": \"{{currentdateplus2}}\"\n                  }\n                ]\n              },\n              \"guestCounts\": {\n                \"childAges\": [\n                  4,\n                  9,\n                  17\n                ],\n                \"adults\": 2,\n                \"children\": 3\n              },\n              \"roomType\": \"{{RoomTypeCode}}\",\n              \"ratePlanCode\":\"{{RatePlanCode}}\",\n              \"suppressRate\": false,\n              \"numberOfUnits\": 1,\n              \"start\": \"{{currentdateplus1}}\",\n              \"end\": \"{{currentdateplus2}}\"\n            }\n          ],\n          \"guestCounts\": {\n            \"adults\": 2,\n            \"children\": 3\n          },\n          \"total\": {\n            \"amountAfterTax\": 200,\n            \"amountBeforeTax\": 20.09,\n            \"currencyCode\": \"USD\"\n          },\n          \"guarantee\": {\n            \"guaranteeCode\": \"CC\",\n            \"onHold\": false\n          },\n          \"printRate\": false\n        },\n        \"reservationGuests\": [\n          {\n            \"profileInfo\": {\n              \"profile\": {\n                \"customer\": {\n                  \"personName\": [\n                    {\n                      \"givenName\": \"Thomas\",\n                      \"surname\": \"Test\",\n                      \"nameTitle\": \"Mr and Mrs\",\n                      \"nameType\": \"Primary\",\n                      \"email\": \"customer@email.com\",\n                      \"phoneNumber\": \"+12313331112\"\n                    }\n                  ],\n                  \"language\": \"en-us\"\n                },\n                \"profileType\": \"Guest\"\n              }\n            },\n            \"primary\": true\n          },\n          {\n            \"profileInfo\": {\n              \"profileIdList\": [\n                {\n                  \"id\": \"ABC\",\n                  \"type\": \"TravelAgent\"\n                }\n              ],\n              \"profile\": {\n                \"profileType\": \"TravelAgent\",\n                \"companyInfo\": {\n                  \"companyName\": \"ABC Company\"\n                }\n              }\n            }\n          }\n        ],\n        \"reservationPaymentMethods\": [\n       {\n        \"paymentMethod\":\"5\",\n        \"folioView\":\"2\",\n        \"paymentCard\":{\n          \"cardType\":\"AX\",\n          \"cardNumber\":\"1234123412341234\",\n          \"expirationDate\":\"06/25\",\n          \"cardHolderName\":\"ABC VirtualCard\"\n        }\n       }\n        ],\n        \"hotelCode\": \"{{HotelCode1}}\",\n        \"messageId\": \"22922909\",\n        \"comments\": [\n          {\n            \"comment\": {\n              \"text\": {\n                \"value\": \"Channel Text note\\n1 king bed\\nNon-Smoking\\nBill guest full stay\"\n              },\n              \"commentTitle\": \"Notes from ABC\",\n              \"notificationLocation\": \"RESERVATION\",\n              \"type\": \"GEN\",\n              \"internal\": true,\n              \"confidential\": false,\n              \"overrideInternal\": false\n            }\n          }\n        ],\n        \"printRate\": false,\n        \"optedForCommunication\": false\n      }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/resnotif/v0/hotels/{{HotelCode}}/reservations/{{ConfirmationNum}}/cancellations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"resnotif",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"reservations",
+										"{{ConfirmationNum}}",
+										"cancellations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post Cancel Reservation Notif (v0) -> Cancel Light payload",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json; charset=utf-8"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"reservations\": [\n      {\n        \"reservationIdList\": [\n           {\n                    \"id\": \"{{currentdate-time}}-{{externalReservationConfirmation}}\",\n                    \"idExtension\": \"1\"\n                }\n        ],\n        \"lastModifyDateTime\" : \"2020-07-01T12:21:00-07:00\",\n       \n        \"hotelCode\": \"{{HotelCode1}}\",\n        \"messageId\": \"22922909\"\n     \n      }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{HostName}}/resnotif/v0/hotels/{{HotelCode1}}/reservations/{{ConfirmationNum}}/cancellations",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"resnotif",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"reservations",
+										"{{ConfirmationNum}}",
+										"cancellations"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Distribution Shop (SHOP)",
+					"item": [
+						{
+							"name": "get Properties (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// collect parameters passed for dispaly \r",
+											"var arrival = pm.environment.get(\"currentdateplus1\")\r",
+											"\r",
+											"// Set template  for html page \r",
+											"// var hotels = pm.environment.get(\"UI-shop-response\")\r",
+											"var hotels = \r",
+											"`\r",
+											"\r",
+											"<html>\r",
+											"    <head>\r",
+											"        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r",
+											"        <title>2 Column Layout &mdash; Left Menu</title>\r",
+											"\r",
+											"        <style type=\"text/css\">\r",
+											"            h1 {\r",
+											"                font-size: 2.5rem;\r",
+											"                font-family: Georgia, serif;\r",
+											"                color: #e6ac58;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 10px;\r",
+											"                background-color: #494b4d;\r",
+											"                color: #fff;\r",
+											"                font-family: \"Oracle Sans Regular\", Arial, Helvetica, sans-serif, Arial, Helvetica, sans-serif;\r",
+											"                font-size: 1.5rem;\r",
+											"                line-height: 1.2;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"\r",
+											"                line-height: 1.5em;\r",
+											"            }\r",
+											"\r",
+											"            main {\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"            }\r",
+											"\r",
+											"            #content {\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"                margin-left: -100%;\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"            }\r",
+											"\r",
+											"            #wrapper {\r",
+											"                overflow: hidden;\r",
+											"            }\r",
+											"\r",
+											"            #offers {\r",
+											"                margin-left: 40%; /* Same as 'nav' width */\r",
+											"            }\r",
+											"\r",
+											"            .innertube {\r",
+											"                margin: 15px; /* Padding for content */\r",
+											"                margin-top: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul {\r",
+											"                list-style-type: none;\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul a {\r",
+											"                color: yellow;\r",
+											"                text-decoration: none;\r",
+											"            }\r",
+											"        </style>\r",
+											"    </head>\r",
+											"\r",
+											"    <body>\r",
+											"        <div id=\"wrapper\">\r",
+											"            <main>\r",
+											"              \r",
+											"            </main>\r",
+											"\r",
+											"            <nav id=\"content\">\r",
+											"                <div class=\"innertube\">\r",
+											"                    <h1>Multi-Property Availability Response</h1>\r",
+											"                    <table>\r",
+											"                        <tr>\r",
+											"                            <th>Hotel Code</th>\r",
+											"                            <th>Hotel Name</th>\r",
+											"                            <th>Chain Code</th>\r",
+											"                            <th>Availablity Status</th>\r",
+											"                            <th>Min Rate</th>\r",
+											"                            <th>Min Rate Currency</th>\r",
+											"                            <th>Min Rate Mode</th>\r",
+											"                            <th>Min Rate Changes</th>\r",
+											"                            <th>Max Rate</th>\r",
+											"                            <th>Max Rate Currency</th>\r",
+											"                            <th>Max Rate Mode</th>\r",
+											"                            <th>Max Rate changes</th>\r",
+											"                        </tr>\r",
+											"                        {{#each response.roomStays}}\r",
+											"                        <tr>\r",
+											"                            <td>{{propertyInfo.hotelCode}}</td>\r",
+											"                            <td>{{propertyInfo.hotelName}}</td>\r",
+											"                            <td>{{propertyInfo.chainCode}}</td>\r",
+											"                            <td>{{availability}}</td>\r",
+											"                            <td>{{minRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{minRate.currencyCode}}</td>\r",
+											"                            <td>{{minRate.rateMode}}</td>\r",
+											"                            <td>{{minRate.hasRateChange}}</td>\r",
+											"                            <td>{{maxRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{maxRate.currencyCode}}</td>\r",
+											"                            <td>{{maxRate.rateMode}}</td>\r",
+											"                            <td>{{maxRate.hasRateChange}}</td>\r",
+											"                            {{/each}}\r",
+											"                        </tr>\r",
+											"                    </table>\r",
+											"\r",
+											"                    \r",
+											"                </div>\r",
+											"            </nav>\r",
+											"        </div>\r",
+											"    </body>\r",
+											"</html>\r",
+											"\r",
+											"\r",
+											"\r",
+											"`\r",
+											"\r",
+											"\r",
+											" \r",
+											"// Set visualizer\r",
+											"pm.visualizer.set(hotels, {response: pm.response.json()});\r",
+											" \r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									},
+									{
+										"key": "x-channelCode",
+										"type": "text",
+										"value": "{{channelCode}}"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels?adults=2&numberOfUnits=1&chainCode={{chainCode}}&hotelCodes={{HotelCode1}},{{HotelCode2}},{{HotelCode3}}&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus3}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "2"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "chainCode",
+											"value": "{{chainCode}}"
+										},
+										{
+											"key": "hotelCodes",
+											"value": "{{HotelCode1}},{{HotelCode2}},{{HotelCode3}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus3}}"
+										}
+									]
+								},
+								"description": "With properties in request"
+							},
+							"response": []
+						},
+						{
+							"name": "get Properties (v0) -> with children",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// collect parameters passed for dispaly \r",
+											"var arrival = pm.environment.get(\"currentdateplus1\")\r",
+											"\r",
+											"// Set template  for html page \r",
+											"// var hotels = pm.environment.get(\"UI-shop-response\")\r",
+											"var hotels = \r",
+											"`\r",
+											"\r",
+											"<html>\r",
+											"    <head>\r",
+											"        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r",
+											"        <title>2 Column Layout &mdash; Left Menu</title>\r",
+											"\r",
+											"        <style type=\"text/css\">\r",
+											"            h1 {\r",
+											"                font-size: 2.5rem;\r",
+											"                font-family: Georgia, serif;\r",
+											"                color: #e6ac58;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 10px;\r",
+											"                background-color: #494b4d;\r",
+											"                color: #fff;\r",
+											"                font-family: \"Oracle Sans Regular\", Arial, Helvetica, sans-serif, Arial, Helvetica, sans-serif;\r",
+											"                font-size: 1.5rem;\r",
+											"                line-height: 1.2;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"\r",
+											"                line-height: 1.5em;\r",
+											"            }\r",
+											"\r",
+											"            main {\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"            }\r",
+											"\r",
+											"            #content {\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"                margin-left: -100%;\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"            }\r",
+											"\r",
+											"            #wrapper {\r",
+											"                overflow: hidden;\r",
+											"            }\r",
+											"\r",
+											"            #offers {\r",
+											"                margin-left: 40%; /* Same as 'nav' width */\r",
+											"            }\r",
+											"\r",
+											"            .innertube {\r",
+											"                margin: 15px; /* Padding for content */\r",
+											"                margin-top: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul {\r",
+											"                list-style-type: none;\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul a {\r",
+											"                color: yellow;\r",
+											"                text-decoration: none;\r",
+											"            }\r",
+											"        </style>\r",
+											"    </head>\r",
+											"\r",
+											"    <body>\r",
+											"        <div id=\"wrapper\">\r",
+											"            <main>\r",
+											"              \r",
+											"            </main>\r",
+											"\r",
+											"            <nav id=\"content\">\r",
+											"                <div class=\"innertube\">\r",
+											"                    <h1>Multi-Property Availability Response</h1>\r",
+											"                    <table>\r",
+											"                        <tr>\r",
+											"                            <th>Hotel Code</th>\r",
+											"                            <th>Hotel Name</th>\r",
+											"                            <th>Chain Code</th>\r",
+											"                            <th>Availablity Status</th>\r",
+											"                            <th>Min Rate</th>\r",
+											"                            <th>Min Rate Currency</th>\r",
+											"                            <th>Min Rate Mode</th>\r",
+											"                            <th>Min Rate Changes</th>\r",
+											"                            <th>Max Rate</th>\r",
+											"                            <th>Max Rate Currency</th>\r",
+											"                            <th>Max Rate Mode</th>\r",
+											"                            <th>Max Rate changes</th>\r",
+											"                        </tr>\r",
+											"                        {{#each response.roomStays}}\r",
+											"                        <tr>\r",
+											"                            <td>{{propertyInfo.hotelCode}}</td>\r",
+											"                            <td>{{propertyInfo.hotelName}}</td>\r",
+											"                            <td>{{propertyInfo.chainCode}}</td>\r",
+											"                            <td>{{availability}}</td>\r",
+											"                            <td>{{minRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{minRate.currencyCode}}</td>\r",
+											"                            <td>{{minRate.rateMode}}</td>\r",
+											"                            <td>{{minRate.hasRateChange}}</td>\r",
+											"                            <td>{{maxRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{maxRate.currencyCode}}</td>\r",
+											"                            <td>{{maxRate.rateMode}}</td>\r",
+											"                            <td>{{maxRate.hasRateChange}}</td>\r",
+											"                            {{/each}}\r",
+											"                        </tr>\r",
+											"                    </table>\r",
+											"\r",
+											"                    \r",
+											"                </div>\r",
+											"            </nav>\r",
+											"        </div>\r",
+											"    </body>\r",
+											"</html>\r",
+											"\r",
+											"\r",
+											"\r",
+											"`\r",
+											"\r",
+											"\r",
+											" \r",
+											"// Set visualizer\r",
+											"pm.visualizer.set(hotels, {response: pm.response.json()});\r",
+											" \r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels?adults=1&children=2&childrenAges=12,6&numberOfUnits=1&chainCode={{chainCode}}&hotelCodes={{HotelCode1}},{{HotelCode2}},{{HotelCode3}}&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus3}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "children",
+											"value": "2"
+										},
+										{
+											"key": "childrenAges",
+											"value": "12,6"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "chainCode",
+											"value": "{{chainCode}}"
+										},
+										{
+											"key": "hotelCodes",
+											"value": "{{HotelCode1}},{{HotelCode2}},{{HotelCode3}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus3}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Properties (v0) -> using rate Mode",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// collect parameters passed for dispaly \r",
+											"var arrival = pm.environment.get(\"currentdateplus1\")\r",
+											"\r",
+											"// Set template  for html page \r",
+											"// var hotels = pm.environment.get(\"UI-shop-response\")\r",
+											"var hotels = \r",
+											"`\r",
+											"\r",
+											"<html>\r",
+											"    <head>\r",
+											"        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r",
+											"        <title>2 Column Layout &mdash; Left Menu</title>\r",
+											"\r",
+											"        <style type=\"text/css\">\r",
+											"            h1 {\r",
+											"                font-size: 2.5rem;\r",
+											"                font-family: Georgia, serif;\r",
+											"                color: #e6ac58;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 10px;\r",
+											"                background-color: #494b4d;\r",
+											"                color: #fff;\r",
+											"                font-family: \"Oracle Sans Regular\", Arial, Helvetica, sans-serif, Arial, Helvetica, sans-serif;\r",
+											"                font-size: 1.5rem;\r",
+											"                line-height: 1.2;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"\r",
+											"                line-height: 1.5em;\r",
+											"            }\r",
+											"\r",
+											"            main {\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"            }\r",
+											"\r",
+											"            #content {\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"                margin-left: -100%;\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"            }\r",
+											"\r",
+											"            #wrapper {\r",
+											"                overflow: hidden;\r",
+											"            }\r",
+											"\r",
+											"            #offers {\r",
+											"                margin-left: 40%; /* Same as 'nav' width */\r",
+											"            }\r",
+											"\r",
+											"            .innertube {\r",
+											"                margin: 15px; /* Padding for content */\r",
+											"                margin-top: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul {\r",
+											"                list-style-type: none;\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul a {\r",
+											"                color: yellow;\r",
+											"                text-decoration: none;\r",
+											"            }\r",
+											"        </style>\r",
+											"    </head>\r",
+											"\r",
+											"    <body>\r",
+											"        <div id=\"wrapper\">\r",
+											"            <main>\r",
+											"              \r",
+											"            </main>\r",
+											"\r",
+											"            <nav id=\"content\">\r",
+											"                <div class=\"innertube\">\r",
+											"                    <h1>Multi-Property Availability Response</h1>\r",
+											"                    <table>\r",
+											"                        <tr>\r",
+											"                            <th>Hotel Code</th>\r",
+											"                            <th>Hotel Name</th>\r",
+											"                            <th>Chain Code</th>\r",
+											"                            <th>Availablity Status</th>\r",
+											"                            <th>Min Rate</th>\r",
+											"                            <th>Min Rate Currency</th>\r",
+											"                            <th>Min Rate Mode</th>\r",
+											"                            <th>Min Rate Changes</th>\r",
+											"                            <th>Max Rate</th>\r",
+											"                            <th>Max Rate Currency</th>\r",
+											"                            <th>Max Rate Mode</th>\r",
+											"                            <th>Max Rate changes</th>\r",
+											"                        </tr>\r",
+											"                        {{#each response.roomStays}}\r",
+											"                        <tr>\r",
+											"                            <td>{{propertyInfo.hotelCode}}</td>\r",
+											"                            <td>{{propertyInfo.hotelName}}</td>\r",
+											"                            <td>{{propertyInfo.chainCode}}</td>\r",
+											"                            <td>{{availability}}</td>\r",
+											"                            <td>{{minRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{minRate.currencyCode}}</td>\r",
+											"                            <td>{{minRate.rateMode}}</td>\r",
+											"                            <td>{{minRate.hasRateChange}}</td>\r",
+											"                            <td>{{maxRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{maxRate.currencyCode}}</td>\r",
+											"                            <td>{{maxRate.rateMode}}</td>\r",
+											"                            <td>{{maxRate.hasRateChange}}</td>\r",
+											"                            {{/each}}\r",
+											"                        </tr>\r",
+											"                    </table>\r",
+											"\r",
+											"                    \r",
+											"                </div>\r",
+											"            </nav>\r",
+											"        </div>\r",
+											"    </body>\r",
+											"</html>\r",
+											"\r",
+											"\r",
+											"\r",
+											"`\r",
+											"\r",
+											"\r",
+											" \r",
+											"// Set visualizer\r",
+											"pm.visualizer.set(hotels, {response: pm.response.json()});\r",
+											" \r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels?rateMode=Average&adults=2&numberOfUnits=1&chainCode={{chainCode}}&hotelCodes={{HotelCode1}},{{HotelCode2}},{{HotelCode3}}&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus4}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels"
+									],
+									"query": [
+										{
+											"key": "rateMode",
+											"value": "Average"
+										},
+										{
+											"key": "adults",
+											"value": "2"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "chainCode",
+											"value": "{{chainCode}}"
+										},
+										{
+											"key": "hotelCodes",
+											"value": "{{HotelCode1}},{{HotelCode2}},{{HotelCode3}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus4}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Properties (v0) -> Access to Neg rate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// collect parameters passed for dispaly \r",
+											"var arrival = pm.environment.get(\"currentdateplus1\")\r",
+											"\r",
+											"// Set template  for html page \r",
+											"// var hotels = pm.environment.get(\"UI-shop-response\")\r",
+											"var hotels = \r",
+											"`\r",
+											"\r",
+											"<html>\r",
+											"    <head>\r",
+											"        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r",
+											"        <title>2 Column Layout &mdash; Left Menu</title>\r",
+											"\r",
+											"        <style type=\"text/css\">\r",
+											"            h1 {\r",
+											"                font-size: 2.5rem;\r",
+											"                font-family: Georgia, serif;\r",
+											"                color: #e6ac58;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 10px;\r",
+											"                background-color: #494b4d;\r",
+											"                color: #fff;\r",
+											"                font-family: \"Oracle Sans Regular\", Arial, Helvetica, sans-serif, Arial, Helvetica, sans-serif;\r",
+											"                font-size: 1.5rem;\r",
+											"                line-height: 1.2;\r",
+											"            }\r",
+											"            body {\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"\r",
+											"                line-height: 1.5em;\r",
+											"            }\r",
+											"\r",
+											"            main {\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"            }\r",
+											"\r",
+											"            #content {\r",
+											"                float: left;\r",
+											"                width: 100%;\r",
+											"                margin-left: -100%;\r",
+											"                padding-bottom: 10010px;\r",
+											"                margin-bottom: -10000px;\r",
+											"            }\r",
+											"\r",
+											"            #wrapper {\r",
+											"                overflow: hidden;\r",
+											"            }\r",
+											"\r",
+											"            #offers {\r",
+											"                margin-left: 40%; /* Same as 'nav' width */\r",
+											"            }\r",
+											"\r",
+											"            .innertube {\r",
+											"                margin: 15px; /* Padding for content */\r",
+											"                margin-top: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul {\r",
+											"                list-style-type: none;\r",
+											"                margin: 0;\r",
+											"                padding: 0;\r",
+											"            }\r",
+											"\r",
+											"            content ul a {\r",
+											"                color: yellow;\r",
+											"                text-decoration: none;\r",
+											"            }\r",
+											"        </style>\r",
+											"    </head>\r",
+											"\r",
+											"    <body>\r",
+											"        <div id=\"wrapper\">\r",
+											"            <main>\r",
+											"              \r",
+											"            </main>\r",
+											"\r",
+											"            <nav id=\"content\">\r",
+											"                <div class=\"innertube\">\r",
+											"                    <h1>Multi-Property Availability Response</h1>\r",
+											"                    <table>\r",
+											"                        <tr>\r",
+											"                            <th>Hotel Code</th>\r",
+											"                            <th>Hotel Name</th>\r",
+											"                            <th>Chain Code</th>\r",
+											"                            <th>Availablity Status</th>\r",
+											"                            <th>Min Rate</th>\r",
+											"                            <th>Min Rate Currency</th>\r",
+											"                            <th>Min Rate Mode</th>\r",
+											"                            <th>Min Rate Changes</th>\r",
+											"                            <th>Max Rate</th>\r",
+											"                            <th>Max Rate Currency</th>\r",
+											"                            <th>Max Rate Mode</th>\r",
+											"                            <th>Max Rate changes</th>\r",
+											"                        </tr>\r",
+											"                        {{#each response.roomStays}}\r",
+											"                        <tr>\r",
+											"                            <td>{{propertyInfo.hotelCode}}</td>\r",
+											"                            <td>{{propertyInfo.hotelName}}</td>\r",
+											"                            <td>{{propertyInfo.chainCode}}</td>\r",
+											"                            <td>{{availability}}</td>\r",
+											"                            <td>{{minRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{minRate.currencyCode}}</td>\r",
+											"                            <td>{{minRate.rateMode}}</td>\r",
+											"                            <td>{{minRate.hasRateChange}}</td>\r",
+											"                            <td>{{maxRate.amountBeforeTax}}</td>\r",
+											"                            <td>{{maxRate.currencyCode}}</td>\r",
+											"                            <td>{{maxRate.rateMode}}</td>\r",
+											"                            <td>{{maxRate.hasRateChange}}</td>\r",
+											"                            {{/each}}\r",
+											"                        </tr>\r",
+											"                    </table>\r",
+											"\r",
+											"                    \r",
+											"                </div>\r",
+											"            </nav>\r",
+											"        </div>\r",
+											"    </body>\r",
+											"</html>\r",
+											"\r",
+											"\r",
+											"\r",
+											"`\r",
+											"\r",
+											"\r",
+											" \r",
+											"// Set visualizer\r",
+											"pm.visualizer.set(hotels, {response: pm.response.json()});\r",
+											" \r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels?adults=1&numberOfUnits=1&ratePlanCodes={{NegotiatedRatePlanCodes}}&accessCode={{accessCode}}&ratePlanCodeMatchOnly=True&chainCode={{chainCode}}&hotelCodes={{HotelCode1}},{{HotelCode2}},{{HotelCode3}}&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus3}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "ratePlanCodes",
+											"value": "{{NegotiatedRatePlanCodes}}"
+										},
+										{
+											"key": "accessCode",
+											"value": "{{accessCode}}"
+										},
+										{
+											"key": "ratePlanCodeMatchOnly",
+											"value": "True"
+										},
+										{
+											"key": "chainCode",
+											"value": "{{chainCode}}"
+										},
+										{
+											"key": "hotelCodes",
+											"value": "{{HotelCode1}},{{HotelCode2}},{{HotelCode3}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus3}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Property Offers (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									},
+									{
+										"key": "x-channelCode",
+										"type": "text",
+										"value": "{{channelCode}}"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels/{{HotelCode}}/offers?adults=1&numberOfUnits=1&departureDate={{currentdateplus2}}&arrivalDate={{currentdateplus1}}&children=1&childrenAges=12",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"offers"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus2}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "children",
+											"value": "1"
+										},
+										{
+											"key": "childrenAges",
+											"value": "12"
+										}
+									]
+								},
+								"description": "Get property offers for Public rates"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Property Offers (v0) -> Access to Neg Rate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels/{{HotelCode1}}/offers?adults=1&numberOfUnits=1&ratePlanCodes={{NegotiatedRatePlanCodes}}&accessCode={{accessCode}}&departureDate={{currentdateplus2}}&arrivalDate={{currentdateplus1}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"offers"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "ratePlanCodes",
+											"value": "{{NegotiatedRatePlanCodes}}"
+										},
+										{
+											"key": "accessCode",
+											"value": "{{accessCode}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus2}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Property Offers (v0) -> Specific room type only",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels/{{HotelCode1}}/offers?adults=1&numberOfUnits=1&roomType={{RoomTypeCode}}&roomTypeMatchOnly=True&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus3}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"offers"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "roomType",
+											"value": "{{RoomTypeCode}}"
+										},
+										{
+											"key": "roomTypeMatchOnly",
+											"value": "True"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus3}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Property Offers (v0) -> Specific rate plan only",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels/{{HotelCode1}}/offers?adults=1&numberOfUnits=1&ratePlanCodes={{RatePlanCode}}&ratePlanCodeMatchOnly=true&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus2}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"offers"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "ratePlanCodes",
+											"value": "{{RatePlanCode}}"
+										},
+										{
+											"key": "ratePlanCodeMatchOnly",
+											"value": "true"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus2}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Property Offer (v0)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{Token}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "x-app-key",
+										"type": "text",
+										"value": "{{AppKey}}"
+									},
+									{
+										"key": "x-channelCode",
+										"type": "text",
+										"value": "{{channelCode}}"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels/{{HotelCode}}/offer?adults=1&numberOfUnits=1&ratePlanCode={{RatePlanCode}}&roomType={{RoomTypeCode}}&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus2}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels",
+										"{{HotelCode}}",
+										"offer"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "ratePlanCode",
+											"value": "{{RatePlanCode}}"
+										},
+										{
+											"key": "roomType",
+											"value": "{{RoomTypeCode}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus2}}"
+										}
+									]
+								},
+								"description": "get Property Offer -> Offer Details"
+							},
+							"response": []
+						},
+						{
+							"name": "get Property Offer (v0) -> Offer Details Negotiated Rate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "x-channelCode",
+										"value": "{{channelCode}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{HostName}}/shop/v0/hotels/{{HotelCode1}}/offer?adults=1&numberOfUnits=1&ratePlanCode={{NegotiatedRatePlanCodes}}&accessCode={{accessCode}}&roomType={{RoomTypeCode}}&arrivalDate={{currentdateplus1}}&departureDate={{currentdateplus2}}",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"shop",
+										"v0",
+										"hotels",
+										"{{HotelCode1}}",
+										"offer"
+									],
+									"query": [
+										{
+											"key": "adults",
+											"value": "1"
+										},
+										{
+											"key": "numberOfUnits",
+											"value": "1"
+										},
+										{
+											"key": "ratePlanCode",
+											"value": "{{NegotiatedRatePlanCodes}}"
+										},
+										{
+											"key": "accessCode",
+											"value": "{{accessCode}}"
+										},
+										{
+											"key": "roomType",
+											"value": "{{RoomTypeCode}}"
+										},
+										{
+											"key": "arrivalDate",
+											"value": "{{currentdateplus1}}"
+										},
+										{
+											"key": "departureDate",
+											"value": "{{currentdateplus2}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
