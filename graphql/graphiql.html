@@ -11,7 +11,13 @@
     <title>
       OHIP GraphiQL Tool
     </title>
-    <link rel="icon" type="image/x-icon" href="https://www.oracle.com/webfolder/technetwork/jet/css/images/favicon.ico"/>
+      <meta charset="UTF-8">
+      <meta http-equiv="x-ua-compatible" content="IE=edge">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/x-icon" href="https://www.oracle.com/webfolder/technetwork/jet/css/images/favicon.ico"/>
+      <meta name="apple-mobile-web-app-title" content="OHIP GraphiQL Tool">
+    
     <style>
       html {
         height: 100%;
@@ -22,15 +28,21 @@
         display: flex;
         flex-direction: column;
       }
+      footer {
+        background-color: var(--oj-body-bg-color)!important;
+      }
 
       #graphiql {
-        height: 100vh;
+        height:100vh;
       }
-
       .content {
         margin: 10px;
-        max-height: 65vh;
+	
       }
+	  .contentql{
+	    margin: 10px;
+		max-height: 60vh;
+	  }
 
       .oracle-ohip-img {
         height: 45px;
@@ -42,8 +54,27 @@
         color: rgb(202, 16, 19);
       }
 
+      .no-flex{
+        flex: none !important;
+      }
+      .oj-efficient {
+        min-height: .5rem!important;
+      }
+      .oj-button-label{
+        width: 60%!important;
+      }
+      .oj-lg-1 {
+        flex:0 1 6.33333%!important
+      }
+      .oj-web-applayout-max-width {
+		margin-left: inherit;
+	}
+	footer{
+		bottom:0!important;
+		width:100%;
+   }
+      
     </style>
-
     <!--
       This GraphiQL example depends on Promise and fetch, which are available in
       modern browsers, but can be "polyfilled" for older browsers.
@@ -60,267 +91,6 @@
       src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js" 
       integrity="sha384-E9IgxDsnjKgh0777N3lXen7NwXeTsOpLLJhI01SW7idG046SRqJpsW2rJwsOYk0L" 
       crossorigin="anonymous">
-    </script>
-
-    <script>
-      async function generateHash(apiKey) {
-        const keyUint8 = new TextEncoder().encode(apiKey);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', keyUint8);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        return hashHex;
-      }
-
-      function saveInputsAndStartConnection() {
-        let url = document.getElementById("urlInput").value;
-        const authToken = document.getElementById("authTokenInput").value;
-        const apiKey = document.getElementById("apiKeyInput").value;
-        if (!url || !authToken || !apiKey) {
-          alert("Please fill all text boxes");
-        } else {
-          
-          if (url.indexOf("/subscriptions") !== -1) {
-            url = url.substring(0, url.indexOf("/subscriptions"));
-            document.getElementById("urlInput").value = url;
-          }
-
-          if (url.endsWith("/")) {
-            url = url.substring(0, url.length - 1);
-            document.getElementById("urlInput").value = url;
-          }
-
-          if (url.startsWith("ws:")) {
-            url = url.replace("ws:","wss:");
-            document.getElementById("urlInput").value = url;
-          }
-
-          if (url.startsWith("http:")) {
-            url = url.replace("http:","wss:");
-            document.getElementById("urlInput").value = url;
-          }
-
-          if (url.startsWith("https:")) {
-            url = url.replace("https:","wss:");
-            document.getElementById("urlInput").value = url;
-          }
-          
-          localStorage.setItem("ohipAsyncUrl", url);
-          sessionStorage.setItem("ohipAsyncApiKey", apiKey);
-          sessionStorage.setItem("ohipAsyncAuthToken", authToken);
-
-          generateHash(apiKey).then(socketKey => {
-            sessionStorage.setItem("ohipAsyncSocketKey", socketKey);
-            document.getElementById("socketKeyInput").value = socketKey;
-            verifyConnection();
-          });
-
-        }
-      }
-
-      function clearInputs() {
-        document.getElementById("urlInput").value = "";
-        document.getElementById("socketKeyInput").value = "";
-        document.getElementById("authTokenInput").value = "";
-        document.getElementById("apiKeyInput").value = "";
-        localStorage.removeItem("ohipAsyncUrl");
-        sessionStorage.removeItem("ohipAsyncSocketKey");
-        sessionStorage.removeItem("ohipAsyncApiKey");
-        sessionStorage.removeItem("ohipAsyncAuthToken");
-      }
-
-      function verifyConnection() {
-        
-        const graphiQLWindow = document.getElementById("graphiql");
-        graphiQLWindow.style.display = "none";
-        const errorMessages = document.getElementById("errorMessage");
-        errorMessages.style.display = "none";
-
-        const ohipAsyncUrl = document.getElementById("urlInput").value;
-        const ohipAsyncSocketKey = document.getElementById("socketKeyInput").value;
-        const ohipAsyncApiKey = document.getElementById("apiKeyInput").value;
-        const ohipAsyncAuthToken = document.getElementById("authTokenInput").value;
-
-        if (!ohipAsyncUrl || !ohipAsyncSocketKey || !ohipAsyncApiKey || !ohipAsyncAuthToken) {
-          alert("Please populate all fields");
-          return;
-        }
-
-        const wsClientTest = graphqlWs.createClient({
-          url: `${ohipAsyncUrl}/subscriptions?key=${ohipAsyncSocketKey}`,
-          lazy: true,
-          keepAlive: 10000,
-          connectionParams: async () => {
-            return {
-              "Authorization": `Bearer ${ohipAsyncAuthToken}`,
-              "x-app-key": `${ohipAsyncApiKey}`
-            }
-          },
-          on: {
-            connected: (socket) => {
-              errorMessages.style.display = "none";
-              graphiQLWindow.style.display = "block";
-              wsClientTest.dispose().then(() => {
-                reloadGraphiql();
-              });
-            },
-            error: (err) => {
-              errorMessages.innerHTML = `<p class="errorText">Error: Unexpected server response: 400 - Incorrect key or URL</p>`;
-              errorMessages.style.display = "block";
-              graphiQLWindow.style.display = "none";
-              wsClientTest.dispose();
-            },
-            closed: (event) => {
-              if (event.code === 4401) {
-                errorMessages.innerHTML = `<p class="errorText">4401 Error: Unauthorised - Invalid credentials - Invalid Auth Token / API Key credentials.</p>`;
-                errorMessages.style.display = "block";
-                graphiQLWindow.style.display = "none";
-                wsClientTest.dispose();
-              }
-            }
-          },
-        });
-        
-        wsClientTest.subscribe({
-          "Authorization": `Bearer ${ohipAsyncAuthToken}`,
-          "x-app-key": `${ohipAsyncApiKey}`
-        }, {
-          next: (data) => {},
-          error: (err) => {},
-          complete: () => {},
-        });
-
-      }
-
-      function reloadGraphiql() {
-
-        const ohipAsyncUrl = document.getElementById("urlInput").value;
-        const ohipAsyncSocketKey = document.getElementById("socketKeyInput").value;
-        const ohipAsyncApiKey = document.getElementById("apiKeyInput").value;
-        const ohipAsyncAuthToken = document.getElementById("authTokenInput").value;
-
-        const wsClient = graphqlWs.createClient({
-          url: `${ohipAsyncUrl}/subscriptions?key=${ohipAsyncSocketKey}`,
-          lazy: true,
-          keepAlive: 10000,
-          connectionParams: async () => {
-            return {
-              "Authorization": `Bearer ${ohipAsyncAuthToken}`,
-              "x-app-key": `${ohipAsyncApiKey}`
-            }
-          },
-        });
-
-        function subscribe(payload) {
-          let deferred = null;
-          const pending = [];
-          let throwMe = null,
-            done = false;
-
-          const dispose = wsClient.subscribe(payload, {
-            next: (data) => {
-              pending.push(data);
-              deferred?.resolve(false);
-            },
-            error: (err) => {
-              if (err instanceof Error) {
-                throwMe = err;
-              } else if (err instanceof CloseEvent) {
-                throwMe = new Error(
-                  `Socket closed with event ${err.code} ${
-                    err.reason || ""
-                  }`.trim()
-                );
-              } else {
-                // GraphQLError[]
-                throwMe = new Error(err.map(({ message }) => message).join(", "));
-              }
-              deferred?.reject(throwMe);
-            },
-            complete: () => {
-              done = true;
-              deferred?.resolve(true);
-            },
-          });
-          
-          return {
-            [Symbol.asyncIterator]() {
-              return this;
-            },
-            async next() {
-              if (done) return { done: true, value: undefined };
-              if (throwMe) throw throwMe;
-              if (pending.length) return { value: pending.shift() };
-              return (await new Promise(
-                (resolve, reject) => (deferred = { resolve, reject })
-              ))
-                ? { done: true, value: undefined }
-                : { value: pending.shift() };
-            },
-            async return() {
-              dispose();
-              return { done: true, value: undefined };
-            },
-          };
-        }
-
-        ReactDOM.render(
-          React.createElement(GraphiQL, {
-            fetcher: subscribe,
-            defaultVariableEditorOpen: false,
-            docExplorerOpen: true,
-            response:
-`{
-    "greeting": "Welcome to the OHIP GraphiQL Tool!",
-    "usefulLinks": {
-        "overview": "https://docs.oracle.com/cd/F29336_01/doc.201/f27480/c_streaming_api.htm#OHIPU-StreamingAPIpush-17008E8A",
-        "connection": "https://docs.oracle.com/cd/F29336_01/doc.201/f27480/t_connecting_to_the_streaming_api.htm#OHIPU-ConnectingToTheStreamingAPI-05AD62C3"
-    }
-}`,
-            defaultQuery:
-`# Welcome to the OHIP GraphiQL Tool
-#
-# Auto Complete Reminder:  Ctrl-Space (or just start typing)
-#
-# Example Sandbox Subscription:
-#
-# subscription {
-#   newEvent (input:{chainCode: "OHIPCN"}) {
-#     metadata {
-#       offset
-#       uniqueEventId
-#     }
-#     moduleName
-#     eventName
-#     detail {
-#       elementName
-#       newValue
-#       oldValue
-#     }
-#   }
-# }
-#
-# Run the Query below to access useful OHIP resources
-query {
-  getHelp {
-    overview
-    configuration
-    connection {
-      help
-      errors
-    }
-    events {
-      payload
-      replaying
-    }
-    slack
-    email
-  } 
-}
-`
-          }),
-          document.getElementById('graphiql'),
-        );
-      }
     </script>
 
     <!--
@@ -364,119 +134,388 @@ query {
         </span>
       </div>
     </header>
-    <div id="inputs">
-        <div class="oj-inputtext oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete" style="padding-left: 10px; max-width: calc(2 * var(--oj-form-layout-column-max-width)); margin-top: 10px;">
-          <div role="presentation" class="oj-text-field-container">
-            <div class="oj-text-field-middle">
-              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="url">
-                <span id="urlHint">URL:</span>
-              </label>
-              <input type="url" class="oj-inputtext-input oj-text-field-input oj-component-initnode" pattern="wss://.*" placeholder="" id="urlInput">
-            </div>
-          </div>
+    <div id="inputs"  class="content" >
+      <oj-form-layout class ="oj-formlayout-full-width" direction="row">
+        <div class="oj-flex">
+          <oj-input-text  class="oj-flex-item oj-lg-6 oj-md-12 oj-sm-12 oj-lg-padding-1x-horizontal oj-md-padding-1x-horizontal oj-sm-padding-1x-horizontal " id="urlInput"  placeholder label-hint="URL:" value="{{urlInputValue}}" ></oj-input-text>  
+          <oj-input-text  class="oj-flex-item oj-lg-6 oj-md-12 oj-sm-12 oj-lg-padding-1x-horizontal oj-md-padding-1x-horizontal oj-sm-padding-1x-horizontal " id="socketKeyInput"  placeholder label-hint="Socket Key:" label-hint="disabled no value" disabled="true" value="{{socketKeyInputValue}}" ></oj-input-text>  
+          <oj-input-text  class="oj-flex-item oj-lg-6 oj-md-12 oj-sm-12 oj-lg-padding-1x-horizontal oj-md-padding-1x-horizontal oj-sm-padding-1x-horizontal " id="authTokenInput"  label-hint="Auth Token:" value="{{authTokenInputValue}}" ></oj-input-text>
+          <oj-input-password  class="oj-flex-item oj-lg-6 oj-md-12 oj-sm-12 oj-lg-padding-1x-horizontal oj-md-padding-1x-horizontal oj-sm-padding-1x-horizontal " placeholder="" id="apiKeyInput" label-hint="API Key:" value="{{apiKeyInputValue}}" ></oj-input-password>
+          <div class="oj-flex-item oj-sm-padding-1x-horizontal">
+          <oj-button class="" chroming="outlined" on-oj-action="[[saveInputsAndStartConnection]]" >
+                <span slot='startIcon' class="oj-ux-ico-restart"></span>
+                <span  class="oj-button-label">Start</span>
+          </oj-button>
+          <oj-button class="" chroming="outlined" on-oj-action="[[clearInputs]]" style="padding-left:10px">
+                <span  slot='startIcon' class="oj-ux-ico-delete-circle"></span>
+                <span  class="oj-button-label">Clear</span>
+          </oj-button>
         </div>
-        <div class="oj-inputtext oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete oj-disabled"  style="max-width: calc(2 * var(--oj-form-layout-column-max-width));padding-left: 10px; margin-top: 10px">
-          <div role="presentation" class="oj-text-field-container">
-            <div class="oj-text-field-middle">
-              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="socketKeyInput">
-                <span id="socketKeyHint">Socket Key:</span>
-              </label>
-              <input type="text" class="oj-inputtext-input oj-text-field-input oj-component-initnode" readonly placeholder id="socketKeyInput">
-            </div>
-          </div>
         </div>
-        <div class="oj-inputtext oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete"  style="max-width: calc(2 * var(--oj-form-layout-column-max-width));padding-left: 10px; margin-top: 10px">
-          <div role="presentation" class="oj-text-field-container">
-            <div class="oj-text-field-middle">
-              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="authTokenInput">
-                <span id="authTokenHint">Auth Token:</span>
-              </label>
-              <input type="text" class="oj-inputtext-input oj-text-field-input oj-component-initnode" placeholder="" id="authTokenInput" value="">
-            </div>
-          </div>
-        </div>
-        <div class="oj-inputpassword oj-form-control oj-component oj-text-field oj-text-field-label-inside oj-complete"  style="max-width: calc(2 * var(--oj-form-layout-column-max-width)); padding-left: 10px; margin-top: 10px">
-          <div role="presentation" class="oj-text-field-container">
-            <div class="oj-text-field-middle">
-              <label class="oj-inputtext-label oj-label oj-component oj-complete" for="apiKeyInput">
-                <span id="apiKeyHint">API Key:</span>
-              </label>
-              <input type="password" class="oj-inputpassword-input oj-text-field-input oj-component-initnode" placeholder="" id="apiKeyInput">
-            </div>
-          </div>
-        </div>
-        <div style="margin-top: 10px;">
-          <button onclick="saveInputsAndStartConnection()" class="oj-button oj-button-outlined-chrome oj-button-text-icon-start oj-enabled oj-complete oj-default" aria-labelledby="saveInputsAndStartConnection" style="margin-left: 10px;">
-            <div class="oj-button-label">
-              <span class="oj-button-icon oj-start">
-                <span slot="startIcon" class="oj-ux-ico-restart"></span>
-              </span>
-              <span>
-                <span class="oj-button-text" id="saveInputsAndStartConnection">
-                  Start
-                </span>
-              </span>
-            </div>
-          </button>
-          <button onclick="clearInputs()" class="oj-button oj-button-outlined-chrome oj-button-text-icon-start oj-enabled oj-complete oj-default" aria-labelledby="clearInputs" style="margin-left: 10px;">
-            <div class="oj-button-label">
-              <span class="oj-button-icon oj-start">
-                <span slot="startIcon" class="oj-ux-ico-delete-circle"></span>
-              </span>
-              <span>
-                <span class="oj-button-text" id="clearInputs">
-                  Clear
-                </span>
-              </span>
-            </div>
-          </button>
-        </div>
-      <hr>
-    </div>
-    <div id="graphiql" class="content">
-
-    </div>
-    <div id="errorMessage" class="content">
-
+      </oj-form-layout>
     </div>
     <hr>
-    <footer id="def" role="contentinfo" class="oj-sm-padding-2x-horizontal" style="height: 5vh;">
-      <div class="oj-flex-bar oj-sm-margin-2x-top">
-        <div class="oj-flex-bar-start">
-          <div class="oj-typography-body-sm oj-sm-margin-2x-top oj-link-standalone oj-link-subtle-primary">
-            Copyright © 2014, 2022 Oracle and/or its affiliates All rights reserved.
-          </div>
-        </div>
-        <div class="oj-flex-bar-end">
-          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="aboutOracle" href="https://www.oracle.com/us/corporate/index.html#menu-about">
-            About Oracle
-          </a>
-          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="contactUs" href="https://www.oracle.com/us/corporate/contact/index.html">
-            Contact Us
-          </a>
-          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="legalNotices" href="https://www.oracle.com/us/legal/index.html">
-            Legal Notices
-          </a>
-          <a target="_blank" rel="noopener" class="oj-link-standalone oj-link-subtle-primary oj-sm-margin-2x-end" id="termsOfUseAndPrivacy" href="https://www.oracle.com/us/legal/privacy/">
-            Terms of Use and Privacy
-          </a>
-        </div>
+    <div id="errorMessage" class="content"></div>
+    <div id="graphiql" class="contentql"></div>
+    <footer class="oj-web-applayout-footer oj-sm-padding-2x-horizontal" role="contentinfo" style="height:5vh">
+	<div class="oj-flex-bar oj-sm-margin-2x-top">
+      <div
+        class="oj-flex-bar-start">
+        Copyright &copy; 2014, 2022 Oracle and/or its affiliates All rights reserved. 
       </div>
+	  <div class="oj-flex-bar-end">
+        <ul>
+          <li>
+            <a href="https://www.oracle.com/us/corporate/index.html#menu-about">About Oracle</a>
+          </li>
+          <li><a href="https://www.oracle.com/us/corporate/contact/index.html">Contact Us</a></li>
+          <li><a href="https://www.oracle.com/us/legal/index.html">Legal Notices</a></li>
+          <li>
+            <a href="https://www.oracle.com/us/legal/privacy/">Terms of Use and Privacy</a>
+          </li>
+        </ul>
+      </div>
+     </div> 
     </footer>
-    <script>
-      document.getElementById("urlInput").value = localStorage.getItem("ohipAsyncUrl");
-      document.getElementById("socketKeyInput").value = sessionStorage.getItem("ohipAsyncSocketKey");
-      document.getElementById("apiKeyInput").value = sessionStorage.getItem("ohipAsyncApiKey");
-      document.getElementById("authTokenInput").value = sessionStorage.getItem("ohipAsyncAuthToken");
-    </script>
 
     <script src="https://unpkg.com/graphiql@1.4.2/graphiql.min.js" 
       integrity="sha384-J66SJ/f9ysdOJbaOO8Hssim6BR6AfWfUWcPUNW8pfm1z+KJy9zPpfsI7HUoM/E5C" 
       crossorigin="anonymous">
     </script>    
-    <script src="https://unpkg.com/graphql-ws@5.3.0/umd/graphql-ws.min.js" 
-      integrity="sha384-iQAYdKZcjrb5rKLc3sFgVP+TiGhRnGJBAQo77LjRfRVtTEhi430qwuYXzhjhnNga" 
+    <script src="https://unpkg.com/graphql-ws@5.5.5/umd/graphql-ws.min.js" 
+      integrity="sha384-iITzwBnP19J9MInXjdWTw6A1/9qUy+xLDGIvonjrGwa0HLsQUY82TN6UsY9xZlUo" 
       crossorigin="anonymous">
     </script>
+    <script src="https://static.oracle.com/cdn/jet/11.0.0/3rdparty/require/require.js" integrity="sha384-Z9JQUtAaWmYKd6d4DNdwKbqQjtvpcd4f/QmJSoaDxeRg4hWHtyyF6BwCsrnLcG1F" crossorigin="anonymous"></script>
+    <script src="https://static.oracle.com/cdn/jet/11.0.0/default/js/bundles-config.js" integrity="sha384-Mu4lwX9BKCkOtUn7MxqSP5gA6Q0GRnzbA/Aoc5t8hlhF+VbGJafzgXdfFWhHGf2D" crossorigin="anonymous"></script>
+      <script type="text/javascript">
+          require(['knockout', 'ojs/ojknockout', 'ojs/ojbutton','ojs/ojinputtext','ojs/ojlabel','ojs/ojformlayout'], (ko) => {
+
+            let inputs = new function () {
+
+            if(undefined !== localStorage.getItem("ohipAsyncUrl") || null!== localStorage.getItem("ohipAsyncUrl")){
+              this.urlInputValue = ko.observable(localStorage.getItem("ohipAsyncUrl"));
+            }else{
+              this.urlInputValue = ko.observable("");
+            }
+            if(undefined !== sessionStorage.getItem("ohipAsyncSocketKey") || null!== sessionStorage.getItem("ohipAsyncSocketKey")){
+              this.socketKeyInputValue = ko.observable(sessionStorage.getItem("ohipAsyncSocketKey"));
+            }else{
+              this.socketKeyInputValue = ko.observable("");
+            }
+            if(undefined !== sessionStorage.getItem("ohipAsyncApiKey") || null!== sessionStorage.getItem("ohipAsyncApiKey")){
+              this.apiKeyInputValue = ko.observable(sessionStorage.getItem("ohipAsyncApiKey"));
+            }else{
+              this.apiKeyInputValue= ko.observable("");
+            }
+            if(undefined !== sessionStorage.getItem("ohipAsyncAuthToken") || null!== sessionStorage.getItem("ohipAsyncAuthToken")){
+              this.authTokenInputValue = ko.observable(sessionStorage.getItem("ohipAsyncAuthToken"));
+            }else{
+              this.authTokenInputValue= ko.observable("");
+            }
+
+              this.generateHash = async(apiKey) =>{
+                const keyUint8 = new TextEncoder().encode(apiKey);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', keyUint8);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                return hashHex;
+              }
+
+              this.saveInputsAndStartConnection = () => {
+                let url = this.urlInputValue();
+                const authToken =  this.authTokenInputValue();
+                const apiKey =  this.apiKeyInputValue();
+                if (!url || !authToken || !apiKey) {
+                  alert("Please fill all text boxes");
+                } else {
+                  
+                  if (url.indexOf("/subscriptions") !== -1) {
+                    url = url.substring(0, url.indexOf("/subscriptions"));
+                    this.urlInputValue(url);
+                  }
+
+                  if (url.endsWith("/")) {
+                    url = url.substring(0, url.length - 1);
+                    this.urlInputValue(url);
+                  }
+
+                  if (url.startsWith("ws:")) {
+                    url = url.replace("ws:","wss:");
+                    this.urlInputValue(url);
+                  }
+
+                  if (url.startsWith("http:")) {
+                    url = url.replace("http:","wss:");
+                    this.urlInputValue(url);
+                  }
+
+                  if (url.startsWith("https:")) {
+                    url = url.replace("https:","wss:");
+                    this.urlInputValue(url);
+                  }
+                  
+                  localStorage.setItem("ohipAsyncUrl", url);
+                  sessionStorage.setItem("ohipAsyncApiKey", apiKey);
+                  sessionStorage.setItem("ohipAsyncAuthToken", authToken);
+
+                  this.generateHash(apiKey).then(socketKey => {
+                    sessionStorage.setItem("ohipAsyncSocketKey", socketKey);
+                    this.socketKeyInputValue(socketKey);
+                    this.verifyConnection();
+                  });
+
+                }
+              }
+
+              this.clearInputs= () => {
+
+                this.urlInputValue("");
+                this.socketKeyInputValue("");
+                this.authTokenInputValue("");
+                this.apiKeyInputValue("");
+                localStorage.removeItem("ohipAsyncUrl");
+                sessionStorage.removeItem("ohipAsyncSocketKey");
+                sessionStorage.removeItem("ohipAsyncApiKey");
+                sessionStorage.removeItem("ohipAsyncAuthToken");
+                const errorMessages = document.getElementById("errorMessage");
+                errorMessages.innerText="";
+                errorMessages.style.display = "none";
+              }
+
+              this.verifyConnection = () => {
+                
+                const graphiQLWindow = document.getElementById("graphiql");
+                graphiQLWindow.style.display = "none";
+                const errorMessages = document.getElementById("errorMessage");
+                errorMessages.style.display = "none";
+
+                const ohipAsyncUrl = this.urlInputValue();
+                const ohipAsyncSocketKey = this.socketKeyInputValue();
+                const ohipAsyncApiKey = this.apiKeyInputValue();
+                const ohipAsyncAuthToken = this.authTokenInputValue();
+
+                if (!ohipAsyncUrl || !ohipAsyncSocketKey || !ohipAsyncApiKey || !ohipAsyncAuthToken) {
+                  alert("Please populate all fields");
+                  return;
+                }
+
+                let testWsDispose;
+
+                const wsClientTest = graphqlWs.createClient({
+                  url: `${ohipAsyncUrl}/subscriptions?key=${ohipAsyncSocketKey}`,
+                  lazy: true,
+                  keepAlive: 10000,
+                  connectionParams: async () => {
+                    return {
+                      "Authorization": `Bearer ${ohipAsyncAuthToken}`,
+                      "x-app-key": `${ohipAsyncApiKey}`
+                    }
+                  },
+                  on: {
+                    connected: (socket) => {
+                      errorMessages.style.display = "none";
+                      graphiQLWindow.style.display = "block";
+                      if (testWsDispose) {
+                        testWsDispose();
+                        this.reloadGraphiql();
+                      } else {
+                        wsClientTest.dispose().then(() => {
+                          this.reloadGraphiql();
+                        });
+                      }
+                    },
+                    error: (err) => {
+                      errorMessages.innerHTML = `<p class="errorText">Error: Unexpected server response: 400 - Incorrect key or URL</p>`;
+                      errorMessages.style.display = "block";
+                      graphiQLWindow.style.display = "none";
+                      if (testWsDispose) {
+                        testWsDispose();
+                      } else {
+                        wsClientTest.dispose();
+                      }
+                    },
+                    closed: (event) => {
+                      if (event.code === 4401) {
+                        errorMessages.innerHTML = `<p class="errorText">4401 Error: Unauthorised - Invalid credentials - Invalid Auth Token / API Key credentials.</p>`;
+                        errorMessages.style.display = "block";
+                        graphiQLWindow.style.display = "none";
+                        if (testWsDispose) {
+                          testWsDispose();
+                        } else {
+                          wsClientTest.dispose();
+                        }
+                      }
+                    }
+                  },
+                });
+                
+                testWsDispose = wsClientTest.subscribe({
+                  "Authorization": `Bearer ${ohipAsyncAuthToken}`,
+                  "x-app-key": `${ohipAsyncApiKey}`
+                }, {
+                  next: (data) => {},
+                  error: (err) => {},
+                  complete: () => {},
+                });
+
+              }
+
+              this.reloadGraphiql= () => {
+
+                let customError = {};
+
+                const ohipAsyncUrl = this.urlInputValue();
+                const ohipAsyncSocketKey = this.socketKeyInputValue();
+                const ohipAsyncApiKey = this.apiKeyInputValue();
+                const ohipAsyncAuthToken = this.authTokenInputValue();
+
+                const wsClient = graphqlWs.createClient({
+                  url: `${ohipAsyncUrl}/subscriptions?key=${ohipAsyncSocketKey}`,
+                  lazy: true,
+                  keepAlive: 10000,
+                  connectionParams: async () => {
+                    return {
+                      "Authorization": `Bearer ${ohipAsyncAuthToken}`,
+                      "x-app-key": `${ohipAsyncApiKey}`
+                    }
+                  },
+                  on: {
+                    connected: () => {
+                      customError.message = "";
+                    },
+                    closed: (event) => {
+                      customError.message = `Socket closed with event ${ event.code } ${ event.reason }`;
+                      if (dispose) {
+                        dispose();
+                      }
+                    }
+                  }
+                });
+
+                let dispose;
+
+                function subscribe(payload) {
+                  let deferred = null;
+                  const pending = [];
+                  let throwMe = null,
+                    done = false;
+
+                  dispose = wsClient.subscribe(payload, {
+                    next: (data) => {
+                      pending.push(data);
+                      deferred?.resolve(false);
+                    },
+                    error: (err) => {
+                      if (err instanceof Error) {
+                        throwMe = err;
+                      } else if (err instanceof CloseEvent) {
+                        throwMe = new Error(
+                          `Socket closed with event ${err.code} ${
+                            err.reason || ""
+                          }`.trim()
+                        );
+                      } else {
+                        // GraphQLError[]
+                        throwMe = new Error(err.map(({ message }) => message).join(", "));
+                      }
+                      deferred?.reject({
+                        message: throwMe.message
+                      });
+                    },
+                    complete: () => {
+                      done = true;
+                      if (customError && customError.message) {
+                        deferred?.reject(customError);
+                      } else {
+                        deferred?.resolve(true);
+                      }
+                    },
+                  });
+                  
+                  return {
+                    [Symbol.asyncIterator]() {
+                      return this;
+                    },
+                    async next() {
+                      if (done) return { done: true, value: undefined };
+                      if (throwMe) throw throwMe;
+                      if (pending.length) return { value: pending.shift() };
+                      return (await new Promise(
+                        (resolve, reject) => (deferred = { resolve, reject })
+                      ))
+                        ? { done: true, value: undefined }
+                        : { value: pending.shift() };
+                    },
+                    async return() {
+                      dispose();
+                      return { done: true, value: undefined };
+                    },
+                  };
+                }
+
+                ReactDOM.render(
+                  React.createElement(GraphiQL, {
+                    fetcher: subscribe,
+                    defaultVariableEditorOpen: false,
+                    docExplorerOpen: true,
+                    response:
+`{
+    "greeting": "Welcome to the OHIP GraphiQL Tool!",
+    "usefulLinks": {
+        "overview": "https://docs.oracle.com/cd/F29336_01/doc.201/f27480/c_streaming_api.htm#OHIPU-StreamingAPIpush-17008E8A",
+        "connection": "https://docs.oracle.com/cd/F29336_01/doc.201/f27480/t_connecting_to_the_streaming_api.htm#OHIPU-ConnectingToTheStreamingAPI-05AD62C3"
+    }
+}`,
+                    defaultQuery:
+`# Welcome to the OHIP GraphiQL Tool
+#
+# Auto Complete Reminder:  Ctrl-Space (or just start typing)
+#
+# Example Sandbox Subscription:
+#
+# subscription {
+#   newEvent (input:{chainCode: "OHIPCN"}) {
+#     metadata {
+#       offset
+#       uniqueEventId
+#     }
+#     moduleName
+#     eventName
+#     detail {
+#       elementName
+#       newValue
+#       oldValue
+#     }
+#   }
+# }
+#
+# Run the Query below to access useful OHIP resources
+query {
+	getHelp {
+	overview
+	configuration
+	connection {
+	  help
+	  errors
+	}
+	events {
+	  payload
+	  replaying
+	}
+	slack
+	email
+  } 
+}
+        `
+                  }),
+                  document.getElementById('graphiql'),
+                );
+              }
+          
+    };
+              ko.applyBindings(inputs);
+          });
+      </script>
   </body>
 </html>
