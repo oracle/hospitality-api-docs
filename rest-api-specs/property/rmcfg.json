@@ -1,0 +1,5577 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Room Configuration API",
+    "description": "APIs to cater for room configuration, such as configuring room types, room Classes, creating new room features, or updating housekeeping room maintenance reasons.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2022 Oracle and/or its affiliates.</p>",
+    "version": "21.5.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/rm/config/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/bedTypes": {
+      "get": {
+        "summary": "Get Bed types",
+        "description": "Use this API to get Bed types. <p><strong>OperationId:</strong>getBedTypes</p>",
+        "operationId": "getBedTypes",
+        "parameters": [
+          {
+            "name": "fetchInactive",
+            "in": "query",
+            "required": false,
+            "description": "Determines wether to fetch inactive records or not.",
+            "type": "boolean"
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Bed Types.",
+            "schema": {
+              "$ref": "#/definitions/bedTypesDetails"
+            }
+          },
+          "204": {
+            "description": "BedTypes not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/housekeepingRoomSchedules": {
+      "get": {
+        "summary": "Get housekeeping room schedules",
+        "description": "Use this API to get housekeeping room schedules. <p><strong>OperationId:</strong>getHousekeepingRoomSchedules</p>",
+        "operationId": "getHousekeepingRoomSchedules",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "roomTypeCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "housekeepingRoomScheduleCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching housekeeping tasks and housekeeping codes associated to a room type.",
+            "schema": {
+              "$ref": "#/definitions/housekeepingRoomSchedulesDetails"
+            }
+          },
+          "204": {
+            "description": "HousekeepingRoomSchedules not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create housekeeping room schedules",
+        "description": "Use this API to create housekeeping room schedules. <p><strong>OperationId:</strong>postHousekeepingRoomSchedules</p>",
+        "operationId": "postHousekeepingRoomSchedules",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "housekeepingRoomSchedulesCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for associating housekeeping tasks and housekeeping codes to a room type.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/housekeepingRoomSchedulesCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/housekeepingRoomSchedules/{roomScheduleId}": {
+      "put": {
+        "summary": "Change housekeeping room schedules",
+        "description": "Use this API to update housekeeping room schedules. <p><strong>OperationId:</strong>changeHousekeepingRoomSchedules</p>",
+        "operationId": "changeHousekeepingRoomSchedules",
+        "parameters": [
+          {
+            "name": "roomScheduleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room scheduled."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "housekeepingRoomSchedulesToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing housekeeping tasks and housekeeping codes associated to a room type.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/housekeepingRoomSchedulesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/housekeepingSections": {
+      "get": {
+        "summary": "Get Housekeeping Sections",
+        "description": "Use this API to get Housekeeping Sections. <p><strong>OperationId:</strong>getHousekeepingSections</p>",
+        "operationId": "getHousekeepingSections",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Indicates if the Section Code is active.",
+            "type": "boolean"
+          },
+          {
+            "name": "housekeepingSectionsCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the Section.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching housekeeping section codes.",
+            "schema": {
+              "$ref": "#/definitions/housekeepingSectionsDetails"
+            }
+          },
+          "204": {
+            "description": "HousekeepingSections not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create Housekeeping Sections",
+        "description": "Use this API to create Housekeeping Sections. <p><strong>OperationId:</strong>postHousekeepingSections</p>",
+        "operationId": "postHousekeepingSections",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "housekeepingSectionsCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Add housekeeping section codes configurations for resort.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/housekeepingSectionsCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/housekeepingSections/{code}": {
+      "delete": {
+        "summary": "Delete Housekeeping Sections",
+        "description": "Use this API to delete Housekeeping Sections. <p><strong>OperationId:</strong>removeHousekeepingSections</p>",
+        "operationId": "removeHousekeepingSections",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of house keeping sections."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "put": {
+        "summary": "Change Housekeeping Sections",
+        "description": "Use this API to update Housekeeping Sections. <p><strong>OperationId:</strong>changeHousekeepingSections</p>",
+        "operationId": "changeHousekeepingSections",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of house keeping sections."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "housekeepingSectionsToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Modify housekeeping section codes in resort configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/housekeepingSectionsToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomMaintenanceReasons": {
+      "get": {
+        "summary": "Get Hotel Room Maintenance Reasons",
+        "description": "Use this API to get Hotel Room Maintenance Reasons. <p><strong>OperationId:</strong>getHotelRoomMaintenanceReasons</p>",
+        "operationId": "getHotelRoomMaintenanceReasons",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "roomMaintenanceReasonCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Inactive flag - whether or not to display inactive records",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching room maintenance reasons for a hotel.",
+            "schema": {
+              "$ref": "#/definitions/hotelRoomMaintenanceReasonsDetails"
+            }
+          },
+          "204": {
+            "description": "HotelRoomMaintenanceReasons not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create Hotel Room Maintenance Reasons",
+        "description": "Use this API to create Hotel Room Maintenance Reasons. <p><strong>OperationId:</strong>postHotelRoomMaintenanceReasons</p>",
+        "operationId": "postHotelRoomMaintenanceReasons",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "hotelRoomMaintenanceReasonsCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating new room maintenance reasons for a hotel.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/hotelRoomMaintenanceReasonsCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomMaintenanceReasons/{reasonCode}": {
+      "put": {
+        "summary": "Change Hotel Room Maintenance Reasons",
+        "description": "Use this API to update Hotel Room Maintenance Reasons. <p><strong>OperationId:</strong>changeHotelRoomMaintenanceReasons</p>",
+        "operationId": "changeHotelRoomMaintenanceReasons",
+        "parameters": [
+          {
+            "name": "reasonCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of reason."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "hotelRoomMaintenanceReasonsToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for modifying room maintenance reasons for a hotel.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/hotelRoomMaintenanceReasonsToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Hotel Room Maintenance Reasons",
+        "description": "Use this API to delete Hotel Room Maintenance Reasons. <p><strong>OperationId:</strong>removeHotelRoomMaintenanceReasons</p>",
+        "operationId": "removeHotelRoomMaintenanceReasons",
+        "parameters": [
+          {
+            "name": "reasonCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of reason."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomTypeCodes/{roomTypeCode}/housekeepingRoomSchedules/{roomScheduleId}": {
+      "delete": {
+        "summary": "Delete housekeeping room schedules",
+        "description": "Use this API to delete housekeeping room schedules. <p><strong>OperationId:</strong>removeHousekeepingRoomSchedules</p>",
+        "operationId": "removeHousekeepingRoomSchedules",
+        "parameters": [
+          {
+            "name": "roomScheduleId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room scheduled."
+          },
+          {
+            "name": "roomTypeCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room Type Code."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomTypes": {
+      "get": {
+        "summary": "Get Room Types",
+        "description": "Fetch a properties Room Types. The request can be based on a properties Room class or Room Type. The operation returns a list of room types and a summary of the room types. <p><strong>OperationId:</strong>getRoomTypes</p>",
+        "operationId": "getRoomTypes",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "accessible",
+            "in": "query",
+            "required": false,
+            "description": "Flag to indicate if accessible room type should be fetched.",
+            "type": "boolean"
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Flag to indicate if inactive room types should be included.",
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "physical",
+            "in": "query",
+            "required": false,
+            "description": "Is it a physical sleep room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "pseudo",
+            "in": "query",
+            "required": false,
+            "description": "Is it a pseudo room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "summaryInfo",
+            "in": "query",
+            "required": false,
+            "description": "Flag to indicate if summary or detailed information should be fetched.",
+            "type": "boolean"
+          },
+          {
+            "name": "roomTypeCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomClassCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for Fetching existing Room Types.",
+            "schema": {
+              "$ref": "#/definitions/roomTypesDetails"
+            }
+          },
+          "204": {
+            "description": "RoomTypes not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create a new room type",
+        "description": "Use this API to create new room types for a property. A list of new room types can be passed as part of the request to Use this API to create multiple rooms in one request. <p><strong>OperationId:</strong>postRoomTypes</p>",
+        "operationId": "postRoomTypes",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "roomTypesCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for Creating a new Room Type.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomTypesCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomTypes/{roomTypeId}": {
+      "put": {
+        "summary": "Update a Room Type",
+        "description": "Use this API to update a Room Type from a property. A list of room types that need to be modified can also passed as part of the request. <p><strong>OperationId:</strong>putRoomTypes</p>",
+        "operationId": "putRoomTypes",
+        "parameters": [
+          {
+            "name": "roomTypeId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room types."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "roomTypesToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for Modifying Room Type.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomTypesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Room Types",
+        "description": "Use this API to delete a Room Type from a property. <p><strong>OperationId:</strong>deleteRoomTypes</p>",
+        "operationId": "deleteRoomTypes",
+        "parameters": [
+          {
+            "name": "roomTypeId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room types."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "roomType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/rooms": {
+      "get": {
+        "summary": "Get Rooms",
+        "description": "Fetch rooms that exist for a specified property. The response will include a list of all existing rooms at that property. <p><strong>OperationId:</strong>getRooms</p>",
+        "operationId": "getRooms",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "physical",
+            "in": "query",
+            "required": false,
+            "description": "Is it a physical room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "pseudo",
+            "in": "query",
+            "required": false,
+            "description": "Is it a pseudo room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "roomClassCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomTypeCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "room",
+            "in": "query",
+            "required": false,
+            "description": "Room to be searched.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching complete information of existing rooms.",
+            "schema": {
+              "$ref": "#/definitions/roomsDetails"
+            }
+          },
+          "204": {
+            "description": "Rooms not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/roomPotentials": {
+      "get": {
+        "summary": "Get Room Potentials",
+        "description": "Use this API to get Room Potentials. <p><strong>OperationId:</strong>getRoomPotentials</p>",
+        "operationId": "getRoomPotentials",
+        "parameters": [
+          {
+            "name": "fetchInactive",
+            "in": "query",
+            "required": false,
+            "description": "Determines wether to fetch inactive records or not.",
+            "type": "boolean"
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Room Potentials.",
+            "schema": {
+              "$ref": "#/definitions/roomPotentialsDetails"
+            }
+          },
+          "204": {
+            "description": "RoomPotentials not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create Room Potentials",
+        "description": "Use this API to create Room Potentials. <p><strong>OperationId:</strong>postRoomPotentials</p>",
+        "operationId": "postRoomPotentials",
+        "parameters": [
+          {
+            "name": "roomPotentialsCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating Room Potentials.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomPotentialsCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
+    "/roomPotentials/{roomPotentialsId}": {
+      "put": {
+        "summary": "Change Room Potentials",
+        "description": "Use this API to update Room Potentials. <p><strong>OperationId:</strong>putRoomPotentials</p>",
+        "operationId": "putRoomPotentials",
+        "parameters": [
+          {
+            "name": "roomPotentialsId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of Room Potentials."
+          },
+          {
+            "name": "roomPotentialsToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing Room Potentials.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomPotentialsToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Room Potentials",
+        "description": "Use this API to delete Room Potentials. <p><strong>OperationId:</strong>deleteRoomPotentials</p>",
+        "operationId": "deleteRoomPotentials",
+        "parameters": [
+          {
+            "name": "roomPotentialsId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of Room Potentials."
+          },
+          {
+            "name": "roomPotentialsCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
+    "/roomTypes": {
+      "get": {
+        "summary": "Get Room Type Templates",
+        "description": "This API accepts the room type template request search criteria and gets the Room Type templates. <p><strong>OperationId:</strong>getRoomTypeTemplates</p>",
+        "operationId": "getRoomTypeTemplates",
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Include inactive Room type in search result?",
+            "type": "boolean"
+          },
+          {
+            "name": "physical",
+            "in": "query",
+            "default": "false",
+            "required": false,
+            "description": "Is it a physical sleep room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "pseudo",
+            "in": "query",
+            "default": "false",
+            "required": false,
+            "description": "Is it a pseudo room type.",
+            "type": "boolean"
+          },
+          {
+            "name": "summaryInfo",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "roomTypeCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomClassCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for information regarding room type template of a property.",
+            "schema": {
+              "$ref": "#/definitions/roomTypeTemplatesDetails"
+            }
+          },
+          "204": {
+            "description": "RoomTypeTemplates not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create Room Type Templates",
+        "description": "This API is used to Use this API to create new Room Type templates. <p><strong>OperationId:</strong>postRoomTypeTemplates</p>",
+        "operationId": "postRoomTypeTemplates",
+        "parameters": [
+          {
+            "name": "roomTypeTemplatesCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating a new Room Type Template.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomTypeTemplatesCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/roomTypes/{roomTypeTemplatesId}": {
+      "put": {
+        "summary": "Change Room Type Templates",
+        "description": "This API is used to update a Room Type template. Use this API to updates can be made concurrently to multiple templates by passing Collection of Room Type templates with the new values. <p><strong>OperationId:</strong>putRoomTypeTemplates</p>",
+        "operationId": "putRoomTypeTemplates",
+        "parameters": [
+          {
+            "name": "roomTypeTemplatesId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room type."
+          },
+          {
+            "name": "roomTypeTemplatesToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for Modifying existing Room Type Templates.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomTypeTemplatesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete new Room Type templates ",
+        "description": "Use this API to delete new Room Type templates. <p><strong>OperationId:</strong>deleteRoomTypeTemplates</p>",
+        "operationId": "deleteRoomTypeTemplates",
+        "parameters": [
+          {
+            "name": "roomTypeTemplatesId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of room type."
+          },
+          {
+            "name": "roomType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/templateFloors": {
+      "get": {
+        "summary": "Get template floors",
+        "description": "Use this API to get template floors. <p><strong>OperationId:</strong>getTemplateFloors</p>",
+        "operationId": "getTemplateFloors",
+        "parameters": [
+          {
+            "name": "floors",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching floors at the template level.",
+            "schema": {
+              "$ref": "#/definitions/templateFloorsDetails"
+            }
+          },
+          "204": {
+            "description": "TemplateFloors not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create template floors",
+        "description": "Use this API to create template floors. <p><strong>OperationId:</strong>postTemplateFloors</p>",
+        "operationId": "postTemplateFloors",
+        "parameters": [
+          {
+            "name": "templateFloorsCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating floors at the template level.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/templateFloorsCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/templateFloors/{templateFloorsId}": {
+      "put": {
+        "summary": "Change template floors",
+        "description": "Use this API to update template floors. <p><strong>OperationId:</strong>changeTemplateFloors</p>",
+        "operationId": "changeTemplateFloors",
+        "parameters": [
+          {
+            "name": "templateFloorsId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of template floors."
+          },
+          {
+            "name": "templateFloorsToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing floors at the template level.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/templateFloorsToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete template floors",
+        "description": "Use this API to delete template floors. <p><strong>OperationId:</strong>removeTemplateFloors</p>",
+        "operationId": "removeTemplateFloors",
+        "parameters": [
+          {
+            "name": "templateFloorsId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of template floors."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "bedTypesDetails": {
+      "type": "object",
+      "description": "Response object for fetching Bed Types.",
+      "properties": {
+        "bedTypes": {
+          "description": "Collection of Bed Types.",
+          "$ref": "#/definitions/bedTypesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "bedTypesType": {
+      "type": "array",
+      "description": "Bed Type Enumeration element.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/bedTypeType"
+      }
+    },
+    "bedTypeType": {
+      "type": "object",
+      "description": "Contains Common Master configuration detail.",
+      "properties": {
+        "code": {
+          "description": "Common Master unique code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Description of the Master code.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "displayOrder": {
+          "description": "Common Master record sequence number.",
+          "type": "number"
+        }
+      }
+    },
+    "translationTextType2000": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "housekeepingRoomSchedulesDetails": {
+      "type": "object",
+      "description": "Response object for fetching housekeeping tasks and housekeeping codes associated to a room type.",
+      "properties": {
+        "housekeepingRoomSchedules": {
+          "description": "Collection of housekeeping tasks and housekeeping codes associated to a room type.",
+          "$ref": "#/definitions/configHousekeepingRoomSchedulesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "configHousekeepingRoomSchedulesType": {
+      "type": "array",
+      "description": "This type holds a collection of housekeeping tasks attached to a room type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/configHousekeepingRoomScheduleType"
+      }
+    },
+    "configHousekeepingRoomScheduleType": {
+      "type": "object",
+      "description": "Facility Housekeeping task code and description.",
+      "properties": {
+        "description": {
+          "description": "Facility task description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "priority": {
+          "description": "Signifies the priority of the task.",
+          "type": "integer"
+        },
+        "code": {
+          "description": "Code of the housekeeping task.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "credits": {
+          "description": "Housekeeping credits associated with this housekeeping task.",
+          "type": "integer"
+        },
+        "frequency": {
+          "description": "Signifies frequency(i.e. every 2 days) with which housekeeping task is to be performed.",
+          "$ref": "#/definitions/frequencyTypeType"
+        },
+        "frequencyDays": {
+          "description": "Specify how often in days following the guest's arrival date, the housekeeping task is to be completed.",
+          "type": "integer"
+        },
+        "specialRequests": {
+          "description": "Specify a particular Special code to associate to a housekeeping task code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "vIPStatuses": {
+          "description": "Specify a particular VIP code to associate to a housekeeping task code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "sequence": {
+          "description": "Used to store the housekeeping task sequence.",
+          "type": "integer"
+        },
+        "daysOfWeek": {
+          "description": "This option, if applied, works in conjunction with the Every XX Day(s) option to allow you to control the days of the week on which this housekeeping task can take place.",
+          "$ref": "#/definitions/timeSpanDaysOfWeekType"
+        },
+        "rateCodes": {
+          "description": "Specify one or more Rate Codes to associate to a specific housekeeping task code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "marketCodes": {
+          "description": "Specify one or more Market Codes to associate to a specific housekeeping task code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "cycleStartDay": {
+          "description": "Signifies offset(in days) i.e. start on 3rd day from arrival.",
+          "type": "integer"
+        },
+        "customizePromptText": {
+          "description": "The information that is entered into this text box.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 400
+        },
+        "taskSupplies": {
+          "description": "Collection of housekeeping task supplies for a room type.",
+          "$ref": "#/definitions/configHousekeepingRoomScheduleTaskSuppliesType"
+        },
+        "roomType": {
+          "description": "Specifies the room type code with description.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "guestRequested": {
+          "description": "Signifies whether housekeeping task is a guest requested task.",
+          "type": "boolean"
+        },
+        "defaultDepartureTask": {
+          "description": "Signifies that task is a default task for the checked out room.",
+          "type": "boolean"
+        },
+        "moveup": {
+          "description": "Automatically moves the task up one day if it falls on the day before the guest’s departure. It will only be available when the schedule is set to every 3 days or more.",
+          "type": "boolean"
+        },
+        "hotelId": {
+          "description": "Specifies the hotel code that the room type belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "frequencyTypeType": {
+      "type": "string",
+      "description": "Simple type for storing frequency type.",
+      "enum": [
+        "Everyday",
+        "EveryXDays",
+        "CustomSchedule",
+        "DepartureDayOnly",
+        "ArrivalDayOnly",
+        "NotRequired",
+        "SpecificDays"
+      ]
+    },
+    "codeListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
+    "timeSpanDaysOfWeekType": {
+      "type": "object",
+      "description": "Container for Time span with days of week.",
+      "properties": {
+        "timeSpan": {
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "configHousekeepingRoomScheduleTaskSuppliesType": {
+      "type": "array",
+      "description": "This type holds a collection of housekeeping task supplies attached to a room type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/configHousekeepingRoomScheduleTaskSupplyType"
+      }
+    },
+    "configHousekeepingRoomScheduleTaskSupplyType": {
+      "type": "object",
+      "description": "Facility Housekeeping Code, its description and quantity.",
+      "properties": {
+        "description": {
+          "description": "Facility Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "quantity": {
+          "description": "Signifies the quantity.",
+          "type": "integer"
+        },
+        "code": {
+          "description": "Facility code value.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sequence": {
+          "description": "Used to store the housekeeping room schedule sequence.",
+          "type": "integer"
+        },
+        "roomType": {
+          "description": "Specifies the room type code with description.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "hotelId": {
+          "description": "Specifies the hotel code that the room type belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "housekeepingRoomScheduleCode": {
+          "description": "Specifies the housekeeping room schedule code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "codeDescriptionType": {
+      "type": "object",
+      "description": "This contains a generic code and description information.",
+      "properties": {
+        "code": {
+          "description": "Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "housekeepingRoomSchedulesCriteria": {
+      "type": "object",
+      "description": "Request object for associating housekeeping tasks and housekeeping codes to a room type.",
+      "properties": {
+        "housekeepingRoomSchedules": {
+          "description": "Collection containing details of housekeeping tasks and housekeeping codes to be associated to a room type.",
+          "$ref": "#/definitions/configHousekeepingRoomSchedulesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "housekeepingRoomSchedulesToBeChanged": {
+      "type": "object",
+      "description": "Request object for changing housekeeping tasks and housekeeping codes associated to a room type.",
+      "properties": {
+        "housekeepingRoomSchedules": {
+          "description": "Collection containing details of housekeeping tasks and housekeeping codes associated to a room type which have to be changed.",
+          "$ref": "#/definitions/configHousekeepingRoomSchedulesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "housekeepingSectionsDetails": {
+      "type": "object",
+      "description": "Response object for fetching housekeeping section codes.",
+      "properties": {
+        "housekeepingSections": {
+          "description": "Collection of housekeeping section codes.",
+          "$ref": "#/definitions/housekeepingSectionsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "housekeepingSectionsType": {
+      "type": "array",
+      "description": "List of the housekeeping sections to be configured or fetched",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/housekeepingSectionType"
+      }
+    },
+    "housekeepingSectionType": {
+      "type": "object",
+      "description": "Information regarding Housekeeping Sections.",
+      "properties": {
+        "hotelId": {
+          "description": "Property where this section is defined.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "code": {
+          "description": "The Housekeeping Section Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the Section.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "sectionGroup": {
+          "description": "Housekeeping Section Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "targetCredits": {
+          "description": "Target Credit for each task sheet created for this section when auto task assignment is broken out by section.",
+          "type": "integer"
+        },
+        "rooms": {
+          "description": "Rooms count for this section code. This is auto populated while creating/fetching record.",
+          "type": "integer"
+        },
+        "roomCredits": {
+          "description": "Number of housekeeping credits. This is auto populated while creating/fetching record.",
+          "type": "integer"
+        },
+        "sequence": {
+          "description": "Display sequence when task assignment is automatically broken out by Section Group.",
+          "type": "integer"
+        },
+        "inactive": {
+          "description": "Indicates if the Section Code is active.",
+          "type": "boolean"
+        }
+      }
+    },
+    "housekeepingSectionsCriteria": {
+      "type": "object",
+      "description": "Add housekeeping section codes configurations for resort.",
+      "properties": {
+        "housekeepingSections": {
+          "description": "Add the housekeeping section code to the configuration of resort.",
+          "$ref": "#/definitions/housekeepingSectionsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "housekeepingSectionsToBeChanged": {
+      "type": "object",
+      "description": "Modify housekeeping section codes in resort configurations.",
+      "properties": {
+        "housekeepingSections": {
+          "description": "The housekeeping section code to be modified in the configuration of the resort.",
+          "$ref": "#/definitions/housekeepingSectionsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelRoomMaintenanceReasonsDetails": {
+      "type": "object",
+      "description": "Response object for fetching room maintenance reasons for a hotel.",
+      "properties": {
+        "hotelRoomMaintenanceReasons": {
+          "description": "Collection of hotel level room maintenance reasons.",
+          "$ref": "#/definitions/hotelRoomMaintenanceReasonsType"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelRoomMaintenanceReasonsType": {
+      "type": "array",
+      "description": "Details for room maintenance reason at hotel level.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/hotelRoomMaintenanceReasonType"
+      }
+    },
+    "hotelRoomMaintenanceReasonType": {
+      "type": "object",
+      "description": "Base common structure for Room Maintenance at both hotel and template levels.",
+      "properties": {
+        "code": {
+          "description": "Identification code for a particular room maintenance reason.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of a particular room maintenance reason.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "sellSequence": {
+          "description": "Indicates the sell sequence for a particular room maintenance reason.",
+          "type": "number"
+        },
+        "inactive": {
+          "description": "Inactive flag for a particular room maintenance reason.",
+          "type": "boolean"
+        },
+        "hotelId": {
+          "description": "Hotel code that a particular room maintenance reason belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "hotelRoomMaintenanceReasonsCriteria": {
+      "type": "object",
+      "description": "Request object for creating new room maintenance reasons for a hotel.",
+      "properties": {
+        "hotelRoomMaintenanceReasons": {
+          "description": "Collection of hotel room maintenance reasons to be created.",
+          "$ref": "#/definitions/hotelRoomMaintenanceReasonsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelRoomMaintenanceReasonsToBeChanged": {
+      "type": "object",
+      "description": "Request object for modifying room maintenance reasons for a hotel.",
+      "properties": {
+        "hotelRoomMaintenanceReasons": {
+          "description": "Collection of hotel room maintenance reason to be changed.",
+          "$ref": "#/definitions/hotelRoomMaintenanceReasonsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomTypesDetails": {
+      "type": "object",
+      "description": "Response object for Fetching existing Room Types.",
+      "properties": {
+        "roomTypesSummary": {
+          "description": "Contains the results of a successful operation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/roomTypesSummaryType"
+          }
+        },
+        "roomTypes": {
+          "description": "Collection of Room Type Templates and their information.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/roomTypesType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomTypesSummaryType": {
+      "type": "object",
+      "description": "This type holds collection of room type.",
+      "properties": {
+        "roomTypeSummary": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomTypeSummaryType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "roomTypeSummaryType": {
+      "type": "object",
+      "description": "This type represents the summary of room type attributes.",
+      "properties": {
+        "roomClass": {
+          "description": "Room class for the room type code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "shortDescription": {
+          "description": "Short Description of room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "activeDate": {
+          "description": "Active date of the room type.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "pseudo": {
+          "description": "Indicates if room type is pseudo.",
+          "type": "boolean"
+        },
+        "accessible": {
+          "description": "Indicates if room type is accessible.",
+          "type": "boolean"
+        },
+        "sendToInterface": {
+          "description": "Indicates if room type is sent to interface.",
+          "type": "boolean"
+        },
+        "sellSequence": {
+          "description": "Indicates room types sell sequence.",
+          "type": "number"
+        },
+        "suite": {
+          "description": "Indicates room type is a suite.",
+          "type": "boolean"
+        },
+        "meetingRoom": {
+          "description": "Indicates room type is meeting room. This Can be Meeting room flag cannot be unmarked at the property level. Can only be marked for non pseudo room types.",
+          "type": "boolean"
+        },
+        "roomType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "numberOfRooms": {
+          "description": "Number of rooms for this room type.",
+          "type": "integer"
+        },
+        "inactive": {
+          "description": "Indicates the room type is inactive or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "roomTypesType": {
+      "type": "object",
+      "description": "This type holds collection of room type.",
+      "properties": {
+        "roomType": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomTypeType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "roomTypeType": {
+      "type": "object",
+      "description": "This type represents the room type attributes.",
+      "properties": {
+        "newRoomType": {
+          "description": "New Room type code. (Used in change template room type operation)",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomClass": {
+          "description": "Room class for the room type code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "bedType": {
+          "description": "Bed type of room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "shortDescription": {
+          "description": "Short Description of room type.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "description": {
+          "description": "Long Description of room type.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "smokingPreference": {
+          "description": "Specifies the smoking preference for this room type. I.E. SM, NS.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "activeDate": {
+          "description": "Active date of the room type.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "pseudo": {
+          "description": "Indicates if room type is pseudo.",
+          "type": "boolean"
+        },
+        "accessible": {
+          "description": "Indicates if room type is accessible.",
+          "type": "boolean"
+        },
+        "suite": {
+          "description": "Indicates room type is a suite.",
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "boolean",
+              "description": "Property Value"
+            },
+            "editable": {
+              "description": "Indicates if room type Room Components may be changed.",
+              "type": "boolean"
+            }
+          }
+        },
+        "meetingRoom": {
+          "description": "Indicates room type is meeting room. This Can be Meeting room flag cannot be unmarked at the property level. Can only be marked for non pseudo room types.",
+          "type": "boolean"
+        },
+        "sendToInterface": {
+          "description": "Indicates room type is sent to interface.",
+          "type": "boolean"
+        },
+        "sellSequence": {
+          "description": "Indicates room types sell sequence.",
+          "type": "number"
+        },
+        "generic": {
+          "description": "Indicates room type is generic.",
+          "type": "boolean"
+        },
+        "maintenance": {
+          "description": "Indicates room type is available for maintenance request.",
+          "type": "boolean"
+        },
+        "defaultOccupancy": {
+          "description": "Default occupancy for the room type.",
+          "type": "number"
+        },
+        "minimumOccupancy": {
+          "description": "Minimum occupancy for the room type.",
+          "type": "integer"
+        },
+        "maximumOccupancy": {
+          "description": "Maximum occupancy for the room type.",
+          "type": "integer"
+        },
+        "maxAdults": {
+          "description": "Maximum Adults for the room type.",
+          "type": "integer"
+        },
+        "maxChildren": {
+          "description": "Maximum Children for the room type.",
+          "type": "integer"
+        },
+        "houseKeeping": {
+          "description": "Room type shows in house keeping.",
+          "type": "boolean"
+        },
+        "infoURL": {
+          "description": "Room type info URL.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "autoPopulate": {
+          "description": "Room type is automatically attached when new rate codes are created.",
+          "type": "boolean"
+        },
+        "autoRoomAssign": {
+          "description": "Room number is automatically assigned when a reservation is made for this Room Type.",
+          "type": "boolean"
+        },
+        "autoCheckin": {
+          "description": "Creates a new linked Reservation, and proceeds within check-in of the new reservation.",
+          "type": "boolean"
+        },
+        "rateFloor": {
+          "description": "This value will control the minimum amount that the selected room type can be sold",
+          "type": "number"
+        },
+        "components": {
+          "description": "Room type component details.",
+          "$ref": "#/definitions/roomTypeComponentsType"
+        },
+        "features": {
+          "description": "Room type feature details.",
+          "$ref": "#/definitions/roomFeaturesType"
+        },
+        "yieldStatus": {
+          "description": "Specify whether the room type is yieldable or non-yieldable (Available when a yield integration add-on license is active.)",
+          "$ref": "#/definitions/roomTypeYieldableType"
+        },
+        "yieldCategory": {
+          "description": "Yield category for this room type (Available when a yield integration add-on license is active and when room type is Yieldable.)",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "numberOfRooms": {
+          "description": "Number of rooms for this room type.",
+          "type": "integer"
+        },
+        "inactive": {
+          "description": "Is Room type inactive?",
+          "type": "boolean"
+        }
+      }
+    },
+    "roomTypeComponentsType": {
+      "type": "array",
+      "description": "Contains room components of a component room type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomTypeComponentType"
+      }
+    },
+    "roomTypeComponentType": {
+      "type": "object",
+      "description": "Room component and its quantity for the component room type.",
+      "properties": {
+        "qty": {
+          "description": "Quantity of room component for the component room type.",
+          "type": "integer"
+        },
+        "description": {
+          "description": "Description of room component.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "roomType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "roomFeaturesType": {
+      "type": "array",
+      "description": "A recurring element that identifies the room features.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomFeatureType"
+      }
+    },
+    "roomFeatureType": {
+      "type": "object",
+      "description": "Room Feature Information.",
+      "properties": {
+        "code": {
+          "description": "A code representing a room feature.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "A code representing a room feature.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
+        },
+        "quantity": {
+          "description": "Indicates quantity.",
+          "type": "integer"
+        }
+      }
+    },
+    "roomTypeYieldableType": {
+      "type": "string",
+      "description": "Simple type for Yieldable or Non Yieldable",
+      "enum": [
+        "Yieldable",
+        "NonYieldable"
+      ]
+    },
+    "roomTypesCriteria": {
+      "type": "object",
+      "description": "Request object for Creating a new Room Type.",
+      "properties": {
+        "roomType": {
+          "description": "Room Type details to be created.",
+          "type": "object",
+          "properties": {
+            "roomTypeDetails": {
+              "description": "Room Type details to be created.",
+              "$ref": "#/definitions/roomTypeType"
+            },
+            "hotelId": {
+              "$ref": "#/definitions/codeType"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "codeType": {
+      "type": "string",
+      "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+      "minLength": 0,
+      "maxLength": 20
+    },
+    "roomTypesToBeChanged": {
+      "type": "object",
+      "description": "Request object for Modifying Room Type.",
+      "properties": {
+        "roomType": {
+          "description": "Room Type details to be changed.",
+          "type": "object",
+          "properties": {
+            "roomTypeDetails": {
+              "description": "Room Type details to be changed.",
+              "$ref": "#/definitions/roomTypeType"
+            },
+            "hotelId": {
+              "$ref": "#/definitions/codeType"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomsDetails": {
+      "type": "object",
+      "description": "Response object for fetching complete information of existing rooms.",
+      "properties": {
+        "rooms": {
+          "description": "Collection of rooms with detailed information.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/configRoomsType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "configRoomsType": {
+      "type": "object",
+      "description": "This type holds collection of rooms with complete information.",
+      "properties": {
+        "room": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/configRoomType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel Code of the rooms.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "configRoomType": {
+      "type": "object",
+      "description": "This type represents the primary room attributes.",
+      "properties": {
+        "roomType": {
+          "description": "Room type basic information of the room.",
+          "$ref": "#/definitions/roomTypeShortInfoType"
+        },
+        "floor": {
+          "description": "Floor of the Room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "floorDescription": {
+          "description": "Description for the Floor of the Room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomFeatures": {
+          "description": "Room Features for the room.",
+          "$ref": "#/definitions/roomFeaturesType"
+        },
+        "roomDescription": {
+          "description": "Detail Long Description Of The Room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the room.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "smokingPreference": {
+          "description": "This indicates room smoking preference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "smokingPreferenceDescription": {
+          "description": "This indicates the description of the room smoking preference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "building": {
+          "description": "Building associated with the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomAssignmentRating": {
+          "description": "Assignment Rating associated with the room.",
+          "$ref": "#/definitions/ratePlanRatingType"
+        },
+        "accessible": {
+          "description": "Indicates whether the room is accessibility compliant.",
+          "type": "boolean"
+        },
+        "roomId": {
+          "description": "Code of the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "meetingRoom": {
+          "description": "Indicates whether the room is a Meeting Room",
+          "type": "boolean"
+        },
+        "roomComponents": {
+          "description": "Components of a room.",
+          "$ref": "#/definitions/roomComponentsType"
+        },
+        "connectingRooms": {
+          "description": "Connecting rooms of a room.",
+          "$ref": "#/definitions/roomRoomsType"
+        },
+        "rateCode": {
+          "description": "Published rate code of a room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateAmount": {
+          "description": "Published rate amount of a room.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "maximumOccupancy": {
+          "description": "Maximum occupancy of a room.",
+          "type": "integer"
+        },
+        "sellSequence": {
+          "description": "Display sequence of a room.",
+          "type": "number"
+        },
+        "ownerRoom": {
+          "description": "This indicates if room is marked as a owner room",
+          "type": "boolean"
+        },
+        "unitGradeCode": {
+          "description": "The Unit Grade Code attached to the room",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "smoking": {
+          "description": "This indicates if smoking is allowed in the room.",
+          "type": "boolean"
+        },
+        "keyCode": {
+          "description": "Key code of a room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "keyOptions": {
+          "description": "Key options of a room.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "squareUnits": {
+          "description": "Square units of a room.",
+          "type": "number"
+        },
+        "turndownService": {
+          "description": "Turndown service flag of a room.",
+          "type": "boolean"
+        },
+        "squareUnitsMeasurement": {
+          "description": "Square unit measurement of a room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "phoneNumber": {
+          "description": "Square unit measurement of a room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "housekeepingCredit": {
+          "description": "Housekeeping credits of the room. This may include stayover, departure, pickup and turndown credits.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/housekeepingCreditsType"
+          }
+        },
+        "roomSection": {
+          "description": "Room section of the room. This includes day and evening sections.",
+          "$ref": "#/definitions/roomSectionType"
+        },
+        "noOfBeds": {
+          "description": "Number of beds of the room.",
+          "type": "integer"
+        }
+      }
+    },
+    "roomTypeShortInfoType": {
+      "type": "object",
+      "description": "Basic information of room type.",
+      "properties": {
+        "pseudo": {
+          "description": "Indicates if room is a pseudo. This is read-only.",
+          "type": "boolean"
+        },
+        "suite": {
+          "description": "Indicates if room is a suite. This is read-only.",
+          "type": "boolean"
+        },
+        "roomClass": {
+          "description": "Room Class of the room. This is read-only.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "shortDescription": {
+          "description": "Short Description of room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "houseKeeping": {
+          "description": "Indicates if room type of the room is flagged as housekeeping. This is read-only.",
+          "type": "boolean"
+        },
+        "smokingPreference": {
+          "description": "Specifies the smoking preference for room type of the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "building": {
+          "description": "Building associated with the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomAssignmentRating": {
+          "description": "Assignment Rating associated with the room.",
+          "$ref": "#/definitions/ratePlanRatingType"
+        },
+        "minimumOccupancy": {
+          "description": "Minimum occupancy for the room type.",
+          "type": "integer"
+        },
+        "maximumOccupancy": {
+          "description": "Maximum occupancy for the room type.",
+          "type": "integer"
+        },
+        "roomFeatures": {
+          "description": "Room Features for the room.",
+          "$ref": "#/definitions/roomFeaturesType"
+        },
+        "accessible": {
+          "description": "Indicates if room type is accessible.",
+          "type": "boolean"
+        },
+        "roomType": {
+          "description": "Room type of the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "meetingRoom": {
+          "description": "Indicates whether function space can be meeting room.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ratePlanRatingType": {
+      "type": "string",
+      "description": "Possible Rate plan rating values.",
+      "enum": [
+        "MostImportant",
+        "Important",
+        "SomewhatImportant",
+        "LessImportant",
+        "LeastImportant",
+        "NoValueSet"
+      ]
+    },
+    "roomComponentsType": {
+      "type": "array",
+      "description": "Component of a room.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomComponentType"
+      }
+    },
+    "roomComponentType": {
+      "type": "object",
+      "description": "Room component and its quantity for the component room type.",
+      "properties": {
+        "qty": {
+          "description": "Quantity of room component for the component room type.",
+          "type": "integer"
+        },
+        "description": {
+          "description": "Description of room component.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "roomType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rooms": {
+          "description": "Collection of rooms assigned to the room type component.",
+          "$ref": "#/definitions/roomRoomsType"
+        }
+      }
+    },
+    "roomRoomsType": {
+      "type": "array",
+      "description": "Collection of rooms.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomRoomType"
+      }
+    },
+    "roomRoomType": {
+      "type": "object",
+      "description": "This type represents the primary room attributes.",
+      "properties": {
+        "roomType": {
+          "description": "Room type basic information of the room.",
+          "$ref": "#/definitions/roomTypeShortInfoType"
+        },
+        "floor": {
+          "description": "Floor of the Room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "floorDescription": {
+          "description": "Description for the Floor of the Room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomFeatures": {
+          "description": "Room Features for the room.",
+          "$ref": "#/definitions/roomFeaturesType"
+        },
+        "roomDescription": {
+          "description": "Detail Long Description Of The Room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the room.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "smokingPreference": {
+          "description": "This indicates room smoking preference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "smokingPreferenceDescription": {
+          "description": "This indicates the description of the room smoking preference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "building": {
+          "description": "Building associated with the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomAssignmentRating": {
+          "description": "Assignment Rating associated with the room.",
+          "$ref": "#/definitions/ratePlanRatingType"
+        },
+        "accessible": {
+          "description": "Indicates whether the room is accessibility compliant.",
+          "type": "boolean"
+        },
+        "roomId": {
+          "description": "Code of the room.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "meetingRoom": {
+          "description": "Indicates whether the room is a Meeting Room",
+          "type": "boolean"
+        },
+        "roomCondition": {
+          "description": "Code and description of condition assigned on the room.",
+          "$ref": "#/definitions/codeDescriptionType"
+        }
+      }
+    },
+    "currencyAmountType": {
+      "type": "object",
+      "description": "A monetary value expressed with a currency code.",
+      "properties": {
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        }
+      }
+    },
+    "housekeepingCreditsType": {
+      "type": "object",
+      "description": "Information regarding the credits for housekeeping tasks/rooms.",
+      "properties": {
+        "type": {
+          "description": "The Type of Credit. Example: TOTAL credits for the task sheet, total TRAVELLING credits for the task sheet.",
+          "$ref": "#/definitions/housekeepingCreditsDefinitionType"
+        },
+        "numberOfCredits": {
+          "description": "Total number of Credits for the Type.",
+          "type": "integer"
+        }
+      }
+    },
+    "housekeepingCreditsDefinitionType": {
+      "type": "string",
+      "description": "Type for the different kinds of Credits which will be used in Rooms Management.",
+      "enum": [
+        "Departure",
+        "Pickup",
+        "Turndown",
+        "StayOver",
+        "FacilityTask",
+        "Travelling",
+        "Total"
+      ]
+    },
+    "roomSectionType": {
+      "type": "object",
+      "properties": {
+        "daySectionCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "eveningSectionCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "roomPotentialsDetails": {
+      "type": "object",
+      "description": "Response object for fetching Room Potentials.",
+      "properties": {
+        "roomPotentials": {
+          "description": "Collection of Room Potentials.",
+          "$ref": "#/definitions/roomPotentialsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomPotentialsType": {
+      "type": "array",
+      "description": "List of Room Potentials.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomPotentialType"
+      }
+    },
+    "roomPotentialType": {
+      "type": "object",
+      "description": "Contains Common Master configuration detail.",
+      "properties": {
+        "code": {
+          "description": "Common Master unique code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Description of the Master code.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "displayOrder": {
+          "description": "Common Master record sequence number.",
+          "type": "number"
+        },
+        "inactive": {
+          "description": "Determines whether this code is inactive or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "roomPotentialsCriteria": {
+      "type": "object",
+      "description": "Request object for creating Room Potentials.",
+      "properties": {
+        "roomPotentials": {
+          "description": "Room Potentials to be created.",
+          "$ref": "#/definitions/roomPotentialsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomPotentialsToBeChanged": {
+      "type": "object",
+      "description": "Request object for changing Room Potentials.",
+      "properties": {
+        "roomPotentials": {
+          "description": "Room Potentials to be changed.",
+          "$ref": "#/definitions/roomPotentialsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomTypeTemplatesDetails": {
+      "type": "object",
+      "description": "Response object for information regarding room type template of a property.",
+      "properties": {
+        "roomTypeTemplatesSummary": {
+          "description": "Contains the results of a successful operation.",
+          "$ref": "#/definitions/roomTypeTemplateSummaryType"
+        },
+        "roomTypeTemplates": {
+          "description": "Collection of Room Type Templates and their information.",
+          "$ref": "#/definitions/roomTypeTemplateType"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomTypeTemplateSummaryType": {
+      "type": "array",
+      "description": "This type holds collection of room type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomTypeSummaryType"
+      }
+    },
+    "roomTypeTemplateType": {
+      "type": "array",
+      "description": "This type holds collection of room type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/roomTypeType"
+      }
+    },
+    "roomTypeTemplatesCriteria": {
+      "type": "object",
+      "description": "Request object for creating a new Room Type Template.",
+      "properties": {
+        "roomTypeTemplate": {
+          "description": "Room Type template details to be created.",
+          "type": "object",
+          "properties": {
+            "roomTypeTemplateDetails": {
+              "description": "Room Type template details to be created.",
+              "$ref": "#/definitions/roomTypeType"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomTypeTemplatesToBeChanged": {
+      "type": "object",
+      "description": "Request object for Modifying existing Room Type Templates.",
+      "properties": {
+        "roomTypeTemplate": {
+          "description": "Room Type template details to be changed.",
+          "type": "object",
+          "properties": {
+            "roomTypeTemplateDetails": {
+              "description": "Room Type template details to be changed.",
+              "$ref": "#/definitions/roomTypeType"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateFloorsDetails": {
+      "type": "object",
+      "description": "Response object for fetching floors at the template level.",
+      "properties": {
+        "templateFloors": {
+          "description": "Collection of floors specified at the template level.",
+          "$ref": "#/definitions/templateFloorsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateFloorsType": {
+      "type": "array",
+      "description": "This type holds a collection of floors at the template level.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/templateFloorType"
+      }
+    },
+    "templateFloorType": {
+      "type": "object",
+      "description": "Base details common between both template and hotel level floors.",
+      "properties": {
+        "floor": {
+          "description": "Specifies the floor code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description for the floor.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "housekeeping": {
+          "description": "Flag to indicate if this floor should be available on the Task Sheet Workflow configuration.",
+          "type": "boolean"
+        },
+        "sequence": {
+          "description": "Display sequence for the floor.",
+          "type": "integer"
+        },
+        "global": {
+          "description": "Specifies whether the floor is to be available for selection at all hotels.",
+          "type": "boolean"
+        }
+      }
+    },
+    "templateFloorsCriteria": {
+      "type": "object",
+      "description": "Request object for creating floors at the template level.",
+      "properties": {
+        "templateFloors": {
+          "description": "Collection containing details of floors specified at the template level which have to be created.",
+          "$ref": "#/definitions/templateFloorsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateFloorsToBeChanged": {
+      "type": "object",
+      "description": "Request object for changing floors at the template level.",
+      "properties": {
+        "templateFloors": {
+          "description": "Collection containing details of floors specified at the template level which have to be changed.",
+          "$ref": "#/definitions/templateFloorsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "ChainConfig",
+      "description": "The ChainConfigService Web Service offers capability of creating, managing, and retrieving of chain configuration."
+    },
+    {
+      "name": "HotelConfig",
+      "description": "The Hotel Config Service Web Service offers capability to configure Master Data needed for Hotel Configuration such as managing Room Classes, Room Types, Rooms, etc."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
