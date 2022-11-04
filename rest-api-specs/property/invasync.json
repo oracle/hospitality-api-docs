@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Opera Cloud Inventory Asynchronous API",
-    "description": "APIs to cater Inventory related asynchronous functionality in OPERA.<br /><br />Compatible with OPERA Cloud release 22.1.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2022 Oracle and/or its affiliates.</p>",
+    "description": "APIs to cater Inventory related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 22.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2022 Oracle and/or its affiliates.</p>",
     "version": "22.1.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
@@ -23,8 +23,8 @@
   "paths": {
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/revenueInventoryStatistics": {
       "post": {
-        "summary": "This API facilitates fetching revenue inventory statistics for a Hotel by given dates.",
-        "description": " <p><strong>OperationId:</strong>startRevenueInventoryStatisticsProcess</p>",
+        "summary": "Start process to get hotel inventory revenue statistics",
+        "description": "Use this API to start the process to get a hotel inventory's revenue statistics for a given date range. Maximum limit of the date range is 94 days with a single request, but the recommendation is to use the date range according to the size of a hotel. Use event driven API (getBusinessEvents) to get real time inventory updates. <p><strong>OperationId:</strong>startRevenueInventoryStatisticsProcess</p>",
         "operationId": "startRevenueInventoryStatisticsProcess",
         "x-interaction": [
           "async-polling"
@@ -122,8 +122,8 @@
     },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/revenueInventoryStatistics/{requestId}": {
       "head": {
-        "summary": "This API returns the status of asynchronous process scheduled for given request id.",
-        "description": " <p><strong>OperationId:</strong>getRevenueInventoryStatisticsProcessStatus</p>",
+        "summary": "Check status of Inventory Revenue Statistic process",
+        "description": "Use this API to check whether the statistics of the inventory revenue is ready yet. You can get value of summaryId with startRevenueInventoryStatisticsProcess API response (under header location). <p><strong>OperationId:</strong>getRevenueInventoryStatisticsProcessStatus</p>",
         "operationId": "getRevenueInventoryStatisticsProcessStatus",
         "responses": {
           "200": {
@@ -249,8 +249,8 @@
         ]
       },
       "get": {
-        "summary": "This API returns a hotel's revenue inventory statistics for a scheduled process.",
-        "description": " <p><strong>OperationId:</strong>getRevenueInventoryStatistics</p>",
+        "summary": "Get results of a revenue inventory statistics process",
+        "description": "This API returns inventory revenue's statistics for a Hotel by given dates in the startRevenueInventoryStatisticsProcess API request. You can get the value of the summaryId with the getRevenueInventoryStatisticsProcessStatus API response (under header location). <p><strong>OperationId:</strong>getRevenueInventoryStatistics</p>",
         "operationId": "getRevenueInventoryStatistics",
         "responses": {
           "200": {
@@ -448,8 +448,8 @@
     },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/sellLimits/{requestId}": {
       "head": {
-        "summary": "This API returns the status of asynchronous process scheduled for given id.",
-        "description": " <p><strong>OperationId:</strong>getSellLimitsProcessStatus</p>",
+        "summary": "Get the status for sell limits asynchronous process",
+        "description": "Use this API to check whether the sell limit data creation is completed yet. You can get the value of the summaryId with the postSellLimitsProcess API response (under header location). <p><strong>OperationId:</strong>getSellLimitsProcessStatus</p>",
         "operationId": "getSellLimitsProcessStatus",
         "responses": {
           "200": {
@@ -576,7 +576,7 @@
       },
       "get": {
         "summary": "Get status for sell limits for a property.",
-        "description": " <p><strong>OperationId:</strong>getSellLimits</p>",
+        "description": "This API returns the status log if any of sell limit data creation is failed. You can get the value of summaryId with the getSellLimitsProcessStatus API response (under header location). <p><strong>OperationId:</strong>getSellLimits</p>",
         "operationId": "getSellLimits",
         "responses": {
           "200": {
@@ -948,65 +948,37 @@
       }
     },
     "revenueInventoryStatisticsDetails": {
-      "type": "array",
+      "type": "object",
       "description": "Revenue Inventory Statistics for the current occupancy date which might include data grouped by room type, market and reservation guarantee code.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/revenueInventoryStatisticsType"
+      "properties": {
+        "revInvStats": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/revenueInventoryStatisticsType"
+          }
+        }
       }
     },
     "revenueInventoryStatisticsType": {
       "type": "object",
       "description": "Revenue and statistics for an occupancy date and hotel code.",
       "properties": {
-        "physicalRooms": {
-          "description": "The statistical figure for physical rooms.",
-          "type": "integer"
-        },
-        "outOfOrderRooms": {
-          "description": "The statistical figure for out of order rooms.",
-          "type": "integer"
-        },
-        "outOfServiceRooms": {
-          "description": "The statistical figure for out of service rooms.",
-          "type": "integer"
-        },
-        "roomsSold": {
-          "description": "The statistical figure for rooms sold.",
-          "type": "integer"
-        },
-        "roomArrivals": {
-          "description": "The statistical figure for arrival rooms.",
-          "type": "integer"
-        },
-        "roomDepartures": {
-          "description": "The statistical figure of departure rooms.",
-          "type": "integer"
-        },
-        "cancelledRooms": {
-          "description": "The statistical figure for canceled rooms.",
-          "type": "integer"
-        },
-        "noShowRooms": {
-          "description": "The statistical figure of no show rooms.",
-          "type": "integer"
-        },
-        "roomRevenue": {
-          "description": "The statistical figure for room revenue.",
-          "type": "number"
-        },
-        "foodRevenue": {
-          "description": "The statistical figure for food revenue.",
-          "type": "number"
-        },
-        "totalRevenue": {
-          "description": "The statistical figure for total revenue.",
-          "type": "number"
+        "property": {
+          "description": "The property for which revenue inventory statistics are fetched",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "occupancyDate": {
           "description": "The occupancy date for which the revenue inventory statistics are fetched.",
           "type": "string",
           "format": "date"
+        },
+        "resType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "marketCode": {
           "description": "The market code for which the revenue inventory statistics are fetched.",
@@ -1020,11 +992,49 @@
           "minLength": 0,
           "maxLength": 20
         },
-        "guaranteeCode": {
-          "description": "The reservation guarantee code for which the revenue inventory statistics are fetched.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+        "physicalRooms": {
+          "description": "The statistical figure for physical rooms.",
+          "type": "integer"
+        },
+        "ooRooms": {
+          "description": "The statistical figure for out of order rooms.",
+          "type": "integer"
+        },
+        "osRooms": {
+          "description": "The statistical figure for out of service rooms.",
+          "type": "integer"
+        },
+        "roomsSold": {
+          "description": "The statistical figure for rooms sold.",
+          "type": "integer"
+        },
+        "roomRevenue": {
+          "description": "The statistical figure for room revenue.",
+          "type": "number"
+        },
+        "roomArrivals": {
+          "description": "The statistical figure for arrival rooms.",
+          "type": "integer"
+        },
+        "roomDepartures": {
+          "description": "The statistical figure of departure rooms.",
+          "type": "integer"
+        },
+        "foodRevenue": {
+          "description": "The statistical figure for food revenue.",
+          "type": "number"
+        },
+        "totalRevenue": {
+          "description": "The statistical figure for total revenue.",
+          "type": "number"
+        },
+        "cancelledRooms": {
+          "description": "The statistical figure for canceled rooms.",
+          "type": "integer"
+        },
+        "noShowRooms": {
+          "description": "The statistical figure of no show rooms.",
+          "type": "integer"
         }
       }
     },
