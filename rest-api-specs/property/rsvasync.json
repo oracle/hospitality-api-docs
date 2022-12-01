@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation Asynchronous API",
-    "description": "APIs to cater for Reservation Asynchronous functionality in OPERA Cloud.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2022 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Reservation Asynchronous functionality in OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 22.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2022 Oracle and/or its affiliates.</p>",
+    "version": "22.4.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -23,8 +23,8 @@
   "paths": {
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/reservations/dailySummary": {
       "post": {
-        "summary": "Fetch Future Reservations Daily Summary.",
-        "description": "This API allows you to fetch reservation daily summary for a property by given dates. <p><strong>OperationId:</strong>startReservationsDailySummaryProcess</p>",
+        "summary": "Fetch past, present and future Reservations Daily Summary.",
+        "description": "This API allows you to fetch reservation daily summary for a property by given date range. Maximum limit of date range is 94 days, but recommendation is to use date range accordingly to the size of a hotel. Use event driven API (getBusinessEvents) to get real time reservation update.  <p><strong>OperationId:</strong>startReservationsDailySummaryProcess</p>",
         "operationId": "startReservationsDailySummaryProcess",
         "x-interaction": [
           "async-polling"
@@ -122,8 +122,8 @@
     },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/reservations/dailySummary/{summaryId}": {
       "head": {
-        "summary": "Check status of Reservation Daily Summary",
-        "description": "Use this to check whether the summary of reservations is ready yet. <p><strong>OperationId:</strong>getReservationsProcessStatus</p>",
+        "summary": "Check status of Reservation Daily Summary process",
+        "description": "Use this to check whether the summary of reservations is ready yet. You can get  the value of summaryId with startReservationsDailySummaryProcess API response (under header location). <p><strong>OperationId:</strong>getReservationsProcessStatus</p>",
         "operationId": "getReservationsProcessStatus",
         "responses": {
           "200": {
@@ -249,8 +249,8 @@
         ]
       },
       "get": {
-        "summary": "Get results of Future Reservations Daily Summary.",
-        "description": "This API returns a properties reservation daily summary for a scheduled process. <p><strong>OperationId:</strong>getReservationsDailySummary</p>",
+        "summary": "Get results of Reservations Daily Summary.",
+        "description": "This API returns a properties reservation daily summary for the process initiated with startReservationsDailySummaryProcess. You can get the value of summaryId with getReservationsProcessStatus API response (under header location). <p><strong>OperationId:</strong>getReservationsDailySummary</p>",
         "operationId": "getReservationsDailySummary",
         "responses": {
           "200": {
@@ -568,6 +568,10 @@
         "timeSpan": {
           "description": "The start date and time span for the search to be performed.",
           "$ref": "#/definitions/timeSpanType"
+        },
+        "lastModifiedDate": {
+          "description": "Start and End Modified Dates of Reservations after which the results are to be fetched",
+          "$ref": "#/definitions/lastModifiedDateType"
         }
       }
     },
@@ -588,6 +592,20 @@
         }
       }
     },
+    "lastModifiedDateType": {
+      "type": "object",
+      "description": "Start and End Modified Dates of Reservations after which the results are to be fetched",
+      "properties": {
+        "startLastModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endLastModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "reservationDailySummaryType": {
       "type": "object",
       "description": "Daily summary information related to a reservation.",
@@ -596,13 +614,27 @@
           "description": "Collection of reservation identifiers like Reservation Name ID, Confirmation Number, etc.",
           "$ref": "#/definitions/reservationIdList"
         },
-        "sharersIdList": {
-          "description": "Collection of Confirmation Numbers of Sharers.",
-          "$ref": "#/definitions/uniqueIDListType"
+        "resvStatus": {
+          "description": "Indicates the status of the reservation.",
+          "$ref": "#/definitions/pMS_ResStatusType"
         },
-        "timeSpan": {
-          "description": "The Time Span(Arrival, Departure) of the reservation.",
-          "$ref": "#/definitions/timeSpanType"
+        "sharedYn": {
+          "description": "Indicates whether the reservation has any sharers. Y indicates true and N indicates false.",
+          "type": "string"
+        },
+        "sharersList": {
+          "description": "The unique identifier reservationId of the shared reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "arrival": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "departure": {
+          "type": "string",
+          "format": "date-time"
         },
         "checkedOutDate": {
           "description": "The date the reservation was checked out.",
@@ -614,19 +646,21 @@
           "type": "string",
           "format": "date-time"
         },
-        "guaranteeCode": {
-          "description": "Guarantee Code on the reservation.",
+        "bookingDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "nationality": {
+          "description": "Affiliation or ethnicity to a particular country.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
-        "reservationStatus": {
-          "description": "Indicates the status of the reservation.",
-          "$ref": "#/definitions/pMS_ResStatusType"
-        },
-        "nationality": {
-          "description": "Affiliation or ethnicity to a particular country.",
-          "$ref": "#/definitions/countryNameType"
+        "resvType": {
+          "description": "Type of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "noOfRooms": {
           "description": "Number of rooms of the reservation.",
@@ -644,7 +678,7 @@
           "minLength": 0,
           "maxLength": 20
         },
-        "travelAgentID": {
+        "travelAgentId": {
           "description": "ID of the travel agent for the reservation.",
           "$ref": "#/definitions/uniqueID_Type"
         },
@@ -670,7 +704,7 @@
           "minLength": 0,
           "maxLength": 200
         },
-        "groupID": {
+        "groupId": {
           "description": "ID of the group for the reservation.",
           "$ref": "#/definitions/uniqueID_Type"
         },
@@ -690,38 +724,81 @@
           "minLength": 0,
           "maxLength": 200
         },
-        "contactId": {
+        "resvContactId": {
           "description": "ID of the contact for the reservation.",
           "$ref": "#/definitions/uniqueID_Type"
         },
-        "contactName": {
+        "resvContactName": {
           "description": "Name of the contact for the reservation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
         },
-        "dailySummaries": {
+        "createDateTime": {
+          "description": "Business Date when the reservation was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedDateTime": {
+          "description": "Business Date when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedDate": {
+          "description": "Business Date when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "membershipId": {
+          "description": "Card Number of the membership.Either membershipId or membershipNumber will be returned.",
+          "type": "string"
+        },
+        "membershipNumber": {
+          "description": "Card Number of the membership.Either membershipId or membershipNumber will be returned.",
+          "type": "string"
+        },
+        "membershipType": {
+          "description": "Type of membership.",
+          "type": "string"
+        },
+        "membershipLevel": {
+          "description": "Indicates the membership level.",
+          "type": "string"
+        },
+        "children1": {
+          "description": "Number of children classified under the first Age Qualifying Group.",
+          "type": "integer"
+        },
+        "children2": {
+          "description": "Number of children classified under the second Age Qualifying Group.",
+          "type": "integer"
+        },
+        "children3": {
+          "description": "Number of children classified under the third Age Qualifying Group.",
+          "type": "integer"
+        },
+        "cancellationReasonCode": {
+          "type": "string"
+        },
+        "bookingMedium": {
+          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made. Either bookingMedium or origin_of_booking will be present in the response.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "origin_of_booking": {
+          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made.Either bookingMedium or origin_of_booking will be present in the response.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "dailySummary": {
           "description": "Collection of daily summary for the reservation.",
           "type": "array",
           "maxItems": 4000,
           "items": {
             "$ref": "#/definitions/dailySummaryType"
           }
-        },
-        "hotelId": {
-          "description": "The Hotel Code the reservation belongs to.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "shared": {
-          "description": "Indicates whether the reservation has any sharers.",
-          "type": "boolean"
-        },
-        "createBusinessDate": {
-          "description": "Business Date when the reservation was created.",
-          "type": "string",
-          "format": "date-time"
         }
       }
     },
@@ -763,15 +840,21 @@
       "type": "object",
       "description": "Statistic information related to a specific reservation stay date.",
       "properties": {
-        "ratePlanCode": {
+        "rateCode": {
           "description": "The rate plan code of the reservation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
         "rateAmount": {
-          "description": "Holds the Rate Amount.",
-          "$ref": "#/definitions/currencyAmountType"
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "rateAmountCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         },
         "marketCode": {
           "description": "Holds the code that relates to the market being sold (e.g., the corporate market, packages).",
@@ -785,41 +868,87 @@
           "minLength": 0,
           "maxLength": 20
         },
-        "originalRoomType": {
-          "description": "Room type against which the reservation was originally made.",
+        "bookedRoomType": {
+          "description": "Booked room type.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
-        "roomNumber": {
+        "room": {
           "description": "Room number.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
+        "netRateAmount": {
+          "description": "Net Amount generated by the reservation.",
+          "type": "number"
+        },
+        "netRateAmountCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
         "roomRevenue": {
           "description": "Room Revenue generated by the reservation.",
-          "$ref": "#/definitions/currencyAmountType"
+          "type": "number"
         },
-        "foodAndBevRevenue": {
+        "roomRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "fbRevenue": {
           "description": "Food and Beverage Revenue generated by the reservation.",
-          "$ref": "#/definitions/currencyAmountType"
+          "type": "number"
+        },
+        "fbRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         },
         "otherRevenue": {
           "description": "Other Revenue generated by the reservation.",
-          "$ref": "#/definitions/currencyAmountType"
+          "type": "number"
+        },
+        "otherRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         },
         "totalRevenue": {
           "description": "Total Revenue generated by the reservation.",
-          "$ref": "#/definitions/currencyAmountType"
+          "type": "number"
+        },
+        "totalRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         },
         "packageRevenue": {
           "description": "Package Revenue generated by the reservation.",
-          "$ref": "#/definitions/currencyAmountType"
+          "type": "number"
         },
-        "taxRevenue": {
+        "packageRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "tax": {
           "description": "Tax Revenue generated by the reservation.",
-          "$ref": "#/definitions/currencyAmountType"
+          "type": "number"
+        },
+        "taxCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         },
         "roomTypeCharged": {
           "description": "Room type charged for the reservation.",
@@ -827,10 +956,10 @@
           "minLength": 0,
           "maxLength": 20
         },
-        "date": {
+        "trxDate": {
           "description": "Reservation stay date for which the daily statistics are projected.",
           "type": "string",
-          "format": "date"
+          "format": "date-time"
         },
         "sourceCode": {
           "description": "The entity/channel who made the reservation.",
@@ -838,8 +967,8 @@
           "minLength": 0,
           "maxLength": 20
         },
-        "bookingMedium": {
-          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made.",
+        "channel": {
+          "description": "Classifies the Channel field on reservation screen through which the reservation is made.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
@@ -854,22 +983,6 @@
         }
       }
     },
-    "currencyAmountType": {
-      "type": "object",
-      "description": "A monetary value expressed with a currency code.",
-      "properties": {
-        "amount": {
-          "description": "A monetary amount.",
-          "type": "number"
-        },
-        "currencyCode": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 3
-        }
-      }
-    },
     "pMS_ResStatusType": {
       "type": "string",
       "description": "This reservation is in checked in status and the business date is past departure date. This could occur when ORS and PMS are in same environment.",
@@ -879,6 +992,7 @@
         "NoShow",
         "Cancelled",
         "InHouse",
+        "CheckedIn",
         "CheckedOut",
         "Waitlisted",
         "DueIn",
@@ -886,24 +1000,6 @@
         "Walkin",
         "PendingCheckout"
       ]
-    },
-    "countryNameType": {
-      "type": "object",
-      "description": "Code for a country or a nationality.",
-      "properties": {
-        "value": {
-          "type": "string",
-          "description": "Used for Character Strings, length 0 to 200.",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "code": {
-          "description": "Code for a country or a nationality.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
     },
     "criteria": {
       "type": "object",
