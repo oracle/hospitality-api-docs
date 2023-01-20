@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Inventory API",
-    "description": "APIs to cater for Inventory functionality in OPERA Cloud.  This includes sell limits for date ranges, viewing and updating the properties inventory, as well as item inventory (such as rollaways, microwaves etc.).<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Inventory functionality in OPERA Cloud.  This includes sell limits for date ranges, viewing and updating the properties inventory, as well as item inventory (such as rollaways, microwaves etc.).<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -21,6 +21,299 @@
     "application/json"
   ],
   "paths": {
+    "/hotels/{hotelId}/blockInventoryStatistics": {
+      "get": {
+        "summary": "Get block inventory statistics",
+        "description": "You can use this API to retrieve Block inventory for a specified hotel. Narrow down your results using the query parameters available. <p><strong>OperationId:</strong>getBlockInventoryStatistics</p>",
+        "operationId": "getBlockInventoryStatistics",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where block inventory statistics are searched."
+          },
+          {
+            "name": "includeBlocksWithNoRoom",
+            "in": "query",
+            "required": false,
+            "description": "If set to true, includes business blocks without rooms.",
+            "type": "boolean"
+          },
+          {
+            "name": "includeOverbooking",
+            "in": "query",
+            "required": false,
+            "description": "If set to true, the house overbooking limit for each day is added to the total number of physical rooms.",
+            "type": "boolean"
+          },
+          {
+            "name": "includeOpportunities",
+            "in": "query",
+            "required": false,
+            "description": "If set to true, the results will include opportunities. If this flag is not provided it will be considered false and exclude opportunities.",
+            "type": "boolean"
+          },
+          {
+            "name": "includeTentativeInventory",
+            "in": "query",
+            "required": false,
+            "description": "If set to true, includes non-deduct business blocks and group reservations in the Sales Allowance Available Rooms and House Availability statistics.",
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "endDateRange",
+            "in": "query",
+            "required": false,
+            "description": "The ending value of the date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "startDateRange",
+            "in": "query",
+            "required": false,
+            "description": "The starting value of the date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "blockStatusCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "originCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "roomOwnerCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "blockOwners",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "summarySortByCode",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Supported block inventory statistical sorting.",
+            "uniqueItems": true,
+            "enum": [
+              "Status",
+              "StatusDescending",
+              "ArrivalDate",
+              "BlockAccount",
+              "Revenue",
+              "RoomsOwner"
+            ]
+          },
+          {
+            "name": "detailSortByCode",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Supported block inventory statistical sorting.",
+            "uniqueItems": true,
+            "enum": [
+              "Status",
+              "StatusDescending",
+              "ArrivalDate",
+              "BlockAccount",
+              "Revenue",
+              "RoomsOwner"
+            ]
+          },
+          {
+            "name": "friday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "monday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "saturday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "sunday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "thursday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "tuesday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "wednesday",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "fetchInstructions",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Type for block inventory statistics instructions that can be used in requests for partial operations.",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "StatusSummary",
+                "BookingSummary",
+                "ForecastSummary",
+                "DetailSummary",
+                "RoomSummary"
+              ]
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for information regarding Block Inventory Statistics.",
+            "schema": {
+              "$ref": "#/definitions/blockInventoryStatistic"
+            }
+          },
+          "204": {
+            "description": "BlockInventoryStatistics not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "INVStats"
+        ]
+      }
+    },
     "/hotels/{hotelId}/hotelInventory": {
       "get": {
         "summary": "Get hotel inventory",
@@ -473,6 +766,332 @@
           "INVStats"
         ]
       }
+    },
+    "/hotels/{hotelId}/itemInventory": {
+      "get": {
+        "summary": "Get item inventory",
+        "description": "This will fetch a hotels Item inventory for a specified date range that you can provided in the request. <p><strong>OperationId:</strong>getItemInventory</p>",
+        "operationId": "getItemInventory",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where item inventory is searched."
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "description": "End Time of the Time window.",
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "description": "Start Time of the Time window.",
+            "type": "string"
+          },
+          {
+            "name": "itemClass",
+            "in": "query",
+            "required": false,
+            "description": "Item Class to filter the Items/Item Pools in the response.",
+            "type": "string"
+          },
+          {
+            "name": "itemPool",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "itemCode",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "defaultDuration",
+            "in": "query",
+            "required": false,
+            "description": "Define the default duration in days when booking the item.",
+            "type": "integer"
+          },
+          {
+            "name": "fixedCharge",
+            "in": "query",
+            "required": false,
+            "description": "If true indicates that item has fixed charge when it is attached to a reservation.",
+            "type": "boolean"
+          },
+          {
+            "name": "outsideStay",
+            "in": "query",
+            "required": false,
+            "description": "If true indicates that item could be held outside of the reservation stay days.",
+            "type": "boolean"
+          },
+          {
+            "name": "requiredForBooking",
+            "in": "query",
+            "required": false,
+            "description": "If true indicates that item is required for the reservation.",
+            "type": "boolean"
+          },
+          {
+            "name": "sellInEvent",
+            "in": "query",
+            "required": false,
+            "description": "If true indicates that item can be sold in event.",
+            "type": "boolean"
+          },
+          {
+            "name": "sellInReservation",
+            "in": "query",
+            "required": false,
+            "description": "If true indicates that item can be sold in reservation.",
+            "type": "boolean"
+          },
+          {
+            "name": "sellSeparate",
+            "in": "query",
+            "required": false,
+            "description": "If true indicates that item is allowed to sell separately.",
+            "type": "boolean"
+          },
+          {
+            "name": "welcomeOffer",
+            "in": "query",
+            "required": false,
+            "description": "When set to true will only return items that are Welcome Offer Eligible.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Return object to the request for information regarding items inventory/availability.",
+            "schema": {
+              "$ref": "#/definitions/itemInventory"
+            }
+          },
+          "204": {
+            "description": "ItemInventory not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/itemInventoryHold": {
+      "post": {
+        "summary": "Hold item inventory",
+        "description": "Use this API to hold Item Inventory. <p><strong>OperationId:</strong>postHoldItemInventory</p>",
+        "operationId": "postHoldItemInventory",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where item inventory is held."
+          },
+          {
+            "name": "holdItemInventory",
+            "in": "body",
+            "required": true,
+            "description": "Request object for holding an items inventory/availability.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/holdItemInventory"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Inventory"
+        ]
+      }
     }
   },
   "parameters": {
@@ -510,6 +1129,12 @@
       "name": "Accept-Language",
       "type": "string",
       "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
       "in": "header"
     }
   },
@@ -561,15 +1186,41 @@
     }
   },
   "definitions": {
-    "hotelInventory": {
+    "blockInventoryStatistic": {
       "type": "object",
-      "description": "A response for Hotel Inventories meeting the search criteria. Returns inventory classified on room type, class and house level for a given property.",
+      "description": "Response object for information regarding Block Inventory Statistics.",
       "properties": {
-        "hotelInventories": {
-          "description": "Refer to Inventory common types document.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/hotelInventoryType"
+        "blockInventoryStatistics": {
+          "description": "List of block inventory statistics that is grouped by statistic date.",
+          "type": "object",
+          "properties": {
+            "blockInventoryStatistic": {
+              "description": "Summary and Detail statistic for block inventory that is group by statistic date.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/blockInventoryStatisticType"
+              }
+            },
+            "totalPages": {
+              "description": "Evaluated total page count based on the requested max fetch count.",
+              "type": "integer"
+            },
+            "offset": {
+              "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+              "type": "integer"
+            },
+            "limit": {
+              "description": "Indicates maximum number of records a Web Service should return.",
+              "type": "integer"
+            },
+            "allRowsFetched": {
+              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type": "boolean"
+            },
+            "totalRows": {
+              "description": "Total number of rows queried",
+              "type": "integer"
+            }
           }
         },
         "links": {
@@ -580,93 +1231,531 @@
         }
       }
     },
-    "hotelInventoryType": {
+    "blockInventoryStatisticType": {
       "type": "object",
-      "description": "A collection of Reservation objects and Unique IDs of Reservation.",
+      "description": "Summary and Detail statistics for block inventory.",
       "properties": {
-        "houseInventory": {
-          "description": "Collection of House level Inventory counts for the date ranges.",
-          "$ref": "#/definitions/inventoryCountsListType"
+        "blockSummaryStatistics": {
+          "description": "Summary statistic for all blocks.",
+          "$ref": "#/definitions/blockSummaryStatisticsType"
         },
-        "roomTypeInventories": {
-          "description": "Collection of Room type level Inventory counts for the date ranges.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/inventoryLevelCountsListType"
-          }
+        "blockDetailStatistics": {
+          "description": "Detailed summary statistics for each block.",
+          "$ref": "#/definitions/blockDetailStatisticsType"
         },
-        "roomClassInventories": {
-          "description": "Collection of Room Class level Inventory counts for the date ranges.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/inventoryLevelCountsListType"
-          }
+        "sellMessages": {
+          "description": "Group Rooms Control Sell Messages configured for a particular date range.",
+          "$ref": "#/definitions/sellMessagesType"
         }
       }
     },
-    "inventoryCountsListType": {
+    "blockSummaryStatisticsType": {
       "type": "array",
-      "description": "Collection of Inventory counts for the date ranges.",
+      "description": "Statistic units group by status, booking and daily targets.",
       "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/inventoryCountsType"
+        "$ref": "#/definitions/blockSummaryStatisticType"
       }
     },
-    "inventoryCountsType": {
+    "blockSummaryStatisticType": {
       "type": "object",
-      "description": "Inventory counts for the given date range.",
+      "description": "Statistic units group by status, booking and daily targets.",
       "properties": {
-        "available": {
-          "description": "Indicates whether enough inventory is available or not.",
-          "type": "boolean"
+        "statusSummaryStatistic": {
+          "description": "List of Statistic Units for Status Types e.g. Definite, Inquiry, Actual.",
+          "$ref": "#/definitions/statusSummaryStatisticType"
         },
-        "availableCount": {
-          "description": "Available Inventory count.",
-          "type": "integer"
+        "bookingSummaryStatistic": {
+          "description": "List of Statistic Units for Booking types e.g. Sales Allowance, Total House Availability.",
+          "$ref": "#/definitions/statisticUnitsType"
         },
-        "availableTentativeCount": {
-          "description": "Available Tentative Inventory count.",
-          "type": "integer"
+        "dailyTargetsSummaryStatistic": {
+          "description": "List of Statistic Units for Daily Targets types e.g. Room Nights, Room Rates, Room Revenue.",
+          "$ref": "#/definitions/statisticUnitsType"
+        },
+        "statisticDate": {
+          "description": "Date of the block inventory statistic.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "statusSummaryStatisticType": {
+      "type": "array",
+      "description": "Statistic summary for a particular status.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/statusStatisticType"
+      }
+    },
+    "statusStatisticType": {
+      "type": "object",
+      "description": "List of statistic units for a particular status.",
+      "properties": {
+        "statisticUnit": {
+          "description": "Unit type to hold statistic code and value pair.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticUnitType"
+          }
+        },
+        "status": {
+          "description": "Status type of statistic, e.g. Definite.",
+          "type": "string"
+        }
+      }
+    },
+    "statisticUnitType": {
+      "type": "object",
+      "description": "Unit type to hold statistic code and value pair e.g. [code - value] [Definite - 20] [Sales Allowance - 30] and its sub units.",
+      "properties": {
+        "code": {
+          "description": "Code of the statistic unit.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value of the statistic unit.",
+          "type": "string"
+        }
+      }
+    },
+    "statisticUnitsType": {
+      "type": "array",
+      "description": "Unit type to hold statistic code and value pair.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/statisticUnitType"
+      }
+    },
+    "blockDetailStatisticsType": {
+      "type": "array",
+      "description": "Compose of block information and statistic summary for a particular block.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/blockDetailStatisticType"
+      }
+    },
+    "blockDetailStatisticType": {
+      "type": "object",
+      "description": "Information and statistic summary for a particular block.",
+      "properties": {
+        "blockInformation": {
+          "description": "Contains information like Block Name, Account Name, Average Room Rate of the block.",
+          "$ref": "#/definitions/blockInfoType"
+        },
+        "blockStatistics": {
+          "description": "Statistic summary for the block.",
+          "$ref": "#/definitions/blockStatusStatisticsType"
+        }
+      }
+    },
+    "blockInfoType": {
+      "type": "object",
+      "description": "Contains information of the business block .",
+      "properties": {
+        "hotelId": {
+          "description": "The hotel code of the business block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "blockId": {
+          "description": "The unique identifier of the business block.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "blockName": {
+          "description": "Name of the business block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "blockCode": {
+          "description": "Block code for the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "startDate": {
-          "description": "The starting value of the date range.",
+          "description": "Start date for this block.",
           "type": "string",
           "format": "date",
           "maxLength": 8
         },
         "endDate": {
-          "description": "The ending value of the date range.",
+          "description": "End date for this block.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "cutOffDate": {
+          "description": "Date after which unused block rooms should be returned to house.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "blockStatus": {
+          "description": "Code and Description used to define a status e.g. (INT, TENT, DEF, CXL) (initial, tentative, definite, cancelled).",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "blockStatusColor": {
+          "description": "Color from block status configuration.",
+          "$ref": "#/definitions/statusColorType"
+        },
+        "accountId": {
+          "description": "The unique identifier of the Account Name.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "accountName": {
+          "description": "Account name attached to the business block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "contactId": {
+          "description": "The unique identifier of the Contact Name.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "contactName": {
+          "description": "Contact name attached to the business block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "roomSalesManager": {
+          "description": "Room Sales Manager Code and Name attached to the business block.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "currencyCode": {
+          "description": "Currency Code attached to the business block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "averageRoomRate": {
+          "description": "Average room rate of the business block.",
+          "type": "number"
+        },
+        "conversionCode": {
+          "description": "Indicates the likelihood of the block moving to the next active block status.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rankingCode": {
+          "description": "Indicates the ranking of the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "guaranteeCode": {
+          "description": "Guarantee Code for the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateProtectionDetails": {
+          "description": "Indicates the Rate Protection details for the block.",
+          "$ref": "#/definitions/blockRateProtectionType"
+        },
+        "nonCompeteDetails": {
+          "description": "Indicates the non-competing industry details.",
+          "$ref": "#/definitions/blockNonCompeteType"
+        },
+        "blockClassification": {
+          "description": "Indicate Block Classification.",
+          "$ref": "#/definitions/blockClassificationType"
+        }
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "codeDescriptionType": {
+      "type": "object",
+      "description": "This contains a generic code and description information.",
+      "properties": {
+        "code": {
+          "description": "Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "statusColorType": {
+      "type": "string",
+      "description": "Status code color configuration type.",
+      "enum": [
+        "White",
+        "Red",
+        "Blue",
+        "Cyan",
+        "Magenta",
+        "Green",
+        "Brown",
+        "Black",
+        "Yellow",
+        "Gray"
+      ]
+    },
+    "blockRateProtectionType": {
+      "type": "object",
+      "description": "Block Rate Protection code information.",
+      "properties": {
+        "criteria": {
+          "description": "Indicates the type of rate protection. 'All' means all dates are rate protected. 'None' specifies no rate protection. 'Selected' specifies few dates are rate protected.",
+          "$ref": "#/definitions/rateProtectionType"
+        },
+        "protectedDates": {
+          "description": "Specifies all the Rate protected dates in the selected range.",
+          "$ref": "#/definitions/datesType"
+        }
+      }
+    },
+    "rateProtectionType": {
+      "type": "string",
+      "description": "Simple type for specifying the block protection type.",
+      "enum": [
+        "All",
+        "Selected",
+        "None"
+      ]
+    },
+    "datesType": {
+      "type": "array",
+      "description": "Specifies a single date.",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "format": "date",
+        "maxLength": 8
+      }
+    },
+    "blockNonCompeteType": {
+      "type": "object",
+      "description": "Block Non Compete code information.",
+      "properties": {
+        "industry": {
+          "description": "Specifies the Non-Compete Industry.>",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "industryDescription": {
+          "description": "Specifies the Non-Compete Industry description.>",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "criteria": {
+          "description": "Indicates the type of Non-Compete. 'All' means all dates are Non-Compete. 'None' specifies Non-Compete is disabled. 'Selected' specifies few dates are Non-Compete.",
+          "$ref": "#/definitions/rateProtectionType"
+        },
+        "protectedDates": {
+          "description": "Specifies all the Non-Compete dates in the selected date range.",
+          "$ref": "#/definitions/datesType"
+        }
+      }
+    },
+    "blockClassificationType": {
+      "type": "string",
+      "description": "Simple type for block instructions to be used in requests for fetching blocks. Valid status values are MASTER_BLOCK, MASTER_TOUR, FIT_MASTER, MASTER_ALLOCATION, MASTER_ITINERARY, LEAD_MASTER, REGULAR_BOOKING, SUB_BLOCK, SUB_TOUR, FIT_CONTRACT, SUB_ALLOCATION, SUB_ITINERARY, LEAD.",
+      "enum": [
+        "MasterBlock",
+        "MasterTour",
+        "MasterAllocation",
+        "MasterItinerary",
+        "LeadMaster",
+        "RegularBooking",
+        "SubBlock",
+        "SubTour",
+        "FitContract",
+        "SubAllocation",
+        "SubItinerary",
+        "Lead",
+        "FitMaster",
+        "Opportunity"
+      ]
+    },
+    "blockStatusStatisticsType": {
+      "type": "array",
+      "description": "Summary statistics of a block for each date.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/blockStatusStatisticType"
+      }
+    },
+    "blockStatusStatisticType": {
+      "type": "object",
+      "description": "Contains summary statistic for a block on a particular statistic date.",
+      "properties": {
+        "statusSummaryStatistic": {
+          "description": "Statistic summary for each status (Blocked, Pickup, Contract).",
+          "$ref": "#/definitions/statisticUnitsType"
+        },
+        "statisticDate": {
+          "description": "Date of the statistic.",
           "type": "string",
           "format": "date",
           "maxLength": 8
         }
       }
     },
-    "inventoryLevelCountsListType": {
+    "sellMessagesType": {
       "type": "object",
-      "description": "Collection of Inventory counts for the date ranges.",
+      "description": "The SellMessagesType is the list of message and attributes returned by web service.",
       "properties": {
-        "inventoryCounts": {
-          "description": "Collection of Inventory counts for the date ranges.",
+        "sellMessage": {
+          "description": "This is the message text.",
           "type": "array",
           "maxItems": 4000,
           "items": {
-            "$ref": "#/definitions/inventoryCountsType"
+            "$ref": "#/definitions/sellMessageType"
           }
         },
-        "code": {
-          "description": "Inventory Group/Level code.",
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "sellMessageType": {
+      "type": "object",
+      "description": "The SellMessagesType defines the standard attributes that will be retrieved with the sell message.",
+      "properties": {
+        "message": {
+          "description": "This is the message text.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "croCode": {
+          "description": "This is the Central Reservation office code.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
-        "sequence": {
-          "description": "Integer Group/Level order sequence number.",
+        "chainCode": {
+          "description": "This is the chain code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelId": {
+          "description": "This is the hotel code or resort.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "This represents the room type code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": "This represents the rate plan code of the room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "languageCode": {
+          "description": "This is the language code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "stickyFlagYn": {
+          "description": "Flag which tells if this message is Sticky (Y/N).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1
+        },
+        "usedInModule": {
+          "description": "This represents the correct moduletype which should be used for fetching SellMessages.",
+          "$ref": "#/definitions/usedInModuleType"
+        },
+        "beginDate": {
+          "description": "This is the Begin date for the configured SellMessage.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
           "type": "integer"
         }
       }
+    },
+    "usedInModuleType": {
+      "type": "string",
+      "description": "Simple type for indicating the module for which user wants to create the SellMessage. Valid module types are Look To Book Sales,Reservations,Blocks,Function Diary and Group Rooms Control.",
+      "enum": [
+        "Blocks",
+        "Reservations",
+        "FunctionDiary",
+        "LookToBookSales",
+        "GroupRoomsControl"
+      ]
     },
     "links": {
       "type": "array",
@@ -878,6 +1967,113 @@
         "title"
       ]
     },
+    "hotelInventory": {
+      "type": "object",
+      "description": "A response for Hotel Inventories meeting the search criteria. Returns inventory classified on room type, class and house level for a given property.",
+      "properties": {
+        "hotelInventories": {
+          "description": "Refer to Inventory common types document.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/hotelInventoryType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelInventoryType": {
+      "type": "object",
+      "description": "A collection of Reservation objects and Unique IDs of Reservation.",
+      "properties": {
+        "houseInventory": {
+          "description": "Collection of House level Inventory counts for the date ranges.",
+          "$ref": "#/definitions/inventoryCountsListType"
+        },
+        "roomTypeInventories": {
+          "description": "Collection of Room type level Inventory counts for the date ranges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/inventoryLevelCountsListType"
+          }
+        },
+        "roomClassInventories": {
+          "description": "Collection of Room Class level Inventory counts for the date ranges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/inventoryLevelCountsListType"
+          }
+        }
+      }
+    },
+    "inventoryCountsListType": {
+      "type": "array",
+      "description": "Collection of Inventory counts for the date ranges.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/inventoryCountsType"
+      }
+    },
+    "inventoryCountsType": {
+      "type": "object",
+      "description": "Inventory counts for the given date range.",
+      "properties": {
+        "available": {
+          "description": "Indicates whether enough inventory is available or not.",
+          "type": "boolean"
+        },
+        "availableCount": {
+          "description": "Available Inventory count.",
+          "type": "integer"
+        },
+        "availableTentativeCount": {
+          "description": "Available Tentative Inventory count.",
+          "type": "integer"
+        },
+        "startDate": {
+          "description": "The starting value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "description": "The ending value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "inventoryLevelCountsListType": {
+      "type": "object",
+      "description": "Collection of Inventory counts for the date ranges.",
+      "properties": {
+        "inventoryCounts": {
+          "description": "Collection of Inventory counts for the date ranges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/inventoryCountsType"
+          }
+        },
+        "code": {
+          "description": "Inventory Group/Level code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sequence": {
+          "description": "Integer Group/Level order sequence number.",
+          "type": "integer"
+        }
+      }
+    },
     "inventoryStatistics": {
       "type": "array",
       "description": "List of inventory statistics that is grouped by statistic date.",
@@ -1023,6 +2219,356 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        }
+      }
+    },
+    "itemInventory": {
+      "type": "object",
+      "description": "Return object to the request for information regarding items inventory/availability.",
+      "properties": {
+        "itemsInventory": {
+          "description": "Collection of Reservations returned/fetched as per the criteria in the fetch request.",
+          "$ref": "#/definitions/poolItemInventoryCountsListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "poolItemInventoryCountsListType": {
+      "type": "array",
+      "description": "Items/Item pool with brief information and its Inventory counts for the given dates.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/poolItemInventoryCountsType"
+      }
+    },
+    "poolItemInventoryCountsType": {
+      "type": "object",
+      "description": "Basic information regarding an Item.",
+      "properties": {
+        "description": {
+          "description": "Detail description of an item.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "availabilityPeriod": {
+          "description": "Defines a Time period when the item is available.",
+          "$ref": "#/definitions/timeWindowType"
+        },
+        "timeSpan": {
+          "description": "Date Range to get the inventories of the items.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "quantity": {
+          "description": "Quantity of hold Item",
+          "type": "integer"
+        },
+        "itemHoldId": {
+          "description": "ID reference for the hold Item",
+          "type": "number"
+        },
+        "code": {
+          "description": "Item Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "name": {
+          "description": "Name of an item.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "itemPool": {
+          "description": "Indicates if it is an item pool. Not applicable for Item within the Item Pool.",
+          "type": "boolean"
+        },
+        "sellSeparate": {
+          "description": "If true indicates that item is allowed to sell separately.",
+          "type": "boolean"
+        },
+        "sellInReservation": {
+          "description": "If true indicates that item can be sold in reservation.",
+          "type": "boolean"
+        },
+        "sellInEvent": {
+          "description": "If true indicates that item can be sold in event.",
+          "type": "boolean"
+        },
+        "requiredForBooking": {
+          "description": "If true indicates that item is required for the reservation.",
+          "type": "boolean"
+        },
+        "fixedCharge": {
+          "description": "If true indicates that item has fixed charge when it is attached to a reservation.",
+          "type": "boolean"
+        },
+        "outsideStay": {
+          "description": "If true indicates that item could be held outside of the reservation stay days.",
+          "type": "boolean"
+        },
+        "defaultDuration": {
+          "description": "Define the default duration in days when booking the item.",
+          "type": "integer"
+        },
+        "inventories": {
+          "description": "Collection of Inventory counts for the given dates.",
+          "$ref": "#/definitions/dailyItemInventoryCountsListType"
+        },
+        "poolItems": {
+          "description": "Collection of items in the pool with brief information and its Inventory counts for the given dates. It element is populated when the parent item is a pull(when ItemPool is true.). ItemPool flag for this item, which is an item in the pool, cannot not be true.",
+          "$ref": "#/definitions/itemInventoryCountsListType"
+        }
+      }
+    },
+    "timeWindowType": {
+      "type": "object",
+      "description": "Defines a Time period with startDate time and an endDate time.",
+      "properties": {
+        "startTime": {
+          "description": "Start Time of the Time window.",
+          "type": "string"
+        },
+        "endTime": {
+          "description": "End Time of the Time window.",
+          "type": "string"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield endDate date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "dailyItemInventoryCountsListType": {
+      "type": "array",
+      "description": "Inventory counts for the given date.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/dailyItemInventoryCountsType"
+      }
+    },
+    "dailyItemInventoryCountsType": {
+      "type": "object",
+      "description": "Inventory counts for the given date.",
+      "properties": {
+        "date": {
+          "description": "Date of the item inventory.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "total": {
+          "description": "Total Item count.",
+          "type": "integer"
+        },
+        "available": {
+          "description": "Available Item count.",
+          "type": "integer"
+        }
+      }
+    },
+    "itemInventoryCountsListType": {
+      "type": "array",
+      "description": "Provides item's brief information and a collection of Inventory counts for the given dates for the item.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/itemInventoryCountsType"
+      }
+    },
+    "itemInventoryCountsType": {
+      "type": "object",
+      "description": "Basic information regarding an Item.",
+      "properties": {
+        "description": {
+          "description": "Detail description of an item.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "availabilityPeriod": {
+          "description": "Defines a Time period when the item is available.",
+          "$ref": "#/definitions/timeWindowType"
+        },
+        "timeSpan": {
+          "description": "Date Range to get the inventories of the items.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "quantity": {
+          "description": "Quantity of hold Item",
+          "type": "integer"
+        },
+        "itemHoldId": {
+          "description": "ID reference for the hold Item",
+          "type": "number"
+        },
+        "code": {
+          "description": "Item Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "name": {
+          "description": "Name of an item.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "itemPool": {
+          "description": "Indicates if it is an item pool. Not applicable for Item within the Item Pool.",
+          "type": "boolean"
+        },
+        "sellSeparate": {
+          "description": "If true indicates that item is allowed to sell separately.",
+          "type": "boolean"
+        },
+        "sellInReservation": {
+          "description": "If true indicates that item can be sold in reservation.",
+          "type": "boolean"
+        },
+        "sellInEvent": {
+          "description": "If true indicates that item can be sold in event.",
+          "type": "boolean"
+        },
+        "requiredForBooking": {
+          "description": "If true indicates that item is required for the reservation.",
+          "type": "boolean"
+        },
+        "fixedCharge": {
+          "description": "If true indicates that item has fixed charge when it is attached to a reservation.",
+          "type": "boolean"
+        },
+        "outsideStay": {
+          "description": "If true indicates that item could be held outside of the reservation stay days.",
+          "type": "boolean"
+        },
+        "defaultDuration": {
+          "description": "Define the default duration in days when booking the item.",
+          "type": "integer"
+        },
+        "inventories": {
+          "description": "Collection of Inventory counts for the given dates.",
+          "$ref": "#/definitions/dailyItemInventoryCountsListType"
+        }
+      }
+    },
+    "holdItemInventory": {
+      "type": "object",
+      "description": "Object containing the item hold details.",
+      "properties": {
+        "holdItemInfo": {
+          "description": "Item information.",
+          "$ref": "#/definitions/holdItemInventoryType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "holdItemInventoryType": {
+      "type": "object",
+      "description": "Request parameter for holding an Item Inventory.",
+      "properties": {
+        "heldById": {
+          "description": "Unique ID of the one requesting for the item hold.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "heldBy": {
+          "description": "Type of the entity that is requesting for the item hold.",
+          "$ref": "#/definitions/heldByType"
+        },
+        "itemHoldId": {
+          "description": "Unique ID of the one requesting for the item hold.",
+          "type": "number"
+        },
+        "holdItemInfoList": {
+          "description": "List of Item Info to hold.",
+          "$ref": "#/definitions/holdItemInfoListType"
+        },
+        "hotelId": {
+          "description": "Hotel Code whose Item Inventory is being requested.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "overrideInventory": {
+          "description": "Flag to indicate if inventory check will be overriden.",
+          "type": "boolean"
+        }
+      }
+    },
+    "heldByType": {
+      "type": "string",
+      "description": "Type of the entity that is requesting for the item hold.",
+      "enum": [
+        "Event",
+        "Reservation",
+        "Allotment"
+      ]
+    },
+    "holdItemInfoListType": {
+      "type": "array",
+      "description": "Info of an item inventory that is requested for Hold.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/holdItemInfoType"
+      }
+    },
+    "holdItemInfoType": {
+      "type": "object",
+      "description": "Information about an item inventory that is requested for hold.",
+      "properties": {
+        "itemId": {
+          "description": "Item ID to hold.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "itemCode": {
+          "description": "Item Code to hold.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "timeSpan": {
+          "description": "Date Range to hold the requested item.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "count": {
+          "description": "Number of items to hold.",
+          "type": "integer"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
         }
       }
     }

@@ -1,0 +1,3863 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Export Configuration API",
+    "description": "APIs catering to the managing export master data configuration. <br /><The exports feature in OPERA Cloud provides the ability to create and export data files, such as back office data, to third-party interfaces and receiving systems.<br /><br /> Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "21.5.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/exp/config/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/availableExports": {
+      "get": {
+        "summary": "Operation to fetch exports available.",
+        "description": " <p><strong>OperationId:</strong>getExportsAvailable</p>",
+        "operationId": "getExportsAvailable",
+        "parameters": [
+          {
+            "name": "fetchColumns",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "fetchDataSetup",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "fetchDestinationSetup",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "fetchGenerateConfiguration",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "exportFileId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "idExtension",
+            "in": "query",
+            "required": false,
+            "description": "Additional identifying value assigned by the creating system.",
+            "type": "integer"
+          },
+          {
+            "name": "idContext",
+            "in": "query",
+            "required": false,
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Hotel code.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "fileGroup",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Enumeration of export file groups.",
+            "uniqueItems": true,
+            "enum": [
+              "Miscellaneous",
+              "Memberships",
+              "Country",
+              "Delphi",
+              "BackOffice",
+              "BackOfficeRevenue",
+              "BackOfficeCityLedger",
+              "BackOfficeMarketStatistics",
+              "BackOfficeDailyStatistics",
+              "CommissionEft"
+            ]
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether inactive records should be returned.",
+            "type": "boolean"
+          },
+          {
+            "name": "match",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "includeComponents",
+            "in": "query",
+            "required": false,
+            "description": "Indicate whether component exports should be included in the request.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object including a list of available exports.",
+            "schema": {
+              "$ref": "#/definitions/exportsAvailable"
+            }
+          },
+          "204": {
+            "description": "ExportsAvailable not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/columnsAndFunctions": {
+      "get": {
+        "summary": "Operation to fetch export columns and functions.",
+        "description": " <p><strong>OperationId:</strong>getExportColumnsAndFunctions</p>",
+        "operationId": "getExportColumnsAndFunctions",
+        "parameters": [
+          {
+            "name": "fetchDbColumns",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "fetchOperaApis",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "fetchPrePostProcedures",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "dataSource",
+            "in": "query",
+            "required": false,
+            "description": "Data source for which we are supposed to get columns and pre post procedures",
+            "type": "string"
+          },
+          {
+            "name": "exportFileId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Enumeration of API Categories.",
+            "uniqueItems": true,
+            "enum": [
+              "Exports",
+              "CustomNumbers"
+            ]
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response that contains columns, pre post functions and export functions.",
+            "schema": {
+              "$ref": "#/definitions/exportColumnsAndFunctionsDetails"
+            }
+          },
+          "204": {
+            "description": "ExportColumnsAndFunctions not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/exportSchedules": {
+      "post": {
+        "summary": "Operation to create export schedules.",
+        "description": " <p><strong>OperationId:</strong>postExportSchedules</p>",
+        "operationId": "postExportSchedules",
+        "parameters": [
+          {
+            "name": "exportSchedulesCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request to create export schedules",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportSchedulesCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      },
+      "delete": {
+        "summary": "Operation to remove export schedules.",
+        "description": " <p><strong>OperationId:</strong>removeExportSchedules</p>",
+        "operationId": "removeExportSchedules",
+        "parameters": [
+          {
+            "name": "jobNames",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Unique name that identifies export schedule",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/exportSchedules/{exportFileId}": {
+      "put": {
+        "summary": "Operation to change export schedules.",
+        "description": " <p><strong>OperationId:</strong>changeExportSchedules</p>",
+        "operationId": "changeExportSchedules",
+        "parameters": [
+          {
+            "name": "exportFileId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of export file."
+          },
+          {
+            "name": "exportSchedulesToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing export schedules",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportSchedulesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportSchedulesStatus"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/exportActivityLog": {
+      "get": {
+        "summary": "Operation to fetch activity logs for Export Data.",
+        "description": "Operation to fetch activity logs for Export Data. <p><strong>OperationId:</strong>getExportActivityLog</p>",
+        "operationId": "getExportActivityLog",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "activityType",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "required": true,
+            "description": "Search from date for the user activity log.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "required": true,
+            "description": "Search to date for the user activity log.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "module",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Activity module.",
+            "uniqueItems": true,
+            "enum": [
+              "Reservation",
+              "Contract",
+              "Allotment",
+              "Outlookview",
+              "Profile",
+              "Accountreceivables",
+              "GdsConvRateCodes",
+              "RateCode",
+              "Billing",
+              "Activity"
+            ]
+          },
+          {
+            "name": "parameterName",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Name of the parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "parameterValue",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Value of the parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "activityGroup",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "required": false,
+            "description": "Search text for the user activity log.",
+            "type": "string"
+          },
+          {
+            "name": "userByIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "integer",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "userForIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "integer",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for the request for the export user activity log.",
+            "schema": {
+              "$ref": "#/definitions/exportActivityLog"
+            }
+          },
+          "204": {
+            "description": "ExportActivityLog not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/exportMappingId/{exportMappingId}/exportMappings": {
+      "delete": {
+        "summary": "Operation to remove export mappings.",
+        "description": " <p><strong>OperationId:</strong>deleteExistingExportMappings</p>",
+        "operationId": "deleteExistingExportMappings",
+        "parameters": [
+          {
+            "name": "exportMappingId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Export Mapping Id."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/exportSchedules": {
+      "get": {
+        "summary": "Operation to fetch export schedules.",
+        "description": " <p><strong>OperationId:</strong>getExportSchedules</p>",
+        "operationId": "getExportSchedules",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "timeZone",
+            "in": "query",
+            "required": false,
+            "description": "Time zone hour and minute specified in the format TZH:TZM example:-05:00",
+            "type": "string"
+          },
+          {
+            "name": "exportFileId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "idExtension",
+            "in": "query",
+            "required": false,
+            "description": "Additional identifying value assigned by the creating system.",
+            "type": "integer"
+          },
+          {
+            "name": "idContext",
+            "in": "query",
+            "required": false,
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "exportGroup",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Enumeration of export file groups.",
+            "uniqueItems": true,
+            "enum": [
+              "Miscellaneous",
+              "Memberships",
+              "Country",
+              "BackOffice"
+            ]
+          },
+          {
+            "name": "exportName",
+            "in": "query",
+            "required": false,
+            "description": "Export name to restrict export schedules",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "Start Date to restrict export schedules",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "End Date to restrict export schedules",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "frequency",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Frequency for which export schedules needs to be returned",
+            "uniqueItems": true,
+            "enum": [
+              "Once",
+              "Hourly",
+              "Daily",
+              "Weekly",
+              "Monthly",
+              "EndOfDay"
+            ]
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether inactive schedules needs to be returned or not",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Export Schedules collection matching the crieteria specified in the request",
+            "schema": {
+              "$ref": "#/definitions/exportSchedulesDetails"
+            }
+          },
+          "204": {
+            "description": "ExportSchedules not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/exportSchedules/{exportFileId}": {
+      "put": {
+        "summary": "Operation to change export schedules.",
+        "description": " <p><strong>OperationId:</strong>changeExportSchedules</p>",
+        "operationId": "changeExportSchedules",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "exportFileId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of export file."
+          },
+          {
+            "name": "exportSchedulesToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing export schedules",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportSchedulesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportSchedulesStatus"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/services/export/cache": {
+      "delete": {
+        "summary": "Operation to clear cache.",
+        "description": " <p><strong>OperationId:</strong>deleteExportServicesCache</p>",
+        "operationId": "deleteExportServicesCache",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    },
+    "/services/export/status": {
+      "get": {
+        "summary": "Operation to ping.",
+        "description": " <p><strong>OperationId:</strong>pingExportServices</p>",
+        "operationId": "pingExportServices",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/operaVersion"
+            }
+          },
+          "204": {
+            "description": "pingExportServices not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "exportsAvailable": {
+      "type": "object",
+      "description": "Response object including a list of available exports.",
+      "properties": {
+        "exports": {
+          "description": "Contains the list of available exports.",
+          "$ref": "#/definitions/exportListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportListType": {
+      "type": "object",
+      "description": "Contains a collection of available export records.",
+      "properties": {
+        "export": {
+          "description": "The list of export records.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportConfigurationType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "exportConfigurationType": {
+      "type": "object",
+      "description": "Type that hold configuration information related to export",
+      "properties": {
+        "summaryInfo": {
+          "description": "The summary information of the given export.",
+          "$ref": "#/definitions/exportHeaderSummaryType"
+        },
+        "dataSetup": {
+          "description": "Details of processing data for export being setup.",
+          "$ref": "#/definitions/exportDataSetupType"
+        },
+        "generateConfigSetup": {
+          "description": "Details of how and when the export is to be executed.",
+          "$ref": "#/definitions/exportGenerateConfigurationType"
+        },
+        "destinationSetup": {
+          "description": "Details of the export's destination and format.",
+          "$ref": "#/definitions/exportDestinationType"
+        },
+        "components": {
+          "description": "A listing of components associated with the given export.",
+          "$ref": "#/definitions/exportComponentsType"
+        },
+        "columns": {
+          "description": "Columns associated with the given export",
+          "$ref": "#/definitions/exportColumnsType"
+        },
+        "xmlColumns": {
+          "description": "Columns associated with the xml export",
+          "$ref": "#/definitions/exportXMLColumnsType"
+        }
+      }
+    },
+    "exportHeaderSummaryType": {
+      "type": "object",
+      "description": "Details of one export.",
+      "properties": {
+        "exportFileId": {
+          "description": "The unique ID that identifies the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "fileType": {
+          "description": "The file type of the export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sourceDescription": {
+          "description": "The description of the source file of the export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "description": {
+          "description": "The description of the export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "hotelId": {
+          "description": "The hotel code for the export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "exportType": {
+          "description": "The group that the export belongs to.",
+          "$ref": "#/definitions/exportType"
+        },
+        "inactive": {
+          "description": "An indicator which show the active status of the export.",
+          "type": "boolean"
+        },
+        "masterExportId": {
+          "description": "The parent export Id if this export has one.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "parameterForm": {
+          "description": "The name of the parameter form used to collect runtime information.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "exportXml": {
+          "description": "Indicates if the export is an XML file",
+          "type": "boolean"
+        },
+        "logLevel": {
+          "description": "Internal number to indicate the log level used when generating the export.",
+          "type": "integer"
+        },
+        "exportSequence": {
+          "description": "Component export sequence",
+          "type": "integer"
+        },
+        "containsSensitiveData": {
+          "description": "Indicates if the export has sensitive data",
+          "type": "boolean"
+        }
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "exportType": {
+      "type": "string",
+      "description": "Enumeration of export file groups.",
+      "enum": [
+        "Miscellaneous",
+        "Memberships",
+        "Country",
+        "Delphi",
+        "BackOffice",
+        "BackOfficeRevenue",
+        "BackOfficeCityLedger",
+        "BackOfficeMarketStatistics",
+        "BackOfficeDailyStatistics",
+        "CommissionEft"
+      ]
+    },
+    "exportDataSetupType": {
+      "type": "object",
+      "description": "Details of processing data for export being setup.",
+      "properties": {
+        "dataSourceName": {
+          "description": "The source view code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "preExportProcedure": {
+          "description": "The code to execute prior to running the export in order to prepare the data.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "postExportProcedure": {
+          "description": "The code to execute after running the export, usually to clean up data.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "addNewLine": {
+          "description": "A flag to add new line character after every row of data generated.",
+          "type": "boolean"
+        },
+        "createHeaderFooter": {
+          "description": "A flag to indicate if Export header and footer should always be created even if no data is generated.",
+          "type": "boolean"
+        },
+        "appendToFile": {
+          "description": "A flag to indicate if the data should be appended to an existing file.",
+          "type": "boolean"
+        },
+        "columnSeparator": {
+          "description": "Column separator of the export file.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "componentExport": {
+          "description": "A flag to indicate if this export contains export components.",
+          "type": "boolean"
+        },
+        "compressData": {
+          "description": "A flag to indicate if the export is compressed.",
+          "type": "boolean"
+        },
+        "filterCondition": {
+          "description": "Where clause for the file to select data form the Source View.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "xMLRootTag": {
+          "description": "Main tag for the xml document",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "xMLEncoding": {
+          "description": "For XML exports this allows to add the encoding attribute to the xml file header.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "xMLProcessingInstructions": {
+          "description": "For XML exports this allows to add the additional processing instructions to the XML file header if needed.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "xMLDocumentTypeName": {
+          "description": "For XML exports this defines the optional document type name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "xMLDocumentTypeSystemId": {
+          "description": "For XML exports this defines the optional system id in doc type tag",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "xMLDocumentTypePublicId": {
+          "description": "For XML exports this defines the optional public id in doc type tag",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        }
+      }
+    },
+    "exportGenerateConfigurationType": {
+      "type": "object",
+      "description": "Details of how and when the export is to be executed.",
+      "properties": {
+        "autoExport": {
+          "description": "A flag to set export to generate automatically.",
+          "type": "boolean"
+        },
+        "nightAudit": {
+          "description": "A flag to set export to be run in Night Audit.",
+          "type": "object",
+          "properties": {
+            "runInNightAudit": {
+              "description": "A flag to set export to be run in Night Audit.",
+              "type": "boolean"
+            },
+            "nightAuditFrequency": {
+              "description": "The frequency at which export should be generated. Eg. Nightly, End of Month or End of Year.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            },
+            "nightAuditExportDetail": {
+              "description": "Day of the week, when the export routine is run in the night audit and the NA_FREQUENCY is set to 'Day of Week'.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            }
+          }
+        }
+      }
+    },
+    "exportDestinationType": {
+      "type": "object",
+      "description": "Details of the export's destination and format.",
+      "properties": {
+        "transportMethod": {
+          "description": "Method of transport that will be used to deliver a generated export.",
+          "$ref": "#/definitions/transportMethodType"
+        },
+        "fileDeliveryConfig": {
+          "description": "Contains the file delivery configuration for an export.",
+          "$ref": "#/definitions/fileDeliveryConfigType"
+        },
+        "useOXIInterface": {
+          "description": "Specify if the OXI interface will be used for export file delivery.",
+          "type": "boolean"
+        },
+        "oXIInterfaceId": {
+          "description": "Interface ID from OXI, required if UploadType is not available.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "uploadType": {
+          "description": "Protocol used to upload the export file to FTP server.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "protocol": {
+          "description": "Protocol used to upload the export file to HTTP server.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "httpAddress": {
+          "description": "URL address of HTTP server which received export file.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "sOAPActionInformation": {
+          "description": "Soap Action information if SOAP protocol is used to upload the export file.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "encryptionType": {
+          "description": "Name of an encryption algorithm that will be used to encrypt an export file upon generation. This is used for the Default transport method.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "encryptionKey": {
+          "description": "Key that will be used during export file encryption; this is only needed if an Encryption Type has been specified.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "xMLDocumentName": {
+          "description": "Main tag for the XML document.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "fileName": {
+          "description": "Formula used to generate the name of the export file.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "fileExtension": {
+          "description": "Formula used to generate the extension of the export file.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "zipFileName": {
+          "description": "The zip file name based on the formula used in the setup.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "zipFileLocation": {
+          "description": "The zip file location where the zip file is saved after being generated.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "transportMethodType": {
+      "type": "string",
+      "description": "Enumeration of transport methods used to deliver exports.",
+      "enum": [
+        "Ftp",
+        "Sftp",
+        "SftpCn",
+        "Http",
+        "FileSystem",
+        "Default"
+      ]
+    },
+    "fileDeliveryConfigType": {
+      "type": "object",
+      "properties": {
+        "communicationType": {
+          "description": "Communication type: FTP, HTTP or FILE_SYSTEM.",
+          "$ref": "#/definitions/fileDeliveryCommunicationType"
+        },
+        "hostURL": {
+          "description": "Host address for FTP or URL for HTTP.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "userId": {
+          "description": "User id to authenticate while connecting through FTP or HTTP.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 30
+        },
+        "password": {
+          "description": "Password to authenticate while connecting through FTP or HTTP.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "directory": {
+          "description": "Directory to which the file is delivered while using FTP or FILE_SYSTEM.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "enableSafeCreate": {
+          "description": "Whether to create a temporary file and move it to actual file once entire data is written to the file (to prevent consumers from reading incomplete files).",
+          "type": "boolean"
+        },
+        "tempDirectory": {
+          "description": "In safe create mode, original directory where the file should be created.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "useAsciiTransfer": {
+          "description": "Whether to transfer the file in ASCII or binary mode.",
+          "type": "boolean"
+        },
+        "compressFile": {
+          "description": "Whether to compress the file before delivery.",
+          "type": "boolean"
+        },
+        "useSOAPProtocol": {
+          "description": "Whether to deliver the file using SOAP protocol.",
+          "type": "boolean"
+        },
+        "sOAPVersion": {
+          "description": "Version of SOAP protocol to use.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sOAPAction": {
+          "description": "For SOAP version 1.1, value of SOAPAction to be passed.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "retryCount": {
+          "description": "Number of delivery attempts to be made each day, in case of failures.",
+          "type": "number"
+        },
+        "retryInterval": {
+          "description": "Number of seconds to wait between delivery attempts in case of failures.",
+          "type": "number"
+        },
+        "deliveryTime": {
+          "description": "Time of day at which the file will be attempted to deliver, if desired.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "deliveryStatus": {
+          "description": "Status of the last delivery.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1000
+        },
+        "validAuthentication": {
+          "description": "Indicates if the authentication information in this configuration is valid.",
+          "type": "boolean"
+        },
+        "validUpdateDate": {
+          "description": "Date and time when the last validation of connection information was performed.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "fileDeliveryCommunicationType": {
+      "type": "string",
+      "description": "Enumeration of export file groups.",
+      "enum": [
+        "Ftp",
+        "SftpPublicKey",
+        "SftpPassword",
+        "SftpCn",
+        "Http",
+        "FileSystem"
+      ]
+    },
+    "exportComponentsType": {
+      "type": "array",
+      "description": "A collection of export components.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportComponentType"
+      }
+    },
+    "exportComponentType": {
+      "type": "object",
+      "description": "Details of a specific export component.",
+      "properties": {
+        "exportFileId": {
+          "description": "The unique ID that identifies the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "fileType": {
+          "description": "The file type of the export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "The description of the export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "parameterForm": {
+          "description": "The name of the parameter form used to collect runtime information.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "exportSequence": {
+          "description": "Component export sequence",
+          "type": "integer"
+        },
+        "containsSensitiveData": {
+          "description": "Indicates if the export has sensitive data",
+          "type": "boolean"
+        }
+      }
+    },
+    "exportColumnsType": {
+      "type": "array",
+      "description": "A collection of export columns.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportColumnDetailType"
+      }
+    },
+    "exportColumnDetailType": {
+      "type": "object",
+      "properties": {
+        "exportDataId": {
+          "description": "The internal identifier of the export column. Used in conjunction with the export file ID to create a unique identifier.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "parentColumnId": {
+          "description": "The internal identifier of the parent export column. This is used if the current column is a child of another column.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "columnName": {
+          "description": "Name of the column to Export.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "columnLength": {
+          "description": "Length of the column.",
+          "type": "integer"
+        },
+        "columnOrderBy": {
+          "description": "Order by column.",
+          "type": "integer"
+        },
+        "columnFormat": {
+          "description": "Column format.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "columnAlignment": {
+          "description": "Column Alignment.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "columnType": {
+          "description": "Type of the column.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "xMLColumnType": {
+          "description": "Indicates the type of XML Column.",
+          "$ref": "#/definitions/exportColumnXMLType"
+        },
+        "formula": {
+          "description": "Formula for the Formula Column.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "sourceViewName": {
+          "description": "Name of an additional database view that the column, and its descendants, may be derived from. This column, and its descendants, may also be derived from the export header's source view, as well as any ancestor's source view.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "filter": {
+          "description": "Filter on the Additional Source View for XML Complex Elements.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "defaultValue": {
+          "description": "Default value of the column.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "databaseColumn": {
+          "type": "boolean"
+        },
+        "columnDataType": {
+          "$ref": "#/definitions/exportColumnInfoType"
+        },
+        "ignoreLength": {
+          "type": "boolean"
+        },
+        "tagRequired": {
+          "type": "boolean"
+        },
+        "xMLAttribute": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exportColumnXMLType": {
+      "type": "string",
+      "description": "Enumeration of export column XML types.",
+      "enum": [
+        "Simple",
+        "Complex",
+        "ComplexAddSource"
+      ]
+    },
+    "exportColumnInfoType": {
+      "type": "string",
+      "description": "Enumeration of export file groups.",
+      "enum": [
+        "Data",
+        "Header",
+        "Footer"
+      ]
+    },
+    "exportXMLColumnsType": {
+      "type": "object",
+      "description": "XML Columns type that hold information to all the element and attribute configuations",
+      "properties": {
+        "attributes": {
+          "description": "Attributes associated with the complex type",
+          "$ref": "#/definitions/exportXMLAttributesType"
+        },
+        "elements": {
+          "description": "Elements associated with the complex type",
+          "$ref": "#/definitions/exportXMLElementsType"
+        }
+      }
+    },
+    "exportXMLAttributesType": {
+      "type": "array",
+      "description": "XML attribute type that holds all the information related to attribute tag",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportXMLAttributeType"
+      }
+    },
+    "exportXMLAttributeType": {
+      "type": "object",
+      "description": "Base type that holds information related to xml tag types",
+      "properties": {
+        "name": {
+          "description": "XML Tag name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "value": {
+          "description": "Value for XML tag",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "length": {
+          "description": "Determines the length of the value for the XML tag",
+          "$ref": "#/definitions/exportColumnLengthType"
+        },
+        "required": {
+          "description": "Determines if the tag need to be present in the data even if there is no value available",
+          "type": "boolean"
+        },
+        "exportDataId": {
+          "description": "Id assosicated with this tag. For the ones that needs to be created this tag can be omitted for all others this tag is required",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "parentDataID": {
+          "description": "Id of the parrent that holds this tag. If this tag is clid of root tag then this can be omitted.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "exportColumnLengthType": {
+      "type": "object",
+      "description": "Type that determines the length of the export column",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "description": "Property Value"
+        },
+        "variable": {
+          "description": "If variable is true then value cannot be specified and value can be of variable length",
+          "type": "boolean"
+        }
+      }
+    },
+    "exportXMLElementsType": {
+      "type": "array",
+      "description": "XML element type that holds all the information related to element tag",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportXMLElementType"
+      }
+    },
+    "exportXMLElementType": {
+      "type": "object",
+      "description": "Type that holds all attributes associated with this tag together",
+      "properties": {
+        "simpleElement": {
+          "description": "XML simple element type that holds all the information related to simple element tag",
+          "$ref": "#/definitions/exportXMLSimpleType"
+        },
+        "complexElement": {
+          "description": "XML complex element type that holds all the information related to complex element tag",
+          "$ref": "#/definitions/exportXMLComplexType"
+        },
+        "complexElementWithSource": {
+          "description": "XML complex element type that holds all the information related to complex element with source tag",
+          "$ref": "#/definitions/exportXMLComplexWithSourceType"
+        }
+      }
+    },
+    "exportXMLSimpleType": {
+      "type": "object",
+      "description": "Base type that holds information related to xml tag types",
+      "properties": {
+        "name": {
+          "description": "XML Tag name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "value": {
+          "description": "Value for XML tag",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "length": {
+          "description": "Determines the length of the value for the XML tag",
+          "$ref": "#/definitions/exportColumnLengthType"
+        },
+        "required": {
+          "description": "Determines if the tag need to be present in the data even if there is no value available",
+          "type": "boolean"
+        },
+        "exportDataId": {
+          "description": "Id assosicated with this tag. For the ones that needs to be created this tag can be omitted for all others this tag is required",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "parentDataID": {
+          "description": "Id of the parrent that holds this tag. If this tag is clid of root tag then this can be omitted.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "exportXMLComplexType": {
+      "type": "object",
+      "description": "XML simple type that holds all the information related to complex element tag",
+      "properties": {
+        "name": {
+          "description": "XML simple tag name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "attributes": {
+          "description": "Attributes associated with the complex type",
+          "$ref": "#/definitions/exportXMLAttributesType"
+        },
+        "elements": {
+          "description": "Elements associated with the complex type",
+          "$ref": "#/definitions/exportXMLElementsType"
+        }
+      }
+    },
+    "exportXMLComplexWithSourceType": {
+      "type": "object",
+      "description": "XML simple type that holds all the information related to complex element tag",
+      "properties": {
+        "name": {
+          "description": "XML simple tag name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "attributes": {
+          "description": "Attributes associated with the complex type",
+          "$ref": "#/definitions/exportXMLAttributesType"
+        },
+        "elements": {
+          "description": "Elements associated with the complex type",
+          "$ref": "#/definitions/exportXMLElementsType"
+        },
+        "source": {
+          "description": "Source from where data needs to be extracted",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "filter": {
+          "description": "Filter data using this attribute",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "exportColumnsAndFunctionsDetails": {
+      "type": "object",
+      "description": "Response that contains columns, pre post functions and export functions.",
+      "properties": {
+        "columnsAndFunctions": {
+          "description": "Contains the list of available columns, pre post functions and export functions.",
+          "$ref": "#/definitions/exportColumnsAndFunctionsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportColumnsAndFunctionsType": {
+      "type": "object",
+      "description": "Contains columns, pre post functions and export functions",
+      "properties": {
+        "dbColumns": {
+          "description": "The list of export records.",
+          "$ref": "#/definitions/expDataSourceColumnsType"
+        },
+        "prePostFunctions": {
+          "description": "List of pre post functions available for this export or for the data source mentioned in the request",
+          "$ref": "#/definitions/expFunctionsType"
+        },
+        "functions": {
+          "description": "List of db functions available for configuring export",
+          "$ref": "#/definitions/expFunctionsType"
+        }
+      }
+    },
+    "expDataSourceColumnsType": {
+      "type": "array",
+      "description": "Function parameters",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/expDataSourceColumnType"
+      }
+    },
+    "expDataSourceColumnType": {
+      "type": "object",
+      "description": "Information related to database columns",
+      "properties": {
+        "name": {
+          "description": "Database columns Name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "description": {
+          "description": "Database columns description",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "dataType": {
+          "description": "Database columns description",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "expFunctionsType": {
+      "type": "array",
+      "description": "Function parameters",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/expFunctionType"
+      }
+    },
+    "expFunctionType": {
+      "type": "object",
+      "description": "Information related to export function",
+      "properties": {
+        "functionParameter": {
+          "description": "Function parameters",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/expFunctionParamType"
+          }
+        },
+        "functionName": {
+          "description": "Name of the function",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "expFunctionParamType": {
+      "type": "object",
+      "description": "Parameters related to export functions",
+      "properties": {
+        "name": {
+          "description": "Parameter Name",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "dataType": {
+          "description": "Parameter Type",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "position": {
+          "description": "Paramter Position",
+          "type": "integer"
+        },
+        "required": {
+          "description": "Flag that determines whether parameter is required or not",
+          "type": "boolean"
+        }
+      }
+    },
+    "exportSchedulesCriteria": {
+      "type": "object",
+      "description": "Request to create export schedules",
+      "properties": {
+        "exportScheduleConfig": {
+          "description": "Collection of export schedules",
+          "$ref": "#/definitions/exportSchedulesConfigType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesConfigType": {
+      "type": "object",
+      "description": "Export schedules information that are required to configure schedules",
+      "properties": {
+        "exportSchedules": {
+          "description": "Export Schedule",
+          "$ref": "#/definitions/exportSchedulesType"
+        },
+        "timeZone": {
+          "description": "Time zone hour and minute specified in the format TZH:TZM example:-05:00",
+          "type": "string"
+        }
+      }
+    },
+    "exportSchedulesType": {
+      "type": "array",
+      "description": "Export Schedule",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportScheduleType"
+      }
+    },
+    "exportScheduleType": {
+      "type": "object",
+      "description": "Type that holds all the information related to export schedule",
+      "properties": {
+        "jobName": {
+          "description": "Unique name that identifies export schedule",
+          "$ref": "#/definitions/exportScheduleJobNameType"
+        },
+        "exportFileId": {
+          "description": "Unique Id that identifies export",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportName": {
+          "description": "Name of the export",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "exportDescription": {
+          "description": "Export Description",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "exportGroup": {
+          "description": "Export category",
+          "$ref": "#/definitions/scheduleExportGroupType"
+        },
+        "createdBy": {
+          "description": "User who created the export schedule",
+          "type": "string"
+        },
+        "runcount": {
+          "description": "Number of time export generated",
+          "type": "integer"
+        },
+        "nextScheduledRun": {
+          "description": "Export is expected to run at time specified by this element. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "Export scheduled started at this time. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "Export schedule is expected to end around this time. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        },
+        "status": {
+          "description": "Export schedule status",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Indicates whether schedule export is active or not",
+          "type": "boolean"
+        },
+        "frequency": {
+          "description": "Frequency at which export needs to be scheduled",
+          "$ref": "#/definitions/exportScheduleFrequencyType"
+        }
+      }
+    },
+    "exportScheduleJobNameType": {
+      "type": "string",
+      "description": "Unique name that identifies export schedule",
+      "minLength": 0,
+      "maxLength": 100
+    },
+    "scheduleExportGroupType": {
+      "type": "string",
+      "description": "Enumeration of export file groups.",
+      "enum": [
+        "Miscellaneous",
+        "Memberships",
+        "Country",
+        "BackOffice"
+      ]
+    },
+    "exportScheduleFrequencyType": {
+      "type": "object",
+      "description": "Frequency at which exports is scheduled to run",
+      "properties": {
+        "once": {
+          "description": "Run only once",
+          "$ref": "#/definitions/exportScheduleFrequencyOnceType"
+        },
+        "hourly": {
+          "description": "Run Hourly",
+          "$ref": "#/definitions/exportScheduleFrequencyHourlyType"
+        },
+        "daily": {
+          "description": "Run Daily",
+          "$ref": "#/definitions/exportScheduleFrequencyDailyType"
+        },
+        "weekly": {
+          "description": "Run Weeekly",
+          "$ref": "#/definitions/exportScheduleFrequencyWeeklyType"
+        },
+        "monthly": {
+          "description": "Run Monthly",
+          "$ref": "#/definitions/exportScheduleFrequencyMonthlyType"
+        },
+        "endOfDay": {
+          "description": "Run during end of day",
+          "$ref": "#/definitions/exportScheduleFrequencyEODType"
+        }
+      }
+    },
+    "exportScheduleFrequencyOnceType": {
+      "type": "object",
+      "description": "If specified then export is scheduled to run only once",
+      "properties": {
+        "runAt": {
+          "description": "Export will be generated using the date and time specified. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        }
+      }
+    },
+    "exportScheduleFrequencyHourlyType": {
+      "type": "object",
+      "description": "If specified then export is scheduled to run at hourly intervals",
+      "properties": {
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        }
+      }
+    },
+    "exportScheduleFrequencyIntervalType": {
+      "type": "integer",
+      "description": "Interval at which export needs to be scheduled",
+      "minimum": 1,
+      "maximum": 99
+    },
+    "exportScheduleFrequencyDailyType": {
+      "type": "object",
+      "description": "If specified then export is scheduled to run daily",
+      "properties": {
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        },
+        "hour": {
+          "description": "Specifies the hour on which the job is to run. Valid values are 0 to 23.",
+          "$ref": "#/definitions/exportScheduleFrequencyByHourType"
+        }
+      }
+    },
+    "exportScheduleFrequencyByHourType": {
+      "type": "integer",
+      "description": "Specifies the hour on which the job is to run. Valid values are 0 to 23.",
+      "minimum": 0,
+      "maximum": 23
+    },
+    "exportScheduleFrequencyWeeklyType": {
+      "type": "object",
+      "description": "If specified then export is scheduled to run Weekly",
+      "properties": {
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exportScheduleFrequencyMonthlyType": {
+      "type": "object",
+      "description": "If specified then export is scheduled to run Monthly",
+      "properties": {
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        },
+        "weekToRepeat": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 5 or -1",
+          "$ref": "#/definitions/exportScheduleWeekToRepeatType"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exportScheduleWeekToRepeatType": {
+      "type": "string",
+      "description": "Frequency for which export schedules needs to be returned",
+      "enum": [
+        "First",
+        "Second",
+        "Third",
+        "Fourth",
+        "Fifth",
+        "Last"
+      ]
+    },
+    "exportScheduleFrequencyEODType": {
+      "type": "object",
+      "description": "If specified then export is scheduled to run during end of day",
+      "properties": {
+        "repeatInterval": {
+          "description": "Frequency for which export schedules needs to be run during EOD",
+          "$ref": "#/definitions/exportScheduleEODRepeatIntervalType"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exportScheduleEODRepeatIntervalType": {
+      "type": "string",
+      "description": "Frequency for which export schedules needs to be run during EOD",
+      "enum": [
+        "Daily",
+        "Weekly",
+        "Monthly",
+        "Yearly"
+      ]
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "exportActivityLog": {
+      "type": "object",
+      "description": "Response object for the request for the export user activity log.",
+      "properties": {
+        "activityLog": {
+          "description": "Collection of the list of Activities(Log) requested.",
+          "$ref": "#/definitions/activityLogListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "activityLogListType": {
+      "type": "object",
+      "properties": {
+        "activityLog": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/activityLogType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "activityLogType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "module": {
+          "type": "string"
+        },
+        "logDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "refActionId": {
+          "type": "number"
+        },
+        "logUserId": {
+          "type": "integer"
+        },
+        "logUserName": {
+          "type": "string"
+        },
+        "machineStation": {
+          "type": "string"
+        },
+        "croCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "actionType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "actionDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "iPAddress": {
+          "description": "The IP Address of the machine that performed the activity",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "exportSchedulesDetails": {
+      "type": "object",
+      "description": "Export Schedules collection matching the crieteria specified in the request",
+      "properties": {
+        "exportSchedules": {
+          "description": "Collection of export schedules",
+          "$ref": "#/definitions/exportSchedulesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesToBeChanged": {
+      "type": "object",
+      "description": "Request object for changing export schedules",
+      "properties": {
+        "exportScheduleConfig": {
+          "description": "Collection of export schedules",
+          "$ref": "#/definitions/exportSchedulesConfigType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesStatus": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "operaVersion": {
+      "type": "object",
+      "description": "Response for Ping operation.",
+      "properties": {
+        "operaVersion": {
+          "description": "Opera version number.",
+          "$ref": "#/definitions/operaVersionNumberType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "operaVersionNumberType": {
+      "type": "string",
+      "description": "Current Opera Version Number",
+      "minLength": 0,
+      "maxLength": 40
+    },
+    "exportDataDetailsType": {
+      "type": "object",
+      "properties": {
+        "exportDataDetail": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportDataDetailType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "exportDataDetailType": {
+      "type": "object",
+      "properties": {
+        "exportDataId": {
+          "description": "The unique ID that identifies this instance of the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportDetailId": {
+          "description": "The unique ID that identifies one detail row of the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportData": {
+          "description": "The export detail data as base 64 binary",
+          "type": "string",
+          "format": "byte"
+        },
+        "exportDataUpdated": {
+          "description": "The edited version of the detail data as base 64 binary",
+          "type": "string",
+          "format": "byte"
+        },
+        "dataChanged": {
+          "description": "A flag indicating whether the data has been changed.",
+          "type": "boolean"
+        },
+        "fileExtension": {
+          "description": "The file extension.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "generateExportCriteriaType": {
+      "type": "object",
+      "properties": {
+        "exportFileId": {
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "hotelId": {
+          "description": "Hotel code to restrict search to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "exportType": {
+          "$ref": "#/definitions/exportType"
+        },
+        "paramForm": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "dateFrom": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "dateTo": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "date1": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "date2": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "country": {
+          "$ref": "#/definitions/codeListType"
+        },
+        "membership": {
+          "$ref": "#/definitions/codeListType"
+        },
+        "str1": {
+          "type": "string"
+        },
+        "str2": {
+          "type": "string"
+        },
+        "str3": {
+          "type": "string"
+        },
+        "str4": {
+          "type": "string"
+        },
+        "str5": {
+          "type": "string"
+        },
+        "num1": {
+          "type": "number"
+        },
+        "num2": {
+          "type": "number"
+        },
+        "flag1": {
+          "type": "boolean"
+        },
+        "flag2": {
+          "type": "boolean"
+        }
+      }
+    },
+    "codeListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
+    "updateExportConfigurationType": {
+      "type": "object",
+      "description": "Type that hold configuration information related to export",
+      "properties": {
+        "summaryInfo": {
+          "description": "The summary information of the given export.",
+          "$ref": "#/definitions/exportHeaderSummaryType"
+        },
+        "dataSetup": {
+          "description": "Details of processing data for export being setup.",
+          "$ref": "#/definitions/exportDataSetupType"
+        },
+        "generateConfigSetup": {
+          "description": "Details of how and when the export is to be executed.",
+          "$ref": "#/definitions/exportGenerateConfigurationType"
+        },
+        "destinationSetup": {
+          "description": "Details of the export's destination and format.",
+          "$ref": "#/definitions/exportDestinationType"
+        },
+        "components": {
+          "description": "A listing of components associated with the given export.",
+          "$ref": "#/definitions/exportComponentsType"
+        },
+        "updateExportColumns": {
+          "description": "Columns that needs to be updated using",
+          "$ref": "#/definitions/updateExportColumnsType"
+        },
+        "updateXMLExportColumns": {
+          "description": "Columns information related to xml exports",
+          "$ref": "#/definitions/exportXMLColumnsType"
+        }
+      }
+    },
+    "updateExportColumnsType": {
+      "type": "object",
+      "description": "A collection of export columns.",
+      "properties": {
+        "createColumns": {
+          "description": "New export columns that needs to be created",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportColumnDetailType"
+          }
+        },
+        "updateColumns": {
+          "description": "Export columns that needs to be updated",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportColumnDetailType"
+          }
+        },
+        "deleteColumns": {
+          "description": "Export columns that needs to be deleted",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportColumnDetailType"
+          }
+        },
+        "recreateColumns": {
+          "description": "If true then existing columns will be deleted and new columns will be created using create columns",
+          "type": "boolean"
+        }
+      }
+    },
+    "codeType": {
+      "type": "string",
+      "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+      "minLength": 0,
+      "maxLength": 20
+    },
+    "batchDataUpdateCriteria": {
+      "type": "object",
+      "description": "The export data can have a batch update where a string is searched for and a replacement string changes the content.",
+      "properties": {
+        "exportDataId": {
+          "description": "The unique ID that identifies this instance of the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "searchString": {
+          "description": "The string to search for in the batch data update.",
+          "type": "string"
+        },
+        "replaceString": {
+          "description": "The replacement string in the batch data update.",
+          "type": "string"
+        }
+      }
+    },
+    "stringLength200": {
+      "type": "string",
+      "description": "Used for Character Strings, length 0 to 200.",
+      "maxLength": 200,
+      "minLength": 0
+    },
+    "stringLength20": {
+      "type": "string",
+      "description": "Used for Character Strings, length 0 to 20.",
+      "maxLength": 20,
+      "minLength": 0
+    },
+    "stringLength2000": {
+      "type": "string",
+      "description": "Used for Character Strings, length 0 to 2000.",
+      "maxLength": 2000,
+      "minLength": 0
+    },
+    "exportDefinitionDetailType": {
+      "type": "object",
+      "properties": {
+        "exportFileId": {
+          "description": "The ID that identifies this instance of the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "paramCode": {
+          "description": "Code of parameter definition.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "paramDescription": {
+          "description": "Code of parameter definition.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "paramValue": {
+          "description": "Parameter value.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "exportMappingConfigType": {
+      "type": "string",
+      "description": "Enumeration  of Types allowed for Export Mapping",
+      "enum": [
+        "TransactionCodes",
+        "MarketCodes",
+        "PackageCodes",
+        "PaymentMethods",
+        "ProfileIdTypes",
+        "StatisticCodes",
+        "PropertyCodes",
+        "CountryCodes",
+        "NationalityCodes",
+        "StateCodes",
+        "DistrictCodes",
+        "CityCodes",
+        "CountryCities",
+        "PurposeOfStayCodes",
+        "TransportationCodes",
+        "CancelReasons",
+        "Gender",
+        "RoomTypes"
+      ]
+    },
+    "exportMappingCodeType": {
+      "type": "object",
+      "description": "Details of one export.",
+      "properties": {
+        "exportMappingId": {
+          "description": "Primary key for this mapping type, internal ID.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "mappingTypeCode": {
+          "description": "Code for the export mapping type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the export mapping code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "dataType": {
+          "description": "Data type of the export mapping code.",
+          "$ref": "#/definitions/exportCodeDataType"
+        },
+        "sequenceNumber": {
+          "description": "Display sequence.",
+          "type": "number"
+        },
+        "lovName": {
+          "description": "Name of the LOV group to be used.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "useLov": {
+          "description": "This flag show LOV button when linking this mapping code to the configuration item.",
+          "type": "boolean"
+        },
+        "required": {
+          "description": "This flag indicates the configuration item cannot be saved until a mapping for this mapping detail has been entered.",
+          "type": "boolean"
+        }
+      }
+    },
+    "exportCodeDataType": {
+      "type": "string",
+      "description": "Enumeration of export mapping types.",
+      "enum": [
+        "Character",
+        "Date",
+        "Number"
+      ]
+    },
+    "exportMappingCodesToLinkType": {
+      "type": "object",
+      "description": "Details of code which is being mapped.",
+      "properties": {
+        "codeToLink": {
+          "description": "The code with which the mapping is linked to in the external system.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "codeToLinkDescription": {
+          "description": "The description of code with which the mapping is linked to in the external system.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "configType": {
+          "description": "Configuration item this export mapping type applies to.",
+          "$ref": "#/definitions/exportMappingConfigType"
+        },
+        "sequenceNumber": {
+          "description": "Display sequence.",
+          "type": "number"
+        }
+      }
+    },
+    "deliveryContentType": {
+      "type": "object",
+      "description": "A collection of delivery content.",
+      "properties": {
+        "deliveryJobId": {
+          "description": "Delivery Job Id for the record.",
+          "type": "string"
+        },
+        "chainCode": {
+          "description": "Chain Code for the record.",
+          "type": "string"
+        },
+        "endPointId": {
+          "description": "Delivery End Point ID for the record.",
+          "type": "string"
+        },
+        "deliveryJobType": {
+          "description": "Delivery Job Type for the record.",
+          "type": "string"
+        },
+        "deliveryUrl": {
+          "description": "Delivery Url for the record if any exists.",
+          "type": "string"
+        },
+        "deliveryFileName": {
+          "description": "Delivery File Name for the record.",
+          "type": "string"
+        },
+        "deliveryContentBinary": {
+          "description": "Delivery data for the record in binary format.",
+          "type": "string",
+          "format": "byte"
+        },
+        "deliveryTrasportMethod": {
+          "description": "Transport method for the record.",
+          "type": "string"
+        }
+      }
+    },
+    "exportDataDetails": {
+      "type": "object",
+      "description": "Response object including a list of export details.",
+      "properties": {
+        "exportDataDetails": {
+          "description": "Contains the list of available exports.",
+          "$ref": "#/definitions/exportDataDetailsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "generateExport": {
+      "type": "object",
+      "description": "Request object used to generate an export.",
+      "properties": {
+        "exportParams": {
+          "description": "The export file ID to generate an export for.",
+          "$ref": "#/definitions/generateExportCriteriaType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "updateExport": {
+      "type": "object",
+      "description": "Request to update the export details.",
+      "properties": {
+        "exportHeader": {
+          "description": "Export header information includes summary, destination, generation and data setup.",
+          "$ref": "#/definitions/updateExportConfigurationType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "batchDataUpdate": {
+      "type": "object",
+      "description": "Request object for doing a batch update of the data on a given export.",
+      "properties": {
+        "criteria": {
+          "description": "Contains the list of export details to be modified.",
+          "$ref": "#/definitions/batchDataUpdateCriteria"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportColumns": {
+      "type": "object",
+      "description": "Request to create columns for an export.",
+      "properties": {
+        "exportFileId": {
+          "description": "The export file ID to copy exports.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "columnsToAdd": {
+          "description": "The columns to be added from the view associated with the export separated by commas.",
+          "$ref": "#/definitions/stringLength2000"
+        },
+        "columnDataType": {
+          "description": "The possible values are Data,Header and Footer.",
+          "$ref": "#/definitions/exportColumnInfoType"
+        },
+        "exportColumns": {
+          "description": "The details of all columns that are added to the export.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportColumnDetailType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "updateExportColumns": {
+      "type": "object",
+      "description": "Request to update columns for an export.",
+      "properties": {
+        "exportFileId": {
+          "description": "The export file ID to copy exports.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportColumns": {
+          "description": "The details of all columns that are added to the export.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportColumnDetailType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportDefinition": {
+      "type": "object",
+      "description": "Request to create export definitions for a given export.",
+      "properties": {
+        "exportDefinition": {
+          "description": "The details of the export definition being created.",
+          "$ref": "#/definitions/exportDefinitionDetailType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingCodes": {
+      "type": "object",
+      "description": "Request to create export mapping code for a given export.",
+      "properties": {
+        "hotelId": {
+          "description": "The hotel code for the export.",
+          "$ref": "#/definitions/codeType"
+        },
+        "exportMappingCodes": {
+          "description": "The details of the export mapping code being created.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingCodeType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingCodesToLink": {
+      "type": "object",
+      "properties": {
+        "codesToLink": {
+          "type": "array",
+          "description": "The codes for a given property which are to be linked to the mapping code.",
+          "items": {
+            "$ref": "#/definitions/exportMappingCodesToLinkType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "deliveryContent": {
+      "type": "object",
+      "properties": {
+        "deliveryContentCollection": {
+          "type": "array",
+          "description": "Delivery record collection content fetch.",
+          "items": {
+            "$ref": "#/definitions/deliveryContentType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Export",
+      "description": "The Export Service provides operations used by Opera to configure and generate file exports of Opera data."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}

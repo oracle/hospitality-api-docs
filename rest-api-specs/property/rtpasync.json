@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "Opera Cloud Rate Plan Async Service API",
-    "description": "APIs catering to the Rate Plan Async related functionality in a hotel.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs catering to the Rate Plan Async related functionality in a hotel.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -21,335 +21,6 @@
     "application/json"
   ],
   "paths": {
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules": {
-      "post": {
-        "summary": "Operation to start rate plans daily schedules job.",
-        "description": " <p><strong>OperationId:</strong>startSetDailyRatePlanSchedulesProcess</p>",
-        "operationId": "startSetDailyRatePlanSchedulesProcess",
-        "x-interaction": [
-          "async-polling"
-        ],
-        "responses": {
-          "202": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of process status resource"
-              }
-            },
-            "description": "Location of process status resource"
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "parameters": [
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "dailyRatePlanSchedules",
-            "in": "body",
-            "required": true,
-            "description": "Request for configuring daily rate plan schedules.",
-            "schema": {
-              "$ref": "#/definitions/dailyRatePlanSchedules"
-            }
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ]
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules/{requestId}": {
-      "head": {
-        "summary": "This API returns the status of asynchronous process scheduled for given id.",
-        "description": " <p><strong>OperationId:</strong>getDailyRatePlanSchedulesProcessStatus</p>",
-        "operationId": "getDailyRatePlanSchedulesProcessStatus",
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Status": {
-                "type": "string",
-                "description": "Status of the requested process.",
-                "enum": [
-                  "Processing",
-                  "Invalid"
-                ]
-              },
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again.",
-                "x-example": "max-age=10"
-              }
-            },
-            "description": "Response for status of scheduled asynchronous process."
-          },
-          "201": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Status": {
-                "type": "string",
-                "description": "Status of the requested process.",
-                "enum": [
-                  "Completed"
-                ]
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource once the status of process run is Complete."
-              }
-            },
-            "description": "Response for status of scheduled asynchronous process."
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ]
-      },
-      "get": {
-        "summary": "This API facilitates fetching of status for configured rate plans daily schedules.",
-        "description": " <p><strong>OperationId:</strong>getDailyRatePlanSchedules</p>",
-        "operationId": "getDailyRatePlanSchedules",
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
-            "description": "Response for configured daily rate plan schedules",
-            "schema": {
-              "$ref": "#/definitions/dailyRatePlanSchedulesStatus"
-            }
-          },
-          "204": {
-            "description": "DailyRatePlanSchedules not found."
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ]
-      }
-    },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/bestAvailableLOS": {
       "post": {
         "summary": "Operation to start price availability rate best available rate plans job.",
@@ -599,6 +270,335 @@
           },
           "204": {
             "description": "BestAvailableRatePlans not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules": {
+      "post": {
+        "summary": "Operation to start rate plans daily schedules job.",
+        "description": " <p><strong>OperationId:</strong>startSetDailyRatePlanSchedulesProcess</p>",
+        "operationId": "startSetDailyRatePlanSchedulesProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "dailyRatePlanSchedules",
+            "in": "body",
+            "required": true,
+            "description": "Request for configuring daily rate plan schedules.",
+            "schema": {
+              "$ref": "#/definitions/dailyRatePlanSchedules"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules/{requestId}": {
+      "head": {
+        "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getDailyRatePlanSchedulesProcessStatus</p>",
+        "operationId": "getDailyRatePlanSchedulesProcessStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "500": {
+            "description": "System Error"
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API facilitates fetching of status for configured rate plans daily schedules.",
+        "description": " <p><strong>OperationId:</strong>getDailyRatePlanSchedules</p>",
+        "operationId": "getDailyRatePlanSchedules",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for configured daily rate plan schedules",
+            "schema": {
+              "$ref": "#/definitions/dailyRatePlanSchedulesStatus"
+            }
+          },
+          "204": {
+            "description": "DailyRatePlanSchedules not found."
           },
           "400": {
             "$ref": "#/responses/400"

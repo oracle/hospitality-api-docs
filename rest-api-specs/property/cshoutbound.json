@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "OPERA Cloud Cashiering API",
-    "description": "APIs to cater for Cashiering related external (outbound) functionality with OPERA. These APIs facilitate various operations related to getting data from an external system, and inserting it into OPERA.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "title": "OPERA Cloud Cashiering Outbound API",
+    "description": "APIs to cater for Cashiering related external (outbound) functionality with OPERA. These APIs facilitate various operations related to getting data from an external system, and inserting it into OPERA.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -16,27 +16,17 @@
   "schemes": [
     "https"
   ],
-  "basePath": "/csh/outbound/v1",
+  "basePath": "/csh/v1",
   "produces": [
     "application/json"
   ],
   "paths": {
-    "/hotels/{hotelId}/memberships/{membershipId}/compRedemptions": {
-      "get": {
-        "summary": "Operation to get complimentary redemptions for a guest having PTS Membership Type",
-        "description": "You can use this API to get complimentary redemptions for a guest having PTS Membership Type <p><strong>OperationId:</strong>getCompRedemptions</p>",
-        "operationId": "getCompRedemptions",
+    "/hotels/{hotelId}/compPostingsApproval": {
+      "put": {
+        "summary": "Operation to request for comp postings approval.",
+        "description": "You can use this API to submit Comp Transactions. <p><strong>OperationId:</strong>approveCompPostings</p>",
+        "operationId": "approveCompPostings",
         "parameters": [
-          {
-            "name": "membershipId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Membership number of the guest in the reservation",
-            "x-example": ""
-          },
           {
             "name": "hotelId",
             "in": "path",
@@ -46,6 +36,19 @@
             "maxLength": 20,
             "description": "Unique ID of the hotel",
             "x-example": ""
+          },
+          {
+            "name": "postings",
+            "in": "body",
+            "required": true,
+            "description": "Request object to submit comp transactions request to gaming system",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/compTransactionsCriteriaType"
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/authKey"
@@ -65,15 +68,122 @@
                 "description": "Audience language",
                 "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
               }
             },
-            "description": "Response type for Complimentary Redemptions retrieval.",
+            "description": "Response object for submit comp transactions request.",
             "schema": {
-              "$ref": "#/definitions/fetchCompRedemptionsRS"
+              "$ref": "#/definitions/sendCompTransactionsStatus"
             }
           },
-          "204": {
-            "description": "CompRedemptions not found."
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Cashiering"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/compPostingsReversal": {
+      "put": {
+        "summary": "Operation to request for comp postings reversal.",
+        "description": "You can use this API to reverse Comp Transactions. <p><strong>OperationId:</strong>reverseCompPostings</p>",
+        "operationId": "reverseCompPostings",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel",
+            "x-example": ""
+          },
+          {
+            "name": "postings",
+            "in": "body",
+            "required": true,
+            "description": "Request object for comp postings reversal to be sent to the gaming system.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/compTransactionsCriteriaType"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -467,12 +577,22 @@
         ]
       }
     },
-    "/hotels/{hotelId}/compPostingsApproval": {
-      "put": {
-        "summary": "Operation to request for comp postings approval.",
-        "description": "You can use this API to submit Comp Transactions. <p><strong>OperationId:</strong>approveCompPostings</p>",
-        "operationId": "approveCompPostings",
+    "/hotels/{hotelId}/memberships/{membershipId}/compRedemptions": {
+      "get": {
+        "summary": "Operation to get complimentary redemptions for a guest having PTS Membership Type",
+        "description": "You can use this API to get complimentary redemptions for a guest having PTS Membership Type <p><strong>OperationId:</strong>getCompRedemptions</p>",
+        "operationId": "getCompRedemptions",
         "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Membership number of the guest in the reservation",
+            "x-example": ""
+          },
           {
             "name": "hotelId",
             "in": "path",
@@ -484,19 +604,6 @@
             "x-example": ""
           },
           {
-            "name": "postings",
-            "in": "body",
-            "required": true,
-            "description": "Request object to submit comp transactions request to gaming system",
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/compTransactionsCriteriaType"
-                }
-              ]
-            }
-          },
-          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -514,122 +621,15 @@
                 "description": "Audience language",
                 "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
               }
             },
-            "description": "Response object for submit comp transactions request.",
+            "description": "Response type for Complimentary Redemptions retrieval.",
             "schema": {
-              "$ref": "#/definitions/sendCompTransactionsStatus"
+              "$ref": "#/definitions/fetchCompRedemptionsRS"
             }
           },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "Cashiering"
-        ]
-      }
-    },
-    "/hotels/{hotelId}/compPostingsReversal": {
-      "put": {
-        "summary": "Operation to request for comp postings reversal.",
-        "description": "You can use this API to reverse Comp Transactions. <p><strong>OperationId:</strong>reverseCompPostings</p>",
-        "operationId": "reverseCompPostings",
-        "parameters": [
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique ID of the hotel",
-            "x-example": ""
-          },
-          {
-            "name": "postings",
-            "in": "body",
-            "required": true,
-            "description": "Request object for comp postings reversal to be sent to the gaming system.",
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/compTransactionsCriteriaType"
-                }
-              ]
-            }
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
-              }
-            },
-            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-            "schema": {
-              "$ref": "#/definitions/status"
-            }
+          "204": {
+            "description": "CompRedemptions not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -1366,15 +1366,6 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
-        }
-      }
-    },
-    "reverseCompRedemptionsRS": {
-      "type": "object",
-      "description": "Response type of Complimentary Redemptions for reversal",
-      "properties": {
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
         }
       }
     },

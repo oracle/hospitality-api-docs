@@ -1,0 +1,152 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Property oAuth API for OHIP",
+    "version": "21.5.0.0",
+    "description": "REST API to obtain an OAuth token from the Oracle Hospitality Integration Platform.  <p>For authenticating to Distribution APIs please use the Early Release OPERA Cloud Distribution Authentication API.</p><br /><br /> Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "x-summary": "The OHIP REST API enables you to develop apps that connect to Oracle Hospitality products through a single endpoint in the Oracle Hospitality cloud.",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/oauth/v1",
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Authentication service"
+    }
+  ],
+  "paths": {
+    "/tokens": {
+      "post": {
+        "description": "<p>This is required to access Oracle Hospitality OPERA Cloud REST APIs.  </p><h3>Obtaining a token</h3><p>To obtain a token include the following headers:</p> <ul><li>A Basic authentication header using the base64 hash of your Client ID and Client Secret in the format <code>ClientID:ClientSecret</code> - base64 encoded to the Basic Access Authorization standard</li> <li>Your application key in the <code>x-app-key</code> header</li></ul> <p>And the following body parameters:</p> <h4>Body parameters for obtaining your initial access token</h4> <ul><li><strong>grant_type</strong>.  Required to be \"password\"</strong></li><li><strong>username</strong>.  set this to your  OPERA Cloud integration username.</strong></li><li><strong>password</strong>.  Set this to your OPERA Cloud integration user's password.</li> <li><strong>scope</strong>. Optional.  Reserved for future use.</li> </strong></li></ul> <h3>JSON Web Token (JWT)</h3><p> An open standard (<a href=\"https://tools.ietf.org/html/rfc7519\" title=\"Definition of RFC7519, the standard for JWT tokens\">RFC 7519</a>) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.</p><p><strong>OperationId:</strong>getToken</p>",
+        "summary": "Authenticate with the identity server",
+        "operationId": "getToken",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OAuth2TokenResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request. This error is returned if the authentication information provided is not valid."
+          },
+          "401": {
+            "description": "Unauthorized. Invalid client ID, client secret, username, and/or password."
+          },
+          "403": {
+            "description": "Forbidden. This error is returned if the operation is not allowed for the request."
+          }
+        },
+        "parameters": [
+          {
+            "name": "grant_type",
+            "description": "The grant type.  This value will depend on the API you are passing the OAuth token to.",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "password"
+            ]
+          },
+          {
+            "name": "username",
+            "description": "Your OPERA Cloud integration user name. Required value when requesting a token using the password grant.",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "type": "string",
+            "required": false,
+            "description": "Your OPERA Cloud integration user password. Required value when requesting a token using the password grant."
+          },
+          {
+            "name": "scope",
+            "in": "formData",
+            "type": "string",
+            "required": false,
+            "description": "Your desired scope to be included in the token.  This is an optional parameter and is reserved for future use."
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          }
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "tags": [
+          "Authentication"
+        ],
+        "x-internal-id": "v1-oauth2Token-post"
+      }
+    }
+  },
+  "parameters": {
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true,
+      "x-example": "41ecd082-8997-4c69-af34-2f72b83645ff"
+    }
+  },
+  "definitions": {
+    "OAuth2TokenResponse": {
+      "type": "object",
+      "description": "OAuth2 token object sent as a response to the token request",
+      "required": [
+        "access_token"
+      ],
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "The access token.  Include this in the header for every subsequent request."
+        },
+        "expires_in": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Time in seconds for the access token to expire (typically, 3600 i.e. 60 minutes)"
+        },
+        "token_type": {
+          "type": "string",
+          "description": "The type of access token issued (Bearer)."
+        },
+        "oracle_tk_context": {
+          "type": "string",
+          "description": "Always user_assertion."
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "basicAuth": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
