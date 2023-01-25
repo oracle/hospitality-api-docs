@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Rate API",
-    "description": "APIs to cater for Rate Availability functionality in OPERA Cloud. <br /><br /> Rate Management provides all the tools you need to effectively define and manage the rate structures for a property in OPERA Cloud. Some of the things you can do include creating and managing rate codes, rate classes, rate categories, display sets, rate strategies, as well as managing promotion groups and codes.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Rate Availability functionality in OPERA Cloud. <br /><br /> Rate Management provides all the tools you need to effectively define and manage the rate structures for a property in OPERA Cloud. Some of the things you can do include creating and managing rate codes, rate classes, rate categories, display sets, rate strategies, as well as managing promotion groups and codes.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -21,6 +21,127 @@
     "application/json"
   ],
   "paths": {
+    "/displaySets": {
+      "get": {
+        "summary": "Get Display Sets",
+        "description": "Use this API to get Display Sets. <p><strong>OperationId:</strong>getDisplaySets</p>",
+        "operationId": "getDisplaySets",
+        "parameters": [
+          {
+            "name": "fetchInactive",
+            "in": "query",
+            "required": false,
+            "description": "Determines wether to fetch inactive records or not.",
+            "type": "boolean"
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Display Sets.",
+            "schema": {
+              "$ref": "#/definitions/displaySetsDetails"
+            }
+          },
+          "204": {
+            "description": "DisplaySets not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
     "/hotels/{hotelId}/bestavailablerates": {
       "get": {
         "summary": "Fetch Best Available Rates",
@@ -1069,11 +1190,11 @@
         ]
       }
     },
-    "/hotels/{hotelId}/ratePlans": {
+    "/hotels/{hotelId}/packageGroups": {
       "get": {
-        "summary": "Get rate plan",
-        "description": "This API allows you to fetch Rate Plans for a given hotel id. <p><strong>OperationId:</strong>getRatePlan</p>",
-        "operationId": "getRatePlan",
+        "summary": "Get package groups",
+        "description": "This API allows you to fetch package group. <p><strong>OperationId:</strong>getPackageGroups</p>",
+        "operationId": "getPackageGroups",
         "parameters": [
           {
             "name": "hotelId",
@@ -1085,11 +1206,729 @@
             "description": "Unique ID that identifies a single hotel property."
           },
           {
-            "name": "ratePlanCode",
+            "name": "limit",
             "in": "query",
             "required": false,
-            "description": "Rate plan code.",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "description": "Package code or group to be searched.",
             "type": "string"
+          },
+          {
+            "name": "descriptionWildCard",
+            "in": "query",
+            "required": false,
+            "description": "The description or a part of the description based on which results should be filtered.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object to fetch package groups.",
+            "schema": {
+              "$ref": "#/definitions/packageGroupsInfo"
+            }
+          },
+          "204": {
+            "description": "PackageGroups not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlan"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/packages/{packageCode}": {
+      "get": {
+        "summary": "Get package for given package",
+        "description": "This API allows you to fetch package details for a given package. <p><strong>OperationId:</strong>getPackage</p>",
+        "operationId": "getPackage",
+        "parameters": [
+          {
+            "name": "packageCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Package Code."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "fetchInstructions",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Simple type for package instructions that can be used in requests for partial operations.",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Header",
+                "PostingRules",
+                "CalculatedPrice",
+                "Items",
+                "Details",
+                "UsageDetails"
+              ]
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object to fetch a package's complete details.",
+            "schema": {
+              "$ref": "#/definitions/packageInfo"
+            }
+          },
+          "204": {
+            "description": "Package not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlan"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/packages/{packageCode}/rates": {
+      "get": {
+        "summary": "Get package rates",
+        "description": "This API allows you to fetch rate plan codes associated for a package. <p><strong>OperationId:</strong>getPackageRates</p>",
+        "operationId": "getPackageRates",
+        "parameters": [
+          {
+            "name": "packageCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Package Code."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object to fetch rate plan codes associated for a package. It contains package's short information.",
+            "schema": {
+              "$ref": "#/definitions/packageRates"
+            }
+          },
+          "204": {
+            "description": "PackageRates not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlan"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/rateCategories": {
+      "post": {
+        "summary": "Create Rate Category",
+        "description": "This API can be used to Use this API to create a Rate Category e.g.  RACK. Only one rate category can be Use this API to created at a time. <p><strong>OperationId:</strong>postRateCategory</p>",
+        "operationId": "postRateCategory",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "rateCategoryCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for Creating a new Rate Category for a property.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/rateCategoryCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/rateClasses": {
+      "get": {
+        "summary": "Get rate classes",
+        "description": "Use this API to get rate classes. <p><strong>OperationId:</strong>getRateClass</p>",
+        "operationId": "getRateClass",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "rateClassListCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the rate class.",
+            "type": "string"
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Indicator which tells whether inactive rate class to be included or not.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetch rate classes.",
+            "schema": {
+              "$ref": "#/definitions/rateClassDetails"
+            }
+          },
+          "204": {
+            "description": "RateClass not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans": {
+      "post": {
+        "summary": "Create rate plans ",
+        "description": "This API allows you to create Rate Plans for a given hotel id. <p><strong>OperationId:</strong>postRatePlan</p>",
+        "operationId": "postRatePlan",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "ratePlan",
+            "in": "body",
+            "required": true,
+            "description": "Request object to create rate plan.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ratePlan"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlan"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/{ratePlanCode}": {
+      "get": {
+        "summary": "Get rate plan",
+        "description": "This API allows you to fetch Rate Plan for a given hotel id and Rate Plan Code. <p><strong>OperationId:</strong>getRatePlan</p>",
+        "operationId": "getRatePlan",
+        "parameters": [
+          {
+            "name": "ratePlanCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Rate Plan Code."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
           },
           {
             "name": "fetchInstructions",
@@ -1253,7 +2092,7 @@
             "name": "ratePlanScheduleIdType",
             "in": "query",
             "required": false,
-            "description": "A reference to the type of object defined by the UniqueID element.",
+            "description": "A reference to the type of object defined by the UniqueID element. Refer to OpenTravel Code List Unique ID Type (UIT).",
             "type": "string"
           },
           {
@@ -1340,6 +2179,242 @@
           },
           "204": {
             "description": "RatePlanSchedules not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlan"
+        ]
+      },
+      "put": {
+        "summary": "Change rate plan schedules",
+        "description": "This API allows you to update Rate Plan schedules. <p><strong>OperationId:</strong>putRatePlanSchedules</p>",
+        "operationId": "putRatePlanSchedules",
+        "parameters": [
+          {
+            "name": "ratePlanCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Rate Plan Code."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "ratePlanSchedules",
+            "in": "body",
+            "required": true,
+            "description": "Request object to change rate plan schedules.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ratePlanSchedules"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlan"
+        ]
+      },
+      "post": {
+        "summary": "Create rate plan schedules",
+        "description": "This API allows you to create Rate Plan schedules. <p><strong>OperationId:</strong>postRatePlanSchedules</p>",
+        "operationId": "postRatePlanSchedules",
+        "parameters": [
+          {
+            "name": "ratePlanCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Rate Plan Code."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "ratePlanSchedulesToCreate",
+            "in": "body",
+            "required": true,
+            "description": "Request object to create rate plan schedules.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/ratePlanSchedulesToCreate"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -1579,6 +2654,41 @@
             "type": "integer"
           },
           {
+            "name": "bucket1Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the first Age Qualifying Group(Child Bucket#1).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket2Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the second Age Qualifying Group(Child Bucket#2).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket3Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the third Age Qualifying Group(Child Bucket#3).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket4Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the fourth Age Qualifying Group(Child Bucket#4).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket5Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the fifth Age Qualifying Group(Child Bucket#5).",
+            "type": "integer"
+          },
+          {
             "name": "includeGroup",
             "in": "query",
             "required": false,
@@ -1738,6 +2848,20 @@
             "description": "End Date.",
             "type": "string",
             "format": "date"
+          },
+          {
+            "name": "hotelCode",
+            "in": "query",
+            "required": false,
+            "description": "Hotel code associated to the hotel",
+            "type": "string"
+          },
+          {
+            "name": "ratePlanCode",
+            "in": "query",
+            "required": false,
+            "description": "Rate Plan Code associated with the rate",
+            "type": "string"
           },
           {
             "name": "includeInactiveNegotiatedRates",
@@ -1954,7 +3078,7 @@
             "name": "type",
             "in": "query",
             "required": false,
-            "description": "A reference to the type of object defined by the UniqueID element.",
+            "description": "A reference to the type of object defined by the UniqueID element. Refer to OpenTravel Code List Unique ID Type (UIT).",
             "type": "string"
           },
           {
@@ -2129,6 +3253,12 @@
       "type": "string",
       "description": "Language code",
       "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
     }
   },
   "responses": {
@@ -2179,126 +3309,151 @@
     }
   },
   "definitions": {
-    "getBestAvailableRatesDetails": {
+    "displaySetsDetails": {
       "type": "object",
+      "description": "Response object for fetching Display Sets.",
       "properties": {
-        "bestAvailableRatesList": {
-          "description": "The list of best available rates for rate code(s)",
-          "$ref": "#/definitions/bestAvailableRatesListType"
+        "displaySets": {
+          "description": "Collection of Display Sets.",
+          "$ref": "#/definitions/displaySetsType"
         },
-        "totalPages": {
-          "description": "Evaluated total page count based on the requested max fetch count.",
-          "type": "integer"
-        },
-        "offset": {
-          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
-          "type": "integer"
-        },
-        "limit": {
-          "description": "Indicates maximum number of records a Web Service should return.",
-          "type": "integer"
-        },
-        "hasMore": {
-          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-          "type": "boolean"
-        },
-        "totalResults": {
-          "description": "Total number of rows queried",
-          "type": "integer"
-        },
-        "count": {
-          "description": "Total number of rows returned",
-          "type": "integer"
+        "links": {
+          "$ref": "#/definitions/links"
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
         }
       }
     },
-    "bestAvailableRatesListType": {
-      "type": "object",
-      "description": "The list of best availabe rates for rate code(s)",
-      "properties": {
-        "bestAvailableRates": {
-          "description": "Collection of best available rates for rate code(s)",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/bestAvailableRateType"
-          }
-        },
-        "masterInfoList": {
-          "description": "The list of references of rate code selected as best available rates",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/masterInfo"
-          }
-        },
-        "hotelId": {
-          "description": "Hotel code for which best available rates will be considered.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "bestAvailableRateType": {
-      "type": "object",
-      "description": "The list of best availabe rates for rates code(s).",
-      "properties": {
-        "rateCode": {
-          "description": "Rate Code selected to be search.",
-          "$ref": "#/definitions/codeListType"
-        },
-        "lengthOfStay": {
-          "description": "Best available rate length of stay",
-          "type": "integer"
-        },
-        "date": {
-          "description": "Best available rate date available",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        }
-      }
-    },
-    "codeListType": {
+    "displaySetsType": {
       "type": "array",
+      "description": "List of Display Sets.",
       "maxItems": 4000,
       "items": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 20
+        "$ref": "#/definitions/displaySetType"
       }
     },
-    "masterInfo": {
+    "displaySetType": {
       "type": "object",
-      "description": "The reference to the rate codes selected as best availabe rates",
+      "description": "Contains Common Master configuration detail.",
       "properties": {
-        "rate": {
-          "description": "Rate Codes for which best available rates will be considered.",
-          "$ref": "#/definitions/codeDescriptionType"
+        "code": {
+          "description": "Common Master unique code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Description of the Master code.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "displayOrder": {
+          "description": "Common Master record sequence number.",
+          "type": "number"
+        },
+        "inactive": {
+          "description": "Determines whether this code is inactive or not.",
+          "type": "boolean"
+        },
+        "protected": {
+          "description": "Determines whether this code is protected from deleting and making inactive",
+          "type": "boolean"
         }
       }
     },
-    "codeDescriptionType": {
+    "translationTextType2000": {
       "type": "object",
-      "description": "This contains a generic code and description information.",
+      "description": "Contains Multiple translated texts and language codes.",
       "properties": {
-        "code": {
-          "description": "Code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "description": {
-          "description": "description.",
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
           "type": "string",
           "minLength": 0,
           "maxLength": 2000
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
         }
       }
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
     },
     "warningsType": {
       "type": "array",
@@ -2454,61 +3609,138 @@
         "title"
       ]
     },
-    "links": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/instanceLink"
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
       }
     },
-    "instanceLink": {
+    "getBestAvailableRatesDetails": {
       "type": "object",
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "properties": {
-        "href": {
-          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type": "string"
+        "bestAvailableRatesList": {
+          "description": "The list of best available rates for rate code(s)",
+          "$ref": "#/definitions/bestAvailableRatesListType"
         },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
         },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
         },
-        "method": {
-          "description": "HTTP method for requesting the target of the link.",
-          "type": "string",
-          "enum": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE",
-            "PATCH",
-            "OPTIONS",
-            "HEAD"
-          ]
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
         },
-        "targetSchema": {
-          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type": "string"
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
         },
-        "title": {
-          "description": "Exact copy of the \"summary\" field on the linked operation.",
-          "type": "string"
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
-      },
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
-      ]
+      }
+    },
+    "bestAvailableRatesListType": {
+      "type": "object",
+      "description": "The list of best availabe rates for rate code(s)",
+      "properties": {
+        "bestAvailableRates": {
+          "description": "Collection of best available rates for rate code(s)",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/bestAvailableRateType"
+          }
+        },
+        "masterInfoList": {
+          "description": "The list of references of rate code selected as best available rates",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/masterInfo"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel code for which best available rates will be considered.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "bestAvailableRateType": {
+      "type": "object",
+      "description": "The list of best availabe rates for rates code(s).",
+      "properties": {
+        "rateCode": {
+          "description": "Rate Code selected to be search.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "lengthOfStay": {
+          "description": "Best available rate length of stay",
+          "type": "integer"
+        },
+        "date": {
+          "description": "Best available rate date available",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "codeListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
+    "masterInfo": {
+      "type": "object",
+      "description": "The reference to the rate codes selected as best availabe rates",
+      "properties": {
+        "rate": {
+          "description": "Rate Codes for which best available rates will be considered.",
+          "$ref": "#/definitions/codeDescriptionType"
+        }
+      }
+    },
+    "codeDescriptionType": {
+      "type": "object",
+      "description": "This contains a generic code and description information.",
+      "properties": {
+        "code": {
+          "description": "Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
     },
     "createBestAvailableRates": {
       "type": "object",
@@ -2629,15 +3861,96 @@
         }
       }
     },
-    "status": {
+    "timeSpanDaysOfWeekType": {
       "type": "object",
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "description": "Container for Time span with days of week.",
       "properties": {
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
+        "timeSpan": {
+          "$ref": "#/definitions/timeSpanType"
         },
-        "links": {
-          "$ref": "#/definitions/links"
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "baseType": {
+      "type": "string",
+      "description": "Simple type for base type, flat or differential.",
+      "enum": [
+        "Flat",
+        "Differential"
+      ]
+    },
+    "roomTypeListType": {
+      "type": "array",
+      "description": "Room Type.",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
+    "rateByAgeBucketsType": {
+      "type": "array",
+      "description": "Rate amount by age bucket.",
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/definitions/rateByAgeBucketType"
+      }
+    },
+    "rateByAgeBucketType": {
+      "type": "object",
+      "description": "Rate amount by age bucket.",
+      "properties": {
+        "rateAmount": {
+          "description": "Rate amount by age bucket.",
+          "type": "number"
+        },
+        "minimumAge": {
+          "description": "Minimum age for age bucket.",
+          "type": "integer"
+        },
+        "maximumAge": {
+          "description": "Maximum age for age bucket.",
+          "type": "integer"
         }
       }
     },
@@ -2846,25 +4159,6 @@
         }
       }
     },
-    "timeSpanType": {
-      "type": "object",
-      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
-      "properties": {
-        "startDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "duration": {
-          "type": "string"
-        }
-      }
-    },
     "profileDiscountType": {
       "type": "object",
       "description": "Discount details for a profile.",
@@ -2881,18 +4175,16 @@
               "type": "number"
             },
             "flatOrPercentage": {
-              "type": "string",
-              "maxLength": 2000
+              "type": "string"
             }
           }
         },
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
-          "description": "A reference to the type of object defined by the UniqueID element.",
+          "description": "A reference to the type of object defined by the UniqueID element. Refer to OpenTravel Code List Unique ID Type (UIT).",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
@@ -2918,36 +4210,6 @@
         "idExtension": {
           "description": "Additional identifying value assigned by the creating system.",
           "type": "integer"
-        }
-      }
-    },
-    "timeSpanDaysOfWeekType": {
-      "type": "object",
-      "description": "Container for Time span with days of week.",
-      "properties": {
-        "timeSpan": {
-          "$ref": "#/definitions/timeSpanType"
-        },
-        "sunday": {
-          "type": "boolean"
-        },
-        "monday": {
-          "type": "boolean"
-        },
-        "tuesday": {
-          "type": "boolean"
-        },
-        "wednesday": {
-          "type": "boolean"
-        },
-        "thursday": {
-          "type": "boolean"
-        },
-        "friday": {
-          "type": "boolean"
-        },
-        "saturday": {
-          "type": "boolean"
         }
       }
     },
@@ -2984,15 +4246,45 @@
         }
       }
     },
-    "ratePlanInfo": {
+    "currencyAmountType": {
       "type": "object",
-      "description": "Response object to fetch rate plan's complete details.",
+      "description": "A monetary value expressed with a currency code.",
       "properties": {
-        "ratePlans": {
-          "description": "Rate plan complete details such as primary details, classifications, room types etc.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ratePlanType"
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        }
+      }
+    },
+    "packageGroupsInfo": {
+      "type": "object",
+      "description": "Response object to fetch package groups.",
+      "properties": {
+        "packageGroupList": {
+          "description": "List of package groups.",
+          "type": "object",
+          "properties": {
+            "packageGroups": {
+              "description": "Package Groups of each hotel.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/hotelPackageGroupsType"
+              }
+            },
+            "allRowsFetched": {
+              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type": "boolean"
+            },
+            "totalRows": {
+              "description": "Total number of rows queried",
+              "type": "integer"
+            }
           }
         },
         "masterInfoList": {
@@ -3010,664 +4302,71 @@
         }
       }
     },
-    "ratePlanType": {
+    "hotelPackageGroupsType": {
       "type": "object",
-      "description": "The Rate plan code Details.",
       "properties": {
-        "primaryDetails": {
-          "description": "Rate plan code header primary details.",
-          "$ref": "#/definitions/ratePlanPrimaryDetailsType"
-        },
-        "classifications": {
-          "description": "Rate plan code grouping details.",
-          "$ref": "#/definitions/ratePlanClassificationsType"
-        },
-        "transactionDetails": {
-          "description": "Rate plan code header folio and transaction information.",
-          "$ref": "#/definitions/ratePlanTransactionDetailsType"
-        },
-        "rateCommission": {
-          "description": "Commission details for Rate plan code.",
-          "$ref": "#/definitions/ratePlanCommissionType"
-        },
-        "rateDeposit": {
-          "description": "Deposit details for Rate plan code.",
-          "$ref": "#/definitions/ratePlanDepositType"
-        },
-        "descriptions": {
-          "description": "Short and Long info details of the Rate Plan.",
-          "$ref": "#/definitions/ratePlanDescriptionsType"
-        },
-        "roomTypeList": {
-          "description": "List of room types that are supported by the Rate Plan.",
-          "$ref": "#/definitions/rateRoomTypeListType"
-        },
-        "ratePackages": {
-          "description": "A collection of packages associated to the rate plan code.",
-          "$ref": "#/definitions/ratePackagesType"
-        },
-        "negotiatedRates": {
-          "description": "List of negotiated Profiles.",
-          "type": "object",
-          "properties": {
-            "negotiatedRate": {
-              "type": "array",
-              "maxItems": 4000,
-              "items": {
-                "$ref": "#/definitions/negotiatedRateType"
-              }
-            },
-            "hasMore": {
-              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-              "type": "boolean"
-            },
-            "totalResults": {
-              "description": "Total number of rows queried",
-              "type": "integer"
-            },
-            "count": {
-              "description": "Total number of rows returned",
-              "type": "integer"
-            }
-          }
-        },
-        "controls": {
-          "description": "Describes the sell and yield controls for the rate code.",
-          "$ref": "#/definitions/ratePlanControlsType"
-        },
-        "distribution": {
-          "description": "Distribution setup for the rate code.",
-          "$ref": "#/definitions/ratePlanDistributionType"
-        },
-        "ratePlanCodeIndicators": {
-          "description": "Indicators of additional information attached to the Rate code.",
-          "$ref": "#/definitions/indicatorsType"
-        },
-        "ratePlanBasedOnRates": {
-          "description": "Rate plan types based on rates.",
-          "$ref": "#/definitions/ratePlanBasedOnRatesType"
-        },
-        "ratePlanScheduleInfo": {
-          "description": "Rate plan's summary information about its schedules.",
-          "$ref": "#/definitions/ratePlanScheduleInfoType"
-        },
-        "approvalNotes": {
-          "description": "Approval Notes for Rate plan code.",
-          "$ref": "#/definitions/ratePlanNotesType"
-        },
-        "routingInstructions": {
-          "description": "Rate plan's default routing instructions.",
-          "$ref": "#/definitions/ratePlanRoutingInstructionsType"
-        },
-        "externalAttributes": {
-          "description": "Elements which are needed by External Interfaces",
-          "$ref": "#/definitions/ratePlanExternalAttributesType"
-        },
-        "accessExclusions": {
-          "description": "List of access exclusions.",
+        "packageGroup": {
+          "description": "Information about the each package group.",
           "type": "array",
           "maxItems": 4000,
           "items": {
-            "$ref": "#/definitions/rateAccessExclusionType"
+            "$ref": "#/definitions/packageGroupType"
           }
         },
-        "mobileCheckinAllowed": {
-          "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
-          "type": "boolean"
-        },
-        "mobileCheckoutAllowed": {
-          "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
-          "type": "boolean"
-        },
         "hotelId": {
-          "description": "Hotel Code",
+          "description": "Hotel code for the packages.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
-        },
-        "ratePlanCode": {
-          "description": "Rate plan Code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "createDateTime": {
-          "description": "Time stamp of the creation.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifierId": {
-          "description": "Identifies the last software system or person to modify a record.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "purgeDate": {
-          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "supressRate": {
-          "description": "Is rate amount suppressed for the rate plan?",
-          "type": "boolean"
-        },
-        "printRate": {
-          "description": "Is Rate amount printed on the reports for the rate plan?",
-          "type": "boolean"
-        },
-        "discountAllowed": {
-          "description": "Is rate plan code discounted?",
-          "type": "boolean"
-        },
-        "redemption": {
-          "description": "Is redemption allowed on the rate code?",
-          "type": "boolean"
-        },
-        "externallyControlled": {
-          "description": "Is rate plan code externally controlled?",
-          "type": "boolean"
-        },
-        "bARRate": {
-          "description": "Is rate plan code of BAR Rate type?",
-          "type": "boolean"
-        },
-        "daily": {
-          "description": "Is rate plan code a daily rate?",
-          "type": "boolean"
-        },
-        "tiered": {
-          "description": "Is rate plan code a tiered rate?",
-          "type": "boolean"
-        },
-        "dayUse": {
-          "description": "Is rate plan code for day use?",
-          "type": "boolean"
-        },
-        "dayType": {
-          "description": "Indicates if rate Calendar factors such as adder/multiplier should be used for price calculation.",
-          "type": "boolean"
-        },
-        "complimentary": {
-          "description": "Is rate plan code complimentary?",
-          "type": "boolean"
-        },
-        "houseUse": {
-          "description": "Is rate plan code for house use?",
-          "type": "boolean"
-        },
-        "negotiated": {
-          "description": "Is rate plan code only available as a negotiated rate that must be associated with a guest, company, or travel agent profile ?",
-          "type": "boolean"
-        },
-        "ownerRate": {
-          "description": "Is rate plan code flagged as an owner rate plan? Owner rate plans have special functionality for no-shows depending on the Rolling Noshow Preference application setting.",
-          "type": "boolean"
-        },
-        "membershipEligible": {
-          "description": "Is rate plan code flagged as eligible for memberships? This flag controls whether the guest stay, which this rate plan is attached to, qualifies for point calculations for Frequent Flyer or Frequent Guest programs. If the rate plan associated to the reservation has not been flagged for Membership then the guest will not earn any points/miles for their stay.",
-          "type": "boolean"
-        },
-        "advancedDailyBase": {
-          "description": "Flag to identify if Rate Code is Advanced Daily Base Rate Code",
-          "type": "boolean"
-        },
-        "advancedDailyRate": {
-          "description": "Flag to identify if Rate Code is Advanced Daily Rate",
-          "type": "boolean"
-        },
-        "floorAmount": {
-          "description": "An amount that act as Floor value for Rate Plan.",
-          "type": "number"
         }
       }
     },
-    "ratePlanPrimaryDetailsType": {
+    "packageGroupType": {
       "type": "object",
+      "description": "Information about a package group common to all usages.",
       "properties": {
         "description": {
-          "description": "Description of the rate plan.",
-          "$ref": "#/definitions/translationTextType2000"
-        },
-        "startSellDate": {
-          "description": "Start sell date of the rate plan.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "endSellDate": {
-          "description": "End sell date of the rate plan.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "sellSequence": {
-          "description": "Sell Sequence for the rate plan.",
-          "type": "number"
-        },
-        "privilegedRate": {
-          "description": "The particular rate code is marked as privileged making it restrictive on who can update information.",
-          "type": "boolean"
-        },
-        "privilegedRateRestriction": {
-          "description": "The restrictions marked on the rate code are marked as privileged making it restrictive on who can update information.",
-          "type": "boolean"
-        },
-        "baseType": {
-          "description": "In Advanced Dynamic Base Rates, specifies how the rate code rates are defined, either as FLAT (defined by amounts) or DIFFERENTIAL (defined by offset).",
-          "$ref": "#/definitions/baseType"
-        },
-        "lockStatus": {
-          "description": "Specifies the lock status of the rate code. Rates can be Unlocked, Externally locked, locked at Property level, or locked at Central level.",
-          "$ref": "#/definitions/rateCodeLockStatusType"
-        },
-        "approvalStatus": {
-          "description": "Approval Status of the Rate Plan.",
-          "$ref": "#/definitions/ratePlanApprovalStatusType"
-        }
-      }
-    },
-    "translationTextType2000": {
-      "type": "object",
-      "description": "Contains Multiple translated texts and language codes.",
-      "properties": {
-        "defaultText": {
-          "description": "Default text with Character length from 0 to 2000.",
+          "description": "Package group description.",
           "type": "string",
           "minLength": 0,
           "maxLength": 2000
         },
-        "translatedTexts": {
-          "description": "List of translated text and language codes.",
-          "$ref": "#/definitions/translationsTextType"
-        }
-      }
-    },
-    "translationsTextType": {
-      "type": "array",
-      "description": "Language code for the translation.",
-      "maxItems": 4000,
-      "items": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "string",
-            "description": "Used for Character Strings, length 0 to 2000.",
-            "minLength": 0,
-            "maxLength": 2000
-          },
-          "language": {
-            "description": "Language identification.",
-            "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-          }
-        },
-        "description": "Language code for the translation."
-      }
-    },
-    "baseType": {
-      "type": "string",
-      "description": "Simple type for base type, flat or differential.",
-      "enum": [
-        "Flat",
-        "Differential"
-      ]
-    },
-    "rateCodeLockStatusType": {
-      "type": "string",
-      "description": "Indicates that the rate code is locked by the central system and cannot be edited at the property level.",
-      "enum": [
-        "Unlocked",
-        "External",
-        "Property",
-        "Central"
-      ]
-    },
-    "ratePlanApprovalStatusType": {
-      "type": "string",
-      "description": "Indicates that the Rate Plan is approved for selling.",
-      "enum": [
-        "NewUnapproved",
-        "ChangedUnapproved",
-        "Rejected",
-        "Approved"
-      ]
-    },
-    "ratePlanClassificationsType": {
-      "type": "object",
-      "properties": {
-        "rateCategory": {
-          "description": "Rate Category for the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "displaySet": {
-          "description": "Display set for the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "marketCode": {
-          "description": "Market code for the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "sourceCode": {
-          "description": "Source code for the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "rateGroup": {
-          "description": "Rate group for the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "ratePlanTransactionDetailsType": {
-      "type": "object",
-      "properties": {
-        "folioText": {
-          "description": "Folio text of the rate plan.",
-          "$ref": "#/definitions/translationTextType2000"
-        },
-        "transactionCode": {
-          "description": "Transaction code used by the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "roomTransactionCodes": {
-          "description": "Collection of transaction codes configured by room types/room classes. The Revenue Posting by Room Type/Room Class function should be on to use this element.",
-          "$ref": "#/definitions/ratePlanRoomTransactionCodesType"
-        },
-        "packageTransactionCode": {
-          "description": "Package Transaction code used by the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "currencyCode": {
-          "description": "Currency code used by the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "rateIncludesTax": {
-          "description": "Is tax included in the rate plan?",
-          "type": "boolean"
-        },
-        "exchangePosting": {
-          "description": "Determines how the exchange rate is set for the rate code.",
-          "$ref": "#/definitions/exchangePostingType"
-        },
-        "postingRhythm": {
-          "description": "Determines the rate code posting rhythm.",
-          "$ref": "#/definitions/ratePlanPostingRhythmType"
-        },
-        "advancedPostingRhythms": {
-          "description": "When the Advanced Rate Code Posting Rhythm parameter is turned on, this element will contain the collection of advanced Buy x Get y posting rhythms for the rate plan.",
-          "$ref": "#/definitions/ratePlanAdvancedPostingRhythmsType"
-        }
-      }
-    },
-    "ratePlanRoomTransactionCodesType": {
-      "type": "array",
-      "description": "Single transaction code and room type/class association.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/ratePlanRoomTransactionCodeType"
-      }
-    },
-    "ratePlanRoomTransactionCodeType": {
-      "type": "object",
-      "description": "Transaction code associated to a room type or room class on a rate plan.",
-      "properties": {
-        "roomType": {
-          "description": "Room type which the transaction code is associated to.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "roomClass": {
-          "description": "Room class which the transaction code is associated to.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "transactionCode": {
-          "description": "Transaction code associated to the room type/room class.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "exchangePostingType": {
-      "type": "string",
-      "description": "Fixed at Block.",
-      "enum": [
-        "FixedAtCheckIn",
-        "FixedAtReservation",
-        "CurrentDate",
-        "FixedAtBlock"
-      ]
-    },
-    "ratePlanPostingRhythmType": {
-      "type": "object",
-      "description": "Rate Plan Posting rhythm type.",
-      "properties": {
-        "doNotPostEveryXNights": {
-          "description": "Do not Post the Rate Code every X nights. This can be used to offer free nights after staying certain number of nights on the rate plan.",
-          "type": "object",
-          "properties": {
-            "xNight": {
-              "description": "The night the rate plan is not supposed to be posted.",
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 14
-            },
-            "postPackages": {
-              "description": "Post the packages on free nights if the packages posting rhythm falls on the night rate plan is not getting posted.",
-              "type": "boolean"
-            }
-          }
-        }
-      }
-    },
-    "ratePlanAdvancedPostingRhythmsType": {
-      "type": "array",
-      "description": "Posting rhythm details for a rate plan containing Buy x Get y functionality.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/ratePlanAdvancedPostingRhythmType"
-      }
-    },
-    "ratePlanAdvancedPostingRhythmType": {
-      "type": "object",
-      "description": "Posting rhythm details for a rate plan containing Buy x Get y functionality.",
-      "properties": {
-        "code": {
-          "description": "Code identifying the posting rhythm within the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "description": {
-          "description": "Description of the posting rhythm offer.",
+        "shortDescription": {
+          "description": "The short description of the package group.",
           "type": "string",
           "minLength": 0,
           "maxLength": 40
         },
-        "beginSellDate": {
-          "description": "Date which the posting rhythm becomes applicable.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "endSellDate": {
-          "description": "Date which the posting rhythm ceases to be applicable.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "requiredPaidNights": {
-          "description": "The number of nights which are required to be paid in order to receive free nights.",
-          "type": "integer"
-        },
-        "eligibleFreeNights": {
-          "description": "The number of free nights which are eligible when the number of required paid nights has been met.",
-          "type": "integer"
-        },
-        "repeatWithinStay": {
-          "description": "Indicates if the posting rhythm offer can be repeated more than once during the entire stay.",
-          "type": "boolean"
-        },
-        "repeatWithinSellSegment": {
-          "description": "Indicates if the posting rhythm offer can be repeated more than once within a specific sell segment of the reservation.",
-          "type": "boolean"
-        }
-      }
-    },
-    "ratePlanCommissionType": {
-      "type": "object",
-      "properties": {
-        "commissionCode": {
-          "description": "commission code used by the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "commissionPercentage": {
-          "description": "commission percentage used by the rate plan.",
-          "type": "number"
-        },
-        "commissionAmount": {
-          "description": "commission amount used by the rate plan.",
-          "type": "number"
-        }
-      }
-    },
-    "ratePlanDepositType": {
-      "type": "object",
-      "properties": {
-        "depositMaturityPreference": {
-          "description": "Deposit maturity preference used by the rate plan.",
-          "$ref": "#/definitions/depositMaturityPreferenceType"
-        }
-      }
-    },
-    "depositMaturityPreferenceType": {
-      "type": "string",
-      "description": "Fixed values for Deposite Maturity Preference affecting the rate code",
-      "enum": [
-        "CheckIn",
-        "LastStayNight",
-        "LastDayAdvDeposit"
-      ]
-    },
-    "ratePlanDescriptionsType": {
-      "type": "object",
-      "description": "Info URL, Short and Long Info details of the rate plan.",
-      "properties": {
-        "shortInfo": {
-          "description": "Short info of the rate plan.",
-          "$ref": "#/definitions/translationTextType2000"
-        },
-        "longInfo": {
-          "description": "Long info of the rate plan.",
-          "$ref": "#/definitions/translationTextType2000"
-        },
-        "infoURL": {
-          "description": "Info URL is the location associated for more information about the rate plan.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "rateInfoTemplate": {
-          "description": "Rate information template which is configured for the hotel. This value can be used to populate the LongInfo of this rate plan, if desired.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        }
-      }
-    },
-    "rateRoomTypeListType": {
-      "type": "array",
-      "description": "Details of each room type",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/rateRoomTypeDetailType"
-      }
-    },
-    "rateRoomTypeDetailType": {
-      "type": "object",
-      "description": "Details of single room type",
-      "properties": {
         "code": {
-          "description": "Room type code",
+          "description": "Package group Code.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         },
-        "description": {
-          "description": "Text description for the room type",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "pseudo": {
-          "description": "True if room type will not be associated with physical rooms included in inventory",
+        "sellSeparate": {
+          "description": "Can Package group be sold separately?",
           "type": "boolean"
         },
-        "rateFloor": {
-          "description": "This is the minimum amount of which room can be sold",
-          "type": "number"
-        }
-      }
-    },
-    "ratePackagesType": {
-      "type": "object",
-      "properties": {
-        "packages": {
-          "description": "A collection of packages attached to the rate code.",
-          "$ref": "#/definitions/ratePackageCodeListType"
+        "webBookable": {
+          "description": "Is Package group web bookable?",
+          "type": "boolean"
         },
-        "packageGroups": {
-          "description": "Package Group full Information along with the members that belong to this Group.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/ratePackageGroupType"
-          }
+        "membersList": {
+          "description": "List of Package group Members.",
+          "$ref": "#/definitions/packageCodeListType"
         }
       }
     },
-    "ratePackageCodeListType": {
+    "packageCodeListType": {
       "type": "array",
-      "description": "Rate Package Full Information",
+      "description": "Package Full Information",
       "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/ratePackageCodeType"
+        "$ref": "#/definitions/packageCodeType"
       }
     },
-    "ratePackageCodeType": {
+    "packageCodeType": {
       "type": "object",
-      "description": "Package code details applied to a rate plan.",
       "properties": {
         "header": {
           "description": "Package code header details.",
@@ -3713,6 +4412,10 @@
           "description": "Flag to adjust the overlapping dates automatically. True will allow the system to adjust the overlapping dates automatically . False will not allow overlapping dates and throws error messages if overlapping dates are found",
           "type": "boolean"
         },
+        "redemption": {
+          "description": "Flag to configure the package as Award Package so they can be redeemed for points on a reservation",
+          "type": "boolean"
+        },
         "hasMore": {
           "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
           "type": "boolean"
@@ -3723,18 +4426,6 @@
         },
         "count": {
           "description": "Total number of rows returned",
-          "type": "integer"
-        },
-        "scheduleExceptions": {
-          "description": "Package code schedule price exception for the rate plan.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/configPackageScheduleType"
-          }
-        },
-        "quantity": {
-          "description": "Quantity of the package code included in the rate plan.",
           "type": "integer"
         }
       }
@@ -4358,6 +5049,10 @@
           "description": "The allowance per unit of the package.",
           "type": "number"
         },
+        "unitPoints": {
+          "description": "Number of points per unit of the package",
+          "type": "number"
+        },
         "bucket": {
           "description": "The bucket is applicable for child bucket functionality when package's price calculation rule is Child.",
           "$ref": "#/definitions/packageChildBuckets"
@@ -4372,6 +5067,1091 @@
         "Bucket2",
         "Bucket3"
       ]
+    },
+    "masterInfoType": {
+      "type": "object",
+      "properties": {
+        "codeInfo": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/codeInfoType"
+          }
+        },
+        "codeType": {
+          "$ref": "#/definitions/masterType"
+        }
+      }
+    },
+    "codeInfoType": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "addtionalCodeInfo": {
+          "$ref": "#/definitions/addtionalCodeInfoType"
+        },
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "code": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "addtionalCodeInfoType": {
+      "type": "array",
+      "description": "Holds name of additional code information",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Holds name of additional code information",
+            "$ref": "#/definitions/masterInfoCodeDetailType"
+          },
+          "value": {
+            "description": "Holds value of additional code information",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        }
+      }
+    },
+    "masterInfoCodeDetailType": {
+      "type": "string",
+      "enum": [
+        "LongDescription",
+        "ShortDescription"
+      ]
+    },
+    "masterType": {
+      "type": "string",
+      "enum": [
+        "Country",
+        "State",
+        "AddressType",
+        "PhoneType",
+        "RateCategory",
+        "CalculationRule",
+        "PostingRythym",
+        "BillingInstruction",
+        "TransactionCode",
+        "DisplaySet",
+        "MailingActions",
+        "DistanceType",
+        "District",
+        "Territory",
+        "FiscalRegion",
+        "InventoryItem",
+        "Package",
+        "RoomFeaturePreference",
+        "SpecialPreference",
+        "Promotion",
+        "Department",
+        "ReservationPreference",
+        "FacilityTask",
+        "RoomType",
+        "RateCode",
+        "OutOfOrderReason",
+        "Block"
+      ]
+    },
+    "packageInfo": {
+      "type": "object",
+      "description": "Request object to create a package.",
+      "properties": {
+        "packageCode": {
+          "description": "Details of the package code to be created.",
+          "$ref": "#/definitions/packageCodeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "packageRates": {
+      "type": "object",
+      "description": "Response object to fetch rate plan codes associated for a package. It contains package's short information.",
+      "properties": {
+        "ratePlanList": {
+          "description": "Hotel code for which rates are associated.",
+          "type": "object",
+          "properties": {
+            "ratePlan": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ratePlanShortInfoType"
+              }
+            },
+            "hotelCode": {
+              "description": "Hotel code for which rates are associated.",
+              "$ref": "#/definitions/codeType"
+            },
+            "packageCode": {
+              "description": "Package code for which rates are associated.",
+              "$ref": "#/definitions/codeType"
+            }
+          }
+        },
+        "masterInfoList": {
+          "description": "Refer to Generic common types document.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/masterInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "ratePlanShortInfoType": {
+      "type": "object",
+      "description": "The Rate plan code information.",
+      "properties": {
+        "primaryDetails": {
+          "description": "Rate plan code header primary details.",
+          "$ref": "#/definitions/ratePlanPrimaryDetailsType"
+        },
+        "classifications": {
+          "description": "Rate plan code grouping details.",
+          "$ref": "#/definitions/ratePlanClassificationsType"
+        },
+        "descriptions": {
+          "description": "Short and Long info details of the Rate Plan.",
+          "$ref": "#/definitions/ratePlanDescriptionsType"
+        },
+        "externalAttributes": {
+          "description": "Elements which are needed by External Interfaces",
+          "$ref": "#/definitions/ratePlanExternalAttributesType"
+        },
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "purgeDate": {
+          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "discountAllowed": {
+          "description": "Indicates whether the rate plan is allowed to be discounted.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ratePlanPrimaryDetailsType": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the rate plan.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "startSellDate": {
+          "description": "Start sell date of the rate plan.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endSellDate": {
+          "description": "End sell date of the rate plan.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "sellSequence": {
+          "description": "Sell Sequence for the rate plan.",
+          "type": "number"
+        },
+        "privilegedRate": {
+          "description": "The particular rate code is marked as privileged making it restrictive on who can update information.",
+          "type": "boolean"
+        },
+        "privilegedRateRestriction": {
+          "description": "The restrictions marked on the rate code are marked as privileged making it restrictive on who can update information.",
+          "type": "boolean"
+        },
+        "baseType": {
+          "description": "In Advanced Dynamic Base Rates, specifies how the rate code rates are defined, either as FLAT (defined by amounts) or DIFFERENTIAL (defined by offset).",
+          "$ref": "#/definitions/baseType"
+        },
+        "lockStatus": {
+          "description": "Specifies the lock status of the rate code. Rates can be Unlocked, Externally locked, locked at Property level, or locked at Central level.",
+          "$ref": "#/definitions/rateCodeLockStatusType"
+        },
+        "approvalStatus": {
+          "description": "Approval Status of the Rate Plan.",
+          "$ref": "#/definitions/ratePlanApprovalStatusType"
+        }
+      }
+    },
+    "rateCodeLockStatusType": {
+      "type": "string",
+      "description": "Indicates that the rate code is locked by the central system and cannot be edited at the property level.",
+      "enum": [
+        "Unlocked",
+        "External",
+        "Property",
+        "Central"
+      ]
+    },
+    "ratePlanApprovalStatusType": {
+      "type": "string",
+      "description": "Indicates that the Rate Plan is approved for selling.",
+      "enum": [
+        "NewUnapproved",
+        "ChangedUnapproved",
+        "Rejected",
+        "Approved"
+      ]
+    },
+    "ratePlanClassificationsType": {
+      "type": "object",
+      "properties": {
+        "rateCategory": {
+          "description": "Rate Category for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "displaySet": {
+          "description": "Display set for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "marketCode": {
+          "description": "Market code for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sourceCode": {
+          "description": "Source code for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateGroup": {
+          "description": "Rate group for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "ratePlanDescriptionsType": {
+      "type": "object",
+      "description": "Info URL, Short and Long Info details of the rate plan.",
+      "properties": {
+        "shortInfo": {
+          "description": "Short info of the rate plan.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "longInfo": {
+          "description": "Long info of the rate plan.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "infoURL": {
+          "description": "Info URL is the location associated for more information about the rate plan.",
+          "type": "string"
+        },
+        "rateInfoTemplate": {
+          "description": "Rate information template which is configured for the hotel. This value can be used to populate the LongInfo of this rate plan, if desired.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "ratePlanExternalAttributesType": {
+      "type": "object",
+      "properties": {
+        "marshaRateProgram": {
+          "description": "Rate Category for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "codeType": {
+      "type": "string",
+      "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+      "minLength": 0,
+      "maxLength": 20
+    },
+    "trxCodesInfoType": {
+      "type": "array",
+      "description": "List of Transaction codes info.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/trxInfoType"
+      }
+    },
+    "trxInfoType": {
+      "type": "object",
+      "description": "Transaction codes info.",
+      "properties": {
+        "description": {
+          "description": "Transaction codes info.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionGroup": {
+          "description": "Category of the transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "transactionSubGroup": {
+          "description": "Sub category of the transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "universalProductCode": {
+          "description": "Unique Universal product code of the transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "routingInstructionsId": {
+          "description": "This is the Routing Instruction Id attached with Reservation. It is only used for internal purpose. It should not be used by external vendor or consumer.",
+          "type": "number"
+        },
+        "articles": {
+          "description": "The List of Articles defined for this transaction code, when using the Articles functionality.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/articleInfoType"
+          }
+        },
+        "trxServiceType": {
+          "description": "Contains service type for transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "transactionCode": {
+          "description": "Unique identifier for the Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelId": {
+          "description": "Hotel context of the Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "printTrxReceipt": {
+          "description": "Print receipt flag that tells whether the transaction receipt is to be printed or not. This is based on the transaction code.",
+          "type": "boolean"
+        }
+      }
+    },
+    "articleInfoType": {
+      "type": "object",
+      "description": "Information regarding an article.",
+      "properties": {
+        "description": {
+          "description": "Description of the article.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionCode": {
+          "description": "Transaction code to which the article belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "price": {
+          "description": "Default price of the article.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "postIt": {
+          "description": "Post it information of the article.",
+          "$ref": "#/definitions/articlePostItType"
+        },
+        "universalProductCode": {
+          "description": "Unique Universal product code of the article.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelId": {
+          "description": "Hotel code to which the article belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "articleCode": {
+          "description": "Unique code of the article.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "inactive": {
+          "description": "Indicates whether the article is inactive or not.",
+          "type": "boolean"
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
+        }
+      }
+    },
+    "articlePostItType": {
+      "type": "object",
+      "description": "Post it information of an article.",
+      "properties": {
+        "availableForPostIt": {
+          "description": "Indicates whether the article is available for post it.",
+          "type": "boolean"
+        },
+        "color": {
+          "description": "Color indicator which is only configurable if article is available for post it.",
+          "$ref": "#/definitions/colorType"
+        }
+      }
+    },
+    "colorType": {
+      "type": "string",
+      "description": "Color configuration type. This color configuration provides a visual category of entities.",
+      "enum": [
+        "Red",
+        "DarkRed",
+        "Green",
+        "DarkGreen",
+        "LightGreen",
+        "Orange",
+        "White",
+        "Yellow",
+        "DarkYellow",
+        "Purple",
+        "Brown",
+        "Gray",
+        "Aqua",
+        "Chocolate",
+        "Blue",
+        "LightBlue",
+        "DarkBlue",
+        "Cyan",
+        "DarkCyan",
+        "Magenta",
+        "DarkMagenta",
+        "Black"
+      ]
+    },
+    "billingInstructionsType": {
+      "type": "array",
+      "description": "Set of Billing Instruction codes.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/billingInstructionType"
+      }
+    },
+    "billingInstructionType": {
+      "type": "object",
+      "description": "Configured Billing Instruction which represents a set of Transaction Codes.",
+      "properties": {
+        "desc": {
+          "description": "Billing Instruction code description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "routingInstructionsId": {
+          "description": "This is the Routing Instruction Id attached with Reservation. It is only used for internal purpose. It should not be used by external vendor or consumer.",
+          "type": "number"
+        },
+        "billingCode": {
+          "description": "Unique identifier for the Billing Instruction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelId": {
+          "description": "Hotel context of the Billing Instruction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "rateAccessExclusionType": {
+      "type": "object",
+      "description": "Access Exclusion information indicating the actions allowed under a HUB or Hotel for which the access exclusion is set.",
+      "properties": {
+        "sourceType": {
+          "description": "The type of source (CRO or Hotel code) for which the rate access exclusion is set.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "sourceValue": {
+          "description": "CRO or Hotel code value.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "allowModifyReservation": {
+          "description": "Allow to modify a reservation under this access exclusion.",
+          "type": "boolean"
+        },
+        "allowCancelReservation": {
+          "description": "Allow to cancel a reservation under this access exclusion.",
+          "type": "boolean"
+        },
+        "allowCreateReservation": {
+          "description": "Allow to create a reservation under this access exclusion.",
+          "type": "boolean"
+        },
+        "inactive": {
+          "description": "The rate access exclusion is inactive",
+          "type": "boolean"
+        },
+        "excludeFromAvailability": {
+          "description": "Exclude a specific rate from availability",
+          "type": "boolean"
+        },
+        "dateRange": {
+          "description": "Date range for the rate access exclusion.",
+          "$ref": "#/definitions/dateRangeType"
+        }
+      }
+    },
+    "rateCategoryCriteria": {
+      "type": "object",
+      "description": "Request object for Creating a new Rate Category for a property.",
+      "properties": {
+        "hotelRateCategory": {
+          "description": "Hotel rate category to be created.",
+          "$ref": "#/definitions/hotelRateCategoryType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelRateCategoryType": {
+      "type": "object",
+      "description": "This type represents the rate category type.",
+      "properties": {
+        "rateCategoryDetails": {
+          "description": "Begin date for the rate category.",
+          "type": "object",
+          "properties": {
+            "beginDate": {
+              "description": "Begin date for the rate category.",
+              "type": "string",
+              "format": "date",
+              "maxLength": 8
+            },
+            "endDate": {
+              "description": "End date for the rate category.",
+              "type": "string",
+              "format": "date",
+              "maxLength": 8
+            },
+            "description": {
+              "description": "Description of rate category.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 200
+            },
+            "rateClass": {
+              "description": "Active date of the room category.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            },
+            "sellSequence": {
+              "description": "Indicates rate category sell sequence.",
+              "type": "number"
+            }
+          }
+        },
+        "rateCategory": {
+          "description": "Rate category Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelId": {
+          "description": "Hotel Code for a rate category.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "rateClassDetails": {
+      "type": "object",
+      "description": "Response for fetch rate classes.",
+      "properties": {
+        "rateClasses": {
+          "description": "Collection of rate classes.",
+          "type": "object",
+          "properties": {
+            "rateClasses": {
+              "description": "Collection of rate classes.",
+              "$ref": "#/definitions/rateClassesType"
+            },
+            "totalPages": {
+              "description": "Evaluated total page count based on the requested max fetch count.",
+              "type": "integer"
+            },
+            "offset": {
+              "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+              "type": "integer"
+            },
+            "limit": {
+              "description": "Indicates maximum number of records a Web Service should return.",
+              "type": "integer"
+            },
+            "hasMore": {
+              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type": "boolean"
+            },
+            "totalResults": {
+              "description": "Total number of rows queried",
+              "type": "integer"
+            },
+            "count": {
+              "description": "Total number of rows returned",
+              "type": "integer"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "rateClassesType": {
+      "type": "array",
+      "description": "Collection of hotel rate classes.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/rateClassType"
+      }
+    },
+    "rateClassType": {
+      "type": "object",
+      "description": "A hotel rate class.",
+      "properties": {
+        "description": {
+          "description": "Description of the rate class.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "sequence": {
+          "description": "Display Sequence of the rate class.",
+          "type": "integer"
+        },
+        "timeSpan": {
+          "description": "Begin Date and End Date of the rate class.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "rateClass": {
+          "description": "Code that uniquely identifies the rate class.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateCategories": {
+          "description": "List of Attached Rate Categories.",
+          "$ref": "#/definitions/simpleRateCategoriesType"
+        },
+        "hotelId": {
+          "description": "Hotel Code the rate class belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "simpleRateCategoriesType": {
+      "type": "array",
+      "description": "List of Rate Categories with description.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/codeDescriptionType"
+      }
+    },
+    "scheduleRateAmountsType": {
+      "type": "object",
+      "properties": {
+        "onePersonRate": {
+          "description": "Rate amount for one person.",
+          "type": "number"
+        },
+        "twoPersonRate": {
+          "description": "Rate amount for two persons.",
+          "type": "number"
+        },
+        "threePersonRate": {
+          "description": "Rate amount for three persons.",
+          "type": "number"
+        },
+        "fourPersonRate": {
+          "description": "Rate amount for four persons.",
+          "type": "number"
+        },
+        "fivePersonRate": {
+          "description": "Rate amount for five persons.",
+          "type": "number"
+        },
+        "extraPersonRate": {
+          "description": "Rate amount for each extra person.",
+          "type": "number"
+        },
+        "extraChildRate": {
+          "description": "Rate amount for each extra Child.",
+          "type": "number"
+        },
+        "oneChildRate": {
+          "description": "Rate amount for one Child.",
+          "type": "number"
+        },
+        "twoChildrenRate": {
+          "description": "Rate amount for two Children.",
+          "type": "number"
+        },
+        "threeChildrenRate": {
+          "description": "Rate amount for three Children.",
+          "type": "number"
+        },
+        "fourChildrenRate": {
+          "description": "Rate amount for four Children.",
+          "type": "number"
+        },
+        "rateByAgeBuckets": {
+          "description": "Collection of rate amount by age bracket.",
+          "$ref": "#/definitions/rateByAgeBucketsType"
+        },
+        "minimumChildrenForFreeStay": {
+          "description": "Minimum number of children needed to get free stay.",
+          "type": "integer"
+        },
+        "pointsRequired": {
+          "description": "The number of award points required for applying this rate plan schedule.",
+          "type": "number"
+        },
+        "overrideFloorAmount": {
+          "description": "true if floor amount needs to be override",
+          "type": "boolean"
+        }
+      }
+    },
+    "advancedBaseRateOffsetType": {
+      "type": "object",
+      "description": "A Rate which is of Advanced Dynamic Base Rate can have rate schedule based on an offset from its Base Rate or BAR Rate.",
+      "properties": {
+        "offset": {
+          "description": "offset amount for the advanced dynamic base rate schedule.",
+          "type": "number"
+        },
+        "flatOrPercentage": {
+          "description": "It signifies offset amount is of Flat or Percentage type. Valid Values are F/P.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1
+        },
+        "applyBar": {
+          "description": "Should this schedule be Advanced dynamically based on BAR rate.",
+          "type": "boolean"
+        }
+      }
+    },
+    "rateAmountBoundariesType": {
+      "type": "object",
+      "description": "Rate amount boundaries for the rate plan schedule. Minimum and/or maximum rate amounts can be defined for one and/or two adults.",
+      "properties": {
+        "minimum": {
+          "description": "Minimum rate amounts for one and/or two adults.",
+          "$ref": "#/definitions/rateAmountBoundaryType"
+        },
+        "maximum": {
+          "description": "Maximum rate amounts for one and/or two adults.",
+          "$ref": "#/definitions/rateAmountBoundaryType"
+        }
+      }
+    },
+    "rateAmountBoundaryType": {
+      "type": "object",
+      "description": "Set of rate amounts for one and/or two adults. This set will represent either the minimum or maximum rate boundary.",
+      "properties": {
+        "onePersonRate": {
+          "description": "One person rate amount for the rate boundary.",
+          "type": "number"
+        },
+        "twoPersonRate": {
+          "description": "Two person rate amount for the rate boundary.",
+          "type": "number"
+        }
+      }
+    },
+    "ratePlanScheduleClassificationsType": {
+      "type": "object",
+      "properties": {
+        "marketCode": {
+          "description": "Market code for the rate schedule.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sourceCode": {
+          "description": "Source code for the rate schedule.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "occupantThresholdPricingType": {
+      "type": "object",
+      "description": "Definition for creating pricing for a rate schedule, based on occupants threshold level.",
+      "properties": {
+        "adults": {
+          "description": "Threshold for Adults in the room.",
+          "type": "object",
+          "properties": {
+            "threshold": {
+              "description": "Threshold value, after it is reached the corresponding amount will be charged.",
+              "type": "integer"
+            },
+            "amount": {
+              "description": "Amount to be charged after the threshold is reached.",
+              "type": "number"
+            }
+          }
+        },
+        "children": {
+          "description": "Threshold for Children in the room.",
+          "type": "object",
+          "properties": {
+            "threshold": {
+              "description": "Threshold value, after it is reached the corresponding amount will be charged.",
+              "type": "integer"
+            },
+            "amount": {
+              "description": "Amount to be charged after the threshold is reached.",
+              "type": "number"
+            },
+            "excludeBucket1": {
+              "description": "When rates are Defined by Age buckets, should the 1st buckets children count be excluded from threshold pricing.",
+              "type": "boolean"
+            },
+            "excludeBucket2": {
+              "description": "When rates are Defined by Age buckets, should the 2nd buckets children count be excluded from threshold pricing.",
+              "type": "boolean"
+            },
+            "excludeBucket3": {
+              "description": "When rates are Defined by Age buckets, should the 3rd buckets children count be excluded from threshold pricing.",
+              "type": "boolean"
+            }
+          }
+        },
+        "occupants": {
+          "description": "Threshold for Occupants in the room.",
+          "type": "object",
+          "properties": {
+            "threshold": {
+              "description": "Threshold value, after it is reached the corresponding amount will be charged.",
+              "type": "integer"
+            },
+            "amount": {
+              "description": "Amount to be charged after the threshold is reached.",
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "scheduleAdjustmentDetailsType": {
+      "type": "array",
+      "description": "The list of adjustment codes for the rate plan schedule.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/adjustmentDetailType"
+      }
+    },
+    "adjustmentDetailType": {
+      "type": "object",
+      "description": "The adjustment code details for the rate schedule.",
+      "properties": {
+        "overriddenAmount": {
+          "description": "The amount with which the actual adjustment will be overridden. if no amount is sent, default adjustment code's amount will be used.",
+          "type": "number"
+        },
+        "adjustmentCode": {
+          "description": "the adjustment code that needs to be attached to the rate schedule.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "deleteAdjustment": {
+          "description": "Should this Adjustment code be deleted ?",
+          "type": "boolean"
+        }
+      }
+    },
+    "ratePackagesType": {
+      "type": "object",
+      "properties": {
+        "packages": {
+          "description": "A collection of packages attached to the rate code.",
+          "$ref": "#/definitions/ratePackageCodeListType"
+        },
+        "packageGroups": {
+          "description": "Package Group full Information along with the members that belong to this Group.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/ratePackageGroupType"
+          }
+        }
+      }
+    },
+    "ratePackageCodeListType": {
+      "type": "array",
+      "description": "Rate Package Full Information",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/ratePackageCodeType"
+      }
+    },
+    "ratePackageCodeType": {
+      "type": "object",
+      "description": "Package code details applied to a rate plan.",
+      "properties": {
+        "header": {
+          "description": "Package code header details.",
+          "$ref": "#/definitions/packageCodeHeaderType"
+        },
+        "schedules": {
+          "description": "Package code price schedule details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/configPackageScheduleType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel code for the packages.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "code": {
+          "description": "Package Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Package Code Description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "group": {
+          "description": "Indicates if it is a Package Group or not.",
+          "type": "boolean"
+        },
+        "ratePlanCode": {
+          "description": "Package Code specific to a rate plan code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "adjustOverlappingRange": {
+          "description": "Flag to adjust the overlapping dates automatically. True will allow the system to adjust the overlapping dates automatically . False will not allow overlapping dates and throws error messages if overlapping dates are found",
+          "type": "boolean"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "scheduleExceptions": {
+          "description": "Package code schedule price exception for the rate plan.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/configPackageScheduleType"
+          }
+        },
+        "quantity": {
+          "description": "Quantity of the package code included in the rate plan.",
+          "type": "integer"
+        }
+      }
     },
     "ratePackageGroupType": {
       "type": "object",
@@ -4406,6 +6186,496 @@
         "packages": {
           "description": "List of Package group members for a rate plan.",
           "$ref": "#/definitions/ratePackageCodeListType"
+        }
+      }
+    },
+    "tierIDType": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "ratePlanInfo": {
+      "type": "object",
+      "description": "Response object to fetch rate plan's complete details.",
+      "properties": {
+        "ratePlans": {
+          "description": "Rate plan complete details such as primary details, classifications, room types etc.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ratePlanType"
+          }
+        },
+        "masterInfoList": {
+          "description": "Refer to Generic common types document.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/masterInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "ratePlanType": {
+      "type": "object",
+      "description": "The Rate plan code Details.",
+      "properties": {
+        "primaryDetails": {
+          "description": "Rate plan code header primary details.",
+          "$ref": "#/definitions/ratePlanPrimaryDetailsType"
+        },
+        "classifications": {
+          "description": "Rate plan code grouping details.",
+          "$ref": "#/definitions/ratePlanClassificationsType"
+        },
+        "transactionDetails": {
+          "description": "Rate plan code header folio and transaction information.",
+          "$ref": "#/definitions/ratePlanTransactionDetailsType"
+        },
+        "rateCommission": {
+          "description": "Commission details for Rate plan code.",
+          "$ref": "#/definitions/ratePlanCommissionType"
+        },
+        "rateDeposit": {
+          "description": "Deposit details for Rate plan code.",
+          "$ref": "#/definitions/ratePlanDepositType"
+        },
+        "descriptions": {
+          "description": "Short and Long info details of the Rate Plan.",
+          "$ref": "#/definitions/ratePlanDescriptionsType"
+        },
+        "roomTypeList": {
+          "description": "List of room types that are supported by the Rate Plan.",
+          "$ref": "#/definitions/rateRoomTypeListType"
+        },
+        "ratePackages": {
+          "description": "A collection of packages associated to the rate plan code.",
+          "$ref": "#/definitions/ratePackagesType"
+        },
+        "negotiatedRates": {
+          "description": "List of negotiated Profiles.",
+          "type": "object",
+          "properties": {
+            "negotiatedRate": {
+              "type": "array",
+              "maxItems": 4000,
+              "items": {
+                "$ref": "#/definitions/negotiatedRateType"
+              }
+            },
+            "hasMore": {
+              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type": "boolean"
+            },
+            "totalResults": {
+              "description": "Total number of rows queried",
+              "type": "integer"
+            },
+            "count": {
+              "description": "Total number of rows returned",
+              "type": "integer"
+            }
+          }
+        },
+        "controls": {
+          "description": "Describes the sell and yield controls for the rate code.",
+          "$ref": "#/definitions/ratePlanControlsType"
+        },
+        "distribution": {
+          "description": "Distribution setup for the rate code.",
+          "$ref": "#/definitions/ratePlanDistributionType"
+        },
+        "ratePlanCodeIndicators": {
+          "description": "Indicators of additional information attached to the Rate code.",
+          "$ref": "#/definitions/indicatorsType"
+        },
+        "ratePlanBasedOnRates": {
+          "description": "Rate plan types based on rates.",
+          "$ref": "#/definitions/ratePlanBasedOnRatesType"
+        },
+        "ratePlanScheduleInfo": {
+          "description": "Rate plan's summary information about its schedules.",
+          "$ref": "#/definitions/ratePlanScheduleInfoType"
+        },
+        "approvalNotes": {
+          "description": "Approval Notes for Rate plan code.",
+          "$ref": "#/definitions/ratePlanNotesType"
+        },
+        "routingInstructions": {
+          "description": "Rate plan's default routing instructions.",
+          "$ref": "#/definitions/ratePlanRoutingInstructionsType"
+        },
+        "externalAttributes": {
+          "description": "Elements which are needed by External Interfaces",
+          "$ref": "#/definitions/ratePlanExternalAttributesType"
+        },
+        "accessExclusions": {
+          "description": "List of access exclusions.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/rateAccessExclusionType"
+          }
+        },
+        "mobileCheckinAllowed": {
+          "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
+          "type": "boolean"
+        },
+        "mobileCheckoutAllowed": {
+          "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
+          "type": "boolean"
+        },
+        "hotelId": {
+          "description": "Hotel Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": "Rate plan Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "purgeDate": {
+          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "supressRate": {
+          "description": "Is rate amount suppressed for the rate plan?",
+          "type": "boolean"
+        },
+        "printRate": {
+          "description": "Is Rate amount printed on the reports for the rate plan?",
+          "type": "boolean"
+        },
+        "discountAllowed": {
+          "description": "Is rate plan code discounted?",
+          "type": "boolean"
+        },
+        "redemption": {
+          "description": "Is redemption allowed on the rate code?",
+          "type": "boolean"
+        },
+        "externallyControlled": {
+          "description": "Is rate plan code externally controlled?",
+          "type": "boolean"
+        },
+        "bARRate": {
+          "description": "Is rate plan code of BAR Rate type?",
+          "type": "boolean"
+        },
+        "daily": {
+          "description": "Is rate plan code a daily rate?",
+          "type": "boolean"
+        },
+        "tiered": {
+          "description": "Is rate plan code a tiered rate?",
+          "type": "boolean"
+        },
+        "dayUse": {
+          "description": "Is rate plan code for day use?",
+          "type": "boolean"
+        },
+        "dayType": {
+          "description": "Indicates if rate Calendar factors such as adder/multiplier should be used for price calculation.",
+          "type": "boolean"
+        },
+        "complimentary": {
+          "description": "Is rate plan code complimentary?",
+          "type": "boolean"
+        },
+        "houseUse": {
+          "description": "Is rate plan code for house use?",
+          "type": "boolean"
+        },
+        "negotiated": {
+          "description": "Is rate plan code only available as a negotiated rate that must be associated with a guest, company, or travel agent profile ?",
+          "type": "boolean"
+        },
+        "ownerRate": {
+          "description": "Is rate plan code flagged as an owner rate plan? Owner rate plans have special functionality for no-shows depending on the Rolling Noshow Preference application setting.",
+          "type": "boolean"
+        },
+        "membershipEligible": {
+          "description": "Is rate plan code flagged as eligible for memberships? This flag controls whether the guest stay, which this rate plan is attached to, qualifies for point calculations for Frequent Flyer or Frequent Guest programs. If the rate plan associated to the reservation has not been flagged for Membership then the guest will not earn any points/miles for their stay.",
+          "type": "boolean"
+        },
+        "advancedDailyBase": {
+          "description": "Flag to identify if Rate Code is Advanced Daily Base Rate Code",
+          "type": "boolean"
+        },
+        "advancedDailyRate": {
+          "description": "Flag to identify if Rate Code is Advanced Daily Rate",
+          "type": "boolean"
+        },
+        "floorAmount": {
+          "description": "An amount that act as Floor value for Rate Plan.",
+          "type": "number"
+        }
+      }
+    },
+    "ratePlanTransactionDetailsType": {
+      "type": "object",
+      "properties": {
+        "folioText": {
+          "description": "Folio text of the rate plan.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "transactionCode": {
+          "description": "Transaction code used by the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomTransactionCodes": {
+          "description": "Collection of transaction codes configured by room types/room classes. The Revenue Posting by Room Type/Room Class function should be on to use this element.",
+          "$ref": "#/definitions/ratePlanRoomTransactionCodesType"
+        },
+        "packageTransactionCode": {
+          "description": "Package Transaction code used by the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "currencyCode": {
+          "description": "Currency code used by the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateIncludesTax": {
+          "description": "Is tax included in the rate plan?",
+          "type": "boolean"
+        },
+        "exchangePosting": {
+          "description": "Determines how the exchange rate is set for the rate code.",
+          "$ref": "#/definitions/exchangePostingType"
+        },
+        "postingRhythm": {
+          "description": "Determines the rate code posting rhythm.",
+          "$ref": "#/definitions/ratePlanPostingRhythmType"
+        },
+        "advancedPostingRhythms": {
+          "description": "When the Advanced Rate Code Posting Rhythm parameter is turned on, this element will contain the collection of advanced Buy x Get y posting rhythms for the rate plan.",
+          "$ref": "#/definitions/ratePlanAdvancedPostingRhythmsType"
+        }
+      }
+    },
+    "ratePlanRoomTransactionCodesType": {
+      "type": "array",
+      "description": "Single transaction code and room type/class association.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/ratePlanRoomTransactionCodeType"
+      }
+    },
+    "ratePlanRoomTransactionCodeType": {
+      "type": "object",
+      "description": "Transaction code associated to a room type or room class on a rate plan.",
+      "properties": {
+        "roomType": {
+          "description": "Room type which the transaction code is associated to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomClass": {
+          "description": "Room class which the transaction code is associated to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "transactionCode": {
+          "description": "Transaction code associated to the room type/room class.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "exchangePostingType": {
+      "type": "string",
+      "description": "Fixed at Block.",
+      "enum": [
+        "FixedAtCheckIn",
+        "FixedAtReservation",
+        "CurrentDate",
+        "FixedAtBlock"
+      ]
+    },
+    "ratePlanPostingRhythmType": {
+      "type": "object",
+      "description": "Rate Plan Posting rhythm type.",
+      "properties": {
+        "doNotPostEveryXNights": {
+          "description": "Do not Post the Rate Code every X nights. This can be used to offer free nights after staying certain number of nights on the rate plan.",
+          "type": "object",
+          "properties": {
+            "xNight": {
+              "description": "The night the rate plan is not supposed to be posted.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 14
+            },
+            "postPackages": {
+              "description": "Post the packages on free nights if the packages posting rhythm falls on the night rate plan is not getting posted.",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "ratePlanAdvancedPostingRhythmsType": {
+      "type": "array",
+      "description": "Posting rhythm details for a rate plan containing Buy x Get y functionality.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/ratePlanAdvancedPostingRhythmType"
+      }
+    },
+    "ratePlanAdvancedPostingRhythmType": {
+      "type": "object",
+      "description": "Posting rhythm details for a rate plan containing Buy x Get y functionality.",
+      "properties": {
+        "code": {
+          "description": "Code identifying the posting rhythm within the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the posting rhythm offer.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "beginSellDate": {
+          "description": "Date which the posting rhythm becomes applicable.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endSellDate": {
+          "description": "Date which the posting rhythm ceases to be applicable.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "requiredPaidNights": {
+          "description": "The number of nights which are required to be paid in order to receive free nights.",
+          "type": "integer"
+        },
+        "eligibleFreeNights": {
+          "description": "The number of free nights which are eligible when the number of required paid nights has been met.",
+          "type": "integer"
+        },
+        "repeatWithinStay": {
+          "description": "Indicates if the posting rhythm offer can be repeated more than once during the entire stay.",
+          "type": "boolean"
+        },
+        "repeatWithinSellSegment": {
+          "description": "Indicates if the posting rhythm offer can be repeated more than once within a specific sell segment of the reservation.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ratePlanCommissionType": {
+      "type": "object",
+      "properties": {
+        "commissionCode": {
+          "description": "commission code used by the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "commissionPercentage": {
+          "description": "commission percentage used by the rate plan.",
+          "type": "number"
+        },
+        "commissionAmount": {
+          "description": "commission amount used by the rate plan.",
+          "type": "number"
+        }
+      }
+    },
+    "ratePlanDepositType": {
+      "type": "object",
+      "properties": {
+        "depositMaturityPreference": {
+          "description": "Deposit maturity preference used by the rate plan.",
+          "$ref": "#/definitions/depositMaturityPreferenceType"
+        }
+      }
+    },
+    "depositMaturityPreferenceType": {
+      "type": "string",
+      "description": "Fixed values for Deposite Maturity Preference affecting the rate code",
+      "enum": [
+        "CheckIn",
+        "LastStayNight",
+        "LastDayAdvDeposit"
+      ]
+    },
+    "rateRoomTypeListType": {
+      "type": "array",
+      "description": "Details of each room type",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/rateRoomTypeDetailType"
+      }
+    },
+    "rateRoomTypeDetailType": {
+      "type": "object",
+      "description": "Details of single room type",
+      "properties": {
+        "code": {
+          "description": "Room type code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Text description for the room type",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "pseudo": {
+          "description": "True if room type will not be associated with physical rooms included in inventory",
+          "type": "boolean"
+        },
+        "rateFloor": {
+          "description": "This is the minimum amount of which room can be sold",
+          "type": "number"
         }
       }
     },
@@ -4805,374 +7075,21 @@
         "Source"
       ]
     },
-    "trxCodesInfoType": {
-      "type": "array",
-      "description": "List of Transaction codes info.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/trxInfoType"
-      }
-    },
-    "trxInfoType": {
+    "ratePlan": {
       "type": "object",
-      "description": "Transaction codes info.",
+      "description": "Request object to create rate plan.",
       "properties": {
-        "description": {
-          "description": "Transaction codes info.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
+        "ratePlan": {
+          "description": "Rate plan code details to be created.",
+          "$ref": "#/definitions/ratePlanType"
         },
-        "transactionGroup": {
-          "description": "Category of the transaction code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+        "links": {
+          "$ref": "#/definitions/links"
         },
-        "transactionSubGroup": {
-          "description": "Sub category of the transaction code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "universalProductCode": {
-          "description": "Unique Universal product code of the transaction code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "routingInstructionsId": {
-          "description": "This is the Routing Instruction Id attached with Reservation. It is only used for internal purpose. It should not be used by external vendor or consumer.",
-          "type": "number"
-        },
-        "articles": {
-          "description": "The List of Articles defined for this transaction code, when using the Articles functionality.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/articleInfoType"
-          }
-        },
-        "trxServiceType": {
-          "description": "Contains service type for transaction code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "transactionCode": {
-          "description": "Unique identifier for the Transaction code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "hotelId": {
-          "description": "Hotel context of the Transaction code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "printTrxReceipt": {
-          "description": "Print receipt flag that tells whether the transaction receipt is to be printed or not. This is based on the transaction code.",
-          "type": "boolean"
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
-    },
-    "articleInfoType": {
-      "type": "object",
-      "description": "Information regarding an article.",
-      "properties": {
-        "description": {
-          "description": "Description of the article.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "transactionCode": {
-          "description": "Transaction code to which the article belongs.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "price": {
-          "description": "Default price of the article.",
-          "$ref": "#/definitions/currencyAmountType"
-        },
-        "postIt": {
-          "description": "Post it information of the article.",
-          "$ref": "#/definitions/articlePostItType"
-        },
-        "universalProductCode": {
-          "description": "Unique Universal product code of the article.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "hotelId": {
-          "description": "Hotel code to which the article belongs.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "articleCode": {
-          "description": "Unique code of the article.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "inactive": {
-          "description": "Indicates whether the article is inactive or not.",
-          "type": "boolean"
-        },
-        "orderSequence": {
-          "description": "Display Order sequence.",
-          "type": "number"
-        }
-      }
-    },
-    "currencyAmountType": {
-      "type": "object",
-      "description": "A monetary value expressed with a currency code.",
-      "properties": {
-        "amount": {
-          "description": "A monetary amount.",
-          "type": "number"
-        },
-        "currencyCode": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 3
-        }
-      }
-    },
-    "articlePostItType": {
-      "type": "object",
-      "description": "Post it information of an article.",
-      "properties": {
-        "availableForPostIt": {
-          "description": "Indicates whether the article is available for post it.",
-          "type": "boolean"
-        },
-        "color": {
-          "description": "Color indicator which is only configurable if article is available for post it.",
-          "$ref": "#/definitions/colorType"
-        }
-      }
-    },
-    "colorType": {
-      "type": "string",
-      "description": "Color configuration type. This color configuration provides a visual category of entities.",
-      "enum": [
-        "Red",
-        "DarkRed",
-        "Green",
-        "DarkGreen",
-        "LightGreen",
-        "Orange",
-        "White",
-        "Yellow",
-        "DarkYellow",
-        "Purple",
-        "Brown",
-        "Gray",
-        "Aqua",
-        "Chocolate",
-        "Blue",
-        "LightBlue",
-        "DarkBlue",
-        "Cyan",
-        "DarkCyan",
-        "Magenta",
-        "DarkMagenta",
-        "Black"
-      ]
-    },
-    "billingInstructionsType": {
-      "type": "array",
-      "description": "Set of Billing Instruction codes.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/billingInstructionType"
-      }
-    },
-    "billingInstructionType": {
-      "type": "object",
-      "description": "Configured Billing Instruction which represents a set of Transaction Codes.",
-      "properties": {
-        "desc": {
-          "description": "Billing Instruction code description.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "routingInstructionsId": {
-          "description": "This is the Routing Instruction Id attached with Reservation. It is only used for internal purpose. It should not be used by external vendor or consumer.",
-          "type": "number"
-        },
-        "billingCode": {
-          "description": "Unique identifier for the Billing Instruction.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "hotelId": {
-          "description": "Hotel context of the Billing Instruction.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "ratePlanExternalAttributesType": {
-      "type": "object",
-      "properties": {
-        "marshaRateProgram": {
-          "description": "Rate Category for the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "rateAccessExclusionType": {
-      "type": "object",
-      "description": "Access Exclusion information indicating the actions allowed under a HUB or Hotel for which the access exclusion is set.",
-      "properties": {
-        "sourceType": {
-          "description": "The type of source (CRO or Hotel code) for which the rate access exclusion is set.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "sourceValue": {
-          "description": "CRO or Hotel code value.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "allowModifyReservation": {
-          "description": "Allow to modify a reservation under this access exclusion.",
-          "type": "boolean"
-        },
-        "allowCancelReservation": {
-          "description": "Allow to cancel a reservation under this access exclusion.",
-          "type": "boolean"
-        },
-        "allowCreateReservation": {
-          "description": "Allow to create a reservation under this access exclusion.",
-          "type": "boolean"
-        },
-        "inactive": {
-          "description": "The rate access exclusion is inactive",
-          "type": "boolean"
-        },
-        "excludeFromAvailability": {
-          "description": "Exclude a specific rate from availability",
-          "type": "boolean"
-        },
-        "dateRange": {
-          "description": "Date range for the rate access exclusion.",
-          "$ref": "#/definitions/dateRangeType"
-        }
-      }
-    },
-    "masterInfoType": {
-      "type": "object",
-      "properties": {
-        "codeInfo": {
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/codeInfoType"
-          }
-        },
-        "codeType": {
-          "$ref": "#/definitions/masterType"
-        }
-      }
-    },
-    "codeInfoType": {
-      "type": "object",
-      "description": "",
-      "properties": {
-        "description": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "addtionalCodeInfo": {
-          "$ref": "#/definitions/addtionalCodeInfoType"
-        },
-        "hotelId": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "code": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "addtionalCodeInfoType": {
-      "type": "array",
-      "description": "Holds name of additional code information",
-      "maxItems": 4000,
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "Holds name of additional code information",
-            "$ref": "#/definitions/masterInfoCodeDetailType"
-          },
-          "value": {
-            "description": "Holds value of additional code information",
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 2000
-          }
-        }
-      }
-    },
-    "masterInfoCodeDetailType": {
-      "type": "string",
-      "enum": [
-        "LongDescription",
-        "ShortDescription"
-      ]
-    },
-    "masterType": {
-      "type": "string",
-      "enum": [
-        "Country",
-        "State",
-        "AddressType",
-        "PhoneType",
-        "RateCategory",
-        "CalculationRule",
-        "PostingRythym",
-        "BillingInstruction",
-        "TransactionCode",
-        "DisplaySet",
-        "MailingActions",
-        "DistanceType",
-        "District",
-        "Territory",
-        "FiscalRegion",
-        "InventoryItem",
-        "Package",
-        "RoomFeaturePreference",
-        "SpecialPreference",
-        "Promotion",
-        "Department",
-        "ReservationPreference",
-        "FacilityTask",
-        "RoomType",
-        "RateCode",
-        "OutOfOrderReason",
-        "Block"
-      ]
     },
     "ratePlanSchedulesInfo": {
       "type": "object",
@@ -5331,265 +7248,6 @@
         }
       }
     },
-    "scheduleRateAmountsType": {
-      "type": "object",
-      "properties": {
-        "onePersonRate": {
-          "description": "Rate amount for one person.",
-          "type": "number"
-        },
-        "twoPersonRate": {
-          "description": "Rate amount for two persons.",
-          "type": "number"
-        },
-        "threePersonRate": {
-          "description": "Rate amount for three persons.",
-          "type": "number"
-        },
-        "fourPersonRate": {
-          "description": "Rate amount for four persons.",
-          "type": "number"
-        },
-        "fivePersonRate": {
-          "description": "Rate amount for five persons.",
-          "type": "number"
-        },
-        "extraPersonRate": {
-          "description": "Rate amount for each extra person.",
-          "type": "number"
-        },
-        "extraChildRate": {
-          "description": "Rate amount for each extra Child.",
-          "type": "number"
-        },
-        "oneChildRate": {
-          "description": "Rate amount for one Child.",
-          "type": "number"
-        },
-        "twoChildrenRate": {
-          "description": "Rate amount for two Children.",
-          "type": "number"
-        },
-        "threeChildrenRate": {
-          "description": "Rate amount for three Children.",
-          "type": "number"
-        },
-        "fourChildrenRate": {
-          "description": "Rate amount for four Children.",
-          "type": "number"
-        },
-        "rateByAgeBuckets": {
-          "description": "Collection of rate amount by age bracket.",
-          "$ref": "#/definitions/rateByAgeBucketsType"
-        },
-        "minimumChildrenForFreeStay": {
-          "description": "Minimum number of children needed to get free stay.",
-          "type": "integer"
-        },
-        "pointsRequired": {
-          "description": "The number of award points required for applying this rate plan schedule.",
-          "type": "number"
-        },
-        "overrideFloorAmount": {
-          "description": "true if floor amount needs to be override",
-          "type": "boolean"
-        }
-      }
-    },
-    "rateByAgeBucketsType": {
-      "type": "array",
-      "description": "Rate amount by age bucket.",
-      "maxItems": 3,
-      "items": {
-        "$ref": "#/definitions/rateByAgeBucketType"
-      }
-    },
-    "rateByAgeBucketType": {
-      "type": "object",
-      "description": "Rate amount by age bucket.",
-      "properties": {
-        "rateAmount": {
-          "description": "Rate amount by age bucket.",
-          "type": "number"
-        },
-        "minimumAge": {
-          "description": "Minimum age for age bucket.",
-          "type": "integer"
-        },
-        "maximumAge": {
-          "description": "Maximum age for age bucket.",
-          "type": "integer"
-        }
-      }
-    },
-    "advancedBaseRateOffsetType": {
-      "type": "object",
-      "description": "A Rate which is of Advanced Dynamic Base Rate can have rate schedule based on an offset from its Base Rate or BAR Rate.",
-      "properties": {
-        "offset": {
-          "description": "offset amount for the advanced dynamic base rate schedule.",
-          "type": "number"
-        },
-        "flatOrPercentage": {
-          "description": "It signifies offset amount is of Flat or Percentage type. Valid Values are F/P.",
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 1
-        },
-        "applyBar": {
-          "description": "Should this schedule be Advanced dynamically based on BAR rate.",
-          "type": "boolean"
-        }
-      }
-    },
-    "rateAmountBoundariesType": {
-      "type": "object",
-      "description": "Rate amount boundaries for the rate plan schedule. Minimum and/or maximum rate amounts can be defined for one and/or two adults.",
-      "properties": {
-        "minimum": {
-          "description": "Minimum rate amounts for one and/or two adults.",
-          "$ref": "#/definitions/rateAmountBoundaryType"
-        },
-        "maximum": {
-          "description": "Maximum rate amounts for one and/or two adults.",
-          "$ref": "#/definitions/rateAmountBoundaryType"
-        }
-      }
-    },
-    "rateAmountBoundaryType": {
-      "type": "object",
-      "description": "Set of rate amounts for one and/or two adults. This set will represent either the minimum or maximum rate boundary.",
-      "properties": {
-        "onePersonRate": {
-          "description": "One person rate amount for the rate boundary.",
-          "type": "number"
-        },
-        "twoPersonRate": {
-          "description": "Two person rate amount for the rate boundary.",
-          "type": "number"
-        }
-      }
-    },
-    "ratePlanScheduleClassificationsType": {
-      "type": "object",
-      "properties": {
-        "marketCode": {
-          "description": "Market code for the rate schedule.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "sourceCode": {
-          "description": "Source code for the rate schedule.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "occupantThresholdPricingType": {
-      "type": "object",
-      "description": "Definition for creating pricing for a rate schedule, based on occupants threshold level.",
-      "properties": {
-        "adults": {
-          "description": "Threshold for Adults in the room.",
-          "type": "object",
-          "properties": {
-            "threshold": {
-              "description": "Threshold value, after it is reached the corresponding amount will be charged.",
-              "type": "integer"
-            },
-            "amount": {
-              "description": "Amount to be charged after the threshold is reached.",
-              "type": "number"
-            }
-          }
-        },
-        "children": {
-          "description": "Threshold for Children in the room.",
-          "type": "object",
-          "properties": {
-            "threshold": {
-              "description": "Threshold value, after it is reached the corresponding amount will be charged.",
-              "type": "integer"
-            },
-            "amount": {
-              "description": "Amount to be charged after the threshold is reached.",
-              "type": "number"
-            },
-            "excludeBucket1": {
-              "description": "When rates are Defined by Age buckets, should the 1st buckets children count be excluded from threshold pricing.",
-              "type": "boolean"
-            },
-            "excludeBucket2": {
-              "description": "When rates are Defined by Age buckets, should the 2nd buckets children count be excluded from threshold pricing.",
-              "type": "boolean"
-            },
-            "excludeBucket3": {
-              "description": "When rates are Defined by Age buckets, should the 3rd buckets children count be excluded from threshold pricing.",
-              "type": "boolean"
-            }
-          }
-        },
-        "occupants": {
-          "description": "Threshold for Occupants in the room.",
-          "type": "object",
-          "properties": {
-            "threshold": {
-              "description": "Threshold value, after it is reached the corresponding amount will be charged.",
-              "type": "integer"
-            },
-            "amount": {
-              "description": "Amount to be charged after the threshold is reached.",
-              "type": "number"
-            }
-          }
-        }
-      }
-    },
-    "scheduleAdjustmentDetailsType": {
-      "type": "array",
-      "description": "The list of adjustment codes for the rate plan schedule.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/adjustmentDetailType"
-      }
-    },
-    "adjustmentDetailType": {
-      "type": "object",
-      "description": "The adjustment code details for the rate schedule.",
-      "properties": {
-        "overriddenAmount": {
-          "description": "The amount with which the actual adjustment will be overridden. if no amount is sent, default adjustment code's amount will be used.",
-          "type": "number"
-        },
-        "adjustmentCode": {
-          "description": "the adjustment code that needs to be attached to the rate schedule.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "deleteAdjustment": {
-          "description": "Should this Adjustment code be deleted ?",
-          "type": "boolean"
-        }
-      }
-    },
-    "tierIDType": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 5
-    },
-    "roomTypeListType": {
-      "type": "array",
-      "description": "Room Type.",
-      "maxItems": 4000,
-      "items": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 20
-      }
-    },
     "ratePlanMasterInfoType": {
       "type": "object",
       "description": "The Rate plan info type is used primarily by rate plan schedules to get basic rate plan header details.",
@@ -5681,6 +7339,60 @@
         "tierID": {
           "description": "The rate tier number/level.",
           "$ref": "#/definitions/tierIDType"
+        }
+      }
+    },
+    "ratePlanSchedules": {
+      "type": "object",
+      "description": "Request object to change rate plan schedules.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code of the rate plan schedule.",
+          "$ref": "#/definitions/codeType"
+        },
+        "ratePlanCode": {
+          "description": "Rate plan code of the rate plan schedule.",
+          "$ref": "#/definitions/codeType"
+        },
+        "ratePlanScheduleList": {
+          "description": "List of rate plan schedules to be updated.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ratePlanSchedulesType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "ratePlanSchedulesToCreate": {
+      "type": "object",
+      "description": "Request object to create rate plan schedules.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code of the rate plan schedule.",
+          "$ref": "#/definitions/codeType"
+        },
+        "ratePlanCode": {
+          "description": "Rate plan code of the rate plan schedule.",
+          "$ref": "#/definitions/codeType"
+        },
+        "ratePlanScheduleList": {
+          "description": "List of rate plan schedules to be created.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ratePlanScheduleDetailType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     },
@@ -5787,67 +7499,6 @@
         }
       }
     },
-    "packageCodeType": {
-      "type": "object",
-      "properties": {
-        "header": {
-          "description": "Package code header details.",
-          "$ref": "#/definitions/packageCodeHeaderType"
-        },
-        "schedules": {
-          "description": "Package code price schedule details.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/configPackageScheduleType"
-          }
-        },
-        "hotelId": {
-          "description": "Hotel code for the packages.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "code": {
-          "description": "Package Code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "description": {
-          "description": "Package Code Description.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "group": {
-          "description": "Indicates if it is a Package Group or not.",
-          "type": "boolean"
-        },
-        "ratePlanCode": {
-          "description": "Package Code specific to a rate plan code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "adjustOverlappingRange": {
-          "description": "Flag to adjust the overlapping dates automatically. True will allow the system to adjust the overlapping dates automatically . False will not allow overlapping dates and throws error messages if overlapping dates are found",
-          "type": "boolean"
-        },
-        "hasMore": {
-          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-          "type": "boolean"
-        },
-        "totalResults": {
-          "description": "Total number of rows queried",
-          "type": "integer"
-        },
-        "count": {
-          "description": "Total number of rows returned",
-          "type": "integer"
-        }
-      }
-    },
     "ratePlansSummary": {
       "type": "object",
       "description": "Response object to fetch rate plans summary information.",
@@ -5903,76 +7554,20 @@
           "$ref": "#/definitions/warningsType"
         }
       }
-    },
-    "ratePlanShortInfoType": {
-      "type": "object",
-      "description": "The Rate plan code information.",
-      "properties": {
-        "primaryDetails": {
-          "description": "Rate plan code header primary details.",
-          "$ref": "#/definitions/ratePlanPrimaryDetailsType"
-        },
-        "classifications": {
-          "description": "Rate plan code grouping details.",
-          "$ref": "#/definitions/ratePlanClassificationsType"
-        },
-        "descriptions": {
-          "description": "Short and Long info details of the Rate Plan.",
-          "$ref": "#/definitions/ratePlanDescriptionsType"
-        },
-        "externalAttributes": {
-          "description": "Elements which are needed by External Interfaces",
-          "$ref": "#/definitions/ratePlanExternalAttributesType"
-        },
-        "hotelId": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "ratePlanCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "createDateTime": {
-          "description": "Time stamp of the creation.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifierId": {
-          "description": "Identifies the last software system or person to modify a record.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "purgeDate": {
-          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "discountAllowed": {
-          "description": "Indicates whether the rate plan is allowed to be discounted.",
-          "type": "boolean"
-        }
-      }
     }
   },
   "tags": [
     {
       "name": "RatePlan",
       "description": "The Rate Plan APIs allow for creating, managing, and retrieving rates and their related components such as negotiated rates and packages."
+    },
+    {
+      "name": "ChainConfig",
+      "description": "These APIs will allow you to configure rate related configuration related for Administration."
+    },
+    {
+      "name": "HotelConfig",
+      "description": "These APIs will allow you to configure rate related configuration related for Administration."
     }
   ],
   "externalDocs": {

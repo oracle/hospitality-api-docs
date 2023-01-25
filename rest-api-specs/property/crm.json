@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Customer Relationship Management API",
-    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.<br /><br /> There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much  more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.<br /><br /> There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much  more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -143,7 +143,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Delivery methods associated with the profile.",
+            "description": "Room Ownership information associated with the profile.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -330,7 +330,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Delivery methods associated with the profile.",
+            "description": "Room Ownership information associated with the profile.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -1032,11 +1032,18 @@
             "description": "Unique OPERA internal ID used to find guest/contact/employee profile in OPERA."
           },
           {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "description": "Hotel Code used to filter hotel specific information regarding the profile.",
+            "type": "string"
+          },
+          {
             "name": "fetchInstructions",
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Delivery methods associated with the profile.",
+            "description": "Room Ownership information associated with the profile.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -1561,6 +1568,136 @@
         ]
       }
     },
+    "/profileListOfValues/availableARAddresses": {
+      "get": {
+        "summary": "Get available AR Addresses ",
+        "description": "Use this API to fetch the available AR Addresses List Of Values for profiles <p><strong>OperationId:</strong>getAvailableARAddresses</p>",
+        "operationId": "getAvailableARAddresses",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "query",
+            "required": true,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": true,
+            "description": "The property where the AR Account exists or is being created.",
+            "type": "string"
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "accountIdContext",
+            "in": "query",
+            "required": false,
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "type": "string"
+          },
+          {
+            "name": "accountType",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "accountNo",
+            "in": "query",
+            "required": false,
+            "description": "The Account Number of the AR Account of the Profile.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response to the request to fetch the available Accounts Receivables(AR) Addresses for a Profile.",
+            "schema": {
+              "$ref": "#/definitions/availableARAddresses"
+            }
+          },
+          "204": {
+            "description": "AvailableARAddresses not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileLOV"
+        ]
+      }
+    },
     "/profileListOfValues/availablePreferences": {
       "get": {
         "summary": "Get available preferences",
@@ -1577,7 +1714,7 @@
           {
             "name": "hotelId",
             "in": "query",
-            "required": true,
+            "required": false,
             "description": "Property for which preferences are to be fetched.",
             "type": "string"
           },
@@ -1925,6 +2062,17 @@
             "type": "string"
           },
           {
+            "name": "ownerCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
             "name": "membershipLevel",
             "in": "query",
             "required": false,
@@ -1936,6 +2084,13 @@
             "in": "query",
             "required": false,
             "description": "Account Receivable associated to the profile.",
+            "type": "string"
+          },
+          {
+            "name": "taxID",
+            "in": "query",
+            "required": false,
+            "description": "Tax ID associated to the profile",
             "type": "string"
           },
           {
@@ -2037,6 +2192,50 @@
             "required": false,
             "description": "Indicates whether to exclude Protected Profiles.",
             "type": "boolean"
+          },
+          {
+            "name": "excludedProfilesId",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "idExtension",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Additional identifying value assigned by the creating system.",
+            "items": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "name": "excludedProfilesIdContext",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "excludedProfilesIdType",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
           },
           {
             "name": "identificationNo",
@@ -2543,7 +2742,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Delivery methods associated with the profile.",
+            "description": "Room Ownership information associated with the profile.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -4539,6 +4738,12 @@
       "type": "string",
       "description": "Language code",
       "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
     }
   },
   "responses": {
@@ -4589,6 +4794,489 @@
     }
   },
   "definitions": {
+    "addressType": {
+      "type": "object",
+      "description": "Provides address information.",
+      "properties": {
+        "isValidated": {
+          "description": "Indicator to define if the Address is validated by the Address Validation System.",
+          "type": "boolean"
+        },
+        "addressLine": {
+          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 80
+          }
+        },
+        "cityName": {
+          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "postalCode": {
+          "description": "Post Office Code number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 15
+        },
+        "cityExtension": {
+          "description": "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "county": {
+          "description": "County or District Name (e.g., Fairfax). This is read only.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "state": {
+          "description": "State or Province name (e.g., Texas).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "country": {
+          "description": "Country name (e.g., Ireland).",
+          "$ref": "#/definitions/countryNameType"
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "type": {
+          "description": "Defines the type of address (e.g. home, business, other).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "typeDescription": {
+          "description": "Describes the type code",
+          "type": "string"
+        },
+        "primaryInd": {
+          "description": "When true, indicates a primary information.",
+          "type": "boolean"
+        },
+        "updateReservations": {
+          "description": "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
+          "type": "boolean"
+        },
+        "barCode": {
+          "description": "The postal barcode for the address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "countryNameType": {
+      "type": "object",
+      "description": "Code for a country or a nationality.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Used for Character Strings, length 0 to 200.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "code": {
+          "description": "Code for a country or a nationality.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "userDefinedFieldsType": {
+      "type": "object",
+      "description": "A common type used to hold user defined fields(UDFs). This type should be used to handle UDFs on RReservation, Profiles, etc.",
+      "properties": {
+        "characterUDFs": {
+          "description": "Collection of user defined fields of Character/String Type.",
+          "$ref": "#/definitions/characterUDFsType"
+        },
+        "numericUDFs": {
+          "description": "Collection of user defined fields of Numeric Type.",
+          "$ref": "#/definitions/numericUDFsType"
+        },
+        "dateUDFs": {
+          "description": "Collection of user defined fields of Date Type.",
+          "$ref": "#/definitions/dateUDFsType"
+        }
+      }
+    },
+    "characterUDFsType": {
+      "type": "array",
+      "description": "Used to hold collection of user defined fields of Character/String Type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/characterUDFType"
+      }
+    },
+    "characterUDFType": {
+      "type": "object",
+      "description": "Used to hold user defined field of Character/String Type.",
+      "properties": {
+        "name": {
+          "description": "Used to hold user defined field of Character Type. It is highly recommended to use UDFC01, UDFC02,...UDFC40 (Total 40) as Character/String UDF names(commonly used on Reservation, Profile etc.). Name is not restricted using enumeration, to provide flexibility of different name usage if required.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "value": {
+          "description": "Value of user defined field.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "alternateName": {
+          "description": "Label of user defined field used by vendors or customers.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "numericUDFsType": {
+      "type": "array",
+      "description": "Used to hold collection of user defined fields of Numeric Type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/numericUDFType"
+      }
+    },
+    "numericUDFType": {
+      "type": "object",
+      "description": "Used to hold user defined field of Numeric Type. It is highly recommended to use UDFN01, UDFN02,...UDFN40 (Total 40) as Numeric UDF names(commonly used on Reservation, Profile etc.). Name is not restricted using enumeration, to provide flexibility of different name usage if required.",
+      "properties": {
+        "name": {
+          "description": "Name of user defined field.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "value": {
+          "description": "Value of user defined field.",
+          "type": "number"
+        },
+        "alternateName": {
+          "description": "Label of user defined field used by vendors or customers.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "dateUDFsType": {
+      "type": "array",
+      "description": "Used to hold collection of user defined fields of Date Type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/dateUDFType"
+      }
+    },
+    "dateUDFType": {
+      "type": "object",
+      "description": "Used to hold user defined field of Date Type.",
+      "properties": {
+        "name": {
+          "description": "Used to hold user defined field of Date Type. It is highly recommended to use UDFD01, UDFD02,...UDFN20 (Total 20) as Date UDF names(commonly used on Reservation, Profile etc.). Name is not restricted using enumeration, to provide flexibility of different name usage if required.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "value": {
+          "description": "Value of user defined field.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "alternateName": {
+          "description": "Label of user defined field used by vendors or customers.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "profileIdList": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
     "company": {
       "type": "object",
       "description": "Request object for creation of company/agent/group/source profile. This object contains profile details with unique identifiers of a profile. The standard optional Opera Context element is also included.",
@@ -4610,32 +5298,6 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "profileIdList": {
-      "type": "array",
-      "description": "Unique Id that references an object uniquely in the system.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/uniqueID_Type"
-      }
-    },
-    "uniqueID_Type": {
-      "type": "object",
-      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
-      "properties": {
-        "id": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "type": {
-          "description": "A reference to the type of object defined by the UniqueID element.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
         }
       }
     },
@@ -5144,7 +5806,7 @@
           "description": "Alternate Name of the Company. Mainly, it's the name of the company written in the Alternate Language.",
           "type": "string",
           "minLength": 0,
-          "maxLength": 40
+          "maxLength": 80
         },
         "alternateLanguage": {
           "description": "Alternate Language of the company.",
@@ -5357,130 +6019,6 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 40
-        }
-      }
-    },
-    "addressType": {
-      "type": "object",
-      "description": "Provides address information.",
-      "properties": {
-        "isValidated": {
-          "description": "Indicator to define if the Address is validated by the Address Validation System.",
-          "type": "boolean"
-        },
-        "addressLine": {
-          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
-          "type": "array",
-          "maxItems": 4,
-          "items": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 80
-          }
-        },
-        "cityName": {
-          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "postalCode": {
-          "description": "Post Office Code number.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 15
-        },
-        "cityExtension": {
-          "description": "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "county": {
-          "description": "County or District Name (e.g., Fairfax). This is read only.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "state": {
-          "description": "State or Province name (e.g., Texas).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "country": {
-          "description": "Country name (e.g., Ireland).",
-          "$ref": "#/definitions/countryNameType"
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "type": {
-          "description": "Defines the type of address (e.g. home, business, other).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "typeDescription": {
-          "description": "Describes the type code",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "primaryInd": {
-          "description": "When true, indicates a primary information.",
-          "type": "boolean"
-        },
-        "updateReservations": {
-          "description": "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
-          "type": "boolean"
-        },
-        "barCode": {
-          "description": "The postal barcode for the address.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 100
-        },
-        "createDateTime": {
-          "description": "Time stamp of the creation.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifierId": {
-          "description": "Identifies the last software system or person to modify a record.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        }
-      }
-    },
-    "countryNameType": {
-      "type": "object",
-      "description": "Code for a country or a nationality.",
-      "properties": {
-        "value": {
-          "type": "string",
-          "description": "Used for Character Strings, length 0 to 200.",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "code": {
-          "description": "Code for a country or a nationality.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
         }
       }
     },
@@ -5867,23 +6405,19 @@
         },
         "newMembershipNumber": {
           "description": "Card Number of the membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "nameOnCard": {
           "description": "Name to be displayed on the membership card.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "programDescription": {
           "description": "Description of the membership program.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevel": {
           "description": "Indicates the membership level.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevelDescription": {
           "description": "Indicates the membership level description.",
@@ -5893,8 +6427,7 @@
         },
         "membershipClass": {
           "description": "Indicates the membership class.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "earningPreference": {
           "description": "Earning preference to the membership.",
@@ -5938,8 +6471,7 @@
         },
         "rating": {
           "description": "Value Rating Type Description for this membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipEnrollmentCode": {
           "description": "Indicates how the guest enrolled in the program.",
@@ -5981,13 +6513,11 @@
         },
         "membershipId": {
           "description": "Card Number of the membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipType": {
           "description": "Type of membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "primaryMembershipYn": {
           "description": "Indicator if Membership is a Primary Membership.",
@@ -6071,8 +6601,7 @@
         },
         "url": {
           "description": "A URL for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -6160,13 +6689,11 @@
         },
         "preferenceTypeDescription": {
           "description": "Preference group description.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "sequence": {
           "description": "Preference Sequence.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "maxQuantity": {
           "description": "Maximum quantity of preferences allowed per preference group.",
@@ -6252,6 +6779,10 @@
         "excludedPreferencesCount": {
           "description": "Specifies the count of preferences excluded for the attached reservation preference.",
           "type": "integer"
+        },
+        "copyToProfile": {
+          "description": "Specifies whether to copy the reservation preference to the profile or not.",
+          "type": "boolean"
         }
       }
     },
@@ -6660,13 +7191,10 @@
           "maxLength": 80
         },
         "gender": {
-          "description": "Identifies the gender.",
+          "description": "Identifies the profile gender code selected from Gender types List of values. Gender types LOV provides the values configured at gender configuration.",
           "type": "string",
-          "enum": [
-            "Male",
-            "Female",
-            "Unknown"
-          ]
+          "minLength": 0,
+          "maxLength": 20
         },
         "birthDate": {
           "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
@@ -6676,8 +7204,7 @@
         },
         "birthDateMasked": {
           "description": "Indicates the date of birth as masked.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "currencyCode": {
           "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
@@ -6798,13 +7325,11 @@
         },
         "envelopeGreeting": {
           "description": "Envelope Greeting of the profile",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "salutation": {
           "description": "Salutation of the profile",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "nameType": {
           "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
@@ -6941,8 +7466,7 @@
       "properties": {
         "alienRegistrationNo": {
           "description": "Alien Registration Number.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "immigrationStatus": {
           "description": "Immigration Status on an Alien.",
@@ -7147,8 +7671,7 @@
         },
         "lastRoom": {
           "description": "Used to hold last room information for the profile.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastRate": {
           "description": "Used to hold last rate information for the profile.",
@@ -7471,118 +7994,6 @@
         "Eft",
         "Chk"
       ]
-    },
-    "userDefinedFieldsType": {
-      "type": "object",
-      "description": "A common type used to hold user defined fields(UDFs). This type should be used to handle UDFs on RReservation, Profiles, etc.",
-      "properties": {
-        "characterUDFs": {
-          "description": "Collection of user defined fields of Character/String Type.",
-          "$ref": "#/definitions/characterUDFsType"
-        },
-        "numericUDFs": {
-          "description": "Collection of user defined fields of Numeric Type.",
-          "$ref": "#/definitions/numericUDFsType"
-        },
-        "dateUDFs": {
-          "description": "Collection of user defined fields of Date Type.",
-          "$ref": "#/definitions/dateUDFsType"
-        }
-      }
-    },
-    "characterUDFsType": {
-      "type": "array",
-      "description": "Used to hold collection of user defined fields of Character/String Type.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/characterUDFType"
-      }
-    },
-    "characterUDFType": {
-      "type": "object",
-      "description": "Used to hold user defined field of Character/String Type.",
-      "properties": {
-        "name": {
-          "description": "Used to hold user defined field of Character Type. It is highly recommended to use UDFC01, UDFC02,...UDFC40 (Total 40) as Character/String UDF names(commonly used on Reservation, Profile etc.). Name is not restricted using enumeration, to provide flexibility of different name usage if required.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "value": {
-          "description": "Value of user defined field.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "alternateName": {
-          "description": "Label of user defined field used by vendors or customers.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        }
-      }
-    },
-    "numericUDFsType": {
-      "type": "array",
-      "description": "Used to hold collection of user defined fields of Numeric Type.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/numericUDFType"
-      }
-    },
-    "numericUDFType": {
-      "type": "object",
-      "description": "Used to hold user defined field of Numeric Type. It is highly recommended to use UDFN01, UDFN02,...UDFN40 (Total 40) as Numeric UDF names(commonly used on Reservation, Profile etc.). Name is not restricted using enumeration, to provide flexibility of different name usage if required.",
-      "properties": {
-        "name": {
-          "description": "Name of user defined field.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "value": {
-          "description": "Value of user defined field.",
-          "type": "number"
-        },
-        "alternateName": {
-          "description": "Label of user defined field used by vendors or customers.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        }
-      }
-    },
-    "dateUDFsType": {
-      "type": "array",
-      "description": "Used to hold collection of user defined fields of Date Type.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/dateUDFType"
-      }
-    },
-    "dateUDFType": {
-      "type": "object",
-      "description": "Used to hold user defined field of Date Type.",
-      "properties": {
-        "name": {
-          "description": "Used to hold user defined field of Date Type. It is highly recommended to use UDFD01, UDFD02,...UDFN20 (Total 20) as Date UDF names(commonly used on Reservation, Profile etc.). Name is not restricted using enumeration, to provide flexibility of different name usage if required.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "value": {
-          "description": "Value of user defined field.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "alternateName": {
-          "description": "Label of user defined field used by vendors or customers.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        }
-      }
     },
     "webUserAccountsType": {
       "type": "array",
@@ -8394,226 +8805,1245 @@
         "Source"
       ]
     },
-    "links": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/instanceLink"
+    "profileNameType": {
+      "type": "object",
+      "description": "This provides name information for a person.",
+      "properties": {
+        "name": {
+          "description": "Family name, last name or Company Name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "fullName": {
+          "description": "Full display Name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "namePrefix": {
+          "description": "Salutation of honorific (e.g. Mr., Mrs., Ms., Miss, Dr.)",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "givenName": {
+          "description": "Given name, first name or names.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "middleName": {
+          "description": "The middle name of the person name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "nameSuffix": {
+          "description": "Hold various name suffixes and letters (e.g. Jr., Sr., III, Ret., Esq.)",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "nameTitle": {
+          "description": "Degree or honors (e.g., Ph.D., M.D.)",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "nameType": {
+          "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
+          "$ref": "#/definitions/personNameTypeType"
+        }
       }
     },
-    "instanceLink": {
+    "profileDeliveryMethod": {
       "type": "object",
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "description": "Delivery Information type to the profile.",
       "properties": {
-        "href": {
-          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type": "string"
+        "deliveryId": {
+          "description": "Delivery ID. It will be empty in case of new delivery method.",
+          "$ref": "#/definitions/uniqueID_Type"
         },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
-        },
-        "method": {
-          "description": "HTTP method for requesting the target of the link.",
+        "deliveryType": {
+          "description": "Delivery type can have a value EMAIL, ELECTRONIC etc and it depends on the parameter set in OPERA Control.",
           "type": "string",
-          "enum": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE",
-            "PATCH",
-            "OPTIONS",
-            "HEAD"
-          ]
+          "minLength": 0,
+          "maxLength": 20
         },
-        "targetSchema": {
-          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type": "string"
+        "deliveryValue": {
+          "description": "Delivery value holds the corresponding value of the delivery type..",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
+        "hotelId": {
+          "description": "Property that has delivery methods configured.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
-        "title": {
-          "description": "Exact copy of the \"summary\" field on the linked operation.",
-          "type": "string"
+        "deliveryModule": {
+          "description": "Module where this delivery type will be used. Example : EFolio Export, EInvoice , Fiscal, etc..",
+          "$ref": "#/definitions/profileDeliveryModuleType"
+        },
+        "primaryInd": {
+          "description": "When true, indicates a primary information.",
+          "type": "boolean"
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
         }
-      },
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
+      }
+    },
+    "profileDeliveryModuleType": {
+      "type": "string",
+      "description": "Module where this delivery type will be used. Example : EFolio Export, EInvoice , Fiscal, etc..",
+      "enum": [
+        "EfolioExport"
       ]
     },
-    "warningsType": {
-      "type": "array",
-      "description": "Used in conjunction with the Success element to define a business error.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/warningType"
+    "relationshipInfoSummaryType": {
+      "type": "object",
+      "description": "RelationshipInfoSummaryType contains information about the associations between and among individuals, companies, travel agents, groups, sources, and contact profiles.",
+      "properties": {
+        "relationshipProfile": {
+          "description": "Refer to Relationship Profile Summary type document.",
+          "$ref": "#/definitions/relationshipProfileSummaryType"
+        },
+        "masterAccountDetails": {
+          "description": "Refer to Master Profile type document.",
+          "$ref": "#/definitions/masterAccountInfoType"
+        },
+        "relationshipID": {
+          "description": "Relationship identifier.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "sourceRelation": {
+          "description": "Indicates the type of relationship the current profile(Source Profile) has with the related profile(Target Profile).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sourceRelationDescription": {
+          "description": "Displays the description of relationship the current profile(Source Profile) has with the related profile(Target Profile).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "targetRelation": {
+          "description": "Displays the type of relationship the Related profile(Target Profile) has with the current profile(Source Profile).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "targetRelationDescription": {
+          "description": "Displays the description of the target relation(Target Profile).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
       }
     },
-    "warningType": {
+    "relationshipProfileSummaryType": {
       "type": "object",
-      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "customerName": {
+          "description": "Name of the customer",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "companyName": {
+          "description": "Name of the company.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "telephoneNumber": {
+          "description": "Telephone number assigned to a single location",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "address": {
+          "description": "Information on address details for the customer/company",
+          "$ref": "#/definitions/relationshipAddressType"
+        },
+        "emailAddress": {
+          "description": "Defines the e-mail address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "ownerCode": {
+          "description": "Unique Code to identify the owner.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "profileIdList": {
+          "description": "Original profile details for which the relationships was created",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "primary": {
+          "description": "Indicates if this relationship is the primary relationship.",
+          "type": "boolean"
+        },
+        "profileStatus": {
+          "description": "Status of the profile. Active/Inactive",
+          "$ref": "#/definitions/profileStatusType"
+        },
+        "primaryOwnerCode": {
+          "description": "When true, this is a primary owner.",
+          "type": "boolean"
+        },
+        "profileType": {
+          "description": "Type of profile such as Guest, Agent, Company, Group, Source, Employee, Hotel, Vendor or Contact.",
+          "$ref": "#/definitions/profileTypeType"
+        }
+      }
+    },
+    "relationshipAddressType": {
+      "type": "object",
+      "description": "Provides address information for a Relationship.",
+      "properties": {
+        "addressLine": {
+          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 80
+          }
+        },
+        "city": {
+          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "postalCode": {
+          "description": "Post Office Code number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 15
+        },
+        "state": {
+          "description": "State or Province name (e.g., Texas).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "country": {
+          "description": "Country name (e.g., Ireland).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "reservationIdList": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "stayInfoType": {
+      "type": "object",
+      "description": "Details on the Room Stay including Guest Counts, Time Span of this Room Stay, pointers to Res Guests, guest Memberships, Comments and Special Requests pertaining to this particular Room Stay and finally financial information related to the Room Stay, including Guarantee, Deposit and Payment and Cancellation Penalties.",
+      "properties": {
+        "arrivalDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "departureDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "originalTimeSpan": {
+          "description": "The Original Time Span covers the Room Stay dates of the original reservation.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "expectedTimes": {
+          "description": "The expected arrival, return and departure times of the guest.",
+          "$ref": "#/definitions/resExpectedTimesType"
+        },
+        "adultCount": {
+          "description": "A collection of Guest Counts associated with Room Stay.",
+          "type": "integer"
+        },
+        "childCount": {
+          "description": "A collection of Child Counts associated with Room Stay.",
+          "type": "integer"
+        },
+        "roomClass": {
+          "description": "Room class code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "Room type code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "componentRoomType": {
+          "description": "True indicates room type is a component type.",
+          "type": "boolean"
+        },
+        "numberOfRooms": {
+          "description": "Room Id",
+          "type": "integer"
+        },
+        "roomId": {
+          "description": "Room Id",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": "Rate plan code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateAmount": {
+          "description": "Rate amount",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "points": {
+          "description": "The Points contains the number of points used to book a particular room type.",
+          "$ref": "#/definitions/pointsType"
+        },
+        "rateSuppressed": {
+          "description": "Whether this rate should be suppressed from view",
+          "type": "boolean"
+        },
+        "reservationBlock": {
+          "description": "Key information about the block for this reservation.",
+          "$ref": "#/definitions/reservationBlockType"
+        },
+        "bookingChannelCode": {
+          "description": "Booking channel code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "linkCode": {
+          "description": "Party code",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "fixedRate": {
+          "description": "True if the rate is a fixed rate, otherwise false",
+          "type": "boolean"
+        },
+        "totalAmount": {
+          "description": "The total amount charged for the Room Stay including additional occupant amounts and fees. If TaxInclusive is set to True, then taxes are included in the total amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "guarantee": {
+          "description": "The guarantee information associated to the Room Stay. A maximum of 5 occurances are available for use depending on the context.",
+          "$ref": "#/definitions/resGuaranteeType"
+        },
+        "promotion": {
+          "description": "Promotion Codes",
+          "$ref": "#/definitions/promotionType"
+        },
+        "marketCode": {
+          "description": "Market code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "marketDescription": {
+          "description": "Description of Market code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "sourceCode": {
+          "description": "Source of business",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sourceCodeDescription": {
+          "description": "Description of the source of business.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "balance": {
+          "description": "Balance amount",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "compBalance": {
+          "description": "Comp Balance amount",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "roomTypeCharged": {
+          "description": "Room type code that was charged",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "depositPayments": {
+          "description": "A collection of deposit and/or payments for the Room Stay.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "guestServiceStatus": {
+          "description": "Service Status of In House guest like DND or MUP",
+          "$ref": "#/definitions/guestHousekeepingServiceRequestType"
+        },
+        "scheduledCheckoutTime": {
+          "description": "Indicates that this reservation is scheduled for automated check out.",
+          "type": "string",
+          "format": "date"
+        },
+        "roomNumberLocked": {
+          "description": "When true, indicates a room number cannot be changed. When false, indicates a room number may be changed.",
+          "type": "boolean"
+        },
+        "pseudoRoom": {
+          "description": "True indicates as pseudo room type. This is usually used for a posting master reservation.",
+          "type": "boolean"
+        },
+        "assignedByAI": {
+          "description": "Represents the room was assigned by AI Room Assignment.",
+          "type": "boolean"
+        },
+        "upgradedByAI": {
+          "description": "Represents the room was assigned by AI Room Assignment.",
+          "type": "boolean"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "resExpectedTimesType": {
+      "type": "object",
+      "description": "Holds the Arrival and Departure Time Information",
+      "properties": {
+        "reservationExpectedArrivalTime": {
+          "description": "Arrival Time",
+          "type": "string",
+          "format": "date-time"
+        },
+        "reservationExpectedDepartureTime": {
+          "description": "Departure Time",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pointsType": {
+      "type": "object",
+      "description": "The Redeem Points contains the number of points required to book a room type.",
+      "properties": {
+        "awardsType": {
+          "description": "Awards type for the award type rate code.",
+          "type": "string"
+        },
+        "points": {
+          "description": "No of points required to book this Room Stay.",
+          "type": "integer"
+        }
+      }
+    },
+    "reservationBlockType": {
+      "type": "object",
+      "description": "Key information about the block for a reservation.",
+      "properties": {
+        "blockIdList": {
+          "description": "Collection of unique block identifiers for the reservation.",
+          "$ref": "#/definitions/blockIdList"
+        },
+        "blockName": {
+          "description": "The Name of the block that is attached to the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "hotelId": {
+          "description": "This is the HotelCode of the Block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "blockIdList": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "resGuaranteeType": {
+      "type": "object",
+      "description": "Validations type record returned after Validations are done.",
+      "properties": {
+        "guaranteeCode": {
+          "description": "Guarantee Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "shortDescription": {
+          "description": "Guarantee Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "onHold": {
+          "description": "Guarantee Code.",
+          "type": "boolean"
+        }
+      }
+    },
+    "promotionType": {
+      "type": "object",
+      "description": "Type to specify a rate promotion. Usually attached to a reservation to indicate a specific promotion is applied to the reservation.",
+      "properties": {
+        "promotionCode": {
+          "description": "Promotion code associated with the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "promotionName": {
+          "description": "Promotion code Name associated with the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "couponCode": {
+          "description": "Promotion Coupon Code when promotion is setup to have a valid coupon code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "guestHousekeepingServiceRequestType": {
+      "type": "string",
+      "description": "Possible values for the Guest Service Status.",
+      "enum": [
+        "DoNotDisturb",
+        "MakeUpRoom",
+        "NoStatusSelected"
+      ]
+    },
+    "basicEmailType": {
+      "type": "string",
+      "description": "Email address",
+      "minLength": 0,
+      "maxLength": 2000
+    },
+    "resAttachedProfileListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/resAttachedProfileType"
+      }
+    },
+    "resAttachedProfileType": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Attached profile name",
+          "type": "string"
+        },
+        "profileIdList": {
+          "description": "Collection of unique profile identifiers",
+          "$ref": "#/definitions/profileIdList"
+        },
+        "reservationProfileType": {
+          "$ref": "#/definitions/resProfileTypeType"
+        }
+      }
+    },
+    "resProfileTypeType": {
+      "type": "string",
+      "enum": [
+        "Guest",
+        "Company",
+        "Group",
+        "TravelAgent",
+        "Source",
+        "ReservationContact",
+        "BillingContact",
+        "Addressee"
+      ]
+    },
+    "searchMatchesType": {
+      "type": "array",
+      "description": "List of Generic Name-Value-Pair Parameters used for super search matches.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/searchMatchType"
+      }
+    },
+    "searchMatchType": {
+      "type": "object",
+      "description": "Search match indicating attribute and the matching value.",
+      "properties": {
+        "attribute": {
+          "description": "Search match attribute.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "value": {
+          "description": "Search match value.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "pMS_ResStatusType": {
+      "type": "string",
+      "description": "This reservation is in checked in status and the business date is past departure date. This could occur when ORS and PMS are in same environment.",
+      "enum": [
+        "Reserved",
+        "Requested",
+        "NoShow",
+        "Cancelled",
+        "InHouse",
+        "CheckedOut",
+        "Waitlisted",
+        "DueIn",
+        "DueOut",
+        "Walkin",
+        "PendingCheckout"
+      ]
+    },
+    "reservationStayHistoryFutureInfoType": {
+      "type": "object",
+      "description": "Information of History and Future Reservation details attached to Profiles.",
+      "properties": {
+        "historyList": {
+          "description": "Refer to History list type document.",
+          "$ref": "#/definitions/stayHistoryListType"
+        },
+        "futureList": {
+          "description": "Refer to Future list type document.",
+          "$ref": "#/definitions/stayFutureListType"
+        }
+      }
+    },
+    "stayHistoryListType": {
+      "type": "object",
+      "description": "A collection of reservation history details attached to Profiles.",
+      "properties": {
+        "reservationInfo": {
+          "description": "Additional reservation information attached to the profile . Eg : History reservation details",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayReservationInfoType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "stayReservationInfoType": {
+      "type": "object",
+      "description": "The Reservation class contains the current reservation being created or altered.",
+      "properties": {
+        "reservationIdList": {
+          "description": "Unique identifiers for the reservation for both internal and external systems",
+          "$ref": "#/definitions/reservationIdList"
+        },
+        "roomStay": {
+          "description": "Collection of room stays.",
+          "$ref": "#/definitions/stayInfoType"
+        },
+        "attachedProfiles": {
+          "description": "List of attached profiles",
+          "$ref": "#/definitions/resAttachedProfileListType"
+        },
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "reservationStatus": {
+          "description": "Indicates the status of the reservation.",
+          "$ref": "#/definitions/pMS_ResStatusType"
+        },
+        "computedReservationStatus": {
+          "description": "Indicates the status of the reservation.",
+          "$ref": "#/definitions/pMS_ResStatusType"
+        }
+      }
+    },
+    "stayFutureListType": {
+      "type": "object",
+      "description": "A collection of reservation history details attached to Profiles.",
+      "properties": {
+        "reservationInfo": {
+          "description": "Additional reservation information attached to the profile . Eg : Future reservation details",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayReservationInfoType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "roomOwnershipType": {
+      "type": "object",
+      "description": "Define the search criteria for retrieving room ownership records",
+      "properties": {
+        "contractId": {
+          "description": "Contract ID of the room ownership record.",
+          "type": "integer"
+        },
+        "contractNumber": {
+          "description": "Contract number for room owner.",
+          "type": "string"
+        },
+        "unit": {
+          "description": "Unit for room owner.",
+          "type": "string"
+        },
+        "roomCategory": {
+          "description": "Room Category of the room ownership record.",
+          "type": "string"
+        },
+        "roomType": {
+          "description": "Room Type of the room ownership record.",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "Start Date of the room ownership record.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "description": "End Date of the room ownership record.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "profileId": {
+          "description": "Profile ID of the room ownership record.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "status": {
+          "description": "Status of the room ownership record.",
+          "type": "string"
+        }
+      }
+    },
+    "profileSummaryInfoType": {
+      "type": "object",
+      "description": "Summary information about a profile and the associated Unique IDs.",
+      "properties": {
+        "profileIdList": {
+          "description": "Unique identifiers for the Profile for both internal and external systems. In case of Travel Agent the IATA code.",
+          "$ref": "#/definitions/profileIdList"
+        },
+        "profile": {
+          "description": "Provides summary information regarding profile.",
+          "$ref": "#/definitions/profileSummaryType"
+        }
+      }
+    },
+    "profileSummaryType": {
+      "type": "object",
+      "description": "Type provides the basic information about the profile.",
+      "properties": {
+        "formerName": {
+          "description": "This provides name information for a person.",
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "Family name, last name or Company Name.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "fullName": {
+              "description": "Full display Name.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 200
+            },
+            "namePrefix": {
+              "description": "Salutation of honorific (e.g. Mr., Mrs., Ms., Miss, Dr.)",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "givenName": {
+              "description": "Given name, first name or names.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "middleName": {
+              "description": "The middle name of the person name.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "nameSuffix": {
+              "description": "Hold various name suffixes and letters (e.g. Jr., Sr., III, Ret., Esq.)",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            },
+            "nameTitle": {
+              "description": "Degree or honors (e.g., Ph.D., M.D.)",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 80
+            },
+            "nameType": {
+              "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
+              "$ref": "#/definitions/personNameTypeType"
+            },
+            "gender": {
+              "description": "Identifies the profile gender code selected from Gender types List of values. Gender types LOV provides the values configured at gender configuration.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            },
+            "birthDate": {
+              "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
+              "type": "string",
+              "format": "date",
+              "maxLength": 8
+            },
+            "birthDateMasked": {
+              "description": "Indicates the date of birth as masked.",
+              "type": "string"
+            },
+            "currencyCode": {
+              "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            },
+            "currencySymbol": {
+              "description": "The symbol for the currency, e.g, for currencyCode USD the symbol is $.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 10
+            },
+            "decimalPlaces": {
+              "description": "Indicates the number of decimal places for a particular currency. This is equivalent to the ISO 4217 standard \"minor unit\". Typically used when the amount provided includes the minor unit of currency without a decimal point (e.g., USD 8500 needs DecimalPlaces=\"2\" to represent $85).",
+              "type": "integer"
+            },
+            "language": {
+              "description": "Language identification.",
+              "type": "string",
+              "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+            },
+            "customerValue": {
+              "description": "The supplier's ranking of the customer (e.g., VIP, numerical ranking).",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            }
+          }
+        },
+        "altName": {
+          "description": "Profile Name information for this profile.",
+          "$ref": "#/definitions/profileNameType"
+        },
+        "anonymization": {
+          "description": "Provides information about the guest's anonymization status",
+          "$ref": "#/definitions/anonymizationType"
+        },
+        "addressInfo": {
+          "description": "Detailed information on an address for the customer.",
+          "$ref": "#/definitions/addressInfoType"
+        },
+        "telephoneInfo": {
+          "description": "Detailed information on telephone/ fax for the customer.",
+          "$ref": "#/definitions/telephoneInfoType"
+        },
+        "emailInfo": {
+          "description": "Detailed information on an eMail address for the customer.",
+          "$ref": "#/definitions/emailInfoType"
+        },
+        "profileMembership": {
+          "description": "Information on membership for the customer.",
+          "$ref": "#/definitions/profileMembershipType"
+        },
+        "uRLInfo": {
+          "description": "Detailed information on web url/address for the customer.",
+          "$ref": "#/definitions/uRLInfoType"
+        },
+        "citizenCountry": {
+          "description": "Name of the (self-professed) country that is claimed for citizenship.",
+          "$ref": "#/definitions/countryNameType"
+        },
+        "profileIndicators": {
+          "description": "Indicators of additional information attached to the profile",
+          "$ref": "#/definitions/indicatorsType"
+        },
+        "searchMatches": {
+          "description": "Super Search matching terms.",
+          "$ref": "#/definitions/searchMatchesType"
+        },
+        "profileAccessType": {
+          "description": "Detailed information on access type associated with the profile.Information on whether the profile is created in CRO/Hotel/Chain.",
+          "$ref": "#/definitions/profileAccessType"
+        },
+        "profileRestrictions": {
+          "description": "Detailed information on restrictions associated with the profile.",
+          "$ref": "#/definitions/profileRestrictions"
+        },
+        "vipStatus": {
+          "description": "VIP status of the customer.",
+          "$ref": "#/definitions/vIPStatusType"
+        },
+        "owners": {
+          "description": "Owner of the customer.",
+          "$ref": "#/definitions/ownersType"
+        },
+        "primaryCompany": {
+          "description": "Primary Company of the profile.",
+          "type": "string"
+        },
+        "aRAccount": {
+          "description": "AR Account information.",
+          "$ref": "#/definitions/directBillingType"
+        },
+        "commission": {
+          "description": "Commission Code and description of the requested HotelCode.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "taxInfo": {
+          "description": "Profile information about tax.",
+          "$ref": "#/definitions/profileTaxInfoType"
+        },
+        "cashiering": {
+          "description": "Contains cashiering related details for the profile",
+          "$ref": "#/definitions/profileCashieringType"
+        },
+        "lastStayInfo": {
+          "description": "Information on last stay of the profile.",
+          "$ref": "#/definitions/lastStayInfoType"
+        },
+        "allowedActions": {
+          "description": "Collection of allowed actions for profile search.",
+          "$ref": "#/definitions/profileAllowedActionsType"
+        },
+        "primaryAccountInfo": {
+          "description": "Contains primary account information (Profile Id, Profile Type and Profile Name) for the contacts.",
+          "$ref": "#/definitions/primaryProfileInfoType"
+        },
+        "salesInfo": {
+          "description": "Sales information of the profile.",
+          "$ref": "#/definitions/salesInfoType"
+        },
+        "additionalInfo": {
+          "description": "Additional Information about the profile.",
+          "$ref": "#/definitions/profileAdditionalInfoType"
+        },
+        "profileType": {
+          "description": "Type of profile such as Guest, Agent, Company, Group, Source, Employee, Hotel, Vendor or Contact.",
+          "$ref": "#/definitions/profileTypeType"
+        },
+        "subscription": {
+          "description": "This element tells If there is an active subscription for this external profile .",
+          "type": "boolean"
+        },
+        "statusCode": {
+          "description": "Status of the profile. Active/Inactive",
+          "$ref": "#/definitions/profileStatusType"
+        },
+        "protected": {
+          "description": "What level this profile is protected.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "privateProfile": {
+          "description": "This element tells profile is property exclusive or not.",
+          "type": "boolean"
+        },
+        "inheritedNegRates": {
+          "description": "Flag to indicate if the negotiated rates are inherited from master profile. Flag is available only when the profile is linked to master profile and master profile has negotiated rate codes attached.",
+          "type": "boolean"
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "registeredProperty": {
+          "description": "Property this profile is registered with.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "vIPStatusType": {
+      "type": "object",
+      "description": "VIP status of the customer.",
       "properties": {
         "value": {
           "type": "string",
-          "description": "Property Value"
-        },
-        "shortText": {
-          "description": "An abbreviated version of the error in textual format.",
-          "type": "string",
+          "description": "Used for Character Strings, length 0 to 2000.",
+          "minLength": 0,
           "maxLength": 2000
         },
         "code": {
-          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "description": "VIP status of the customer.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
-        },
-        "docURL": {
-          "description": "If present, this URL refers to an online description of the error that occurred.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "status": {
-          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "tag": {
-          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "type": {
-          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "rph": {
-          "description": "Reference Place Holder used as an index for this warning.",
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 8
         }
       }
     },
-    "status": {
-      "type": "object",
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "properties": {
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        }
+    "ownersType": {
+      "type": "array",
+      "description": "Generic type for a list of owners.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/ownerType"
       }
     },
-    "exceptionDetailType": {
-      "title": "Error Detail",
-      "description": "Complex type that contains error details for a REST call.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
-        },
-        "detail": {
-          "type": "string",
-          "description": "Human-readable description specific to this occurrence of the problem."
-        },
-        "instance": {
-          "type": "string",
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Application error code, which is different from HTTP error code."
-        },
-        "o:errorPath": {
-          "type": "string",
-          "description": "Path to the problem at the resource or property level."
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/errorInstance"
-          }
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        }
-      },
-      "required": [
-        "type",
-        "title"
+    "profileAllowedActionsType": {
+      "type": "array",
+      "description": "Allowed actions for profile operations.",
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/definitions/profileAllowedActionType"
+      }
+    },
+    "profileAllowedActionType": {
+      "type": "string",
+      "description": "Flag indicating whether Profile is Enrolled to Primary Membership Program.",
+      "enum": [
+        "NameChange",
+        "TaxIDChange",
+        "EnrollToPrimaryMembership"
       ]
     },
-    "errorInstance": {
-      "title": "Error Instance Details",
-      "description": "Complex type that contains error instance details for a REST call.",
+    "primaryProfileInfoType": {
+      "type": "object",
+      "description": "Contains basic information of profile.",
+      "properties": {
+        "profileId": {
+          "description": "Unique Identifier for OPERA Profile.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "profileType": {
+          "description": "Type of account such as Agent, Company, and Source.",
+          "$ref": "#/definitions/profileTypeType"
+        },
+        "profileName": {
+          "description": "Name of the account.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "profileAdditionalInfoType": {
       "type": "object",
       "properties": {
-        "type": {
+        "primaryOwnerCode": {
+          "description": "Primary Owner of the profile",
           "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+          "minLength": 0,
+          "maxLength": 20
         },
-        "title": {
+        "territory": {
+          "description": "Territory associated to the profile.",
           "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+          "minLength": 0,
+          "maxLength": 40
         },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        "masterAccount": {
+          "description": "Indicates if the profile is a Master Account for one or more Subsidiary Accounts.",
+          "type": "boolean"
         },
-        "detail": {
+        "subsidiaryAccount": {
+          "description": "Indicates if the profile is a Subsidiary Account of a Master/Parent Account.",
+          "type": "boolean"
+        },
+        "businessPosition": {
+          "description": "Business Title or Position of the profile.",
           "type": "string",
-          "description": "Human-readable description specific to this occurrence of the problem."
-        },
-        "instance": {
-          "type": "string",
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Application error code, which is different from HTTP error code."
-        },
-        "o:errorPath": {
-          "type": "string",
-          "description": "Path to the problem at the resource or property level."
+          "minLength": 0,
+          "maxLength": 40
         }
-      },
-      "required": [
-        "type",
-        "title"
+      }
+    },
+    "masterInfoType": {
+      "type": "object",
+      "properties": {
+        "codeInfo": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/codeInfoType"
+          }
+        },
+        "codeType": {
+          "$ref": "#/definitions/masterType"
+        }
+      }
+    },
+    "codeInfoType": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "addtionalCodeInfo": {
+          "$ref": "#/definitions/addtionalCodeInfoType"
+        },
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "code": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "addtionalCodeInfoType": {
+      "type": "array",
+      "description": "Holds name of additional code information",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Holds name of additional code information",
+            "$ref": "#/definitions/masterInfoCodeDetailType"
+          },
+          "value": {
+            "description": "Holds value of additional code information",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        }
+      }
+    },
+    "masterInfoCodeDetailType": {
+      "type": "string",
+      "enum": [
+        "LongDescription",
+        "ShortDescription"
+      ]
+    },
+    "masterType": {
+      "type": "string",
+      "enum": [
+        "Country",
+        "State",
+        "AddressType",
+        "PhoneType",
+        "RateCategory",
+        "CalculationRule",
+        "PostingRythym",
+        "BillingInstruction",
+        "TransactionCode",
+        "DisplaySet",
+        "MailingActions",
+        "DistanceType",
+        "District",
+        "Territory",
+        "FiscalRegion",
+        "InventoryItem",
+        "Package",
+        "RoomFeaturePreference",
+        "SpecialPreference",
+        "Promotion",
+        "Department",
+        "ReservationPreference",
+        "FacilityTask",
+        "RoomType",
+        "RateCode",
+        "OutOfOrderReason",
+        "Block"
       ]
     },
     "profile": {
@@ -9181,732 +10611,14 @@
         "showInactiveRoomOwners": {
           "description": "Flag to show inactive Room Owners.",
           "type": "boolean"
-        }
-      }
-    },
-    "profileDeliveryMethod": {
-      "type": "object",
-      "description": "Delivery Information type to the profile.",
-      "properties": {
-        "deliveryId": {
-          "description": "Delivery ID. It will be empty in case of new delivery method.",
-          "$ref": "#/definitions/uniqueID_Type"
         },
-        "deliveryType": {
-          "description": "Delivery type can have a value EMAIL, ELECTRONIC etc and it depends on the parameter set in OPERA Control.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "deliveryValue": {
-          "description": "Delivery value holds the corresponding value of the delivery type..",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "hotelId": {
-          "description": "Property that has delivery methods configured.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "deliveryModule": {
-          "description": "Module where this delivery type will be used. Example : EFolio Export, EInvoice , Fiscal, etc..",
-          "$ref": "#/definitions/profileDeliveryModuleType"
-        },
-        "primaryInd": {
-          "description": "When true, indicates a primary information.",
-          "type": "boolean"
-        },
-        "orderSequence": {
-          "description": "Display Order sequence.",
-          "type": "number"
-        }
-      }
-    },
-    "profileDeliveryModuleType": {
-      "type": "string",
-      "description": "Module where this delivery type will be used. Example : EFolio Export, EInvoice , Fiscal, etc..",
-      "enum": [
-        "EfolioExport"
-      ]
-    },
-    "relationshipInfoSummaryType": {
-      "type": "object",
-      "description": "RelationshipInfoSummaryType contains information about the associations between and among individuals, companies, travel agents, groups, sources, and contact profiles.",
-      "properties": {
-        "relationshipProfile": {
-          "description": "Refer to Relationship Profile Summary type document.",
-          "$ref": "#/definitions/relationshipProfileSummaryType"
-        },
-        "masterAccountDetails": {
-          "description": "Refer to Master Profile type document.",
-          "$ref": "#/definitions/masterAccountInfoType"
-        },
-        "relationshipID": {
-          "description": "Relationship identifier.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "sourceRelation": {
-          "description": "Indicates the type of relationship the current profile(Source Profile) has with the related profile(Target Profile).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "sourceRelationDescription": {
-          "description": "Displays the description of relationship the current profile(Source Profile) has with the related profile(Target Profile).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "targetRelation": {
-          "description": "Displays the type of relationship the Related profile(Target Profile) has with the current profile(Source Profile).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "targetRelationDescription": {
-          "description": "Displays the description of the target relation(Target Profile).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        }
-      }
-    },
-    "relationshipProfileSummaryType": {
-      "type": "object",
-      "properties": {
-        "customerName": {
-          "description": "Name of the customer",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "companyName": {
-          "description": "Name of the company.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "telephoneNumber": {
-          "description": "Telephone number assigned to a single location",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "address": {
-          "description": "Information on address details for the customer/company",
-          "$ref": "#/definitions/relationshipAddressType"
-        },
-        "emailAddress": {
-          "description": "Defines the e-mail address.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "ownerCode": {
-          "description": "Unique Code to identify the owner.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "profileIdList": {
-          "description": "Original profile details for which the relationships was created",
-          "$ref": "#/definitions/uniqueIDListType"
-        },
-        "primary": {
-          "description": "Indicates if this relationship is the primary relationship.",
-          "type": "boolean"
-        },
-        "profileStatus": {
-          "description": "Status of the profile. Active/Inactive",
-          "$ref": "#/definitions/profileStatusType"
-        },
-        "primaryOwnerCode": {
-          "description": "When true, this is a primary owner.",
-          "type": "boolean"
-        },
-        "profileType": {
-          "description": "Type of profile such as Guest, Agent, Company, Group, Source, Employee, Hotel, Vendor or Contact.",
-          "$ref": "#/definitions/profileTypeType"
-        }
-      }
-    },
-    "relationshipAddressType": {
-      "type": "object",
-      "description": "Provides address information for a Relationship.",
-      "properties": {
-        "addressLine": {
-          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
-          "type": "array",
-          "maxItems": 4,
-          "items": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 80
-          }
-        },
-        "city": {
-          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "postalCode": {
-          "description": "Post Office Code number.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 15
-        },
-        "state": {
-          "description": "State or Province name (e.g., Texas).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "country": {
-          "description": "Country name (e.g., Ireland).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        }
-      }
-    },
-    "reservationStayHistoryFutureInfoType": {
-      "type": "object",
-      "description": "Information of History and Future Reservation details attached to Profiles.",
-      "properties": {
-        "historyList": {
-          "description": "Refer to History list type document.",
-          "$ref": "#/definitions/stayHistoryListType"
-        },
-        "futureList": {
-          "description": "Refer to Future list type document.",
-          "$ref": "#/definitions/stayFutureListType"
-        }
-      }
-    },
-    "stayHistoryListType": {
-      "type": "object",
-      "description": "A collection of reservation history details attached to Profiles.",
-      "properties": {
-        "reservationInfo": {
-          "description": "Additional reservation information attached to the profile . Eg : History reservation details",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/stayReservationInfoType"
-          }
-        },
-        "hasMore": {
-          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-          "type": "boolean"
-        },
-        "totalResults": {
-          "description": "Total number of rows queried",
-          "type": "integer"
-        },
-        "count": {
-          "description": "Total number of rows returned",
-          "type": "integer"
-        }
-      }
-    },
-    "stayReservationInfoType": {
-      "type": "object",
-      "description": "The Reservation class contains the current reservation being created or altered.",
-      "properties": {
-        "reservationIdList": {
-          "description": "Unique identifiers for the reservation for both internal and external systems",
-          "$ref": "#/definitions/reservationIdList"
-        },
-        "roomStay": {
-          "description": "Collection of room stays.",
-          "$ref": "#/definitions/stayInfoType"
-        },
-        "attachedProfiles": {
-          "description": "List of attached profiles",
-          "$ref": "#/definitions/resAttachedProfileListType"
-        },
-        "hotelId": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "reservationStatus": {
-          "description": "Indicates the status of the reservation.",
-          "$ref": "#/definitions/pMS_ResStatusType"
-        },
-        "computedReservationStatus": {
-          "description": "Indicates the status of the reservation.",
-          "$ref": "#/definitions/pMS_ResStatusType"
-        }
-      }
-    },
-    "reservationIdList": {
-      "type": "array",
-      "description": "Unique Id that references an object uniquely in the system.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/uniqueID_Type"
-      }
-    },
-    "stayInfoType": {
-      "type": "object",
-      "description": "Details on the Room Stay including Guest Counts, Time Span of this Room Stay, pointers to Res Guests, guest Memberships, Comments and Special Requests pertaining to this particular Room Stay and finally financial information related to the Room Stay, including Guarantee, Deposit and Payment and Cancellation Penalties.",
-      "properties": {
-        "arrivalDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "departureDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "originalTimeSpan": {
-          "description": "The Original Time Span covers the Room Stay dates of the original reservation.",
-          "$ref": "#/definitions/timeSpanType"
-        },
-        "expectedTimes": {
-          "description": "The expected arrival, return and departure times of the guest.",
-          "$ref": "#/definitions/resExpectedTimesType"
-        },
-        "adultCount": {
-          "description": "A collection of Guest Counts associated with Room Stay.",
-          "type": "integer"
-        },
-        "childCount": {
-          "description": "A collection of Child Counts associated with Room Stay.",
-          "type": "integer"
-        },
-        "roomClass": {
-          "description": "Room class code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "roomType": {
-          "description": "Room type code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "componentRoomType": {
-          "description": "True indicates room type is a component type.",
-          "type": "boolean"
-        },
-        "numberOfRooms": {
-          "description": "Room Id",
-          "type": "integer"
-        },
-        "roomId": {
-          "description": "Room Id",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "ratePlanCode": {
-          "description": "Rate plan code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "rateAmount": {
-          "description": "Rate amount",
-          "$ref": "#/definitions/currencyAmountType"
-        },
-        "points": {
-          "description": "The Points contains the number of points used to book a particular room type.",
-          "$ref": "#/definitions/pointsType"
-        },
-        "rateSuppressed": {
-          "description": "Whether this rate should be suppressed from view",
-          "type": "boolean"
-        },
-        "reservationBlock": {
-          "description": "Key information about the block for this reservation.",
-          "$ref": "#/definitions/reservationBlockType"
-        },
-        "bookingChannelCode": {
-          "description": "Booking channel code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "linkCode": {
-          "description": "Party code",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "fixedRate": {
-          "description": "True if the rate is a fixed rate, otherwise false",
-          "type": "boolean"
-        },
-        "totalAmount": {
-          "description": "The total amount charged for the Room Stay including additional occupant amounts and fees. If TaxInclusive is set to True, then taxes are included in the total amount.",
-          "$ref": "#/definitions/currencyAmountType"
-        },
-        "guarantee": {
-          "description": "The guarantee information associated to the Room Stay. A maximum of 5 occurances are available for use depending on the context.",
-          "$ref": "#/definitions/resGuaranteeType"
-        },
-        "promotion": {
-          "description": "Promotion Codes",
-          "$ref": "#/definitions/promotionType"
-        },
-        "marketCode": {
-          "description": "Market code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "marketDescription": {
-          "description": "Description of Market code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 4000
-        },
-        "sourceCode": {
-          "description": "Source of business",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "sourceCodeDescription": {
-          "description": "Description of the source of business.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 4000
-        },
-        "balance": {
-          "description": "Balance amount",
-          "$ref": "#/definitions/currencyAmountType"
-        },
-        "compBalance": {
-          "description": "Comp Balance amount",
-          "$ref": "#/definitions/currencyAmountType"
-        },
-        "roomTypeCharged": {
-          "description": "Room type code that was charged",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "depositPayments": {
-          "description": "A collection of deposit and/or payments for the Room Stay.",
-          "$ref": "#/definitions/currencyAmountType"
-        },
-        "guestServiceStatus": {
-          "description": "Service Status of In House guest like DND or MUP",
-          "$ref": "#/definitions/guestHousekeepingServiceRequestType"
-        },
-        "scheduledCheckoutTime": {
-          "description": "Indicates that this reservation is scheduled for automated check out.",
-          "type": "string",
-          "format": "date"
-        },
-        "roomNumberLocked": {
-          "description": "When true, indicates a room number cannot be changed. When false, indicates a room number may be changed.",
-          "type": "boolean"
-        },
-        "pseudoRoom": {
-          "description": "True indicates as pseudo room type. This is usually used for a posting master reservation.",
-          "type": "boolean"
-        },
-        "assignedByAI": {
-          "description": "Represents the room was assigned by AI Room Assignment.",
-          "type": "boolean"
-        },
-        "upgradedByAI": {
-          "description": "Represents the room was assigned by AI Room Assignment.",
-          "type": "boolean"
-        }
-      }
-    },
-    "timeSpanType": {
-      "type": "object",
-      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
-      "properties": {
-        "startDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "duration": {
-          "type": "string"
-        }
-      }
-    },
-    "resExpectedTimesType": {
-      "type": "object",
-      "description": "Holds the Arrival and Departure Time Information",
-      "properties": {
-        "reservationExpectedArrivalTime": {
-          "description": "Arrival Time",
-          "type": "string",
-          "format": "date-time"
-        },
-        "reservationExpectedDepartureTime": {
-          "description": "Departure Time",
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "pointsType": {
-      "type": "object",
-      "description": "The Redeem Points contains the number of points required to book a room type.",
-      "properties": {
-        "awardsType": {
-          "description": "Awards type for the award type rate code.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "points": {
-          "description": "No of points required to book this Room Stay.",
-          "type": "integer"
-        }
-      }
-    },
-    "reservationBlockType": {
-      "type": "object",
-      "description": "Key information about the block for a reservation.",
-      "properties": {
-        "blockIdList": {
-          "description": "Collection of unique block identifiers for the reservation.",
-          "$ref": "#/definitions/blockIdList"
-        },
-        "blockName": {
-          "description": "The Name of the block that is attached to the reservation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "hotelId": {
-          "description": "This is the HotelCode of the Block.",
+        "fiscalGuestType": {
+          "description": "Fiscal Guest Type is used for Fiscal Folio funcionality",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
         }
       }
-    },
-    "blockIdList": {
-      "type": "array",
-      "description": "Unique Id that references an object uniquely in the system.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/uniqueID_Type"
-      }
-    },
-    "resGuaranteeType": {
-      "type": "object",
-      "description": "Validations type record returned after Validations are done.",
-      "properties": {
-        "guaranteeCode": {
-          "description": "Guarantee Code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "shortDescription": {
-          "description": "Guarantee Code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "onHold": {
-          "description": "Guarantee Code.",
-          "type": "boolean"
-        }
-      }
-    },
-    "promotionType": {
-      "type": "object",
-      "description": "Type to specify a rate promotion. Usually attached to a reservation to indicate a specific promotion is applied to the reservation.",
-      "properties": {
-        "promotionCode": {
-          "description": "Promotion code associated with the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "promotionName": {
-          "description": "Promotion code Name associated with the rate plan.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "couponCode": {
-          "description": "Promotion Coupon Code when promotion is setup to have a valid coupon code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        }
-      }
-    },
-    "guestHousekeepingServiceRequestType": {
-      "type": "string",
-      "description": "Possible values for the Guest Service Status.",
-      "enum": [
-        "DoNotDisturb",
-        "MakeUpRoom",
-        "NoStatusSelected"
-      ]
-    },
-    "resAttachedProfileListType": {
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/resAttachedProfileType"
-      }
-    },
-    "resAttachedProfileType": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "description": "Attached profile name",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "profileIdList": {
-          "description": "Collection of unique profile identifiers",
-          "$ref": "#/definitions/profileIdList"
-        },
-        "reservationProfileType": {
-          "$ref": "#/definitions/resProfileTypeType"
-        }
-      }
-    },
-    "resProfileTypeType": {
-      "type": "string",
-      "enum": [
-        "Guest",
-        "Company",
-        "Group",
-        "TravelAgent",
-        "Source",
-        "ReservationContact",
-        "BillingContact",
-        "Addressee"
-      ]
-    },
-    "pMS_ResStatusType": {
-      "type": "string",
-      "description": "This reservation is in checked in status and the business date is past departure date. This could occur when ORS and PMS are in same environment.",
-      "enum": [
-        "Reserved",
-        "Requested",
-        "NoShow",
-        "Cancelled",
-        "InHouse",
-        "CheckedOut",
-        "Waitlisted",
-        "DueIn",
-        "DueOut",
-        "Walkin",
-        "PendingCheckout"
-      ]
-    },
-    "stayFutureListType": {
-      "type": "object",
-      "description": "A collection of reservation history details attached to Profiles.",
-      "properties": {
-        "reservationInfo": {
-          "description": "Additional reservation information attached to the profile . Eg : Future reservation details",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/stayReservationInfoType"
-          }
-        },
-        "hasMore": {
-          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-          "type": "boolean"
-        },
-        "totalResults": {
-          "description": "Total number of rows queried",
-          "type": "integer"
-        },
-        "count": {
-          "description": "Total number of rows returned",
-          "type": "integer"
-        }
-      }
-    },
-    "roomOwnershipType": {
-      "type": "object",
-      "description": "Define the search criteria for retrieving room ownership records",
-      "properties": {
-        "contractId": {
-          "description": "Contract ID of the room ownership record.",
-          "type": "integer"
-        },
-        "contractNumber": {
-          "description": "Contract number for room owner.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "unit": {
-          "description": "Unit for room owner.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "roomCategory": {
-          "description": "Room Category of the room ownership record.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "roomType": {
-          "description": "Room Type of the room ownership record.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "startDate": {
-          "description": "Start Date of the room ownership record.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "endDate": {
-          "description": "End Date of the room ownership record.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "profileId": {
-          "description": "Profile ID of the room ownership record.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "status": {
-          "description": "Status of the room ownership record.",
-          "type": "string",
-          "maxLength": 2000
-        }
-      }
-    },
-    "profileAllowedActionsType": {
-      "type": "array",
-      "description": "Allowed actions for profile operations.",
-      "maxItems": 2,
-      "items": {
-        "$ref": "#/definitions/profileAllowedActionType"
-      }
-    },
-    "profileAllowedActionType": {
-      "type": "string",
-      "description": "Flag indicating whether Profile is Enrolled to Primary Membership Program.",
-      "enum": [
-        "NameChange",
-        "TaxIDChange",
-        "EnrollToPrimaryMembership"
-      ]
     },
     "guest": {
       "type": "object",
@@ -10379,6 +11091,25 @@
         "Contact"
       ]
     },
+    "availableARAddresses": {
+      "type": "object",
+      "description": "Response to the request to fetch the available Accounts Receivables(AR) Addresses for a Profile.",
+      "properties": {
+        "addresses": {
+          "description": "Collection of Detailed information on an address for the customer.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/addressInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
     "availablePreferences": {
       "type": "object",
       "properties": {
@@ -10458,529 +11189,6 @@
         }
       }
     },
-    "profileSummaryInfoType": {
-      "type": "object",
-      "description": "Summary information about a profile and the associated Unique IDs.",
-      "properties": {
-        "profileIdList": {
-          "description": "Unique identifiers for the Profile for both internal and external systems. In case of Travel Agent the IATA code.",
-          "$ref": "#/definitions/profileIdList"
-        },
-        "profile": {
-          "description": "Provides summary information regarding profile.",
-          "$ref": "#/definitions/profileSummaryType"
-        }
-      }
-    },
-    "profileSummaryType": {
-      "type": "object",
-      "description": "Type provides the basic information about the profile.",
-      "properties": {
-        "formerName": {
-          "description": "This provides name information for a person.",
-          "type": "object",
-          "properties": {
-            "name": {
-              "description": "Family name, last name or Company Name.",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 40
-            },
-            "fullName": {
-              "description": "Full display Name.",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 200
-            },
-            "namePrefix": {
-              "description": "Salutation of honorific (e.g. Mr., Mrs., Ms., Miss, Dr.)",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 40
-            },
-            "givenName": {
-              "description": "Given name, first name or names.",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 40
-            },
-            "middleName": {
-              "description": "The middle name of the person name.",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 40
-            },
-            "nameSuffix": {
-              "description": "Hold various name suffixes and letters (e.g. Jr., Sr., III, Ret., Esq.)",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 40
-            },
-            "nameTitle": {
-              "description": "Degree or honors (e.g., Ph.D., M.D.)",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 80
-            },
-            "nameType": {
-              "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
-              "$ref": "#/definitions/personNameTypeType"
-            },
-            "gender": {
-              "description": "Identifies the gender.",
-              "type": "string",
-              "enum": [
-                "Male",
-                "Female",
-                "Unknown"
-              ]
-            },
-            "birthDate": {
-              "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
-              "type": "string",
-              "format": "date",
-              "maxLength": 8
-            },
-            "birthDateMasked": {
-              "description": "Indicates the date of birth as masked.",
-              "type": "string",
-              "maxLength": 2000
-            },
-            "currencyCode": {
-              "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 20
-            },
-            "currencySymbol": {
-              "description": "The symbol for the currency, e.g, for currencyCode USD the symbol is $.",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 10
-            },
-            "decimalPlaces": {
-              "description": "Indicates the number of decimal places for a particular currency. This is equivalent to the ISO 4217 standard \"minor unit\". Typically used when the amount provided includes the minor unit of currency without a decimal point (e.g., USD 8500 needs DecimalPlaces=\"2\" to represent $85).",
-              "type": "integer"
-            },
-            "language": {
-              "description": "Language identification.",
-              "type": "string",
-              "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-            },
-            "customerValue": {
-              "description": "The supplier's ranking of the customer (e.g., VIP, numerical ranking).",
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 20
-            }
-          }
-        },
-        "altName": {
-          "description": "Profile Name information for this profile.",
-          "$ref": "#/definitions/profileNameType"
-        },
-        "anonymization": {
-          "description": "Provides information about the guest's anonymization status",
-          "$ref": "#/definitions/anonymizationType"
-        },
-        "addressInfo": {
-          "description": "Detailed information on an address for the customer.",
-          "$ref": "#/definitions/addressInfoType"
-        },
-        "telephoneInfo": {
-          "description": "Detailed information on telephone/ fax for the customer.",
-          "$ref": "#/definitions/telephoneInfoType"
-        },
-        "emailInfo": {
-          "description": "Detailed information on an eMail address for the customer.",
-          "$ref": "#/definitions/emailInfoType"
-        },
-        "profileMembership": {
-          "description": "Information on membership for the customer.",
-          "$ref": "#/definitions/profileMembershipType"
-        },
-        "uRLInfo": {
-          "description": "Detailed information on web url/address for the customer.",
-          "$ref": "#/definitions/uRLInfoType"
-        },
-        "citizenCountry": {
-          "description": "Name of the (self-professed) country that is claimed for citizenship.",
-          "$ref": "#/definitions/countryNameType"
-        },
-        "profileIndicators": {
-          "description": "Indicators of additional information attached to the profile",
-          "$ref": "#/definitions/indicatorsType"
-        },
-        "searchMatches": {
-          "description": "Super Search matching terms.",
-          "$ref": "#/definitions/searchMatchesType"
-        },
-        "profileAccessType": {
-          "description": "Detailed information on access type associated with the profile.Information on whether the profile is created in CRO/Hotel/Chain.",
-          "$ref": "#/definitions/profileAccessType"
-        },
-        "profileRestrictions": {
-          "description": "Detailed information on restrictions associated with the profile.",
-          "$ref": "#/definitions/profileRestrictions"
-        },
-        "vipStatus": {
-          "description": "VIP status of the customer.",
-          "$ref": "#/definitions/vIPStatusType"
-        },
-        "owners": {
-          "description": "Owner of the customer.",
-          "$ref": "#/definitions/ownersType"
-        },
-        "primaryCompany": {
-          "description": "Primary Company of the profile.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "aRAccount": {
-          "description": "AR Account information.",
-          "$ref": "#/definitions/directBillingType"
-        },
-        "commission": {
-          "description": "Commission Code and description of the requested HotelCode.",
-          "$ref": "#/definitions/codeDescriptionType"
-        },
-        "taxInfo": {
-          "description": "Profile information about tax.",
-          "$ref": "#/definitions/profileTaxInfoType"
-        },
-        "cashiering": {
-          "description": "Contains cashiering related details for the profile",
-          "$ref": "#/definitions/profileCashieringType"
-        },
-        "lastStayInfo": {
-          "description": "Information on last stay of the profile.",
-          "$ref": "#/definitions/lastStayInfoType"
-        },
-        "allowedActions": {
-          "description": "Collection of allowed actions for profile search.",
-          "$ref": "#/definitions/profileAllowedActionsType"
-        },
-        "primaryAccountInfo": {
-          "description": "Contains primary account information (Profile Id, Profile Type and Profile Name) for the contacts.",
-          "$ref": "#/definitions/primaryProfileInfoType"
-        },
-        "salesInfo": {
-          "description": "Sales information of the profile.",
-          "$ref": "#/definitions/salesInfoType"
-        },
-        "additionalInfo": {
-          "description": "Additional Information about the profile.",
-          "$ref": "#/definitions/profileAdditionalInfoType"
-        },
-        "profileType": {
-          "description": "Type of profile such as Guest, Agent, Company, Group, Source, Employee, Hotel, Vendor or Contact.",
-          "$ref": "#/definitions/profileTypeType"
-        },
-        "subscription": {
-          "description": "This element tells If there is an active subscription for this external profile .",
-          "type": "boolean"
-        },
-        "statusCode": {
-          "description": "Status of the profile. Active/Inactive",
-          "$ref": "#/definitions/profileStatusType"
-        },
-        "protected": {
-          "description": "What level this profile is protected.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "privateProfile": {
-          "description": "This element tells profile is property exclusive or not.",
-          "type": "boolean"
-        },
-        "inheritedNegRates": {
-          "description": "Flag to indicate if the negotiated rates are inherited from master profile. Flag is available only when the profile is linked to master profile and master profile has negotiated rate codes attached.",
-          "type": "boolean"
-        },
-        "createDateTime": {
-          "description": "Time stamp of the creation.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifierId": {
-          "description": "Identifies the last software system or person to modify a record.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "registeredProperty": {
-          "description": "Property this profile is registered with.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "profileNameType": {
-      "type": "object",
-      "description": "This provides name information for a person.",
-      "properties": {
-        "name": {
-          "description": "Family name, last name or Company Name.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "fullName": {
-          "description": "Full display Name.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "namePrefix": {
-          "description": "Salutation of honorific (e.g. Mr., Mrs., Ms., Miss, Dr.)",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "givenName": {
-          "description": "Given name, first name or names.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "middleName": {
-          "description": "The middle name of the person name.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "nameSuffix": {
-          "description": "Hold various name suffixes and letters (e.g. Jr., Sr., III, Ret., Esq.)",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "nameTitle": {
-          "description": "Degree or honors (e.g., Ph.D., M.D.)",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "nameType": {
-          "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
-          "$ref": "#/definitions/personNameTypeType"
-        }
-      }
-    },
-    "searchMatchesType": {
-      "type": "array",
-      "description": "List of Generic Name-Value-Pair Parameters used for super search matches.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/searchMatchType"
-      }
-    },
-    "searchMatchType": {
-      "type": "object",
-      "description": "Search match indicating attribute and the matching value.",
-      "properties": {
-        "attribute": {
-          "description": "Search match attribute.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "value": {
-          "description": "Search match value.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        }
-      }
-    },
-    "vIPStatusType": {
-      "type": "object",
-      "description": "VIP status of the customer.",
-      "properties": {
-        "value": {
-          "type": "string",
-          "description": "Used for Character Strings, length 0 to 2000.",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "code": {
-          "description": "VIP status of the customer.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "ownersType": {
-      "type": "array",
-      "description": "Generic type for a list of owners.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/ownerType"
-      }
-    },
-    "primaryProfileInfoType": {
-      "type": "object",
-      "description": "Contains basic information of profile.",
-      "properties": {
-        "profileId": {
-          "description": "Unique Identifier for OPERA Profile.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "profileType": {
-          "description": "Type of account such as Agent, Company, and Source.",
-          "$ref": "#/definitions/profileTypeType"
-        },
-        "profileName": {
-          "description": "Name of the account.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        }
-      }
-    },
-    "profileAdditionalInfoType": {
-      "type": "object",
-      "properties": {
-        "primaryOwnerCode": {
-          "description": "Primary Owner of the profile",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "territory": {
-          "description": "Territory associated to the profile.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "masterAccount": {
-          "description": "Indicates if the profile is a Master Account for one or more Subsidiary Accounts.",
-          "type": "boolean"
-        },
-        "subsidiaryAccount": {
-          "description": "Indicates if the profile is a Subsidiary Account of a Master/Parent Account.",
-          "type": "boolean"
-        },
-        "businessPosition": {
-          "description": "Business Title or Position of the profile.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        }
-      }
-    },
-    "masterInfoType": {
-      "type": "object",
-      "properties": {
-        "codeInfo": {
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/codeInfoType"
-          }
-        },
-        "codeType": {
-          "$ref": "#/definitions/masterType"
-        }
-      }
-    },
-    "codeInfoType": {
-      "type": "object",
-      "description": "",
-      "properties": {
-        "description": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "addtionalCodeInfo": {
-          "$ref": "#/definitions/addtionalCodeInfoType"
-        },
-        "hotelId": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "code": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "addtionalCodeInfoType": {
-      "type": "array",
-      "description": "Holds name of additional code information",
-      "maxItems": 4000,
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "Holds name of additional code information",
-            "$ref": "#/definitions/masterInfoCodeDetailType"
-          },
-          "value": {
-            "description": "Holds value of additional code information",
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 2000
-          }
-        }
-      }
-    },
-    "masterInfoCodeDetailType": {
-      "type": "string",
-      "enum": [
-        "LongDescription",
-        "ShortDescription"
-      ]
-    },
-    "masterType": {
-      "type": "string",
-      "enum": [
-        "Country",
-        "State",
-        "AddressType",
-        "PhoneType",
-        "RateCategory",
-        "CalculationRule",
-        "PostingRythym",
-        "BillingInstruction",
-        "TransactionCode",
-        "DisplaySet",
-        "MailingActions",
-        "DistanceType",
-        "District",
-        "Territory",
-        "FiscalRegion",
-        "InventoryItem",
-        "Package",
-        "RoomFeaturePreference",
-        "SpecialPreference",
-        "Promotion",
-        "Department",
-        "ReservationPreference",
-        "FacilityTask",
-        "RoomType",
-        "RateCode",
-        "OutOfOrderReason",
-        "Block"
-      ]
-    },
     "emailMessageType": {
       "type": "object",
       "description": "Request object for storing an email.",
@@ -11029,12 +11237,6 @@
       "description": "Used for Character Strings, length 0 to 80.",
       "maxLength": 80,
       "minLength": 0
-    },
-    "basicEmailType": {
-      "type": "string",
-      "description": "Email address",
-      "minLength": 0,
-      "maxLength": 2000
     },
     "basicEmailListType": {
       "type": "array",

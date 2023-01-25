@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Integration Processor API",
-    "description": "APIs to get Business Events generated in OPERA Cloud.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to get Business Events generated in OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -202,7 +202,7 @@
     "/externalSystem/{extSystemCode}/hotels/{hotelId}/businessEvents": {
       "get": {
         "summary": "Get Business Events by External System and Hotel ID",
-        "description": "Business Event messages will be placed in a queue. Use this API to fetch the Business Event messages based on External System and Hotel ID. <p><strong>OperationId:</strong>getBusinessEvents</p>",
+        "description": "Business Event messages will be placed in a queue. Use this API to fetch the Business Event messages based on External System and Hotel ID. In order to get property specific business event messages, you need to create a unique consumer code (Toolbox > External Database) for the External System and the Property. <p><strong>OperationId:</strong>getBusinessEvents</p>",
         "operationId": "getBusinessEvents",
         "parameters": [
           {
@@ -634,6 +634,12 @@
       "type": "string",
       "description": "Language code",
       "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
     }
   },
   "responses": {
@@ -741,8 +747,7 @@
         },
         "actionType": {
           "description": "Business event action type, such as new reservation, update profile, etc.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "actionId": {
           "description": "Unique action instance id of the business event, uniqueness is guaranteed intra-module only.",
@@ -750,8 +755,7 @@
         },
         "primaryKey": {
           "description": "Primary key value of the business event, such as resv name id, allotment header id, name id etc.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "parentActionId": {
           "description": "Action instance id of the parent business event, if the action triggered this event was a side effect of another action.",
@@ -809,18 +813,15 @@
       "properties": {
         "dataElement": {
           "description": "Name of the data element, such as arrival date, departure date, etc.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "oldValue": {
           "description": "Value of the element when this action took place. In case of date values, format used is YYYY-MM-DD.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "newValue": {
           "description": "Value of the element after this action took place. In case of date values, format used is YYYY-MM-DD.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "scopeFrom": {
           "description": "Begin date from when this value is applicable, such as daily element date, block grid date etc.",
@@ -833,6 +834,18 @@
           "type": "string",
           "format": "date",
           "maxLength": 8
+        },
+        "elementSequence": {
+          "description": "Sequence number used to correlate fields of each record, when a collection of records is represented.",
+          "type": "integer"
+        },
+        "elementType": {
+          "description": "Element type used to correlate fields of each record, when a collection of records is represented, such as phone type for phones.",
+          "type": "string"
+        },
+        "elementRole": {
+          "description": "Element role used to correlate fields of each record, when a collection of records is represented, such as phone role for phones.",
+          "type": "string"
         }
       }
     },

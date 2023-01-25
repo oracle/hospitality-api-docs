@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "OPERA Cloud Back Office Operations API",
-    "description": "APIs to cater for Back Office Operations functionality in OPERA Cloud. <br /><br /> A common BackOffice industry term is End of Day.  This closes and balances each day's business activities. It reconciles guest folios and processes credit card transactions. The End of Day routine rolls the business date forward and prints final reports.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
-    "version": "22.3",
+    "title": "OPERA Cloud Room Rotation Service API",
+    "description": "APIs to cater for Room Rotation functionality in OPERA Cloud. Api provides capability to handle Room Rotation in OPERA Cloud. Room Rotation provides room ownership options for automatic inventory rotation and prioritization for owner rooms assignment and occupancy.<br /><br /> Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "21.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -16,25 +16,23 @@
   "schemes": [
     "https"
   ],
-  "basePath": "/bof/v1",
+  "basePath": "/rmr/v1",
   "produces": [
     "application/json"
   ],
   "paths": {
-    "/hotels/{hotelId}/businessDate": {
-      "get": {
-        "summary": "Fetch end of day business dates",
-        "description": "Use this API to find out the current business date of a specified hotel. <p><strong>OperationId:</strong>getBusinessDate</p>",
-        "operationId": "getBusinessDate",
+    "/services/roomrotation/cache": {
+      "delete": {
+        "summary": "Clear Cache",
+        "description": "This API facilitates clearing of cache in room rotation service <p><strong>OperationId:</strong>deleteRoomRotationServiceCache</p>",
+        "operationId": "deleteRoomRotationServiceCache",
         "parameters": [
           {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
+            "name": "operaClearInput",
+            "in": "query",
+            "required": false,
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique ID that identifies a single hotel property."
+            "description": "Request object for cleaning WS cache input type"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -60,25 +58,16 @@
                 "description": "Audience language",
                 "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
               }
             },
-            "description": "Response for fetching active end of day status for multiple hotels.",
+            "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
-              "$ref": "#/definitions/businessDate"
-            },
-            "examples": {
-              "application/json": {
-                "hotels": [
-                  {
-                    "hotelId": "HOTEL1",
-                    "businessDate": "2020-04-05"
-                  }
-                ]
-              }
+              "$ref": "#/definitions/status"
             }
-          },
-          "204": {
-            "description": "BusinessDate not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -124,7 +113,102 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "BackOfficeOperations"
+          "RoomRotation"
+        ]
+      }
+    },
+    "/services/roomrotation/status": {
+      "get": {
+        "summary": "Ping",
+        "description": "This API facilitates status check of room rotation service <p><strong>OperationId:</strong>pingRoomRotationService</p>",
+        "operationId": "pingRoomRotationService",
+        "parameters": [
+          {
+            "name": "operaPingInput",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Opera Ping request input type"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/pingDetail"
+            }
+          },
+          "204": {
+            "description": "pingRoomRotationService not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
         ]
       }
     }
@@ -164,12 +248,6 @@
       "name": "Accept-Language",
       "type": "string",
       "description": "Language code",
-      "in": "header"
-    },
-    "x-hubid": {
-      "name": "x-hubid",
-      "type": "string",
-      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
       "in": "header"
     }
   },
@@ -221,103 +299,17 @@
     }
   },
   "definitions": {
-    "businessDate": {
+    "status": {
       "type": "object",
-      "description": "Response for fetching active end of day status for multiple hotels.",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
       "properties": {
-        "hotels": {
-          "description": "Collection of hotels and its active end of days.",
-          "$ref": "#/definitions/hotelActiveEndOfDaysType"
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         },
         "links": {
           "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
         }
       }
-    },
-    "hotelActiveEndOfDaysType": {
-      "type": "array",
-      "description": "Collection of hotels and its active end of days.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/hotelActiveEndOfDayType"
-      }
-    },
-    "hotelActiveEndOfDayType": {
-      "type": "object",
-      "description": "Defines hotel and its active end of days.",
-      "properties": {
-        "hotelId": {
-          "description": "Hotel code of the active end of days.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "businessDate": {
-          "description": "Current open business date of hotel.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        }
-      }
-    },
-    "links": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/instanceLink"
-      }
-    },
-    "instanceLink": {
-      "type": "object",
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
-      "properties": {
-        "href": {
-          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
-        },
-        "method": {
-          "description": "HTTP method for requesting the target of the link.",
-          "type": "string",
-          "enum": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE",
-            "PATCH",
-            "OPTIONS",
-            "HEAD"
-          ]
-        },
-        "targetSchema": {
-          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type": "string"
-        },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "title": {
-          "description": "Exact copy of the \"summary\" field on the linked operation.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
-      ]
     },
     "warningsType": {
       "type": "array",
@@ -384,6 +376,62 @@
           "maxLength": 8
         }
       }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
     },
     "exceptionDetailType": {
       "title": "Error Detail",
@@ -472,12 +520,34 @@
         "type",
         "title"
       ]
+    },
+    "pingDetail": {
+      "type": "object",
+      "description": "Response for Ping operation.",
+      "properties": {
+        "operaVersion": {
+          "description": "Opera version number.",
+          "$ref": "#/definitions/operaVersionNumberType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "operaVersionNumberType": {
+      "type": "string",
+      "description": "Current Opera Version Number",
+      "minLength": 0,
+      "maxLength": 40
     }
   },
   "tags": [
     {
-      "name": "BackOfficeOperations",
-      "description": "This module provides APIs to service Back Office operations for property, such as managing end-of-day, getting the properties current business date, and perform cashier closure."
+      "name": "RoomRotation",
+      "description": "The REST APIs allow you to perform all actions related to Room Rotation from configuring point calculations for owner rooms, adjustment options for room prioritization and automatic assignment based on owner room utilization."
     }
   ],
   "externalDocs": {

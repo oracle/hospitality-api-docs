@@ -1,0 +1,1099 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud User Interface API",
+    "description": "APIs catering to the managing Opera User Interface features.<br /><br /> Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "21.5.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/oui/config/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/data/refresh/{hotelId}": {
+      "post": {
+        "summary": "Trigger Property Refresh",
+        "description": "Trigger Property Refresh of a property in Non Production Environment. <p><strong>OperationId:</strong>Trigger Property Refresh</p>",
+        "operationId": "refreshProperty",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Hotel Code"
+          },
+          {
+            "name": "Trigger Property Refresh",
+            "in": "body",
+            "required": true,
+            "description": "Request to refresh Property.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/refreshProperty"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      }
+    },
+    "/data/refresh/{hotelId}/history": {
+      "get": {
+        "summary": "Fetch Refresh Property History",
+        "description": "Fetch Refresh Property History Logs. <p><strong>OperationId:</strong>getRefreshPropertyHistory</p>",
+        "operationId": "getRefreshPropertyHistory",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Hotel Code"
+          },
+          {
+            "name": "appUserId",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "description": "Used to Filter the results using the given appUserId"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used to Filter the results using the given startDate",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used to Filter the results using the given endDate",
+            "format": "date"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxItems": 4000,
+              "enum": [
+                "IN_PROGRESS",
+                "COMPLETE",
+                "FAILED",
+                "START"
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object return to fetch refresh property logs request.",
+            "schema": {
+              "$ref": "#/definitions/refreshPropertyHistoryDetails"
+            }
+          },
+          "204": {
+            "description": "RebuildTableIndexes not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      }
+    },
+    "/data/refresh/{hotelId}/{jobName}/errorLog": {
+      "get": {
+        "summary": "Download Refresh Property Error Log",
+        "description": "This API will Download Refresh Property Error Log. <p><strong>OperationId:</strong>getRefreshPropertyErrorLog</p>",
+        "operationId": "getRefreshPropertyErrorLog",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X."
+          },
+          {
+            "name": "jobName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Refresh Property Job Name for which the error log needs to be downloaded"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response to download refresh property error log",
+            "schema": {
+              "$ref": "#/definitions/refreshPropertyErrorLog"
+            }
+          },
+          "204": {
+            "description": "refresh property error log not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      }
+    },
+    "/queueData/{queueName}": {
+      "delete": {
+        "summary": "Purge Queue Data",
+        "description": "Operation to purge the queue data <p><strong>OperationId:</strong>purgeQueueData</p>",
+        "operationId": "purgeQueueData",
+        "parameters": [
+          {
+            "name": "queueName",
+            "in": "path",
+            "required": true,
+            "description": "The name of the queue.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "The result element containing the requested statistics of the queue data.",
+            "schema": {
+              "$ref": "#/definitions/purgeQueueData"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner’s Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "batchProcessDetailType": {
+      "type": "object",
+      "description": "Detail of batch process.",
+      "properties": {
+        "messages": {
+          "description": "Status Messages of batch process.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/batchProcessMessageType"
+          }
+        },
+        "flexFields": {
+          "description": "Flex fields for batch process.",
+          "type": "object",
+          "properties": {
+            "field": {
+              "description": "Flex fields for batch process.",
+              "type": "array",
+              "maxItems": 4000,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of flex field.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  },
+                  "value": {
+                    "description": "Value for flex field.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "entity": {
+              "description": "Entity for flex field.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            }
+          }
+        },
+        "details": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/batchProcessDetailType"
+          }
+        },
+        "status": {
+          "description": "Status of the batch process details.",
+          "$ref": "#/definitions/statusType"
+        }
+      }
+    },
+    "statusType": {
+      "type": "string",
+      "description": "Status of the batch process.",
+      "enum": [
+        "Success",
+        "Error",
+        "Running",
+        "Stopped",
+        "Warning",
+        "Failed",
+        "Started",
+        "CompletedWithLogs"
+      ]
+    },
+    "batchProcessMessageType": {
+      "type": "object",
+      "description": "Status of batch process .",
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "detailSeq": {
+          "description": "Sequence number of message.",
+          "type": "integer"
+        },
+        "logTime": {
+          "description": "Log time details of message.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "applicationSettingLevelType": {
+      "type": "string",
+      "enum": [
+        "Global",
+        "Hotel",
+        "Cro"
+      ]
+    },
+    "applicationSettingSimpleType": {
+      "type": "object",
+      "description": "Internal settings that is mainly used to get a quick information on the type.",
+      "properties": {
+        "configurations": {
+          "description": "This element is used for additional items (Key-Value-Pair) that has relevance to the operation.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/applicationSettingSimpleType"
+          }
+        },
+        "name": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "levelType": {
+          "$ref": "#/definitions/applicationSettingLevelType"
+        },
+        "levelCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "value": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "performanceTimeMetricType": {
+      "type": "object",
+      "description": "Time metrics information related to stage",
+      "properties": {
+        "stage": {
+          "description": "Name of the stage",
+          "type": "string"
+        },
+        "startTime": {
+          "description": "Stage start time in ISO 8601 time format (Time will be in UTC time zone)",
+          "type": "string"
+        },
+        "endTime": {
+          "description": "Stage end time in ISO 8601 time format (Time will be in UTC time zone)",
+          "type": "string"
+        },
+        "childStages": {
+          "description": "Time metrics related to child stage",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/performanceTimeMetricType"
+          }
+        }
+      }
+    },
+    "refreshPropertyJobStatus": {
+      "type": "string",
+      "description": "Status of the Refresh Property Job",
+      "enum": [
+        "IN_PROGRESS",
+        "COMPLETE",
+        "FAILED",
+        "START"
+      ]
+    },
+    "refreshPropertyJobDetailedStatus": {
+      "type": "string",
+      "description": "Detailed Status of the Refresh Property Job",
+      "enum": [
+        "PROPERTY_REFRESH_COMPLETE",
+        "PROPERTY_LICENSE_FAILED",
+        "PROPERTY_REFRESH_FAILED",
+        "DELETE_PROPERTY_FAILED",
+        "PROPERTY_REFRESH",
+        "DELETE_PROPERTY"
+      ]
+    },
+    "refreshPropertyHistoryLog": {
+      "type": "object",
+      "description": "Record of Refresh Property History Log",
+      "properties": {
+        "jobName": {
+          "type": "string",
+          "description": "Job Name of the refresh property job"
+        },
+        "appUserName": {
+          "type": "string",
+          "description": "Name of user who initiated the property refresh"
+        },
+        "hotelId": {
+          "description": "The hotel code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "status": {
+          "description": "Status of refresh property job",
+          "$ref": "#/definitions/refreshPropertyJobStatus"
+        },
+        "detailedStatus": {
+          "description": "Detailed Status of refresh property job",
+          "$ref": "#/definitions/refreshPropertyJobDetailedStatus"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date at which job was started"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when job ended"
+        },
+        "errorLogAvailable": {
+          "type": "boolean",
+          "description": "indicates if error log is available"
+        }
+      }
+    },
+    "refreshPropertyHistoryDetails": {
+      "type": "object",
+      "description": "Response object return to fetch refresh property logs.",
+      "properties": {
+        "refreshPropertyHistoryLogs": {
+          "description": "Array of Refresh Property History Logs.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/refreshPropertyHistoryLog"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "refreshPropertyErrorLog": {
+      "type": "object",
+      "description": "Response to download refresh Property Error Log",
+      "properties": {
+        "errorLog": {
+          "description": "Refresh Property Error Log",
+          "type": "string",
+          "format": "byte"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "refreshProperty": {
+      "type": "object",
+      "description": "Request to refresh Property with specified shell.",
+      "properties": {
+        "shellName": {
+          "description": "Name of Shell to use, if empty standard shell will be used",
+          "type": "string"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "purgeQueueData": {
+      "type": "object",
+      "description": "The result element containing the result of the purging of the queue data.",
+      "properties": {
+        "purgeQueueData": {
+          "description": "Contain response of the purged queue.",
+          "$ref": "#/definitions/purgeQueueDataType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "purgeQueueDataType": {
+      "type": "object",
+      "description": "The response of the purged queue.",
+      "properties": {
+        "jobNameId": {
+          "description": "The job name id of the purge job.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "UIInternal",
+      "description": "The UI Internal Service contains operations used internally by Opera."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
