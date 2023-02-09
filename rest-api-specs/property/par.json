@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Price Availability Rate API",
-    "description": "APIs to cater for Price and Rate Availability functionality in OPERA Cloud. <br /><br />Availability enables you to manage your room inventory by providing a detailed view of all available and sold rooms at a property. Some of the tasks you can perform include defining conditions for stay restrictions, setting room sell limits, and searching for and viewing room availability.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Price and Rate Availability functionality in OPERA Cloud. <br /><br />Availability enables you to manage your room inventory by providing a detailed view of all available and sold rooms at a property. Some of the tasks you can perform include defining conditions for stay restrictions, setting room sell limits, and searching for and viewing room availability.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -7198,6 +7198,285 @@
         ]
       }
     },
+    "/hotels/{hotelId}/availability/alternate": {
+      "get": {
+        "summary": "Get Alternate Availability",
+        "description": "This API allows to  fetch alternate dates for closed rates. Criteria for to search for alternate dates, room stay information, profile block or guest information can be specified. <p><strong>OperationId:</strong>getAlternateAvailability</p>",
+        "operationId": "getAlternateAvailability",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "ratePlanCode",
+            "in": "query",
+            "required": false,
+            "description": "Requested Rate code",
+            "type": "string"
+          },
+          {
+            "name": "redemption",
+            "in": "query",
+            "required": false,
+            "description": "Used to indicate if award redemption flag is to be set.",
+            "type": "boolean"
+          },
+          {
+            "name": "roomType",
+            "in": "query",
+            "required": false,
+            "description": "Requested Room type.",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "quantity",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "adults",
+            "in": "query",
+            "required": false,
+            "description": "Defines the number of Adults.",
+            "type": "integer"
+          },
+          {
+            "name": "children",
+            "in": "query",
+            "required": false,
+            "description": "Defines the number of Children.",
+            "type": "integer"
+          },
+          {
+            "name": "childAge",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Age of a child in years.",
+            "items": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "name": "bucket1Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the first Age Qualifying Group(Child Bucket#1).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket2Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the second Age Qualifying Group(Child Bucket#2).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket3Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the third Age Qualifying Group(Child Bucket#3).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket4Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the fourth Age Qualifying Group(Child Bucket#4).",
+            "type": "integer"
+          },
+          {
+            "name": "bucket5Count",
+            "in": "query",
+            "required": false,
+            "description": "Number of children classified under the fifth Age Qualifying Group(Child Bucket#5).",
+            "type": "integer"
+          },
+          {
+            "name": "reservationGuestId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "reservationGuestIdType",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "reservationProfileType",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Guest",
+                "Company",
+                "Group",
+                "TravelAgent",
+                "Source",
+                "ReservationContact",
+                "BillingContact",
+                "Addressee"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "blockCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "blockName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "blockId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string"
+          },
+          {
+            "name": "blockIdType",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "membershipLevel",
+            "in": "query",
+            "required": false,
+            "description": "Membership id Number of the guest.",
+            "type": "string"
+          },
+          {
+            "name": "membershipType",
+            "in": "query",
+            "required": false,
+            "description": "Membership id Number of the guest.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Reponse object for fetch alternate availability operation",
+            "schema": {
+              "$ref": "#/definitions/alternateAvailability"
+            }
+          },
+          "204": {
+            "description": "AlternateAvailability not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Availability"
+        ]
+      }
+    },
     "/hotels/{hotelId}/guarantees": {
       "get": {
         "summary": "Get Reservation Guarantee ",
@@ -7492,6 +7771,115 @@
         ]
       }
     },
+    "/hotels/{hotelId}/rates": {
+      "get": {
+        "summary": "Get the Rate Plan Information ",
+        "description": "This API allows to fetch Rate Plan information. <p><strong>OperationId:</strong>getAvailabilityRatePlanInfoByMultipleRatePlans</p>",
+        "operationId": "getAvailabilityRatePlanInfoByMultipleRatePlans",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "ratePlanCodeList",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Rate Plan code.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching rate plans.",
+            "schema": {
+              "$ref": "#/definitions/availabilityRatePlanInfo"
+            }
+          },
+          "204": {
+            "description": "AvailabilityRatePlanInfoByMultipleRatePlans not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Availability"
+        ]
+      }
+    },
     "/hotels/{hotelId}/restrictions": {
       "get": {
         "summary": "Get the Restrictions ",
@@ -7698,6 +8086,115 @@
         "tags": [
           "Availability"
         ]
+      },
+      "post": {
+        "summary": "Create a Restriction ",
+        "description": "This API allows to create Restrictions on various levels like House Level, Rate Class, Rate Category, RatePlan, Room Class, Room Type, Booking Channel Code <p><strong>OperationId:</strong>postRestriction</p>",
+        "operationId": "postRestriction",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "name": "createRestriction",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating a new restriction.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/createRestriction"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Availability"
+        ]
       }
     }
   },
@@ -7736,6 +8233,12 @@
       "name": "Accept-Language",
       "type": "string",
       "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
       "in": "header"
     }
   },
@@ -7874,8 +8377,7 @@
         },
         "pagingKey": {
           "description": "Used to indicate the paging key(rate room) when more rate rooms available.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -8218,8 +8720,7 @@
         },
         "inventoryLender": {
           "description": "Indicates whether the room type inventory was taken from the allotment or House availability.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "fixedRate": {
           "description": "Fixed Rate Indicator.",
@@ -8450,8 +8951,7 @@
       "properties": {
         "awardsType": {
           "description": "Awards type for the award type rate code.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "points": {
           "description": "No of points required to book this Room Stay.",
@@ -8646,16 +9146,13 @@
           "maxLength": 8
         },
         "packageCode": {
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "calculationRule": {
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "postingRhythm": {
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "quantity": {
           "type": "integer"
@@ -9337,13 +9834,10 @@
           "maxLength": 80
         },
         "gender": {
-          "description": "Identifies the gender.",
+          "description": "Identifies the profile gender code selected from Gender types List of values. Gender types LOV provides the values configured at gender configuration.",
           "type": "string",
-          "enum": [
-            "Male",
-            "Female",
-            "Unknown"
-          ]
+          "minLength": 0,
+          "maxLength": 20
         },
         "birthDate": {
           "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
@@ -9353,8 +9847,7 @@
         },
         "birthDateMasked": {
           "description": "Indicates the date of birth as masked.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "currencyCode": {
           "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
@@ -9475,13 +9968,11 @@
         },
         "envelopeGreeting": {
           "description": "Envelope Greeting of the profile",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "salutation": {
           "description": "Salutation of the profile",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "nameType": {
           "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
@@ -9642,8 +10133,7 @@
       "properties": {
         "alienRegistrationNo": {
           "description": "Alien Registration Number.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "immigrationStatus": {
           "description": "Immigration Status on an Alien.",
@@ -9989,8 +10479,7 @@
         },
         "typeDescription": {
           "description": "Describes the type code",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "primaryInd": {
           "description": "When true, indicates a primary information.",
@@ -10332,13 +10821,11 @@
         },
         "image": {
           "description": "An image for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "url": {
           "description": "A URL for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "commentTitle": {
           "description": "Specifies Comment's Title.",
@@ -10500,23 +10987,19 @@
         },
         "newMembershipNumber": {
           "description": "Card Number of the membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "nameOnCard": {
           "description": "Name to be displayed on the membership card.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "programDescription": {
           "description": "Description of the membership program.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevel": {
           "description": "Indicates the membership level.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevelDescription": {
           "description": "Indicates the membership level description.",
@@ -10526,8 +11009,7 @@
         },
         "membershipClass": {
           "description": "Indicates the membership class.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "earningPreference": {
           "description": "Earning preference to the membership.",
@@ -10571,8 +11053,7 @@
         },
         "rating": {
           "description": "Value Rating Type Description for this membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipEnrollmentCode": {
           "description": "Indicates how the guest enrolled in the program.",
@@ -10614,13 +11095,11 @@
         },
         "membershipId": {
           "description": "Card Number of the membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipType": {
           "description": "Type of membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "primaryMembershipYn": {
           "description": "Indicator if Membership is a Primary Membership.",
@@ -10710,13 +11189,11 @@
         },
         "image": {
           "description": "An image for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "url": {
           "description": "A URL for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -10804,13 +11281,11 @@
         },
         "preferenceTypeDescription": {
           "description": "Preference group description.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "sequence": {
           "description": "Preference Sequence.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "maxQuantity": {
           "description": "Maximum quantity of preferences allowed per preference group.",
@@ -11311,8 +11786,7 @@
       "properties": {
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
@@ -12189,13 +12663,11 @@
         },
         "fullName": {
           "description": "Full display name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "alternateFullName": {
           "description": "Altername full display name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "phoneNumber": {
           "description": "Phone number",
@@ -12246,13 +12718,11 @@
         },
         "guestRestrictedCode": {
           "description": "Guest profile restricted reason code",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "guestRestrictedReasonDesc": {
           "description": "Guest profile restricted reason description",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "guestRestricted": {
           "description": "True indicates there are restrictions associated with the current profile.",
@@ -12430,18 +12900,15 @@
       "properties": {
         "firstName": {
           "description": "Given name, first name or names",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastName": {
           "description": "Family name, last name.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "fullName": {
           "description": "String representation of the full name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "registrationCardNo": {
           "description": "Unique identifier of the police registration card number.",
@@ -12526,18 +12993,15 @@
         },
         "firstName": {
           "description": "Given name, first name or names",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastName": {
           "description": "Family name, last name.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "fullName": {
           "description": "String representation of the full name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -12553,8 +13017,7 @@
       "properties": {
         "name": {
           "description": "Attached profile name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "profileIdList": {
           "description": "Collection of unique profile identifiers",
@@ -13062,8 +13525,7 @@
       "properties": {
         "instructions": {
           "description": "Turndown instructions for the room.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "facilityTaskInfo": {
           "description": "The facility task applicable for the current day. This will be information only and not used for any updates.",
@@ -13815,8 +14277,7 @@
         },
         "errorMessage": {
           "description": "Error message when Mobile Notification has failed.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -14082,8 +14543,7 @@
         },
         "lastRoom": {
           "description": "Used to hold last room information for the profile.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastRate": {
           "description": "Used to hold last rate information for the profile.",
@@ -15132,8 +15592,7 @@
       "properties": {
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
@@ -15978,8 +16437,7 @@
           "properties": {
             "url": {
               "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-              "type": "string",
-              "maxLength": 2000
+              "type": "string"
             },
             "type": {
               "description": "A reference to the type of object defined by the UniqueID element.",
@@ -16061,8 +16519,7 @@
         },
         "lateArrival": {
           "description": "Represents the late arrival time.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -16072,8 +16529,7 @@
       "properties": {
         "requirementCode": {
           "description": "Requirement Code.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "cancellation": {
           "description": "When true indicates cancellation on the reservation is required for this guarantee code.",
@@ -16975,8 +17431,7 @@
             },
             "typeDescription": {
               "description": "Describes the type code",
-              "type": "string",
-              "maxLength": 2000
+              "type": "string"
             },
             "primaryInd": {
               "description": "When true, indicates a primary information.",
@@ -17437,8 +17892,7 @@
       "properties": {
         "membershipId": {
           "description": "Membership ID criteria.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevel": {
           "description": "Membership Level criteria.",
@@ -17463,8 +17917,7 @@
         },
         "messageId": {
           "description": "Indicates the transaction identifier.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "summaryOnly": {
           "description": "Used to indicate whether to return summarized or detailed rate room information.",
@@ -17582,8 +18035,7 @@
         },
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
@@ -18210,6 +18662,79 @@
         "title"
       ]
     },
+    "alternateAvailability": {
+      "type": "object",
+      "description": "Response object for fetch alternate availability operation",
+      "properties": {
+        "alternates": {
+          "description": "List of Alternate dates",
+          "$ref": "#/definitions/alternateAvailDatesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "alternateAvailDatesType": {
+      "type": "array",
+      "description": "List of alternate dates.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/alternateAvailDateType"
+      }
+    },
+    "alternateAvailDateType": {
+      "type": "object",
+      "description": "Type containing information about an alternate date.",
+      "properties": {
+        "rateAmount": {
+          "description": "Rate amount for the requested room-rate combination if it's available in this particular date.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "date": {
+          "description": "A specific date from the alternate dates.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "status": {
+          "description": "Status of the availability for the date.",
+          "$ref": "#/definitions/availabilityStatusType"
+        }
+      }
+    },
+    "availabilityStatusType": {
+      "type": "string",
+      "description": "Status when there are not enough sell control items available.",
+      "enum": [
+        "Restricted",
+        "Available",
+        "InventoryNotAvailable",
+        "PointsNotEnough",
+        "InventoryitemsNotAvailable"
+      ]
+    },
+    "restrictionStatusesType": {
+      "type": "string",
+      "enum": [
+        "Closed",
+        "ClosedForArrival",
+        "ClosedForDeparture",
+        "MinimumStayThrough",
+        "MaximumStayThrough",
+        "MinimumLengthOfStay",
+        "MaximumLengthOfStay",
+        "LOSNotAvailable",
+        "MinimumAdvanceBooking",
+        "MaximumAdvanceBooking",
+        "Open",
+        "OpenForArrival",
+        "OpenForDeparture"
+      ]
+    },
     "reservationGuaranteesPolicies": {
       "type": "object",
       "description": "Response object to fetch reservation guarantees.",
@@ -18217,6 +18742,34 @@
         "resGuarantees": {
           "description": "A collection of Guarantee Codes information with cancellation penalty and deposit policy information.",
           "$ref": "#/definitions/guaranteePoliciesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "availabilityRatePlanInfo": {
+      "type": "object",
+      "description": "Response object for fetching rate plans.",
+      "properties": {
+        "availRatePlanInfoType": {
+          "description": "Rate plan info based on the search criteria.",
+          "$ref": "#/definitions/availRatePlanInfoType"
         },
         "links": {
           "$ref": "#/definitions/links"
@@ -18457,22 +19010,193 @@
         }
       }
     },
-    "restrictionStatusesType": {
+    "createRestriction": {
+      "type": "object",
+      "description": "Request object for creating a new restriction.",
+      "properties": {
+        "restriction": {
+          "$ref": "#/definitions/createRestrictionType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "createRestrictionType": {
+      "type": "object",
+      "properties": {
+        "restrictionStatus": {
+          "description": "Indicates the type of the restriction.",
+          "$ref": "#/definitions/restrictionStatusType"
+        },
+        "ratePlanCodes": {
+          "description": "The rate code for which the restriction will be applied.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "rateClasses": {
+          "description": "The rate class for which the restriction will be applied.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "roomClasses": {
+          "description": "The room class for which the restriction will be applied.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "bookingChannels": {
+          "description": "Booking channel.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "roomTypes": {
+          "description": "The room type for which the restriction will be applied.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "ratePlanCategories": {
+          "description": "The rate category for which the restriction will be applied.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "seasonCode": {
+          "description": "The season code during which the restrictions are valid.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "blockId": {
+          "description": "Unique block identifier of the block for which restriction will be applied.",
+          "$ref": "#/definitions/blockId"
+        },
+        "bookingChannelOnRequest": {
+          "description": "Booking channel on request.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1
+        },
+        "start": {
+          "description": "The starting value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "end": {
+          "description": "The ending value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        },
+        "yieldStatus": {
+          "description": "Yield status condition.",
+          "$ref": "#/definitions/roomTypeYieldableType"
+        },
+        "hotelId": {
+          "description": "The property to which the restriction is applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "blockId": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
+          "type": "integer"
+        }
+      }
+    },
+    "roomTypeYieldableType": {
       "type": "string",
+      "description": "Simple type for Yieldable or Non Yieldable",
       "enum": [
-        "Closed",
-        "ClosedForArrival",
-        "ClosedForDeparture",
-        "MinimumStayThrough",
-        "MaximumStayThrough",
-        "MinimumLengthOfStay",
-        "MaximumLengthOfStay",
-        "LOSNotAvailable",
-        "MinimumAdvanceBooking",
-        "MaximumAdvanceBooking",
-        "Open",
-        "OpenForArrival",
-        "OpenForDeparture"
+        "Yieldable",
+        "NonYieldable"
       ]
     }
   },

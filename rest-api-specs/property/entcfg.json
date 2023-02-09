@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Enterprise Configuration API",
-    "description": "APIs to cater for Enterprise Configuration functionality in OPERA Cloud. <br /><br In this module, you can configure a variety of options related to your properties such as their locations, facilities, and local attractions. The available options are dependant on the active controls at your property.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Enterprise Configuration functionality in OPERA Cloud. <br /><br In this module, you can configure a variety of options related to your properties such as their locations, facilities, and local attractions. The available options are dependant on the active controls at your property.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -986,6 +986,142 @@
         ],
         "tags": [
           "ChainConfig"
+        ]
+      }
+    },
+    "/currencyExchangeRates": {
+      "get": {
+        "summary": "Get Currency Exchange Rates",
+        "description": "Fetch the currency exchange rates when using this API. <p><strong>OperationId:</strong>getCurrencyExchangeRates</p>",
+        "operationId": "getCurrencyExchangeRates",
+        "parameters": [
+          {
+            "name": "exchangeType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Exchange Rate Types",
+            "uniqueItems": true,
+            "enum": [
+              "Posting",
+              "Settlement",
+              "Exchangecash",
+              "Travelagent",
+              "Forecast",
+              "Membership",
+              "Exchangecheck",
+              "Certificate"
+            ]
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Hotels for which the currency exchange rate information is required.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "currencyCode",
+            "in": "query",
+            "required": false,
+            "description": "Currency Code for which the exchange rate is requested. Sending no currency code will return values for all available currency codes.",
+            "type": "string"
+          },
+          {
+            "name": "currencyCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "List of currency codes with their exchange rates.",
+            "schema": {
+              "$ref": "#/definitions/currencyExchangeRatesDetails"
+            }
+          },
+          "204": {
+            "description": "CurrencyExchangeRates not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
         ]
       }
     },
@@ -6457,6 +6593,136 @@
         ]
       }
     },
+    "/hotels/{hotelId}/countries": {
+      "get": {
+        "summary": "Get Countries",
+        "description": "Use this API to get Countries. <p><strong>OperationId:</strong>getCountries</p>",
+        "operationId": "getCountries",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "countriesCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Countries.",
+            "schema": {
+              "$ref": "#/definitions/countriesDetails"
+            }
+          },
+          "204": {
+            "description": "Countries not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
     "/hotels/{hotelId}/creditcardTypes": {
       "get": {
         "summary": "Get Credit Card Types",
@@ -9335,6 +9601,112 @@
         ]
       }
     },
+    "/settings": {
+      "get": {
+        "summary": "Get OPERA Settings",
+        "description": "Use this API to get OPERA Settings. <p><strong>OperationId:</strong>getOperaSettings</p>",
+        "operationId": "getOperaSettings",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cROCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "parameterNameWildCard",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "The result element containing the requested application settings.",
+            "schema": {
+              "$ref": "#/definitions/operaSettingsDetails"
+            }
+          },
+          "204": {
+            "description": "OperaSettings not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
     "/templateCodes": {
       "get": {
         "summary": " Get Template Codes",
@@ -9820,6 +10192,12 @@
       "type": "string",
       "description": "Language code",
       "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
     }
   },
   "responses": {
@@ -9870,86 +10248,28 @@
     }
   },
   "definitions": {
-    "attractionClassesDetails": {
+    "transportationInfoType": {
       "type": "object",
-      "description": "Response object for fetching Attraction Classes.",
+      "description": "Information about the transportation type.",
       "properties": {
-        "attractionClasses": {
-          "description": "Collection of Attraction Classes.",
-          "$ref": "#/definitions/attractionClassesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "attractionClassesType": {
-      "type": "array",
-      "description": "List of Attraction Classes.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/attractionClassType"
-      }
-    },
-    "attractionClassType": {
-      "type": "object",
-      "description": "Contains Common Master configuration detail.",
-      "properties": {
-        "code": {
-          "description": "Common Master unique code.",
+        "label": {
+          "description": "Single character label for the transportation type.",
           "type": "string",
           "minLength": 0,
-          "maxLength": 40
+          "maxLength": 1
         },
         "description": {
-          "description": "Description of the Master code.",
-          "$ref": "#/definitions/translationTextType2000"
-        },
-        "displayOrder": {
-          "description": "Common Master record sequence number.",
-          "type": "number"
-        }
-      }
-    },
-    "translationTextType2000": {
-      "type": "object",
-      "description": "Contains Multiple translated texts and language codes.",
-      "properties": {
-        "defaultText": {
-          "description": "Default text with Character length from 0 to 2000.",
+          "description": "Description of the transportation type.",
           "type": "string",
           "minLength": 0,
-          "maxLength": 2000
+          "maxLength": 1000
         },
-        "translatedTexts": {
-          "description": "List of translated text and language codes.",
-          "$ref": "#/definitions/translationsTextType"
+        "code": {
+          "description": "Code for the transportation type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         }
-      }
-    },
-    "translationsTextType": {
-      "type": "array",
-      "description": "Language code for the translation.",
-      "maxItems": 4000,
-      "items": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "string",
-            "description": "Used for Character Strings, length 0 to 2000.",
-            "minLength": 0,
-            "maxLength": 2000
-          },
-          "language": {
-            "description": "Language identification.",
-            "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-          }
-        },
-        "description": "Language code for the translation."
       }
     },
     "links": {
@@ -10161,6 +10481,289 @@
         "type",
         "title"
       ]
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "amenityTypeType": {
+      "type": "string",
+      "description": "Simple type for storing amenity type.",
+      "enum": [
+        "General",
+        "Meeting"
+      ]
+    },
+    "attractionClassesDetails": {
+      "type": "object",
+      "description": "Response object for fetching Attraction Classes.",
+      "properties": {
+        "attractionClasses": {
+          "description": "Collection of Attraction Classes.",
+          "$ref": "#/definitions/attractionClassesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "attractionClassesType": {
+      "type": "array",
+      "description": "List of Attraction Classes.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/attractionClassType"
+      }
+    },
+    "attractionClassType": {
+      "type": "object",
+      "description": "Contains Common Master configuration detail.",
+      "properties": {
+        "code": {
+          "description": "Common Master unique code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Description of the Master code.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "displayOrder": {
+          "description": "Common Master record sequence number.",
+          "type": "number"
+        }
+      }
+    },
+    "translationTextType2000": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "relativePositionType": {
+      "type": "object",
+      "description": "Defines the position of an entity in relation to another entity (e.g. from an airport to a hotel, the relationship is dependent on use).",
+      "properties": {
+        "distance": {
+          "description": "Defines the distance between two points.",
+          "type": "number"
+        },
+        "distanceType": {
+          "description": "The unit of measure in a code format.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "drivingTime": {
+          "description": "The driving time in a free text format.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "addressType": {
+      "type": "object",
+      "description": "Provides address information.",
+      "properties": {
+        "isValidated": {
+          "description": "Indicator to define if the Address is validated by the Address Validation System.",
+          "type": "boolean"
+        },
+        "addressLine": {
+          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 80
+          }
+        },
+        "cityName": {
+          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "postalCode": {
+          "description": "Post Office Code number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 15
+        },
+        "cityExtension": {
+          "description": "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "county": {
+          "description": "County or District Name (e.g., Fairfax). This is read only.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "state": {
+          "description": "State or Province name (e.g., Texas).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "country": {
+          "description": "Country name (e.g., Ireland).",
+          "$ref": "#/definitions/countryNameType"
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "type": {
+          "description": "Defines the type of address (e.g. home, business, other).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "typeDescription": {
+          "description": "Describes the type code",
+          "type": "string"
+        },
+        "primaryInd": {
+          "description": "When true, indicates a primary information.",
+          "type": "boolean"
+        },
+        "updateReservations": {
+          "description": "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
+          "type": "boolean"
+        },
+        "barCode": {
+          "description": "The postal barcode for the address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "purgeDate": {
+          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "countryNameType": {
+      "type": "object",
+      "description": "Code for a country or a nationality.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Used for Character Strings, length 0 to 200.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "code": {
+          "description": "Code for a country or a nationality.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "uRLType": {
+      "type": "object",
+      "description": "Web site address, in IETF(The Internet Engineering Task Force) specified format.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "type": {
+          "description": "Defines the purpose of the URL address, such as personal, business, public, etc.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "typeDescription": {
+          "description": "Describes the Type code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "primaryInd": {
+          "description": "When true, indicates a primary information.",
+          "type": "boolean"
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
+        }
+      }
     },
     "brandCodesDetails": {
       "type": "object",
@@ -10470,6 +11073,110 @@
         }
       }
     },
+    "currencyExchangeRatesDetails": {
+      "type": "object",
+      "description": "Response with the list of currency codes and their exchange rates for each property requested.",
+      "properties": {
+        "exchangeRates": {
+          "description": "List of currency codes with their exchange rates.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "exchangeInfo": {
+                "description": "Exchange Rate information for a currency code.",
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/currencyExchangeRateType"
+                }
+              },
+              "hotelId": {
+                "$ref": "#/definitions/codeType"
+              }
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "currencyExchangeRateType": {
+      "type": "object",
+      "description": "Currency code configuration.",
+      "properties": {
+        "currencyCode": {
+          "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "currencySymbol": {
+          "description": "The symbol for the currency, e.g, for currencyCode USD the symbol is $.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10
+        },
+        "decimalPlaces": {
+          "description": "Indicates the number of decimal places for a particular currency. This is equivalent to the ISO 4217 standard \"minor unit\". Typically used when the amount provided includes the minor unit of currency without a decimal point (e.g., USD 8500 needs DecimalPlaces=\"2\" to represent $85).",
+          "type": "integer"
+        },
+        "description": {
+          "description": "Description of the currency code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "exchangeRate": {
+          "description": "Exchange Rate for the currency code. Exchange rate is based on the current business date of the property.",
+          "$ref": "#/definitions/currencyAmountType"
+        }
+      }
+    },
+    "currencyAmountType": {
+      "type": "object",
+      "description": "A monetary value expressed with a currency code.",
+      "properties": {
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        }
+      }
+    },
+    "codeType": {
+      "type": "string",
+      "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+      "minLength": 0,
+      "maxLength": 20
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
     "defaultNoteDetails": {
       "type": "object",
       "description": "Response object for fetching Default Application Note text.",
@@ -10592,18 +11299,6 @@
         }
       }
     },
-    "status": {
-      "type": "object",
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "properties": {
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        }
-      }
-    },
     "departmentsToBeChanged": {
       "type": "object",
       "description": "Request object for updating departments.",
@@ -10662,6 +11357,15 @@
           "description": "Common Master record sequence number.",
           "type": "number"
         }
+      }
+    },
+    "codeListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
       }
     },
     "hotelDetails": {
@@ -11056,8 +11760,7 @@
             },
             "typeDescription": {
               "description": "Describes the type code",
-              "type": "string",
-              "maxLength": 2000
+              "type": "string"
             },
             "primaryInd": {
               "description": "When true, indicates a primary information.",
@@ -11182,36 +11885,6 @@
         }
       }
     },
-    "uRLType": {
-      "type": "object",
-      "description": "Web site address, in IETF(The Internet Engineering Task Force) specified format.",
-      "properties": {
-        "value": {
-          "type": "string",
-          "description": "Property Value"
-        },
-        "type": {
-          "description": "Defines the purpose of the URL address, such as personal, business, public, etc.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "typeDescription": {
-          "description": "Describes the Type code",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "primaryInd": {
-          "description": "When true, indicates a primary information.",
-          "type": "boolean"
-        },
-        "orderSequence": {
-          "description": "Display Order sequence.",
-          "type": "number"
-        }
-      }
-    },
     "languageType": {
       "type": "string",
       "minLength": 0,
@@ -11295,24 +11968,6 @@
       "minLength": 0,
       "maxLength": 2000
     },
-    "countryNameType": {
-      "type": "object",
-      "description": "Code for a country or a nationality.",
-      "properties": {
-        "value": {
-          "type": "string",
-          "description": "Used for Character Strings, length 0 to 200.",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "code": {
-          "description": "Code for a country or a nationality.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
     "hotelRestaurantsType": {
       "type": "array",
       "maxItems": 4000,
@@ -11390,25 +12045,6 @@
         "Restaurant",
         "Retail"
       ]
-    },
-    "timeSpanType": {
-      "type": "object",
-      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
-      "properties": {
-        "startDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "duration": {
-          "type": "string"
-        }
-      }
     },
     "hotelRateRangesType": {
       "type": "array",
@@ -11587,156 +12223,6 @@
         }
       }
     },
-    "addressType": {
-      "type": "object",
-      "description": "Provides address information.",
-      "properties": {
-        "isValidated": {
-          "description": "Indicator to define if the Address is validated by the Address Validation System.",
-          "type": "boolean"
-        },
-        "addressLine": {
-          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
-          "type": "array",
-          "maxItems": 4,
-          "items": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 80
-          }
-        },
-        "cityName": {
-          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "postalCode": {
-          "description": "Post Office Code number.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 15
-        },
-        "cityExtension": {
-          "description": "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "county": {
-          "description": "County or District Name (e.g., Fairfax). This is read only.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "state": {
-          "description": "State or Province name (e.g., Texas).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "country": {
-          "description": "Country name (e.g., Ireland).",
-          "$ref": "#/definitions/countryNameType"
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "type": {
-          "description": "Defines the type of address (e.g. home, business, other).",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "typeDescription": {
-          "description": "Describes the type code",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "primaryInd": {
-          "description": "When true, indicates a primary information.",
-          "type": "boolean"
-        },
-        "updateReservations": {
-          "description": "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
-          "type": "boolean"
-        },
-        "barCode": {
-          "description": "The postal barcode for the address.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 100
-        },
-        "createDateTime": {
-          "description": "Time stamp of the creation.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifierId": {
-          "description": "Identifies the last software system or person to modify a record.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "purgeDate": {
-          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        }
-      }
-    },
-    "currencyAmountType": {
-      "type": "object",
-      "description": "A monetary value expressed with a currency code.",
-      "properties": {
-        "amount": {
-          "description": "A monetary amount.",
-          "type": "number"
-        },
-        "currencyCode": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 3
-        }
-      }
-    },
-    "relativePositionType": {
-      "type": "object",
-      "description": "Defines the position of an entity in relation to another entity (e.g. from an airport to a hotel, the relationship is dependent on use).",
-      "properties": {
-        "distance": {
-          "description": "Defines the distance between two points.",
-          "type": "number"
-        },
-        "distanceType": {
-          "description": "The unit of measure in a code format.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "drivingTime": {
-          "description": "The driving time in a free text format.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
     "hotelAmenityType": {
       "type": "object",
       "properties": {
@@ -11791,8 +12277,7 @@
       "properties": {
         "membershipId": {
           "description": "Membership ID criteria.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevel": {
           "description": "Membership Level criteria.",
@@ -11806,15 +12291,6 @@
           "description": "If this is true,the reservations which has membership information associated will be resulted .",
           "type": "boolean"
         }
-      }
-    },
-    "codeListType": {
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 20
       }
     },
     "masterRestrictionStatusesType": {
@@ -12178,8 +12654,7 @@
         },
         "inventoryLender": {
           "description": "Indicates whether the room type inventory was taken from the allotment or House availability.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "fixedRate": {
           "description": "Fixed Rate Indicator.",
@@ -12410,8 +12885,7 @@
       "properties": {
         "awardsType": {
           "description": "Awards type for the award type rate code.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "points": {
           "description": "No of points required to book this Room Stay.",
@@ -12606,16 +13080,13 @@
           "maxLength": 8
         },
         "packageCode": {
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "calculationRule": {
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "postingRhythm": {
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "quantity": {
           "type": "integer"
@@ -13281,13 +13752,10 @@
           "maxLength": 80
         },
         "gender": {
-          "description": "Identifies the gender.",
+          "description": "Identifies the profile gender code selected from Gender types List of values. Gender types LOV provides the values configured at gender configuration.",
           "type": "string",
-          "enum": [
-            "Male",
-            "Female",
-            "Unknown"
-          ]
+          "minLength": 0,
+          "maxLength": 20
         },
         "birthDate": {
           "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
@@ -13297,8 +13765,7 @@
         },
         "birthDateMasked": {
           "description": "Indicates the date of birth as masked.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "currencyCode": {
           "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
@@ -13419,13 +13886,11 @@
         },
         "envelopeGreeting": {
           "description": "Envelope Greeting of the profile",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "salutation": {
           "description": "Salutation of the profile",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "nameType": {
           "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
@@ -13568,8 +14033,7 @@
       "properties": {
         "alienRegistrationNo": {
           "description": "Alien Registration Number.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "immigrationStatus": {
           "description": "Immigration Status on an Alien.",
@@ -14044,13 +14508,11 @@
         },
         "image": {
           "description": "An image for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "url": {
           "description": "A URL for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "commentTitle": {
           "description": "Specifies Comment's Title.",
@@ -14212,23 +14674,19 @@
         },
         "newMembershipNumber": {
           "description": "Card Number of the membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "nameOnCard": {
           "description": "Name to be displayed on the membership card.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "programDescription": {
           "description": "Description of the membership program.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevel": {
           "description": "Indicates the membership level.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipLevelDescription": {
           "description": "Indicates the membership level description.",
@@ -14238,8 +14696,7 @@
         },
         "membershipClass": {
           "description": "Indicates the membership class.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "earningPreference": {
           "description": "Earning preference to the membership.",
@@ -14283,8 +14740,7 @@
         },
         "rating": {
           "description": "Value Rating Type Description for this membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipEnrollmentCode": {
           "description": "Indicates how the guest enrolled in the program.",
@@ -14326,13 +14782,11 @@
         },
         "membershipId": {
           "description": "Card Number of the membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "membershipType": {
           "description": "Type of membership.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "primaryMembershipYn": {
           "description": "Indicator if Membership is a Primary Membership.",
@@ -14422,13 +14876,11 @@
         },
         "image": {
           "description": "An image for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "url": {
           "description": "A URL for this paragraph.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -14516,13 +14968,11 @@
         },
         "preferenceTypeDescription": {
           "description": "Preference group description.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "sequence": {
           "description": "Preference Sequence.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "maxQuantity": {
           "description": "Maximum quantity of preferences allowed per preference group.",
@@ -15023,8 +15473,7 @@
       "properties": {
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
@@ -15916,13 +16365,11 @@
         },
         "fullName": {
           "description": "Full display name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "alternateFullName": {
           "description": "Altername full display name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "phoneNumber": {
           "description": "Phone number",
@@ -15973,13 +16420,11 @@
         },
         "guestRestrictedCode": {
           "description": "Guest profile restricted reason code",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "guestRestrictedReasonDesc": {
           "description": "Guest profile restricted reason description",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "guestRestricted": {
           "description": "True indicates there are restrictions associated with the current profile.",
@@ -16151,18 +16596,15 @@
       "properties": {
         "firstName": {
           "description": "Given name, first name or names",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastName": {
           "description": "Family name, last name.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "fullName": {
           "description": "String representation of the full name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "registrationCardNo": {
           "description": "Unique identifier of the police registration card number.",
@@ -16247,18 +16689,15 @@
         },
         "firstName": {
           "description": "Given name, first name or names",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastName": {
           "description": "Family name, last name.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "fullName": {
           "description": "String representation of the full name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -16274,8 +16713,7 @@
       "properties": {
         "name": {
           "description": "Attached profile name",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "profileIdList": {
           "description": "Collection of unique profile identifiers",
@@ -16789,8 +17227,7 @@
       "properties": {
         "instructions": {
           "description": "Turndown instructions for the room.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "facilityTaskInfo": {
           "description": "The facility task applicable for the current day. This will be information only and not used for any updates.",
@@ -17577,8 +18014,7 @@
         },
         "errorMessage": {
           "description": "Error message when Mobile Notification has failed.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         }
       }
     },
@@ -17844,8 +18280,7 @@
         },
         "lastRoom": {
           "description": "Used to hold last room information for the profile.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "lastRate": {
           "description": "Used to hold last rate information for the profile.",
@@ -18894,8 +19329,7 @@
       "properties": {
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
@@ -19389,8 +19823,7 @@
         },
         "messageId": {
           "description": "Indicates the transaction identifier.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "summaryOnly": {
           "description": "Used to indicate whether to return summarized or detailed rate room information.",
@@ -19508,8 +19941,7 @@
         },
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string",
-          "maxLength": 2000
+          "type": "string"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
@@ -19558,38 +19990,6 @@
       "maxItems": 4000,
       "items": {
         "$ref": "#/definitions/currencyExchangeRateType"
-      }
-    },
-    "currencyExchangeRateType": {
-      "type": "object",
-      "description": "Currency code configuration.",
-      "properties": {
-        "currencyCode": {
-          "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "currencySymbol": {
-          "description": "The symbol for the currency, e.g, for currencyCode USD the symbol is $.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 10
-        },
-        "decimalPlaces": {
-          "description": "Indicates the number of decimal places for a particular currency. This is equivalent to the ISO 4217 standard \"minor unit\". Typically used when the amount provided includes the minor unit of currency without a decimal point (e.g., USD 8500 needs DecimalPlaces=\"2\" to represent $85).",
-          "type": "integer"
-        },
-        "description": {
-          "description": "Description of the currency code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "exchangeRate": {
-          "description": "Exchange Rate for the currency code. Exchange rate is based on the current business date of the property.",
-          "$ref": "#/definitions/currencyAmountType"
-        }
       }
     },
     "hotelContactsType": {
@@ -20132,30 +20532,6 @@
         }
       }
     },
-    "transportationInfoType": {
-      "type": "object",
-      "description": "Information about the transportation type.",
-      "properties": {
-        "label": {
-          "description": "Single character label for the transportation type.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 1
-        },
-        "description": {
-          "description": "Description of the transportation type.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 1000
-        },
-        "code": {
-          "description": "Code for the transportation type.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
     "amenitiesDetails": {
       "type": "object",
       "description": "Response object for fetching amenities at the property level.",
@@ -20253,14 +20629,6 @@
           "maxLength": 20
         }
       }
-    },
-    "amenityTypeType": {
-      "type": "string",
-      "description": "Simple type for storing amenity type.",
-      "enum": [
-        "General",
-        "Meeting"
-      ]
     },
     "amenitiesCriteria": {
       "type": "object",
@@ -20455,6 +20823,132 @@
         }
       }
     },
+    "countriesDetails": {
+      "type": "object",
+      "description": "Response object for fetching Countries.",
+      "properties": {
+        "countries": {
+          "description": "Collection of Countries.",
+          "$ref": "#/definitions/countriesType"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "countriesType": {
+      "type": "array",
+      "description": "Country details.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/countryType"
+      }
+    },
+    "countryType": {
+      "type": "object",
+      "description": "Base details of the country.",
+      "properties": {
+        "name": {
+          "description": "Name for the country.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "statisticCode": {
+          "description": "Statistic code for the country.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 3
+        },
+        "guestAddressFormat": {
+          "description": "Guest Address format Codes for confirmation letter.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "addressDoctorMode": {
+          "description": "Defines the mode used to invoke address doctor service.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "mainGroup": {
+          "description": "Main Group of Country. Used in statistic reports.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "regionCode": {
+          "description": "Regin to which the Country belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 3
+        },
+        "isoCode": {
+          "description": "ISO standard code for country.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "isoName": {
+          "description": "ISO standard name for country.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "displaySequence": {
+          "description": "Sequence number for displaying the countries.",
+          "type": "number"
+        },
+        "printSequence": {
+          "description": "Print Sequence number for report.",
+          "type": "number"
+        },
+        "displayFlag": {
+          "description": "Indicates if the country flag should be displayed.",
+          "type": "boolean"
+        },
+        "countryCode": {
+          "description": "Country code identifying the country.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hotelId": {
+          "description": "Hotel code the country belongs to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
     "creditCardTypesDetails": {
       "type": "object",
       "description": "Response object for fetching Credit Card Types.",
@@ -20534,6 +21028,58 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelTransportationType": {
+      "type": "object",
+      "description": "Information about the transportations of the hotel.",
+      "properties": {
+        "phoneNumber": {
+          "description": "The name of the package.",
+          "$ref": "#/definitions/telephoneType"
+        },
+        "relativePosition": {
+          "$ref": "#/definitions/relativePositionType"
+        },
+        "description": {
+          "description": "The description of the transportation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1000
+        },
+        "comments": {
+          "description": "Comments about the transportation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "priceRange": {
+          "description": "The price range of the transportation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "website": {
+          "description": "Web address associated with transportation.",
+          "$ref": "#/definitions/uRLType"
+        },
+        "keyOptions": {
+          "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "transportationCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "label": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1
+        },
+        "orderBy": {
+          "type": "integer"
         }
       }
     },
@@ -20632,6 +21178,22 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        }
+      }
+    },
+    "translationTextType80": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 80.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
         }
       }
     },
@@ -20853,22 +21415,6 @@
         }
       }
     },
-    "translationTextType80": {
-      "type": "object",
-      "description": "Contains Multiple translated texts and language codes.",
-      "properties": {
-        "defaultText": {
-          "description": "Default text with Character length from 0 to 80.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "translatedTexts": {
-          "description": "List of translated text and language codes.",
-          "$ref": "#/definitions/translationsTextType"
-        }
-      }
-    },
     "languagesDetails": {
       "type": "object",
       "description": "Response object for fetching languages.",
@@ -20917,6 +21463,18 @@
           "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
           "type": "boolean"
         },
+        "locale": {
+          "description": "Geographic, political or cultural region.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "localeDescription": {
+          "description": "Description for the locale.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
         "languageCode": {
           "description": "Language Code is a user definable code that identifies a language.",
           "type": "string",
@@ -20940,6 +21498,46 @@
           "$ref": "#/definitions/translationsTextType"
         }
       }
+    },
+    "applicationSettingSimpleType": {
+      "type": "object",
+      "description": "Internal settings that is mainly used to get a quick information on the type.",
+      "properties": {
+        "configurations": {
+          "description": "This element is used for additional items (Key-Value-Pair) that has relevance to the operation.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/applicationSettingSimpleType"
+          }
+        },
+        "name": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "levelType": {
+          "$ref": "#/definitions/applicationSettingLevelType"
+        },
+        "levelCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "value": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "applicationSettingLevelType": {
+      "type": "string",
+      "enum": [
+        "Global",
+        "Hotel",
+        "Cro"
+      ]
     },
     "propertyDetailCategoriesDetails": {
       "type": "object",
@@ -21213,6 +21811,236 @@
         }
       }
     },
+    "operaSettingsDetails": {
+      "type": "object",
+      "description": "The result element containing the requested application settings.",
+      "properties": {
+        "activeFunctions": {
+          "description": "Count of active property services functions.",
+          "type": "integer"
+        },
+        "groups": {
+          "description": "Contains a collection of application settings for a particular group.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/applicationSettingGroupType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "applicationSettingGroupType": {
+      "type": "object",
+      "description": "This element simply groups the different Application Functions.",
+      "properties": {
+        "appSettings": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/applicationSettingType"
+          }
+        },
+        "groupName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "groupDisplayName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        }
+      }
+    },
+    "applicationSettingType": {
+      "type": "object",
+      "description": "Internal settings that can be of a certain valueType.",
+      "properties": {
+        "shortDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "wildCardMatch": {
+          "description": "A flag which indicate whether a wild card search should be made.",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "$ref": "#/definitions/applicationSettingTypeType"
+        },
+        "hotelId": {
+          "description": "Each configuration item will come with a HotelCode which will help the configuration to specify what context the update has to be. Eg. _Global,ORS,'CRO', etc.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sequence": {
+          "type": "number"
+        },
+        "editAllowed": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "P",
+            "G",
+            "Ch",
+            "C"
+          ]
+        },
+        "valueType": {
+          "type": "string",
+          "enum": [
+            "Yn",
+            "Integer",
+            "String",
+            "SingleSelectLov",
+            "MultiSelectLov",
+            "ShuttleLov",
+            "Custom",
+            "Double",
+            "Secure"
+          ]
+        },
+        "conversionType": {
+          "description": "Represents whether the value is OXI Parameter or Conversion code default.",
+          "$ref": "#/definitions/applicationSettingConversionType"
+        },
+        "settings": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/baseApplicationSettingType"
+          }
+        },
+        "levelType": {
+          "$ref": "#/definitions/applicationSettingLevelType"
+        },
+        "levelCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "applicationSettingTypeType": {
+      "type": "string",
+      "enum": [
+        "Function",
+        "Parameter",
+        "Setting"
+      ]
+    },
+    "applicationSettingConversionType": {
+      "type": "string",
+      "enum": [
+        "Default",
+        "Parameter"
+      ]
+    },
+    "baseApplicationSettingType": {
+      "type": "object",
+      "description": "Internal settings that can be of a certain valueType.",
+      "properties": {
+        "shortDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "wildCardMatch": {
+          "description": "A flag which indicate whether a wild card search should be made.",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "$ref": "#/definitions/applicationSettingTypeType"
+        },
+        "hotelId": {
+          "description": "Each configuration item will come with a HotelCode which will help the configuration to specify what context the update has to be. Eg. _Global,ORS,'CRO', etc.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sequence": {
+          "type": "number"
+        },
+        "editAllowed": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "P",
+            "G",
+            "Ch",
+            "C"
+          ]
+        },
+        "valueType": {
+          "type": "string",
+          "enum": [
+            "Yn",
+            "Integer",
+            "String",
+            "SingleSelectLov",
+            "MultiSelectLov",
+            "ShuttleLov",
+            "Custom",
+            "Double",
+            "Secure"
+          ]
+        },
+        "conversionType": {
+          "description": "Represents whether the value is OXI Parameter or Conversion code default.",
+          "$ref": "#/definitions/applicationSettingConversionType"
+        }
+      }
+    },
     "templateCodesDetails": {
       "type": "object",
       "description": "Response object for fetching Template Codes.",
@@ -21282,58 +22110,6 @@
       "maxItems": 4000,
       "items": {
         "$ref": "#/definitions/hotelTransportationType"
-      }
-    },
-    "hotelTransportationType": {
-      "type": "object",
-      "description": "Information about the transportations of the hotel.",
-      "properties": {
-        "phoneNumber": {
-          "description": "The name of the package.",
-          "$ref": "#/definitions/telephoneType"
-        },
-        "relativePosition": {
-          "$ref": "#/definitions/relativePositionType"
-        },
-        "description": {
-          "description": "The description of the transportation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 1000
-        },
-        "comments": {
-          "description": "Comments about the transportation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "priceRange": {
-          "description": "The price range of the transportation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "website": {
-          "description": "Web address associated with transportation.",
-          "$ref": "#/definitions/uRLType"
-        },
-        "keyOptions": {
-          "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
-          "$ref": "#/definitions/codeListType"
-        },
-        "transportationCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "label": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 1
-        },
-        "orderBy": {
-          "type": "integer"
-        }
       }
     },
     "userDefinedFieldGroupsDetails": {

@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Integration Configuration API",
-    "description": "APIs catering to Integration Configuration in OPERA Cloud.  Operations such as get Hotel Interface Types, or get UDF mappings can be found in this module.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs catering to Integration Configuration in OPERA Cloud.  Operations such as get Hotel Interface Types, or get UDF mappings can be found in this module.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -2257,6 +2257,12 @@
       "type": "string",
       "description": "Language code",
       "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
     }
   },
   "responses": {
@@ -2307,6 +2313,228 @@
     }
   },
   "definitions": {
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ]
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
     "fetchedDeliveryMethods": {
       "type": "object",
       "description": "Response to request to fetch the delivery method for a property/HUB/Chain and its configurations.",
@@ -2687,216 +2915,6 @@
         }
       }
     },
-    "links": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/instanceLink"
-      }
-    },
-    "instanceLink": {
-      "type": "object",
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
-      "properties": {
-        "href": {
-          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
-        },
-        "method": {
-          "description": "HTTP method for requesting the target of the link.",
-          "type": "string",
-          "enum": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE",
-            "PATCH",
-            "OPTIONS",
-            "HEAD"
-          ]
-        },
-        "targetSchema": {
-          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type": "string"
-        },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "title": {
-          "description": "Exact copy of the \"summary\" field on the linked operation.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
-      ]
-    },
-    "warningsType": {
-      "type": "array",
-      "description": "Used in conjunction with the Success element to define a business error.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/warningType"
-      }
-    },
-    "warningType": {
-      "type": "object",
-      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
-      "properties": {
-        "value": {
-          "type": "string",
-          "description": "Property Value"
-        },
-        "shortText": {
-          "description": "An abbreviated version of the error in textual format.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "code": {
-          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "docURL": {
-          "description": "If present, this URL refers to an online description of the error that occurred.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "status": {
-          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "tag": {
-          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "type": {
-          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "rph": {
-          "description": "Reference Place Holder used as an index for this warning.",
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 8
-        }
-      }
-    },
-    "exceptionDetailType": {
-      "title": "Error Detail",
-      "description": "Complex type that contains error details for a REST call.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
-        },
-        "detail": {
-          "type": "string",
-          "description": "Human-readable description specific to this occurrence of the problem."
-        },
-        "instance": {
-          "type": "string",
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Application error code, which is different from HTTP error code."
-        },
-        "o:errorPath": {
-          "type": "string",
-          "description": "Path to the problem at the resource or property level."
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/errorInstance"
-          }
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        }
-      },
-      "required": [
-        "type",
-        "title"
-      ]
-    },
-    "errorInstance": {
-      "title": "Error Instance Details",
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
-        },
-        "detail": {
-          "type": "string",
-          "description": "Human-readable description specific to this occurrence of the problem."
-        },
-        "instance": {
-          "type": "string",
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Application error code, which is different from HTTP error code."
-        },
-        "o:errorPath": {
-          "type": "string",
-          "description": "Path to the problem at the resource or property level."
-        }
-      },
-      "required": [
-        "type",
-        "title"
-      ]
-    },
     "changeDeliveryMethods": {
       "type": "object",
       "description": "Request to change the delivery method for a property/HUB/Chain and its configurations.",
@@ -2922,18 +2940,6 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "status": {
-      "type": "object",
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "properties": {
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
         }
       }
     },
@@ -3445,6 +3451,123 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "conditionGroupType": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/conditionType"
+          }
+        },
+        "conditionGroup": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/conditionGroupType"
+          }
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/logicalOperatorType"
+        }
+      }
+    },
+    "logicalOperatorType": {
+      "type": "string",
+      "enum": [
+        "And",
+        "Or"
+      ]
+    },
+    "conditionType": {
+      "type": "object",
+      "properties": {
+        "leftExpression": {
+          "$ref": "#/definitions/expressionFieldType"
+        },
+        "operator": {
+          "$ref": "#/definitions/expressionOperatorType"
+        },
+        "rightExpression": {
+          "$ref": "#/definitions/expressionParameterType"
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/logicalOperatorType"
+        }
+      }
+    },
+    "expressionFieldType": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "fieldDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "tableName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "virtual": {
+          "type": "boolean"
+        },
+        "dataType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "lovSelected": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "expressionParameterType": {
+      "type": "object",
+      "properties": {
+        "parameter": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40
+          }
+        },
+        "functionIdOne": {
+          "type": "number"
+        },
+        "functionIdTwo": {
+          "type": "number"
+        }
+      }
+    },
+    "expressionOperatorType": {
+      "type": "object",
+      "properties": {
+        "operatorName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "operatorDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "parameterSize": {
+          "type": "number"
         }
       }
     }

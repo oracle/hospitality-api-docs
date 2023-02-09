@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation Master Data Management API",
-    "description": "APIs to cater for Reservation Configuration in OPERA Cloud. In this module you can retrieve, create, modify or delete configuration related to Reservations, Blocks and Leisure Management.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "description": "APIs to cater for Reservation Configuration in OPERA Cloud. In this module you can retrieve, create, modify or delete configuration related to Reservations, Blocks and Leisure Management.<br /><br /> Compatible with OPERA Cloud release 22.3.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "22.3",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -21,6 +21,138 @@
     "application/json"
   ],
   "paths": {
+    "/depositpolicies": {
+      "get": {
+        "summary": "Get deposit policies in hotel level",
+        "description": "Use this API to get deposit policies in hotel level. <p><strong>OperationId:</strong>getDepositPolicy</p>",
+        "operationId": "getDepositPolicy",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Hotel code.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "policyCodeListCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Indicator that tells whether to include inactive in search results.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetch Deposit Policies in hotel level.",
+            "schema": {
+              "$ref": "#/definitions/depositPolicyDetails"
+            }
+          },
+          "204": {
+            "description": "DepositPolicy not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
     "/guaranteeCodes": {
       "get": {
         "summary": "Get Guarantee Codes",
@@ -150,6 +282,801 @@
         "tags": [
           "HotelConfig"
         ]
+      },
+      "post": {
+        "summary": "Create Guarantee Code",
+        "description": "Use this API to create Guarantee Code. <p><strong>OperationId:</strong>postGuaranteeCode</p>",
+        "operationId": "postGuaranteeCode",
+        "parameters": [
+          {
+            "name": "guaranteeCodeCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object that holds the details of Guarantee Code to be created.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/guaranteeCodeCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/alertCodes": {
+      "get": {
+        "summary": "Get Alert Codes",
+        "description": "You can use this API to get Alert Codes. <p><strong>OperationId:</strong>getAlertCodes</p>",
+        "operationId": "getAlertCodes",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "alertCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for information regarding alert templates.",
+            "schema": {
+              "$ref": "#/definitions/alertCodes"
+            }
+          },
+          "204": {
+            "description": "AlertCodes not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ReservationConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/guaranteeCodeSchedules": {
+      "post": {
+        "summary": "Create schedule for guarantee codes ",
+        "description": "Use this API to create schedule for guarantee codes. <p><strong>OperationId:</strong>postGuaranteeCodeSchedule</p>",
+        "operationId": "postGuaranteeCodeSchedule",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "guaranteeCodeScheduleCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Creates the Guarantee Code schedule based on the details provided by the request.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/guaranteeCodeScheduleCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/policyschedules": {
+      "post": {
+        "summary": "Create a Policy Schedule",
+        "description": "Use this API to create schedule for deposit or cancel policy. <p><strong>OperationId:</strong>postNewPolicySchedule</p>",
+        "operationId": "postNewPolicySchedule",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "policyScheduleCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Creates the Policy schedule based on the details provided by the request.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/policyScheduleCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/marketCodeTemplates": {
+      "post": {
+        "summary": "Create Market Code Template",
+        "description": "This API is used to create a new Template Market Code. Only one template Market Code can be Use this API to created at a time. <p><strong>OperationId:</strong>postTemplateMarketCode</p>",
+        "operationId": "postTemplateMarketCode",
+        "parameters": [
+          {
+            "name": "templateMarketCodeCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object that holds the details of template Market Code to be created.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/templateMarketCodeCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/marketCodes": {
+      "get": {
+        "summary": "Get Market codes",
+        "description": "Use this API to get Market codes. <p><strong>OperationId:</strong>getMarketCodes</p>",
+        "operationId": "getMarketCodes",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "marketCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "marketGroupsCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Search inactive Market Codes.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetch Market Codes.",
+            "schema": {
+              "$ref": "#/definitions/marketCodesDetails"
+            }
+          },
+          "204": {
+            "description": "MarketCodes not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/templates/sourceCodes": {
+      "post": {
+        "summary": "Create a Template Source Code",
+        "description": "Use this API to create a new Template Source Code. Only one template Source Code can be created at a time. <p><strong>OperationId:</strong>postTemplateSourceCode</p>",
+        "operationId": "postTemplateSourceCode",
+        "parameters": [
+          {
+            "name": "templateSourceCodeCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object that holds the details of template Source Code to be created.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/templateSourceCodeCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
       }
     }
   },
@@ -188,6 +1115,12 @@
       "name": "Accept-Language",
       "type": "string",
       "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
       "in": "header"
     }
   },
@@ -239,217 +1172,6 @@
     }
   },
   "definitions": {
-    "guaranteeCodesDetails": {
-      "type": "object",
-      "description": "Response for fetch Guarantee Codes.",
-      "properties": {
-        "guaranteeCodes": {
-          "description": "Collection of Guarantee Codes.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/guaranteeCodesType"
-          }
-        },
-        "totalPages": {
-          "description": "Evaluated total page count based on the requested max fetch count.",
-          "type": "integer"
-        },
-        "offset": {
-          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
-          "type": "integer"
-        },
-        "limit": {
-          "description": "Indicates maximum number of records a Web Service should return.",
-          "type": "integer"
-        },
-        "hasMore": {
-          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-          "type": "boolean"
-        },
-        "totalResults": {
-          "description": "Total number of rows queried",
-          "type": "integer"
-        },
-        "count": {
-          "description": "Total number of rows returned",
-          "type": "integer"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "guaranteeCodesType": {
-      "type": "object",
-      "description": "The Collection of Guarantee Codes Type.",
-      "properties": {
-        "guaranteeCode": {
-          "description": "Guarantee Code details.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/guaranteeConfigType"
-          }
-        },
-        "hotelId": {
-          "description": "Hotel code for fetched template Guarantee Codes.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "guaranteeConfigType": {
-      "type": "object",
-      "description": "Specifies Guarantee Code attributes.",
-      "properties": {
-        "description": {
-          "description": "Description of the Guarantee Code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        },
-        "requirements": {
-          "description": "Specifies various requirements for the guarantee code.",
-          "$ref": "#/definitions/guaranteeRequirementsType"
-        },
-        "shortDescription": {
-          "description": "Brief description of the Guarantee Code.",
-          "$ref": "#/definitions/translationTextType80"
-        },
-        "paymentTypes": {
-          "description": "Specifies various payment types for the guarantee code.",
-          "$ref": "#/definitions/paymentTypesType"
-        },
-        "guaranteeCode": {
-          "description": "Code assigned to the Guarantee.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "onHold": {
-          "description": "If true indicates this Guarantee Code is used only to hold the inventory during reservation process.",
-          "type": "boolean"
-        },
-        "reserveInventory": {
-          "description": "If true indicates inventory will be reserved/deducted when reservation uses this Guarantee Code.",
-          "type": "boolean"
-        },
-        "orderSequence": {
-          "description": "Display Order sequence.",
-          "type": "number"
-        },
-        "lateArrival": {
-          "description": "Represents the late arrival time.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "massCancellation": {
-          "description": "Defines the Auto mass cancellation criteria (i.e. number of days pending before auto cancellation).",
-          "type": "object",
-          "properties": {
-            "autoCancel": {
-              "description": "If true indicates, the reservations having this Guarantee Code will be auto canceled for which the credit card info is missing for number of days specified in pending days.",
-              "type": "boolean"
-            },
-            "pendingDays": {
-              "description": "Number of days, with in which the credit card info should be received for the reservation, using this guarnatee code, to avoid auto cancellation.",
-              "type": "integer"
-            }
-          }
-        },
-        "inactive": {
-          "description": "Indicates the reservation type is inactive or not.",
-          "type": "boolean"
-        }
-      }
-    },
-    "guaranteeRequirementsType": {
-      "type": "object",
-      "description": "Specifies various requirement for the guarantee code.",
-      "properties": {
-        "requirementCode": {
-          "description": "Requirement Code.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "cancellation": {
-          "description": "When true indicates cancellation on the reservation is required for this guarantee code.",
-          "type": "boolean"
-        },
-        "phoneNumber": {
-          "description": "When true indicates phone number on the reservation is required for this guarantee code.",
-          "type": "boolean"
-        },
-        "address": {
-          "description": "When true indicates address on the reservation is required for this guarantee code.",
-          "type": "boolean"
-        },
-        "creditCard": {
-          "description": "When true indicates Credit Card on the reservation is required for this guarantee code.",
-          "type": "boolean"
-        },
-        "arrivalTime": {
-          "description": "When true indicates arrival Time on the reservation is required for this guarantee code.",
-          "type": "boolean"
-        },
-        "deposit": {
-          "description": "When true indicates deposit is required for this guarantee code.",
-          "type": "boolean"
-        }
-      }
-    },
-    "translationTextType80": {
-      "type": "object",
-      "description": "Contains Multiple translated texts and language codes.",
-      "properties": {
-        "defaultText": {
-          "description": "Default text with Character length from 0 to 80.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "translatedTexts": {
-          "description": "List of translated text and language codes.",
-          "$ref": "#/definitions/translationsTextType"
-        }
-      }
-    },
-    "translationsTextType": {
-      "type": "array",
-      "description": "Language code for the translation.",
-      "maxItems": 4000,
-      "items": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "string",
-            "description": "Used for Character Strings, length 0 to 2000.",
-            "minLength": 0,
-            "maxLength": 2000
-          },
-          "language": {
-            "description": "Language identification.",
-            "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-          }
-        },
-        "description": "Language code for the translation."
-      }
-    },
-    "paymentTypesType": {
-      "type": "array",
-      "description": "Payment card code like AX,VI etc.",
-      "maxItems": 4000,
-      "items": {
-        "type": "string",
-        "minLength": 0,
-        "maxLength": 20
-      }
-    },
     "links": {
       "type": "array",
       "items": {
@@ -659,9 +1381,1176 @@
         "type",
         "title"
       ]
+    },
+    "status": {
+      "type": "object",
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "codeListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
+    "conditionGroupType": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/conditionType"
+          }
+        },
+        "conditionGroup": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/conditionGroupType"
+          }
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/logicalOperatorType"
+        }
+      }
+    },
+    "conditionType": {
+      "type": "object",
+      "properties": {
+        "leftExpression": {
+          "$ref": "#/definitions/expressionFieldType"
+        },
+        "operator": {
+          "$ref": "#/definitions/expressionOperatorType"
+        },
+        "rightExpression": {
+          "$ref": "#/definitions/expressionParameterType"
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/logicalOperatorType"
+        }
+      }
+    },
+    "expressionFieldType": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "fieldDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "tableName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "virtual": {
+          "type": "boolean"
+        },
+        "dataType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "lovSelected": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "expressionOperatorType": {
+      "type": "object",
+      "properties": {
+        "operatorName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "operatorDescription": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "parameterSize": {
+          "type": "number"
+        }
+      }
+    },
+    "expressionParameterType": {
+      "type": "object",
+      "properties": {
+        "parameter": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40
+          }
+        },
+        "functionIdOne": {
+          "type": "number"
+        },
+        "functionIdTwo": {
+          "type": "number"
+        }
+      }
+    },
+    "logicalOperatorType": {
+      "type": "string",
+      "enum": [
+        "And",
+        "Or"
+      ]
+    },
+    "translationsTextType": {
+      "type": "array",
+      "description": "Language code for the translation.",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "minLength": 0,
+            "maxLength": 2000
+          },
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description": "Language code for the translation."
+      }
+    },
+    "policyDeadlineType": {
+      "type": "object",
+      "description": "Cancellation deadline, absolute or relative.",
+      "properties": {
+        "absoluteDeadline": {
+          "description": "Defines the absolute deadline. Either this or the offset attributes may be used.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "offsetFromArrival": {
+          "description": "The number of days before arrival that allows cancellation without penalties.",
+          "type": "integer"
+        },
+        "offsetDropTime": {
+          "description": "Time on offset day the cancellation penalties applies.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "offsetFromBookingDate": {
+          "description": "The number of days after booking deposit must be paid.",
+          "type": "integer"
+        }
+      }
+    },
+    "policyAmountPercentType": {
+      "type": "object",
+      "description": "Defines the percentage basis for calculating the fee amount or the amount.",
+      "properties": {
+        "basisType": {
+          "description": "Provides the basis for how the amount of the guarantee is calculated.",
+          "$ref": "#/definitions/policyBasisTypeType"
+        },
+        "nights": {
+          "description": "The number of nights of the hotel stay that are used to calculate the fee amount.",
+          "type": "integer"
+        },
+        "percent": {
+          "description": "The percentage used to calculate the amount.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        }
+      }
+    },
+    "policyBasisTypeType": {
+      "type": "string",
+      "description": "Full Amount.",
+      "enum": [
+        "FlatAmount",
+        "Percentage",
+        "Nights",
+        "NightPercentage",
+        "FullAmount"
+      ]
+    },
+    "depositPolicyDetails": {
+      "type": "object",
+      "description": "Response for fetch Deposit Policies in hotel level.",
+      "properties": {
+        "depositPolicies": {
+          "description": "Collection of Deposit Policies grouped by hotel.",
+          "type": "object",
+          "properties": {
+            "depositPolicies": {
+              "description": "Collection of Deposit Policies grouped by hotel.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/hotelConfigDepositPoliciesType"
+              }
+            },
+            "totalPages": {
+              "description": "Evaluated total page count based on the requested max fetch count.",
+              "type": "integer"
+            },
+            "offset": {
+              "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+              "type": "integer"
+            },
+            "limit": {
+              "description": "Indicates maximum number of records a Web Service should return.",
+              "type": "integer"
+            },
+            "hasMore": {
+              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type": "boolean"
+            },
+            "totalResults": {
+              "description": "Total number of rows queried",
+              "type": "integer"
+            },
+            "count": {
+              "description": "Total number of rows returned",
+              "type": "integer"
+            }
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "hotelConfigDepositPoliciesType": {
+      "type": "object",
+      "description": "Collection of Deposit Policy Configurations of a hotel.",
+      "properties": {
+        "depositPolicy": {
+          "description": "Collection of Deposit Policy configurations of a hotel.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/configDepositPolicyType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel code of the collection of Deposit Policy configurations.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "configDepositPolicyType": {
+      "type": "object",
+      "description": "Used to define the deposit policy, guarantees policy, and/or accepted forms of payment.",
+      "properties": {
+        "amountPercent": {
+          "description": "Payment expressed as a fixed amount, or a percentage of/or room nights.",
+          "$ref": "#/definitions/policyAmountPercentType"
+        },
+        "deadline": {
+          "description": "Payment deadline, absolute or relative.",
+          "$ref": "#/definitions/policyDeadlineType"
+        },
+        "description": {
+          "description": "Text description of the Payment in a given language.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "depositReceiptNo": {
+          "description": "Receipt number associated with the deposit policy",
+          "type": "integer"
+        },
+        "transactionDate": {
+          "description": "Transaction Date associated with the deposit policy",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "depositReqReversed": {
+          "description": "Flag to indicate if deposit policy is reversed",
+          "type": "boolean"
+        },
+        "formattedRule": {
+          "description": "Formatted Text Rule of the deposit policy.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "typeOfCharges": {
+          "description": "Defines if the deposit amount is calculated based on Room Charges, Catering Charges or both",
+          "$ref": "#/definitions/depositCancelRevenueType"
+        },
+        "policyCode": {
+          "description": "Deposit Policy Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "manual": {
+          "description": "Flag to indicate if the cancellation policy is manual.",
+          "type": "boolean"
+        },
+        "sequence": {
+          "description": "The sequence number that determines the position of this rule in the Deposit or Cancellation rules LOV.",
+          "type": "integer"
+        },
+        "inactive": {
+          "description": "Inactive rules are no longer available for attachment to rate codes, reservation types or reservations; however, they are still recorded in the database for historical purposes.",
+          "type": "boolean"
+        }
+      }
+    },
+    "depositCancelRevenueType": {
+      "type": "string",
+      "description": "The type to indicate what revenue is to be used for calculating deposit/cancellation amounts.",
+      "enum": [
+        "Rooms",
+        "Catering",
+        "All"
+      ]
+    },
+    "uniqueIDListType": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "guaranteeConfigType": {
+      "type": "object",
+      "description": "Specifies Guarantee Code attributes.",
+      "properties": {
+        "description": {
+          "description": "Description of the Guarantee Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "requirements": {
+          "description": "Specifies various requirements for the guarantee code.",
+          "$ref": "#/definitions/guaranteeRequirementsType"
+        },
+        "shortDescription": {
+          "description": "Brief description of the Guarantee Code.",
+          "$ref": "#/definitions/translationTextType80"
+        },
+        "paymentTypes": {
+          "description": "Specifies various payment types for the guarantee code.",
+          "$ref": "#/definitions/paymentTypesType"
+        },
+        "guaranteeCode": {
+          "description": "Code assigned to the Guarantee.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "onHold": {
+          "description": "If true indicates this Guarantee Code is used only to hold the inventory during reservation process.",
+          "type": "boolean"
+        },
+        "reserveInventory": {
+          "description": "If true indicates inventory will be reserved/deducted when reservation uses this Guarantee Code.",
+          "type": "boolean"
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
+        },
+        "lateArrival": {
+          "description": "Represents the late arrival time.",
+          "type": "string"
+        },
+        "massCancellation": {
+          "description": "Defines the Auto mass cancellation criteria (i.e. number of days pending before auto cancellation).",
+          "type": "object",
+          "properties": {
+            "autoCancel": {
+              "description": "If true indicates, the reservations having this Guarantee Code will be auto canceled for which the credit card info is missing for number of days specified in pending days.",
+              "type": "boolean"
+            },
+            "pendingDays": {
+              "description": "Number of days, with in which the credit card info should be received for the reservation, using this guarnatee code, to avoid auto cancellation.",
+              "type": "integer"
+            }
+          }
+        },
+        "inactive": {
+          "description": "Indicates the reservation type is inactive or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "guaranteeRequirementsType": {
+      "type": "object",
+      "description": "Specifies various requirement for the guarantee code.",
+      "properties": {
+        "requirementCode": {
+          "description": "Requirement Code.",
+          "type": "string"
+        },
+        "cancellation": {
+          "description": "When true indicates cancellation on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "phoneNumber": {
+          "description": "When true indicates phone number on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "address": {
+          "description": "When true indicates address on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "creditCard": {
+          "description": "When true indicates Credit Card on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "arrivalTime": {
+          "description": "When true indicates arrival Time on the reservation is required for this guarantee code.",
+          "type": "boolean"
+        },
+        "deposit": {
+          "description": "When true indicates deposit is required for this guarantee code.",
+          "type": "boolean"
+        }
+      }
+    },
+    "translationTextType80": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 80.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "paymentTypesType": {
+      "type": "array",
+      "description": "Payment card code like AX,VI etc.",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
+    "guaranteeCodesDetails": {
+      "type": "object",
+      "description": "Response for fetch Guarantee Codes.",
+      "properties": {
+        "guaranteeCodes": {
+          "description": "Collection of Guarantee Codes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/guaranteeCodesType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "guaranteeCodesType": {
+      "type": "object",
+      "description": "The Collection of Guarantee Codes Type.",
+      "properties": {
+        "guaranteeCode": {
+          "description": "Guarantee Code details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/guaranteeConfigType"
+          }
+        },
+        "hotelId": {
+          "description": "Hotel code for fetched template Guarantee Codes.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "guaranteeCodeCriteria": {
+      "type": "object",
+      "description": "Request object that holds the details of Guarantee Code to be created.",
+      "properties": {
+        "guaranteeCode": {
+          "description": "Details of Guarantee Code to be created.",
+          "$ref": "#/definitions/guaranteeConfigType"
+        },
+        "hotelId": {
+          "description": "Hotel code for Guarantee Code.",
+          "$ref": "#/definitions/codeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "codeType": {
+      "type": "string",
+      "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+      "minLength": 0,
+      "maxLength": 20
+    },
+    "alertCodes": {
+      "type": "object",
+      "description": "Response object for information regarding alert templates.",
+      "properties": {
+        "alerts": {
+          "description": "Collection of alert code templates and their information.",
+          "$ref": "#/definitions/alertCodesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "alertCodesType": {
+      "type": "array",
+      "description": "Collection of hotel level alert codes with attached alert types.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/alertCodeType"
+      }
+    },
+    "alertCodeType": {
+      "type": "object",
+      "description": "Common code type for code, description",
+      "properties": {
+        "code": {
+          "description": "Code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "displaySequence": {
+          "description": "Sequence for alert.",
+          "type": "number"
+        },
+        "hotelId": {
+          "description": "Hotel Code for alert.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "guaranteeCodeScheduleCriteria": {
+      "type": "object",
+      "description": "Creates the Guarantee Code schedule based on the details provided by the request.",
+      "properties": {
+        "guaranteeCodeSchedule": {
+          "description": "Details of the Guarantee Code schedule to be created.",
+          "$ref": "#/definitions/createGuaranteeCodeScheduleType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "createGuaranteeCodeScheduleType": {
+      "type": "object",
+      "description": "The Guarantee Code Schedule Type.",
+      "properties": {
+        "scheduleDetail": {
+          "description": "Guarantee Code Schedule details.",
+          "$ref": "#/definitions/createGuaranteeCodeScheduleDetailType"
+        },
+        "hotelId": {
+          "description": "Hotel code for the Guarantee Code Schedule.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "createGuaranteeCodeScheduleDetailType": {
+      "type": "object",
+      "description": "The Guarantee Code Schedule detail Type.",
+      "properties": {
+        "timeSpan": {
+          "description": "Time span the Guarantee Code schedule is applicable.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "guaranteeCode": {
+          "description": "Guarantee code and description for this schedule.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "applicableCodes": {
+          "description": "Guarantee Code is applicable to hotel, rate plan, Guarantee Code, Credit Rating etc. for this schedule.",
+          "$ref": "#/definitions/createPolicyApplicableCodesType"
+        },
+        "sequence": {
+          "description": "Sequence for the schedule.",
+          "type": "number"
+        },
+        "override": {
+          "description": "override the schedule?",
+          "type": "boolean"
+        },
+        "inactive": {
+          "description": "schedule Inactive?",
+          "type": "boolean"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "codeDescriptionType": {
+      "type": "object",
+      "description": "This contains a generic code and description information.",
+      "properties": {
+        "code": {
+          "description": "Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "createPolicyApplicableCodesType": {
+      "type": "object",
+      "description": "The object contains the applicatble code for creation of new policy schedule.",
+      "properties": {
+        "hotelId": {
+          "description": "create schedule for this Hotel code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCodes": {
+          "description": "create schedule for this Rate plan code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "guaranteeCodes": {
+          "description": "create schedule for these Guarantee codes.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "blockId": {
+          "description": "Block Id for creation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "blockCode": {
+          "description": "create schedule for this Block code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "creditRatings": {
+          "description": "create schedule for this Credit Rating.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "seasonCode": {
+          "description": "create schedule for this Season Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "policyApplicableCodesType": {
+      "type": "object",
+      "description": "The object contains usage of the Policy Schedule detail Type.",
+      "properties": {
+        "hotelId": {
+          "description": "Schedule is used by this Hotel code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCodes": {
+          "description": "Schedule is used by this Rate plan code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "guaranteeCodes": {
+          "description": "Schedule is used by this Guarantee code.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "blockIds": {
+          "description": "Block Id to search.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "blockCode": {
+          "description": "Schedule is used by this Block code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "creditRatings": {
+          "description": "Schedule is used by this Credit Rating.",
+          "$ref": "#/definitions/codeListType"
+        },
+        "seasonCode": {
+          "description": "Schedule is used by this Season Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "marketCodeType": {
+      "type": "object",
+      "description": "Common code type for code, description, seq and inactive",
+      "properties": {
+        "description": {
+          "description": "Description for the code type.",
+          "$ref": "#/definitions/translationTextType50"
+        },
+        "sequence": {
+          "description": "Display sequence for the code type.",
+          "type": "integer"
+        },
+        "code": {
+          "description": "Code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "inactive": {
+          "description": "Indicates the code type is inactive or not.",
+          "type": "boolean"
+        },
+        "hotelId": {
+          "description": "Hotel code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "groupCode": {
+          "description": "Group code to which this code type belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "displayColor": {
+          "description": "Display color for the marketing type.",
+          "$ref": "#/definitions/marketCodeColorsType"
+        },
+        "transactionCode": {
+          "description": "Transaction code to map Market Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "printGroup": {
+          "description": "Print Group to map Market Code.",
+          "$ref": "#/definitions/marketCodePrintGroupType"
+        }
+      }
+    },
+    "translationTextType50": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 50.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "marketCodeColorsType": {
+      "type": "string",
+      "description": "Simple type for Market Code colors.",
+      "enum": [
+        "None",
+        "Blue",
+        "Red",
+        "Cyan",
+        "Green",
+        "Black",
+        "White",
+        "Gray",
+        "Yellow"
+      ]
+    },
+    "marketCodePrintGroupType": {
+      "type": "string",
+      "description": "Group Print Group Type for country code Sweden.",
+      "enum": [
+        "Business",
+        "Conference",
+        "Leisure",
+        "BusinessSe",
+        "ConferenceSe",
+        "LeisureSe",
+        "GroupSe"
+      ]
+    },
+    "marketCodesType": {
+      "type": "array",
+      "description": "Collection of Market Codes.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/marketCodeType"
+      }
+    },
+    "policyScheduleType": {
+      "type": "object",
+      "description": "The Policy Schedule Type.",
+      "properties": {
+        "scheduleId": {
+          "description": "Unique Identifer for the policy schedule.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "scheduleDetail": {
+          "description": "Policy Schedule details.",
+          "$ref": "#/definitions/policyScheduleDetailType"
+        },
+        "hotelId": {
+          "description": "Hotel code for the Policy Schedules.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "policyType": {
+          "description": "Policy Type for the Policy Schedules.",
+          "$ref": "#/definitions/policyTypeType"
+        }
+      }
+    },
+    "policyScheduleDetailType": {
+      "type": "object",
+      "description": "The Policy Schedule detail Type.",
+      "properties": {
+        "timeSpan": {
+          "description": "Time span the policy schedule is applicable.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "policy": {
+          "description": "Policy code and description for this schedule.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "applicableCodes": {
+          "description": "Policy is applicable to hotel, rate plan, Guarantee Code, Block, Credit Rating etc. for this schedule.",
+          "$ref": "#/definitions/policyApplicableCodesType"
+        },
+        "sequence": {
+          "description": "Sequence for the schedule.",
+          "type": "number"
+        },
+        "override": {
+          "description": "override the schedule?",
+          "type": "boolean"
+        },
+        "inactive": {
+          "description": "schedule Inactive?",
+          "type": "boolean"
+        }
+      }
+    },
+    "policyTypeType": {
+      "type": "string",
+      "description": "Simple type for Policy type.",
+      "enum": [
+        "Deposit",
+        "Cancellation"
+      ]
+    },
+    "policyScheduleCriteria": {
+      "type": "object",
+      "description": "Creates the Policy schedule based on the details provided by the request.",
+      "properties": {
+        "policySchedule": {
+          "description": "Details of the the policy schedule to be created.",
+          "$ref": "#/definitions/policyScheduleType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateMarketCodeType": {
+      "type": "object",
+      "description": "Common code type for code, description, seq and inactive",
+      "properties": {
+        "description": {
+          "description": "Description for the code type.",
+          "$ref": "#/definitions/translationTextType50"
+        },
+        "sequence": {
+          "description": "Display sequence for the code type.",
+          "type": "integer"
+        },
+        "code": {
+          "description": "Code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "inactive": {
+          "description": "Indicates the code type is inactive or not.",
+          "type": "boolean"
+        },
+        "chainCode": {
+          "description": "Chain code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "groupCode": {
+          "description": "Group code to which this code type belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "displayColor": {
+          "description": "Display Color for the template market code type.",
+          "$ref": "#/definitions/marketCodeColorsType"
+        }
+      }
+    },
+    "templateMarketCodeCriteria": {
+      "type": "object",
+      "description": "Request object that holds the details of template Market Code to be created.",
+      "properties": {
+        "templateMarketCode": {
+          "description": "Details of template Market Code to be created.",
+          "$ref": "#/definitions/templateMarketCodeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "marketCodesDetails": {
+      "type": "object",
+      "description": "Response for fetch Market Codes.",
+      "properties": {
+        "marketCodes": {
+          "description": "Collection of Market Codes.",
+          "$ref": "#/definitions/marketCodesType"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "templateSourceCodeType": {
+      "type": "object",
+      "description": "Common code type for code, description, seq and inactive",
+      "properties": {
+        "description": {
+          "description": "Description for the code type.",
+          "$ref": "#/definitions/translationTextType50"
+        },
+        "sequence": {
+          "description": "Display sequence for the code type.",
+          "type": "integer"
+        },
+        "code": {
+          "description": "Code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "inactive": {
+          "description": "Indicates the code type is inactive or not.",
+          "type": "boolean"
+        },
+        "chainCode": {
+          "description": "Chain code for the code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "groupCode": {
+          "description": "Group code to which this code type belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "templateSourceCodeCriteria": {
+      "type": "object",
+      "description": "Request object that holds the details of template Source Code to be created.",
+      "properties": {
+        "templateSourceCode": {
+          "description": "Details of template Source Code to be created.",
+          "$ref": "#/definitions/templateSourceCodeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
     }
   },
   "tags": [
+    {
+      "name": "ReservationConfig",
+      "description": "The Reservation Configuration module offers capability of creating, managing, and retrieving of Reservation configuration."
+    },
     {
       "name": "HotelConfig",
       "description": "These APIs will allow you to configure reservation related configuration related to Administration."
