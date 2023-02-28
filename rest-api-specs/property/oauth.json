@@ -3,7 +3,7 @@
   "info": {
     "title": "Property oAuth API for OHIP",
     "version": "21.5.0.0",
-    "description": "REST API to obtain an OAuth token from the Oracle Hospitality Integration Platform.  <p>For authenticating to Distribution APIs please use the Early Release OPERA Cloud Distribution Authentication API.</p><br /><br /> Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2022 Oracle and/or its affiliates.</p>",
+    "description": "REST API to obtain an OAuth token from the Oracle Hospitality Integration Platform.  <p>For authenticating to Distribution APIs please use the Early Release OPERA Cloud Distribution Authentication API.</p><br /><br /> Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
     "x-summary": "The OHIP REST API enables you to develop apps that connect to Oracle Hospitality products through a single endpoint in the Oracle Hospitality cloud.",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
@@ -27,7 +27,7 @@
   "paths": {
     "/tokens": {
       "post": {
-        "description": "<p>This is required to access Oracle Hospitality OPERA Cloud REST APIs.  </p><h3>Obtaining a token</h3><p>To obtain a token include the following headers:</p> <ul><li>A Basic authentication header using the base64 hash of your Client ID and Client Secret in the format <code>ClientID:ClientSecret</code> - base64 encoded to the Basic Access Authorization standard</li> <li>Your application key in the <code>x-app-key</code> header</li></ul> <p>And the following body parameters:</p> <h4>Body parameters for obtaining your initial access token</h4> <ul><li><strong>grant_type</strong>.  Required to be \"password\"</strong></li><li><strong>username</strong>.  set this to your  OPERA Cloud integration username.</strong></li><li><strong>password</strong>.  Set this to your OPERA Cloud integration user's password.</li> <li><strong>scope</strong>. Optional.  Reserved for future use.</li> </strong></li></ul> <h3>JSON Web Token (JWT)</h3><p> An open standard (<a href=\"https://tools.ietf.org/html/rfc7519\" title=\"Definition of RFC7519, the standard for JWT tokens\">RFC 7519</a>) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.</p><p><strong>OperationId:</strong>getToken</p>",
+        "description": "<p>This is required to access Oracle Hospitality OPERA Cloud REST APIs.  </p><h3>Obtaining a token</h3><p>To obtain a token include the following headers:</p> <ul><li>A Basic authentication header using the base64 hash of your Client ID and Client Secret in the format <code>ClientID:ClientSecret</code> - base64 encoded to the Basic Access Authorization standard</li> <li>Your application key in the <code>x-app-key</code> header</li></ul> <p>And the following body parameters:</p> <h4>Body parameters for obtaining your initial access token</h4> <ul><li><strong>grant_type</strong>.  Required to be \"password\" or \"client_credentials\"</strong></li><li><strong>username</strong>.  If grant_type is password, set this to your OPERA Cloud integration username.</strong></li><li><strong>password</strong>.  If grant_type is password, set this to your OPERA Cloud integration user's password.</li> <li><strong>scope</strong>. If grant_type is client_credentials, set this to your assigned scope. </li> </strong></li></ul> <h3>JSON Web Token (JWT)</h3><p> An open standard (<a href=\"https://tools.ietf.org/html/rfc7519\" title=\"Definition of RFC7519, the standard for JWT tokens\">RFC 7519</a>) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.</p><p><strong>OperationId:</strong>getToken</p>",
         "summary": "Authenticate with the identity server",
         "operationId": "getToken",
         "produces": [
@@ -44,7 +44,7 @@
             "description": "Bad Request. This error is returned if the authentication information provided is not valid."
           },
           "401": {
-            "description": "Unauthorized. Invalid client ID, client secret, username, and/or password."
+            "description": "Unauthorized. Invalid client ID, client secret, username, and/or password, and/or scope."
           },
           "403": {
             "description": "Forbidden. This error is returned if the operation is not allowed for the request."
@@ -58,7 +58,8 @@
             "required": true,
             "type": "string",
             "enum": [
-              "password"
+              "password",
+              "client_credentials"
             ]
           },
           {
@@ -80,10 +81,13 @@
             "in": "formData",
             "type": "string",
             "required": false,
-            "description": "Your desired scope to be included in the token.  This is an optional parameter and is reserved for future use."
+            "description": "Your assigned scope. Required value when requesting a token using the client_credentials grant."
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/enterpriseId"
           }
         ],
         "consumes": [
@@ -105,6 +109,17 @@
       "in": "header",
       "required": true,
       "x-example": "41ecd082-8997-4c69-af34-2f72b83645ff"
+    },
+    "enterpriseId": {
+      "name": "enterpriseId",
+      "description": "Global unique ID of the Enterprise. Only while using Client Credentials workflow with OCIM environments, users should pass this header.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8,
+      "pattern": "^[A-Z0-9]{1,8}$",
+      "in": "header",
+      "required": false,
+      "example": "ENT123"
     }
   },
   "definitions": {
