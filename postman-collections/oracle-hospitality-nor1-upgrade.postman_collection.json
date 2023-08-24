@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "5d8f4647-86af-4b40-859d-126dc7ebbf25",
+		"name": "4. Nor1 Upgrade REST APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15729853",
+		"_collection_link": "https://www.postman.com/hospitalityapis/workspace/oracle-hospitality-apis/collection/15729853-5d8f4647-86af-4b40-859d-126dc7ebbf25?action=share&source=collection_link&creator=15729853"
+	},
+	"item": [
+		{
+			"name": "OAuth Token",
+			"item": [
+				{
+					"name": "Get OAuth Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
+								{
+									"key": "saveHelperData",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-app-key",
+								"type": "text",
+								"value": "{{AppKey}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{Username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{Password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostName}}/oauth/v1/tokens",
+							"host": [
+								"{{HostName}}"
+							],
+							"path": [
+								"oauth",
+								"v1",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Nor1 Upgrade API",
+			"item": [
+				{
+					"name": "Upsell Offers API",
+					"item": [
+						{
+							"name": "get Upsell Offers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"postman.setEnvironmentVariable(\"SelectedOfferId\", jsonData.items[0].upsellOffers[0].offers[0].offerId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "providerId",
+										"value": "{{ProviderId}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HostName}}/ohcgep/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/arrivalDate/{{ArrivalDate}}/upsellOffers",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"ohcgep",
+										"v0",
+										"hotels",
+										"{{HotelId}}",
+										"reservations",
+										"{{ReservationId}}",
+										"arrivalDate",
+										"{{ArrivalDate}}",
+										"upsellOffers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post Upsell Offer",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-app-key",
+										"value": "{{AppKey}}",
+										"type": "text"
+									},
+									{
+										"key": "providerId",
+										"value": "{{ProviderId}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"offerId\": \"{{SelectedOfferId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{HostName}}/ohcgep/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/arrivalDate/{{ArrivalDate}}/upsellOffers",
+									"host": [
+										"{{HostName}}"
+									],
+									"path": [
+										"ohcgep",
+										"v0",
+										"hotels",
+										"{{HotelId}}",
+										"reservations",
+										"{{ReservationId}}",
+										"arrivalDate",
+										"{{ArrivalDate}}",
+										"upsellOffers"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
