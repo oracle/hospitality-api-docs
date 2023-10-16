@@ -4,7 +4,7 @@ This repository stores REST API specifications and accompanying Postman collecti
 
 For more information see [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/).
 
-Want help getting started with OHIP?  Register for this free on demand webcast [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).
+Want help getting started with OHIP?  See our user guide, and note that once onboarded you can also subscribe to our on demand Digital Learning (see [here to subscribe](https://docs.oracle.com/cd/F29336_01/doc.201/f27480/c_gs.htm)).
 
 Specifications for Oracle Hospitality REST APIs are held in the [rest-api-specs](rest-api-specs) folder while Postman collections are held in the [postman-collection](postman-collections) folder.
 
