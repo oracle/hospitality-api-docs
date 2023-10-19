@@ -7,8 +7,8 @@
   ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs to cater for Back Office Operations functionality in OPERA Cloud. <br /><br /> A common BackOffice industry term is End of Day.  This closes and balances each day's business activities. It reconciles guest folios and processes credit card transactions. The End of Day routine rolls the business date forward and prints final reports.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
-    "title": "OPERA Cloud Back Office Operations API",
+    "description": "APIs to cater to provisioning and deprovisioning of new properties and chains in OPERA.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "title": "OPERA Provisioning Service API",
     "version": "23.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
@@ -19,11 +19,11 @@
       "url": "https://opensource.org/licenses/upl"
     }
   },
-  "basePath": "/bof/v1",
+  "basePath": "/ops/v1",
   "paths": {
-    "/hotels/{hotelId}/businessDate": {
+    "/listofvalues/currencies": {
       "get": {
-        "description": "Use this API to find out the current business date of a specified hotel. <p><strong>OperationId:</strong>getBusinessDate</p>",
+        "description": "Operation to fetch all currencies that are valid in the Environment. <p><strong>OperationId:</strong>getShells</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -31,20 +31,11 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "BackOfficeOperations"
+          "Provisioning"
         ],
-        "summary": "Fetch end of day business dates",
-        "operationId": "getBusinessDate",
+        "summary": "Operation to fetch all currencies that are valid in the Environment.",
+        "operationId": "getCurrencies",
         "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID that identifies a single hotel property.",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
           {
             "type": "string",
             "description": "Bearer token that needs to be passed which is generated post user authentication",
@@ -84,9 +75,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Response for fetching active end of day status for multiple hotels.",
+            "description": "Response object which will contain all the List of valid currencies in the environment.",
             "schema": {
-              "$ref": "#/definitions/businessDate"
+              "$ref": "#/definitions/currencies"
             },
             "headers": {
               "Content-Language": {
@@ -94,20 +85,10 @@
                 "type": "string",
                 "description": "Audience language"
               }
-            },
-            "examples": {
-              "application/json": {
-                "hotels": [
-                  {
-                    "businessDate": "2020-04-05",
-                    "hotelId": "HOTEL1"
-                  }
-                ]
-              }
             }
           },
           "204": {
-            "description": "BusinessDate not found."
+            "description": "No valid currrency found."
           },
           "400": {
             "description": "Bad Request",
@@ -159,16 +140,16 @@
     }
   },
   "definitions": {
-    "businessDate": {
-      "description": "Response for fetching active end of day status for multiple hotels.",
+    "currencies": {
+      "description": "Response object which will contain all the List of valid currencies in the environment.",
       "type": "object",
       "properties": {
-        "hotels": {
-          "description": "Collection of hotels and its active end of days.",
-          "$ref": "#/definitions/hotelActiveEndOfDaysType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
+        "currencyList": {
+          "description": "List of currencies available in the environment.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
@@ -263,32 +244,6 @@
         }
       }
     },
-    "hotelActiveEndOfDayType": {
-      "description": "Defines hotel and its active end of days.",
-      "type": "object",
-      "properties": {
-        "businessDate": {
-          "description": "Current open business date of hotel.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "hotelId": {
-          "description": "Hotel code of the active end of days.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        }
-      }
-    },
-    "hotelActiveEndOfDaysType": {
-      "description": "Collection of hotels and its active end of days.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/hotelActiveEndOfDayType"
-      }
-    },
     "instanceLink": {
       "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "type": "object",
@@ -344,12 +299,6 @@
       "items": {
         "$ref": "#/definitions/instanceLink"
       }
-    },
-    "operaVersionNumberType": {
-      "description": "Current Opera Version Number",
-      "type": "string",
-      "maxLength": 40,
-      "minLength": 0
     },
     "warningType": {
       "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
@@ -420,8 +369,8 @@
   },
   "tags": [
     {
-      "description": "This module provides APIs to service Back Office operations for property, such as managing end-of-day, getting the properties current business date, and perform cashier closure.",
-      "name": "BackOfficeOperations"
+      "description": "The ProvisioningService Web Service offers capability of provisioning and deprovisioning properties and chains in Opera.",
+      "name": "Provisioning"
     }
   ],
   "externalDocs": {

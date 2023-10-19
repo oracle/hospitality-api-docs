@@ -7,8 +7,8 @@
   ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs to cater for external Leisure Management functionality integrated with OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
-    "title": "OPERA Cloud Leisure Management API",
+    "description": "APIs to cater for Activity Configuration functionality in OPERA Cloud. In this module you can retrieve, create, update Activity configuration codes, for example create a new Activity Type.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "title": "OPERA Cloud Activity Management API",
     "version": "23.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
@@ -19,11 +19,11 @@
       "url": "https://opensource.org/licenses/upl"
     }
   },
-  "basePath": "/lms/v1",
+  "basePath": "/act/config/v1",
   "paths": {
-    "/activityLocations": {
+    "/activityResults": {
       "get": {
-        "description": "Use this API to fetch Activity location codes for a property. <p><strong>OperationId:</strong>getActivityLocations</p>",
+        "description": "Retrieve a list of all configured Activity Result codes and descriptions.  Activity Results appear on the Activities screen in the Results field after the Activity is completed.  And example could be Call Again - an activity is Completed but the result code as part of the completion is to Call Again. <p><strong>OperationId:</strong>getActivityResultsConfig</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -31,21 +31,29 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Look up of Activity Locations",
-        "operationId": "getActivityLocations",
+        "summary": "Get all Configured Activity Result Codes ",
+        "operationId": "getActivityResultsConfig",
         "parameters": [
           {
-            "type": "array",
-            "items": {
-              "maxItems": 4000,
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "name": "hotelIds",
-            "in": "query",
-            "required": true
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 0,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Determines wether to fetch inactive records or not.",
+            "name": "fetchInactive",
+            "in": "query"
           },
           {
             "type": "array",
@@ -54,7 +62,20 @@
               "type": "string"
             },
             "collectionFormat": "multi",
-            "name": "criteriaCodes",
+            "description": "Codes to be searched.",
+            "name": "codes",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Wildcard search on the code.",
+            "name": "wildCard",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Description of the code.",
+            "name": "description",
             "in": "query"
           },
           {
@@ -96,9 +117,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Response object after fetching the Activity Locations.",
+            "description": "Response object for fetching configured Activity Results.",
             "schema": {
-              "$ref": "#/definitions/fetchActivityLocations"
+              "$ref": "#/definitions/activityResultsConfigDetails"
             },
             "headers": {
               "Content-Language": {
@@ -109,7 +130,7 @@
             }
           },
           "204": {
-            "description": "ActivityLocations not found."
+            "description": "ActivityResultsConfig not found."
           },
           "400": {
             "description": "Bad Request",
@@ -159,7 +180,7 @@
         }
       },
       "post": {
-        "description": "Use this API to create a new Activity location for a property. <p><strong>OperationId:</strong>postActivityLocations</p>",
+        "description": "Create a new Activity Results Code, for example SUCCESS, END, CALLAGAIN.  These codes are used when you complete an activity.  You need to specify an Activity Result Code as part of that completion process. <p><strong>OperationId:</strong>postActivityResultsConfig</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -167,20 +188,20 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Create an Activity Locations",
-        "operationId": "postActivityLocations",
+        "summary": "Create an Activity results code",
+        "operationId": "postActivityResultsConfig",
         "parameters": [
           {
-            "description": "Request object for creating Activity Locations.",
-            "name": "createActivityLocations",
+            "description": "Request object for creating Activity Results Configuration.",
+            "name": "activityResultsConfigInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/createActivityLocations"
+                  "$ref": "#/definitions/activityResultsConfigInfo"
                 }
               ]
             }
@@ -288,9 +309,9 @@
         }
       }
     },
-    "/activityLocations/{activityLocationsId}": {
+    "/activityResults/{activityResultCode}": {
       "put": {
-        "description": "Use this API to update an existing Activity location Code for a property. <p><strong>OperationId:</strong>putActivityLocations</p>",
+        "description": "Change or update details of an existing Activity Results Code. <p><strong>OperationId:</strong>putActivityResultsConfig</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -298,29 +319,29 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Change in Activity Locations",
-        "operationId": "putActivityLocations",
+        "summary": "Change an Activity Result Code",
+        "operationId": "putActivityResultsConfig",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "OPERA Activity locations id",
-            "name": "activityLocationsId",
+            "description": "Activity Result Code.",
+            "name": "activityResultCode",
             "in": "path",
             "required": true
           },
           {
-            "description": "Request object for changing Activity Locations.",
-            "name": "changeActivityLocations",
+            "description": "Request object for changing Activity Results Configuration.",
+            "name": "activityResultsConfigInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/changeActivityLocations"
+                  "$ref": "#/definitions/activityResultsConfigInfo"
                 }
               ]
             }
@@ -366,7 +387,7 @@
           "200": {
             "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
             "schema": {
-              "$ref": "#/definitions/changeActivityLocationsRS"
+              "$ref": "#/definitions/status"
             },
             "headers": {
               "Content-Language": {
@@ -428,7 +449,7 @@
         }
       },
       "delete": {
-        "description": "Use this API to delete an Activity location for a property. <p><strong>OperationId:</strong>deleteActivityLocations</p>",
+        "description": "Delete an Activity Result Code from OPERA Cloud. <p><strong>OperationId:</strong>deleteActivityResultsConfig</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -436,25 +457,18 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Remove Activity Locations",
-        "operationId": "deleteActivityLocations",
+        "summary": "Delete an Activity results code",
+        "operationId": "deleteActivityResultsConfig",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "OPERA Activity locations id",
-            "name": "activityLocationsId",
+            "description": "Activity Result Code.",
+            "name": "activityResultCode",
             "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Hotel where the code is configured.",
-            "name": "hotelIds",
-            "in": "query",
             "required": true
           },
           {
@@ -560,149 +574,9 @@
         }
       }
     },
-    "/activityLocations/{activityLocationsId}/copy": {
-      "put": {
-        "description": "Use this API to copy an Activity location for a property. <p><strong>OperationId:</strong>copyActivityLocations</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "LeisureManagementConfig"
-        ],
-        "summary": "Copy Activity Locations",
-        "operationId": "copyActivityLocations",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "OPERA Source Activity locations id",
-            "name": "activityLocationsId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request object for copying Activity Locations to hotel(s).",
-            "name": "copyActivityLocations",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/copyActivityLocations"
-                }
-              ]
-            }
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "maxLength": 80,
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "External system code.",
-            "name": "x-externalsystem",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-            "schema": {
-              "$ref": "#/definitions/copyActivityLocationsRS"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/activityStatusCodes": {
+    "/autoTraceCodes": {
       "get": {
-        "description": "Fetch Activity Status Codes that are configured for a property.  <p><strong>OperationId:</strong>getActivityStatusCodes</p>",
+        "description": "Retrieve a list of all configured Auto Trace Codes for a property. <p><strong>OperationId:</strong>getAutoTraceCodes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -710,30 +584,22 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Get Activity Status Codes",
-        "operationId": "getActivityStatusCodes",
+        "summary": "Get Auto Trace codes",
+        "operationId": "getAutoTraceCodes",
         "parameters": [
           {
-            "type": "array",
-            "items": {
-              "maxItems": 4000,
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "name": "hotelIds",
-            "in": "query",
-            "required": true
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
           },
           {
-            "type": "array",
-            "items": {
-              "maxItems": 4000,
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "name": "criteriaCodes",
+            "type": "integer",
+            "default": 0,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "name": "offset",
             "in": "query"
           },
           {
@@ -743,7 +609,30 @@
               "type": "string"
             },
             "collectionFormat": "multi",
-            "name": "applicationCodes",
+            "name": "codes",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "enum": [
+                "Accounts",
+                "Contacts",
+                "Blocks",
+                "Activities"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "A collection of supported list of Auto Trace Groups.",
+            "name": "autoTraceGroups",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Description for the Trace Code to be searched for.",
+            "name": "description",
             "in": "query"
           },
           {
@@ -785,9 +674,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Response object after fetching the Activity Status Codes.",
+            "description": "Response object to fetch Auto Trace Codes.",
             "schema": {
-              "$ref": "#/definitions/fetchActivityStatusCodes"
+              "$ref": "#/definitions/autoTraceCodesDetails"
             },
             "headers": {
               "Content-Language": {
@@ -798,7 +687,7 @@
             }
           },
           "204": {
-            "description": "ActivityStatusCodes not found."
+            "description": "AutoTraceCodes not found."
           },
           "400": {
             "description": "Bad Request",
@@ -848,7 +737,7 @@
         }
       },
       "post": {
-        "description": "Retrieve Activity Status Code that are configured for a property.  Activity Status Codes are typically used when an EAS (External Activities Scheduler system) interface is connected to OPERA.   <p><strong>OperationId:</strong>postActivityStatusCodes</p>",
+        "description": "Create an Auto trace code. <p><strong>OperationId:</strong>postAutoTraceCodes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -856,20 +745,20 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Create Activity Status Code",
-        "operationId": "postActivityStatusCodes",
+        "summary": "Create an Auto Trace code",
+        "operationId": "postAutoTraceCodes",
         "parameters": [
           {
-            "description": "Request object for creating Activity Status Codes.",
-            "name": "createActivityStatusCodes",
+            "description": "Request object for creating Auto Trace Codes.",
+            "name": "autoTraceCodesInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/createActivityStatusCodes"
+                  "$ref": "#/definitions/autoTraceCodesInfo"
                 }
               ]
             }
@@ -977,9 +866,9 @@
         }
       }
     },
-    "/activityStatusCodes/{activityStatusCodesId}": {
+    "/autoTraceCodes/{autoTraceCode}": {
       "put": {
-        "description": "Modify an Activity Status Code that is configured for a property.  <p><strong>OperationId:</strong>putActivityStatusCodes</p>",
+        "description": "Update an Auto Trace Code. <p><strong>OperationId:</strong>putAutoTraceCodes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -987,29 +876,29 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Change Activity Status Code",
-        "operationId": "putActivityStatusCodes",
+        "summary": "Change an Auto Trace code",
+        "operationId": "putAutoTraceCodes",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "OPERA Activity status codes",
-            "name": "activityStatusCodesId",
+            "description": "Unique code of trace.",
+            "name": "autoTraceCode",
             "in": "path",
             "required": true
           },
           {
-            "description": "Request object for changing Activity Status Codes.",
-            "name": "changeActivityStatusCodes",
+            "description": "Request object for changing Auto Trace Codes.",
+            "name": "autoTraceCodesInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/changeActivityStatusCodes"
+                  "$ref": "#/definitions/autoTraceCodesInfo"
                 }
               ]
             }
@@ -1055,7 +944,7 @@
           "200": {
             "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
             "schema": {
-              "$ref": "#/definitions/changeActivityStatusCodesRS"
+              "$ref": "#/definitions/status"
             },
             "headers": {
               "Content-Language": {
@@ -1117,7 +1006,7 @@
         }
       },
       "delete": {
-        "description": "Remove an Activity Status Code that is configured for a property.  <p><strong>OperationId:</strong>deleteActivityStatusCodes</p>",
+        "description": "Delete an Auto trace code. <p><strong>OperationId:</strong>deleteAutoTraceCodes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1125,25 +1014,18 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Remove Activity Status Code",
-        "operationId": "deleteActivityStatusCodes",
+        "summary": "Delete an Auto Trace code",
+        "operationId": "deleteAutoTraceCodes",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "OPERA Activity status codes",
-            "name": "activityStatusCodesId",
+            "description": "Unique code of trace.",
+            "name": "autoTraceCode",
             "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Hotel where the code is configured.",
-            "name": "hotelIds",
-            "in": "query",
             "required": true
           },
           {
@@ -1249,9 +1131,9 @@
         }
       }
     },
-    "/activityTypes": {
-      "get": {
-        "description": "Retrieve Activity Types that are configured for a property.  Activity Types are typically used when an EAS (External Activities Scheduler system) interface is connected to OPERA.   <p><strong>OperationId:</strong>getActivityTypes</p>",
+    "/autoTraceDefinitions/{autoTraceDefinitionId}": {
+      "delete": {
+        "description": "Delete an Auto trace definition code. <p><strong>OperationId:</strong>deleteAutoTraceDefinitions</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1259,21 +1141,565 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Fetch Activity Types",
+        "summary": "Delete an Auto Trace definitions Code",
+        "operationId": "deleteAutoTraceDefinitions",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of trace.",
+            "name": "autoTraceDefinitionId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/autoTraceOwnerAssignments/{autoTraceOwnerAssignmentID}": {
+      "delete": {
+        "description": "Delete a Trace owner assignment configured for a property. <p><strong>OperationId:</strong>deleteAutoTraceOwnerAssignments</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ActivityManagement"
+        ],
+        "summary": "Delete an Auto Trace owner assignment ",
+        "operationId": "deleteAutoTraceOwnerAssignments",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of trace owner.",
+            "name": "autoTraceOwnerAssignmentID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/copyActivityTypes/sourceHotel/{hotelId}": {
+      "post": {
+        "description": "With this API you can select  existing Activity Type Codes from the source property and copy them to another (target) property. <p><strong>OperationId:</strong>copyActivityTypesConfig</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ActivityManagement"
+        ],
+        "summary": "Copy Activity Types configuration codes",
+        "operationId": "copyActivityTypesConfig",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of the source hotel.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "activityTypesConfigCopy",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/activityTypesConfigCopy"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/copyAutoTraceDefinitions/sourceHotel/{hotelId}": {
+      "post": {
+        "description": "Copy an existing auto trace definition code to another property. <p><strong>OperationId:</strong>copyAutoTraceDefinitions</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ActivityManagement"
+        ],
+        "summary": "Copy an Auto Trace definition Code",
+        "operationId": "copyAutoTraceDefinitions",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request object for copying trace definition.",
+            "name": "autoTraceDefinitionCopy",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/autoTraceDefinitionCopy"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/activityTypes": {
+      "get": {
+        "description": "Retrieve all configured Activity types for a specified hotel. <p><strong>OperationId:</strong>getActivityTypes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ActivityManagement"
+        ],
+        "summary": "Get all Activity Type Codes",
         "operationId": "getActivityTypes",
         "parameters": [
           {
-            "type": "array",
-            "items": {
-              "maxItems": 4000,
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "name": "hotelIds",
-            "in": "query",
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
             "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 0,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "name": "offset",
+            "in": "query"
           },
           {
             "type": "array",
@@ -1282,7 +1708,19 @@
               "type": "string"
             },
             "collectionFormat": "multi",
-            "name": "typeCodes",
+            "name": "activityType",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Description for the activity type is to be searched for.",
+            "name": "description",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Determines whether to fetch inactive records or not.",
+            "name": "inactive",
             "in": "query"
           },
           {
@@ -1324,9 +1762,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Response object after fetching the Activity Types.",
+            "description": "Response object after fetching the activity types.",
             "schema": {
-              "$ref": "#/definitions/fetchActivityTypes"
+              "$ref": "#/definitions/activityTypesConfigDetails"
             },
             "headers": {
               "Content-Language": {
@@ -1387,7 +1825,7 @@
         }
       },
       "post": {
-        "description": "Create a new Activity Type Code for a specific property. <p><strong>OperationId:</strong>postActivityTypes</p>",
+        "description": "Create a new Activity Type for a specified hotel. Examples could be  MEETING, LUNCH, EXTMEETING. <p><strong>OperationId:</strong>postActivityTypes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1395,20 +1833,29 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Create Activity Types",
+        "summary": "Create a new Activity type in configuration",
         "operationId": "postActivityTypes",
         "parameters": [
           {
-            "description": "Request object for creating Activity Types.",
-            "name": "createActivityTypes",
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request object for creating activity types.",
+            "name": "activityTypesConfigInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/createActivityTypes"
+                  "$ref": "#/definitions/activityTypesConfigInfo"
                 }
               ]
             }
@@ -1516,9 +1963,9 @@
         }
       }
     },
-    "/activityTypes/{activityTypesId}": {
+    "/hotels/{hotelId}/activityTypes/{activityTypeCode}": {
       "put": {
-        "description": "Modify an Activity Type Code that is configured for a property. <p><strong>OperationId:</strong>putActivityTypes</p>",
+        "description": "Change or update details of an existing Activity Type for a property. <p><strong>OperationId:</strong>putActivityTypes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1526,29 +1973,38 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Change Activity Types",
+        "summary": "Update Activity Types",
         "operationId": "putActivityTypes",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "OPERA Activity types id",
-            "name": "activityTypesId",
+            "description": "Activity Type Code.",
+            "name": "activityTypeCode",
             "in": "path",
             "required": true
           },
           {
-            "description": "Request object for changing Activity Types.",
-            "name": "changeActivityTypes",
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request object for changing activity types.",
+            "name": "activityTypesConfigInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/changeActivityTypes"
+                  "$ref": "#/definitions/activityTypesConfigInfo"
                 }
               ]
             }
@@ -1594,7 +2050,7 @@
           "200": {
             "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
             "schema": {
-              "$ref": "#/definitions/changeActivityTypesRS"
+              "$ref": "#/definitions/status"
             },
             "headers": {
               "Content-Language": {
@@ -1656,7 +2112,7 @@
         }
       },
       "delete": {
-        "description": "Delete an Activity Type Code that is configured for a property. <p><strong>OperationId:</strong>deleteActivityTypes</p>",
+        "description": "This will delete an Activity Type Code from the properties configuration. <p><strong>OperationId:</strong>deleteActivityTypes</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1664,25 +2120,27 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagementConfig"
+          "ActivityManagement"
         ],
-        "summary": "Remove Activity Types",
+        "summary": "Delete an Activity Type Code",
         "operationId": "deleteActivityTypes",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "OPERA Activity types id",
-            "name": "activityTypesId",
+            "description": "Activity Type Code.",
+            "name": "activityTypeCode",
             "in": "path",
             "required": true
           },
           {
+            "maxLength": 2000,
+            "minLength": 1,
             "type": "string",
-            "description": "Hotel where the code is configured.",
-            "name": "hotelIds",
-            "in": "query",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
             "required": true
           },
           {
@@ -1788,149 +2246,9 @@
         }
       }
     },
-    "/activityTypes/{activityTypesId}/copy": {
-      "put": {
-        "description": "Copy existing Activity Types from source property to target properties. <p><strong>OperationId:</strong>copyActivityTypes</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "LeisureManagementConfig"
-        ],
-        "summary": "Copy Activity Types",
-        "operationId": "copyActivityTypes",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "OPERA Activity types id",
-            "name": "activityTypesId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request object for copying Activity Types to hotel(s).",
-            "name": "copyActivityTypes",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/copyActivityTypes"
-                }
-              ]
-            }
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "maxLength": 80,
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "External system code.",
-            "name": "x-externalsystem",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-            "schema": {
-              "$ref": "#/definitions/copyActivityTypesRS"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/hotels/{hotelId}/activityBookings": {
+    "/hotels/{hotelId}/autoTraceDefinitions": {
       "get": {
-        "description": "This API will send a response to Look-up of Activity Bookings. <p><strong>OperationId:</strong>getActivityBookings</p>",
+        "description": "Get a list of all Auto trace definitions for a property. <p><strong>OperationId:</strong>getAutoTraceDefinitions</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1938,121 +2256,64 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagement"
+          "ActivityManagement"
         ],
-        "summary": "Send a response to Look-up of Activity Bookings",
-        "operationId": "getActivityBookings",
+        "summary": "Get a list of Auto Trace definition Codes",
+        "operationId": "getAutoTraceDefinitions",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "Unique OPERA Hotel code",
+            "description": "Unique ID of hotel.",
             "name": "hotelId",
             "in": "path",
             "required": true
           },
           {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-            "name": "profileIds",
-            "in": "query",
-            "required": true
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
           },
           {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "default": [
-              "Opera"
-            ],
-            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "name": "profileIdContext",
+            "type": "integer",
+            "default": 0,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "name": "offset",
             "in": "query"
           },
           {
             "type": "array",
             "items": {
+              "maxItems": 4000,
               "type": "string"
             },
             "collectionFormat": "multi",
-            "default": [
-              "Profile"
-            ],
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "name": "profileIdsType",
+            "name": "codes",
             "in": "query"
           },
           {
+            "uniqueItems": true,
             "type": "array",
             "items": {
+              "enum": [
+                "Accounts",
+                "Contacts",
+                "Blocks",
+                "Activities"
+              ],
               "type": "string"
             },
             "collectionFormat": "multi",
-            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-            "name": "reservationIds",
+            "description": "A collection of supported list of Auto Trace Groups.",
+            "name": "autoTraceGroups",
             "in": "query"
           },
           {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "default": [
-              "Opera"
-            ],
-            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "name": "reservationIdContext",
-            "in": "query"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "default": [
-              "Reservation"
-            ],
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "name": "reservationIdsType",
-            "in": "query"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-            "name": "activityIds",
-            "in": "query"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "name": "activityIdContext",
-            "in": "query"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "name": "activityIdsType",
+            "type": "boolean",
+            "description": "Determines whether to fetch inactive records or not.",
+            "name": "inactive",
             "in": "query"
           },
           {
@@ -2094,9 +2355,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Message received on an Activity Lookup.",
+            "description": "Response object after fetching Auto Trace Definitions.",
             "schema": {
-              "$ref": "#/definitions/activityBookingsDetails"
+              "$ref": "#/definitions/autoTraceDefinitionsDetails"
             },
             "headers": {
               "Content-Language": {
@@ -2107,7 +2368,145 @@
             }
           },
           "204": {
-            "description": "ActivityBookings not found."
+            "description": "AutoTraceDefinitions not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new Auto Trace Definition code for a specified property. <p><strong>OperationId:</strong>postAutoTraceDefinitions</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ActivityManagement"
+        ],
+        "summary": "Create an Auto Trace Definition Code",
+        "operationId": "postAutoTraceDefinitions",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request object for creating Auto Trace Definitions.",
+            "name": "autoTraceDefinitionsInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/autoTraceDefinitionsInfo"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -2157,9 +2556,9 @@
         }
       }
     },
-    "/hotels/{hotelId}/reservations/{reservationId}/activityBookings": {
+    "/hotels/{hotelId}/autoTraceDefinitions/{autoTraceDefinitionId}": {
       "put": {
-        "description": "This API will send a response to a  Change in Activity Booking request from external Activity Scheduler system. <p><strong>OperationId:</strong>putActivityBooking</p>",
+        "description": "Change an Auto Trace Definition code for a specified property. <p><strong>OperationId:</strong>putAutoTraceDefinitions</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -2167,17 +2566,17 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagement"
+          "ActivityManagement"
         ],
-        "summary": "Send a response to Change in Activity Booking",
-        "operationId": "putActivityBooking",
+        "summary": "Change an Auto Trace definition Code",
+        "operationId": "putAutoTraceDefinitions",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "Unique OPERA internal Reservation ID which is used to find any reservation in OPERA. This ID is a primary identification of a reservation in OPERA.",
-            "name": "reservationId",
+            "description": "Unique ID of trace.",
+            "name": "autoTraceDefinitionId",
             "in": "path",
             "required": true
           },
@@ -2185,20 +2584,20 @@
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "Unique OPERA Hotel code",
+            "description": "Unique ID of hotel.",
             "name": "hotelId",
             "in": "path",
             "required": true
           },
           {
-            "description": "Self-contained Request object that is used when Updating activities.",
-            "name": "changeActivityBooking",
+            "description": "Request object for changing Auto Trace Definitions.",
+            "name": "autoTraceDefinitionsInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/changeActivityBooking"
+                  "$ref": "#/definitions/autoTraceDefinitionsInfo"
                 }
               ]
             }
@@ -2242,9 +2641,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Self-contained response object that is used when Updating activities.",
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
             "schema": {
-              "$ref": "#/definitions/activityBookingModified"
+              "$ref": "#/definitions/autoTraceDefinitionsStatus"
             },
             "headers": {
               "Content-Language": {
@@ -2257,6 +2656,165 @@
                 "description": "Location of newly created resource"
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/autoTraceOwnerAssignments": {
+      "get": {
+        "description": "This API will provide a list of all configured Auto Trace Owner Mappings.   <p><strong>OperationId:</strong>getAutoTraceOwnerAssignments</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ActivityManagement"
+        ],
+        "summary": "Get an Auto Trace owner mappings",
+        "operationId": "getAutoTraceOwnerAssignments",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of hotel.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 0,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "maxItems": 4000,
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "name": "codes",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "maxItems": 4000,
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "name": "traceOwnerCodes",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response object to fetch trace owner assignments.",
+            "schema": {
+              "$ref": "#/definitions/autoTraceOwnerAssignmentsDetails"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "AutoTraceOwnerAssignments not found."
           },
           "400": {
             "description": "Bad Request",
@@ -2306,7 +2864,7 @@
         }
       },
       "post": {
-        "description": "This API will send a response to Creation of Activity Booking. <p><strong>OperationId:</strong>postActivityBooking</p>",
+        "description": "You can create Auto traces so that activities are created automatically under certain configured conditions. You first need a Trace code configured, and then using this API you can link the Owner code and Trace Code to a Trace Group (account, contact, activity, or block). <p><strong>OperationId:</strong>postAutoTraceOwnerAssignments</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -2314,38 +2872,29 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagement"
+          "ActivityManagement"
         ],
-        "summary": "Send a response to Creation of Activity Booking",
-        "operationId": "postActivityBooking",
+        "summary": "Create an Auto Trace owner assignment",
+        "operationId": "postAutoTraceOwnerAssignments",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "Unique OPERA internal Reservation ID which is used to find any reservation in OPERA. This ID is a primary identification of a reservation in OPERA.",
-            "name": "reservationId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique OPERA Hotel code",
+            "description": "Unique ID of hotel.",
             "name": "hotelId",
             "in": "path",
             "required": true
           },
           {
-            "description": "Self-contained Request object that is used when Creating activities.",
-            "name": "createActivityBooking",
+            "description": "Request object for creating trace owner assignments.",
+            "name": "autoTraceOwnerAssignmentsInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/createActivityBooking"
+                  "$ref": "#/definitions/autoTraceOwnerAssignmentsInfo"
                 }
               ]
             }
@@ -2389,155 +2938,6 @@
         ],
         "responses": {
           "201": {
-            "description": "HATEOAS links which help the consumer to navigate to resources",
-            "schema": {
-              "$ref": "#/definitions/status"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      },
-      "delete": {
-        "description": "This API will send a response to Cancellation of an Activity Booking. <p><strong>OperationId:</strong>deleteActivityBooking</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "LeisureManagement"
-        ],
-        "summary": "Send a response to Cancellation of an Activity Booking",
-        "operationId": "deleteActivityBooking",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique OPERA internal Reservation ID which is used to find any reservation in OPERA. This ID is a primary identification of a reservation in OPERA.",
-            "name": "reservationId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique OPERA Hotel code",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-            "name": "activityId",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "name": "activityIdType",
-            "in": "query",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "maxLength": 80,
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "External system code.",
-            "name": "x-externalsystem",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
             "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
               "$ref": "#/definitions/status"
@@ -2602,9 +3002,9 @@
         }
       }
     },
-    "/hotels/{hotelId}/reservations/{reservationId}/locationNotifications": {
-      "post": {
-        "description": "This API will send a response to a Location Notification. <p><strong>OperationId:</strong>postLocationNotification</p>",
+    "/hotels/{hotelId}/autoTraceOwnerAssignments/{autoTraceOwnerAssignmentID}": {
+      "put": {
+        "description": "Change a Trace owner assignment configured for a property. <p><strong>OperationId:</strong>putAutoTraceOwnerAssignments</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -2612,17 +3012,17 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "LeisureManagement"
+          "ActivityManagement"
         ],
-        "summary": "Send a response to Location Notification",
-        "operationId": "postLocationNotification",
+        "summary": "Change Trace owner assignments",
+        "operationId": "putAutoTraceOwnerAssignments",
         "parameters": [
           {
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "Unique OPERA internal Reservation ID which is used to find any reservation in OPERA. This ID is a primary identification of a reservation in OPERA.",
-            "name": "reservationId",
+            "description": "Unique ID of trace owner.",
+            "name": "autoTraceOwnerAssignmentID",
             "in": "path",
             "required": true
           },
@@ -2630,20 +3030,20 @@
             "maxLength": 2000,
             "minLength": 1,
             "type": "string",
-            "description": "Unique OPERA Hotel code",
+            "description": "Unique ID of hotel.",
             "name": "hotelId",
             "in": "path",
             "required": true
           },
           {
-            "description": "Generic self-contained request object that is used for Location Notification",
-            "name": "locationNotificationToBeCreated",
+            "description": "Request object for changing trace owner assignments.",
+            "name": "autoTraceOwnerAssignmentsInfo",
             "in": "body",
             "required": true,
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/definitions/locationNotificationToBeCreated"
+                  "$ref": "#/definitions/autoTraceOwnerAssignmentsInfo"
                 }
               ]
             }
@@ -2686,10 +3086,10 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "HATEOAS links which help the consumer to navigate to resources",
+          "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
             "schema": {
-              "$ref": "#/definitions/status"
+              "$ref": "#/definitions/autoTraceOwnerAssignmentsStatus"
             },
             "headers": {
               "Content-Language": {
@@ -2753,290 +3153,44 @@
     }
   },
   "definitions": {
-    "activityBookingModified": {
-      "type": "object",
-      "properties": {
-        "activityBooking": {
-          "description": "Information related to modified activity booking.",
-          "$ref": "#/definitions/activityBookingRSType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
+    "activityConfigClassType": {
+      "description": "A collection of supported list of activity classes.",
+      "type": "string",
+      "enum": [
+        "Appointment",
+        "Todo"
+      ]
     },
-    "activityBookingRQType": {
-      "description": "The choice between a reservation header or a profile ID. One or the other is required.",
-      "type": "object",
-      "properties": {
-        "activities": {
-          "description": "A collection of activities",
-          "$ref": "#/definitions/activityList"
-        },
-        "hotelId": {
-          "description": "This is not required if a Reservation Id is provided",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "profileId": {
-          "description": "ProfileID associated with the Activity.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "reservationId": {
-          "description": "Required unique identifier of the reservation",
-          "$ref": "#/definitions/uniqueID_Type"
-        }
-      }
-    },
-    "activityBookingRSType": {
-      "description": "Generic self-contained response object that is used when inserting/ updating/ canceling activities.",
-      "type": "object",
-      "properties": {
-        "activities": {
-          "description": "A collection of activities",
-          "$ref": "#/definitions/activityList"
-        }
-      }
-    },
-    "activityBookingsDetails": {
-      "type": "object",
-      "properties": {
-        "activityLookUpList": {
-          "description": "Criteria for fetching Activity Bookings.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/fetchActivityBookingsType"
-          }
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "activityList": {
-      "description": "A collection of Activity objects.",
+    "activityConfigListType": {
+      "description": "Detailed information of activity type.",
       "type": "array",
       "maxItems": 4000,
       "items": {
-        "description": "Represents a single instance of a scheduled activity.",
-        "type": "object",
-        "properties": {
-          "activityIds": {
-            "description": "A collection of reference ID values that identify this uniquely scheduled activity instance. May contain one ID per external system plus an internal identifier.",
-            "$ref": "#/definitions/uniqueIDListType"
-          },
-          "amount": {
-            "description": "The amount charged for the activity.",
-            "$ref": "#/definitions/currencyAmountType"
-          },
-          "deposit": {
-            "description": "A monetary value expressed with a currency code.",
-            "type": "object",
-            "properties": {
-              "amount": {
-                "description": "A monetary amount.",
-                "type": "number"
-              },
-              "collectedBy": {
-                "type": "string",
-                "enum": [
-                  "Vendor",
-                  "Agent",
-                  "Other"
-                ]
-              },
-              "currencyCode": {
-                "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-                "type": "string",
-                "maxLength": 3,
-                "minLength": 3
-              }
-            }
-          },
-          "description": {
-            "description": "Description of the activity",
-            "type": "array",
-            "maxItems": 4000,
-            "items": {
-              "type": "string",
-              "maxLength": 2000,
-              "minLength": 0
-            }
-          },
-          "duration": {
-            "description": "The time span of the activity falls",
-            "$ref": "#/definitions/dateTimeSpanType"
-          },
-          "extensions": {
-            "description": "Vendor extensions to the activity record.",
-            "type": "array",
-            "maxItems": 4000,
-            "items": {
-              "type": "string"
-            }
-          },
-          "groupCode": {
-            "description": "Any Block code associated with the activity if its a Group booking.",
-            "type": "string"
-          },
-          "inactiveDate": {
-            "description": "The Date by which the activity is deemed Cancelled/Deleted.",
-            "type": "string",
-            "format": "date-time"
-          },
-          "link": {
-            "description": "When true indicates that activity link only needs to be inserted or deleted for this record.",
-            "type": "boolean"
-          },
-          "location": {
-            "description": "The Location where the activity takes place. Eg: Salon",
-            "type": "string"
-          },
-          "name": {
-            "description": "Name of the people for whom the activity is scheduled. Can be more than one but should be equal to the number of persons",
-            "type": "array",
-            "maxItems": 4000,
-            "items": {
-              "type": "string",
-              "maxLength": 200,
-              "minLength": 0
-            }
-          },
-          "note": {
-            "description": "Any additional notes or comments regarding the scheduled activity.",
-            "type": "array",
-            "maxItems": 4000,
-            "items": {
-              "type": "string",
-              "maxLength": 2000,
-              "minLength": 0
-            }
-          },
-          "numberOfPersons": {
-            "description": "The total number of the people for whom the activity is scheduled. Can be more than one but should be equal to the number of persons",
-            "type": "integer"
-          },
-          "participants": {
-            "description": "The names of the participants.",
-            "type": "array",
-            "maxItems": 4000,
-            "items": {
-              "$ref": "#/definitions/personNameType"
-            }
-          },
-          "status": {
-            "description": "Activity reservation status. Typical examples are RESERVED, BOOKED, CANCELLED, and TENTATIVE.",
-            "type": "string"
-          },
-          "statusDescription": {
-            "description": "Activity reservation status description. Typical examples are RESERVED, BOOKED, CANCELLED, and TENTATIVE.",
-            "type": "string"
-          },
-          "timeSpan": {
-            "description": "The time with-in which an activity falls (Starts/Ends/Spans)",
-            "$ref": "#/definitions/dateTimeSpanType"
-          },
-          "type": {
-            "description": "The Type of the activity. Eg: SPA, Golf etc.",
-            "type": "string"
-          },
-          "uRLLink": {
-            "description": "The URL link to launch the Activity Reservation System to view or edit full details of this activity.",
-            "type": "string"
-          }
-        }
+        "$ref": "#/definitions/activityConfigTypeDetailType"
       }
     },
-    "activityLocationType": {
-      "description": "Activity Location detail information.",
-      "type": "object",
-      "properties": {
-        "code": {
-          "description": "Code for the activity Location.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "description": {
-          "description": "Description for the Activity Location.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "hotelId": {
-          "description": "Property to which the activity Location belongs to.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        }
-      }
-    },
-    "activityLocationsType": {
-      "description": "Collection of Activity Locations.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/activityLocationType"
-      }
-    },
-    "activityStatusCodeType": {
-      "description": "Activity Status Code detail information.",
-      "type": "object",
-      "properties": {
-        "application": {
-          "description": "Used in Application for the activity status code.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "code": {
-          "description": "Code for the activity status code. Cannot be null.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "description": {
-          "description": "Description for the Activity Status Code. Cannot be null.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "hotelId": {
-          "description": "Property to which the activity status code belongs to. Cannot be null.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "priority": {
-          "description": "Priority for the activity status code.",
-          "type": "integer"
-        }
-      }
-    },
-    "activityStatusCodesType": {
-      "description": "Activity Status Codes object.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/activityStatusCodeType"
-      }
-    },
-    "activityTypeDetailType": {
+    "activityConfigTypeDetailType": {
       "description": "Activity Type detail information.",
       "type": "object",
       "properties": {
+        "activityClassList": {
+          "description": "Element to hold Activity Class value.",
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/definitions/activityConfigClassType"
+          }
+        },
+        "activityTypeCode": {
+          "description": "Type for the activity Type.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "autoiCalendar": {
+          "description": "To create an iCal file (.ics) automatically and send it to the email address of the activity owner on activity creation, update, and deletion.",
+          "type": "boolean"
+        },
         "description": {
           "description": "Description for the Activity Type.",
           "type": "string",
@@ -3044,652 +3198,782 @@
           "minLength": 0
         },
         "hotelId": {
-          "description": "Property to which the activity Type belongs to.",
+          "description": "The hotel code where the activity type to be created.",
           "type": "string",
           "maxLength": 20,
           "minLength": 0
         },
-        "typeCode": {
-          "description": "Type for the activity Type.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+        "inactive": {
+          "description": "When checked,the activity type will still be valid for existing activities and traces,but it cannot be selected for new activities and traces",
+          "type": "boolean"
+        },
+        "internal": {
+          "description": "Check for whether to consider the activity type is internal.",
+          "type": "boolean"
+        },
+        "minutesBeforeAlert": {
+          "description": "Defines the number of minutes before the start time of an activity of this activity type, an alert should be issued.",
+          "type": "integer"
+        },
+        "sequence": {
+          "description": "Display sequence for the activity code type.",
+          "type": "integer"
         }
       }
     },
-    "activityTypesType": {
-      "description": "Collection of Activity Types.",
+    "activityOwnerType": {
+      "description": "Activity owner.",
+      "type": "string",
+      "enum": [
+        "Current",
+        "Primary",
+        "Custom",
+        "Block",
+        "Room",
+        "Catering"
+      ]
+    },
+    "activityResultsConfigDetailType": {
+      "description": "Contains Common Master configuration detail.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Common Master unique code.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "description": {
+          "description": "Description of the Master code.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
+        "displayOrder": {
+          "description": "Common Master record sequence number.",
+          "type": "number"
+        },
+        "inactive": {
+          "description": "Indicates the Activity Results is inactive or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "activityResultsConfigDetails": {
+      "description": "Response object for fetching configured Activity Results.",
+      "type": "object",
+      "properties": {
+        "activityResultsConfiguration": {
+          "description": "Collection of configured Activity Results.",
+          "$ref": "#/definitions/activityResultsConfigListType"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "activityResultsConfigInfo": {
+      "description": "Request object for creating/changing Activity Results Configuration.",
+      "type": "object",
+      "properties": {
+        "activityResultsConfiguration": {
+          "description": "Activity Results Configuration to be created/changed.",
+          "$ref": "#/definitions/activityResultsConfigListType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "activityResultsConfigListType": {
+      "description": "List of configured Activity Results.",
       "type": "array",
       "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/activityTypeDetailType"
+        "$ref": "#/definitions/activityResultsConfigDetailType"
       }
     },
-    "addressType": {
-      "description": "Provides address information.",
+    "activityTypesConfigCopy": {
       "type": "object",
       "properties": {
-        "addressLine": {
-          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
-          "type": "array",
-          "maxItems": 4,
-          "items": {
-            "type": "string",
-            "maxLength": 80,
-            "minLength": 0
-          }
+        "criteria": {
+          "description": "Criteria for copying activity types.",
+          "$ref": "#/definitions/copyActivityConfigCriteriaType"
         },
-        "barCode": {
-          "description": "The postal barcode for the address.",
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "activityTypesConfigDetails": {
+      "description": "Response object after fetching the activity types.",
+      "type": "object",
+      "properties": {
+        "activityConfigTypes": {
+          "description": "Collection of fetched activity types.",
+          "$ref": "#/definitions/activityConfigListType"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "activityTypesConfigInfo": {
+      "description": "Request object for creating/changing activity types.",
+      "type": "object",
+      "properties": {
+        "activityConfigTypes": {
+          "description": "Activity type details to be created/updated.",
+          "$ref": "#/definitions/activityConfigListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceBlockCategoryType": {
+      "description": "Additional Block information used to trigger activities.",
+      "type": "string",
+      "enum": [
+        "Deposits",
+        "Details"
+      ]
+    },
+    "autoTraceCodeDetailType": {
+      "description": "Auto Trace Code detail information.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description for the Trace Code.",
           "type": "string",
           "maxLength": 100,
           "minLength": 0
         },
-        "cityExtension": {
-          "description": "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
+        "traceCode": {
+          "description": "Trace Code.",
           "type": "string",
           "maxLength": 20,
           "minLength": 0
         },
-        "cityName": {
-          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
+        "traceGroup": {
+          "description": "Trace Group for the Code.",
+          "$ref": "#/definitions/autoTraceGroupConfigType"
+        }
+      }
+    },
+    "autoTraceCodesDetails": {
+      "description": "Response object to fetch Auto Trace Codes.",
+      "type": "object",
+      "properties": {
+        "autoTraceCodesConfig": {
+          "description": "Collection of fetched Auto Trace Codes.",
+          "$ref": "#/definitions/autoTraceCodesListType"
         },
-        "country": {
-          "description": "Country name (e.g., Ireland).",
-          "$ref": "#/definitions/countryNameType"
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
         },
-        "county": {
-          "description": "County or District Name (e.g., Fairfax). This is read only.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "createDateTime": {
-          "description": "Time stamp of the creation.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
-        },
-        "isValidated": {
-          "description": "Indicator to define if the Address is validated by the Address Validation System.",
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
           "type": "boolean"
         },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
         },
-        "lastModifierId": {
-          "description": "Identifies the last software system or person to modify a record.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
+        "links": {
+          "$ref": "#/definitions/links"
         },
-        "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
-          "type": "string",
-          "format": "date-time"
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
         },
-        "postalCode": {
-          "description": "Post Office Code number.",
-          "type": "string",
-          "maxLength": 15,
-          "minLength": 0
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
         },
-        "primaryInd": {
-          "description": "When true, indicates a primary information.",
-          "type": "boolean"
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
         },
-        "purgeDate": {
-          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceCodesInfo": {
+      "description": "Request object for creating/changing Auto Trace Codes.",
+      "type": "object",
+      "properties": {
+        "autoTraceCodesConfig": {
+          "description": "Auto Trace Code details to be created/updated.",
+          "$ref": "#/definitions/autoTraceCodesListType"
         },
-        "state": {
-          "description": "State or Province name (e.g., Texas).",
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceCodesListType": {
+      "description": "Detailed information of configured Auto Trace Codes.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/autoTraceCodeDetailType"
+      }
+    },
+    "autoTraceDefinitionActivityInfoType": {
+      "description": "Activity Related Information of Auto Trace.",
+      "type": "object",
+      "properties": {
+        "activityClass": {
+          "description": "Activity Class Information.",
+          "$ref": "#/definitions/activityConfigClassType"
+        },
+        "activityStartDate": {
+          "description": "Start Date of the Activity.Input for this field is selected from the list.",
+          "type": "string"
+        },
+        "activityStartTime": {
+          "description": "Start Time of the Activity.",
+          "type": "string"
+        },
+        "activityTypeCode": {
+          "description": "Type for the Activity.",
           "type": "string",
           "maxLength": 20,
+          "minLength": 0
+        },
+        "daysFromActivityStartDate": {
+          "description": "Number of days from activity start date",
+          "type": "integer"
+        },
+        "purpose": {
+          "description": "Purpose for the Activity.",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        }
+      }
+    },
+    "autoTraceDefinitionCopy": {
+      "description": "Request object for copying trace definition.",
+      "type": "object",
+      "properties": {
+        "criteria": {
+          "description": "Criteria for copying trace definitions.",
+          "$ref": "#/definitions/copyAutoTraceDefinitionCriteriaType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceDefinitionDetailType": {
+      "description": "Auto Trace Definition detail information.",
+      "type": "object",
+      "properties": {
+        "autoTraceBlockCategory": {
+          "description": "Additional Block information",
+          "$ref": "#/definitions/autoTraceBlockCategoryType"
+        },
+        "autoTraceId": {
+          "description": "Trace ID.",
+          "$ref": "#/definitions/autoTraceId"
+        },
+        "autoTraceTrigger": {
+          "description": "Element to hold information on when auto trace would be created.",
+          "$ref": "#/definitions/autoTraceTriggerCategoryType"
+        },
+        "conditions": {
+          "description": "Conditions for trace.",
+          "$ref": "#/definitions/conditionGroupType"
+        },
+        "fieldNameOnUpdate": {
+          "description": "Element to hold column name of relavant table on selection of Update in AutoTraceTriggerCategoryType.",
+          "type": "string"
+        },
+        "fieldNameOnUpdateId": {
+          "description": "Element to hold column ID of relavant table on selection of Update in AutoTraceTriggerCategoryType.",
+          "type": "string"
+        },
+        "hotelId": {
+          "description": "The hotel code where the Auto Trace should be created.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "traceCode": {
+          "description": "Trace code",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "traceGroup": {
+          "description": "Trace Group.",
+          "$ref": "#/definitions/autoTraceGroupConfigType"
+        }
+      }
+    },
+    "autoTraceDefinitionListType": {
+      "description": "Auto Trace Definition.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/autoTraceDefinitionType"
+      }
+    },
+    "autoTraceDefinitionOwnerInfoType": {
+      "description": "Owner Information of Auto Trace.",
+      "type": "object",
+      "properties": {
+        "customOwnerCode": {
+          "description": "Custom owner code",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "ownerAssignment": {
+          "description": "Owner Assignment Information",
+          "$ref": "#/definitions/autoTraceOwnerAssignmentListType"
+        },
+        "ownerAssignmentExist": {
+          "description": "Indicates if Owner Assignment exists",
+          "type": "boolean"
+        },
+        "ownerofActivity": {
+          "description": "Owner of Auto Trace",
+          "$ref": "#/definitions/activityOwnerType"
+        }
+      }
+    },
+    "autoTraceDefinitionType": {
+      "description": "Auto Trace Definition information.",
+      "type": "object",
+      "properties": {
+        "autoTraceDefinitionActivityInfo": {
+          "description": "Details of Activity Information associated with Auto Trace Definition.",
+          "$ref": "#/definitions/autoTraceDefinitionActivityInfoType"
+        },
+        "autoTraceDefinitionDetail": {
+          "description": "Auto Trace Definition detail information.",
+          "$ref": "#/definitions/autoTraceDefinitionDetailType"
+        },
+        "autoTraceDefinitionOwnerInfo": {
+          "description": "Details of Owner Information associated with Auto Trace Definition.",
+          "$ref": "#/definitions/autoTraceDefinitionOwnerInfoType"
+        },
+        "inactive": {
+          "description": "Determines whether to fetch inactive records or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "autoTraceDefinitionsDetails": {
+      "description": "Response object after fetching Auto Trace Definitions.",
+      "type": "object",
+      "properties": {
+        "autoTraceDefinitions": {
+          "description": "Collection of fetched Auto Trace Definitions.",
+          "$ref": "#/definitions/autoTraceDefinitionListType"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceDefinitionsInfo": {
+      "description": "Request object for creating/changing Auto Trace Definitions.",
+      "type": "object",
+      "properties": {
+        "autoTraceDefinitions": {
+          "description": "Auto Trace Definition details to be created/updated.",
+          "$ref": "#/definitions/autoTraceDefinitionListType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceDefinitionsStatus": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceGroupConfigType": {
+      "description": "A collection of supported list of Auto Trace Groups.",
+      "type": "string",
+      "enum": [
+        "Accounts",
+        "Contacts",
+        "Blocks",
+        "Activities"
+      ]
+    },
+    "autoTraceId": {
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
+          "type": "integer"
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type": "string",
+          "maxLength": 80,
           "minLength": 0
         },
         "type": {
-          "description": "Defines the type of address (e.g. home, business, other).",
+          "description": "A reference to the type of object defined by the UniqueID element.",
           "type": "string",
           "maxLength": 20,
           "minLength": 0
         },
-        "typeDescription": {
-          "description": "Describes the type code",
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
+        }
+      }
+    },
+    "autoTraceOwnerAssignmentListType": {
+      "description": "Detailed information of trace owner assignment.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/autoTraceOwnerAssignmentType"
+      }
+    },
+    "autoTraceOwnerAssignmentType": {
+      "description": "Trace owner assignment detail information.",
+      "type": "object",
+      "properties": {
+        "autoTraceOwnerAssignmentId": {
+          "description": "Trace Owner Assignment ID.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "hotelId": {
+          "description": "The hotel code where trace owner assignments are created.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "ownerCode": {
+          "description": "Owner code of trace owner assignment.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "ownerName": {
+          "description": "Owner name of trace owner assignment.",
           "type": "string"
         },
-        "updateReservations": {
-          "description": "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
-          "type": "boolean"
-        }
-      }
-    },
-    "changeActivityBooking": {
-      "type": "object",
-      "properties": {
-        "activityBooking": {
-          "description": "Information related to activity booking to be modified.",
-          "$ref": "#/definitions/activityBookingRQType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "changeActivityLocations": {
-      "description": "Request object for changing Activity Locations.",
-      "type": "object",
-      "properties": {
-        "activityLocations": {
-          "description": "Collection of Activity Locations to be changed.",
-          "$ref": "#/definitions/activityLocationsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "changeActivityLocationsRS": {
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "type": "object",
-      "properties": {
-        "correlationId": {
-          "description": "Allow end-to-end correlation of log messages with the corresponding Web service message throughout the processing of the Web service message.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "echoToken": {
-          "description": "A reference for additional message identification, assigned by the requesting host system. When a request message includes an echo token the corresponding response message MUST include an echo token with an identical value.",
-          "type": "string",
-          "maxLength": 128,
-          "minLength": 0
-        },
-        "enforceAllowed": {
-          "description": "Indicates if the operation supports the ability to force the retry request through OPERA services in the case where the external system continues to fail.",
-          "type": "boolean"
-        },
-        "errors": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/errorsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "retryAllowed": {
-          "description": "Indicates if the operation supports the ability to retry the request.",
-          "type": "boolean"
-        },
-        "success": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/successType"
-        },
-        "timeStamp": {
-          "description": "Indicates the creation date and time of the message in UTC using the following format specified by ISO 8601; YYYY-MM-DDThh:mm:ssZ with time values using the 24 hour clock (e.g. 20 November 2003, 1:59:38 pm UTC becomes 2003-11-20T13:59:38Z).",
-          "type": "string",
-          "format": "date-time"
-        },
-        "useLocalAllowed": {
-          "description": "This attribute carries the user selected confirmation value on confirmation popup.",
-          "type": "boolean"
-        },
-        "version": {
-          "description": "For all Opera versioned messages, the version of the message is indicated by a Opera Version value.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "changeActivityStatusCodes": {
-      "description": "Request object for changing Activity Status Codes.",
-      "type": "object",
-      "properties": {
-        "activityStatusCodes": {
-          "description": "Collection of Activity Status Codes to be changed.",
-          "$ref": "#/definitions/activityStatusCodesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "changeActivityStatusCodesRS": {
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "type": "object",
-      "properties": {
-        "correlationId": {
-          "description": "Allow end-to-end correlation of log messages with the corresponding Web service message throughout the processing of the Web service message.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "echoToken": {
-          "description": "A reference for additional message identification, assigned by the requesting host system. When a request message includes an echo token the corresponding response message MUST include an echo token with an identical value.",
-          "type": "string",
-          "maxLength": 128,
-          "minLength": 0
-        },
-        "enforceAllowed": {
-          "description": "Indicates if the operation supports the ability to force the retry request through OPERA services in the case where the external system continues to fail.",
-          "type": "boolean"
-        },
-        "errors": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/errorsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "retryAllowed": {
-          "description": "Indicates if the operation supports the ability to retry the request.",
-          "type": "boolean"
-        },
-        "success": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/successType"
-        },
-        "timeStamp": {
-          "description": "Indicates the creation date and time of the message in UTC using the following format specified by ISO 8601; YYYY-MM-DDThh:mm:ssZ with time values using the 24 hour clock (e.g. 20 November 2003, 1:59:38 pm UTC becomes 2003-11-20T13:59:38Z).",
-          "type": "string",
-          "format": "date-time"
-        },
-        "useLocalAllowed": {
-          "description": "This attribute carries the user selected confirmation value on confirmation popup.",
-          "type": "boolean"
-        },
-        "version": {
-          "description": "For all Opera versioned messages, the version of the message is indicated by a Opera Version value.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "changeActivityTypes": {
-      "description": "Request object for changing Activity Types.",
-      "type": "object",
-      "properties": {
-        "activityTypes": {
-          "description": "Collection of Activity Types to be changed.",
-          "$ref": "#/definitions/activityTypesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "changeActivityTypesRS": {
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "type": "object",
-      "properties": {
-        "correlationId": {
-          "description": "Allow end-to-end correlation of log messages with the corresponding Web service message throughout the processing of the Web service message.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "echoToken": {
-          "description": "A reference for additional message identification, assigned by the requesting host system. When a request message includes an echo token the corresponding response message MUST include an echo token with an identical value.",
-          "type": "string",
-          "maxLength": 128,
-          "minLength": 0
-        },
-        "enforceAllowed": {
-          "description": "Indicates if the operation supports the ability to force the retry request through OPERA services in the case where the external system continues to fail.",
-          "type": "boolean"
-        },
-        "errors": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/errorsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "retryAllowed": {
-          "description": "Indicates if the operation supports the ability to retry the request.",
-          "type": "boolean"
-        },
-        "success": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/successType"
-        },
-        "timeStamp": {
-          "description": "Indicates the creation date and time of the message in UTC using the following format specified by ISO 8601; YYYY-MM-DDThh:mm:ssZ with time values using the 24 hour clock (e.g. 20 November 2003, 1:59:38 pm UTC becomes 2003-11-20T13:59:38Z).",
-          "type": "string",
-          "format": "date-time"
-        },
-        "useLocalAllowed": {
-          "description": "This attribute carries the user selected confirmation value on confirmation popup.",
-          "type": "boolean"
-        },
-        "version": {
-          "description": "For all Opera versioned messages, the version of the message is indicated by a Opera Version value.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "copyActivityLocations": {
-      "description": "Request object for copying Activity Locations to hotel(s).",
-      "type": "object",
-      "properties": {
-        "copyInstructions": {
-          "description": "List of the Activity Location details to be copied to hotel(s).",
-          "$ref": "#/definitions/copyConfigurationCodesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "copyActivityLocationsRS": {
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "type": "object",
-      "properties": {
-        "correlationId": {
-          "description": "Allow end-to-end correlation of log messages with the corresponding Web service message throughout the processing of the Web service message.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "echoToken": {
-          "description": "A reference for additional message identification, assigned by the requesting host system. When a request message includes an echo token the corresponding response message MUST include an echo token with an identical value.",
-          "type": "string",
-          "maxLength": 128,
-          "minLength": 0
-        },
-        "enforceAllowed": {
-          "description": "Indicates if the operation supports the ability to force the retry request through OPERA services in the case where the external system continues to fail.",
-          "type": "boolean"
-        },
-        "errors": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/errorsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "retryAllowed": {
-          "description": "Indicates if the operation supports the ability to retry the request.",
-          "type": "boolean"
-        },
-        "success": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/successType"
-        },
-        "timeStamp": {
-          "description": "Indicates the creation date and time of the message in UTC using the following format specified by ISO 8601; YYYY-MM-DDThh:mm:ssZ with time values using the 24 hour clock (e.g. 20 November 2003, 1:59:38 pm UTC becomes 2003-11-20T13:59:38Z).",
-          "type": "string",
-          "format": "date-time"
-        },
-        "useLocalAllowed": {
-          "description": "This attribute carries the user selected confirmation value on confirmation popup.",
-          "type": "boolean"
-        },
-        "version": {
-          "description": "For all Opera versioned messages, the version of the message is indicated by a Opera Version value.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "copyActivityTypes": {
-      "description": "Request object for copying Activity Types to hotel(s).",
-      "type": "object",
-      "properties": {
-        "copyInstructions": {
-          "description": "List of the Activity Type details to be copied to hotel(s).",
-          "$ref": "#/definitions/copyConfigurationCodesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "copyActivityTypesRS": {
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "type": "object",
-      "properties": {
-        "correlationId": {
-          "description": "Allow end-to-end correlation of log messages with the corresponding Web service message throughout the processing of the Web service message.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "echoToken": {
-          "description": "A reference for additional message identification, assigned by the requesting host system. When a request message includes an echo token the corresponding response message MUST include an echo token with an identical value.",
-          "type": "string",
-          "maxLength": 128,
-          "minLength": 0
-        },
-        "enforceAllowed": {
-          "description": "Indicates if the operation supports the ability to force the retry request through OPERA services in the case where the external system continues to fail.",
-          "type": "boolean"
-        },
-        "errors": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/errorsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "retryAllowed": {
-          "description": "Indicates if the operation supports the ability to retry the request.",
-          "type": "boolean"
-        },
-        "success": {
-          "description": "Refer to Generic common types document.",
-          "$ref": "#/definitions/successType"
-        },
-        "timeStamp": {
-          "description": "Indicates the creation date and time of the message in UTC using the following format specified by ISO 8601; YYYY-MM-DDThh:mm:ssZ with time values using the 24 hour clock (e.g. 20 November 2003, 1:59:38 pm UTC becomes 2003-11-20T13:59:38Z).",
-          "type": "string",
-          "format": "date-time"
-        },
-        "useLocalAllowed": {
-          "description": "This attribute carries the user selected confirmation value on confirmation popup.",
-          "type": "boolean"
-        },
-        "version": {
-          "description": "For all Opera versioned messages, the version of the message is indicated by a Opera Version value.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "copyConfigurationCodeType": {
-      "description": "Information needed to copy configuration code from one property to the other.",
-      "type": "object",
-      "properties": {
-        "code": {
-          "description": "Source hotel code from which code is to be copied from.",
+        "traceOwnerCode": {
+          "description": "Trace Owner code of trace owner assignment.",
           "type": "string",
           "maxLength": 20,
           "minLength": 0
         },
-        "sourceHotelCode": {
-          "description": "Code that is to be copied.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+        "traceOwnerName": {
+          "description": "Trace Owner name of trace owner assignment.",
+          "type": "string"
+        }
+      }
+    },
+    "autoTraceOwnerAssignmentsDetails": {
+      "description": "Response object to fetch trace owner assignments.",
+      "type": "object",
+      "properties": {
+        "autoTraceOwnerAssignments": {
+          "description": "Collection of fetched trace owner assignments.",
+          "$ref": "#/definitions/autoTraceOwnerAssignmentListType"
         },
-        "targetHotelCode": {
-          "description": "Property to which configuration code type to be copied to.",
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceOwnerAssignmentsInfo": {
+      "description": "Request object for creating/changing trace owner assignments.",
+      "type": "object",
+      "properties": {
+        "autoTraceOwnerAssignments": {
+          "description": "Trace owner assignments to be created/updated.",
+          "$ref": "#/definitions/autoTraceOwnerAssignmentListType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceOwnerAssignmentsStatus": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "autoTraceTriggerCategoryType": {
+      "description": "Contains information on when auto trace would be created.",
+      "type": "string",
+      "enum": [
+        "Create",
+        "Update",
+        "Delete"
+      ]
+    },
+    "codeListType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "maxLength": 20,
+        "minLength": 0
+      }
+    },
+    "codeListType10": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "maxLength": 20,
+        "minLength": 0
+      }
+    },
+    "conditionGroupType": {
+      "type": "object",
+      "properties": {
+        "condition": {
           "type": "array",
           "maxItems": 4000,
           "items": {
-            "type": "string",
-            "maxLength": 20,
-            "minLength": 0
+            "$ref": "#/definitions/conditionType"
+          }
+        },
+        "conditionGroup": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/conditionGroupType"
+          }
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/logicalOperatorType"
+        }
+      }
+    },
+    "conditionType": {
+      "type": "object",
+      "properties": {
+        "leftExpression": {
+          "$ref": "#/definitions/expressionFieldType"
+        },
+        "logicalOperator": {
+          "$ref": "#/definitions/logicalOperatorType"
+        },
+        "operator": {
+          "$ref": "#/definitions/expressionOperatorType"
+        },
+        "rightExpression": {
+          "$ref": "#/definitions/expressionParameterType"
+        }
+      }
+    },
+    "copyActivityConfigCriteriaType": {
+      "description": "Criteria to copy multiple Activity Types from one Hotel to another Hotel.",
+      "type": "object",
+      "properties": {
+        "copyActivityConfig": {
+          "description": "The hotel code where the activity type was created.",
+          "type": "object",
+          "properties": {
+            "activityCodeList": {
+              "description": "List of Codes for which the activity types are to be searched for.",
+              "$ref": "#/definitions/codeListType"
+            },
+            "sourceHotelCode": {
+              "description": "The hotel code where the activity type was created.",
+              "type": "string",
+              "maxLength": 20,
+              "minLength": 0
+            },
+            "targetHotelCode": {
+              "description": "The hotel code(s) where the activity type should be copied to.",
+              "$ref": "#/definitions/codeListType10"
+            }
           }
         }
       }
     },
-    "copyConfigurationCodesType": {
-      "description": "Information needed to copy configuration code from one property to the other.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/copyConfigurationCodeType"
-      }
-    },
-    "countryNameType": {
-      "description": "Code for a country or a nationality.",
+    "copyAutoTraceDefinitionCriteriaType": {
+      "description": "Criteria to copy multiple trace definitions from one property to another.",
       "type": "object",
       "properties": {
-        "code": {
-          "description": "Code for a country or a nationality.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "value": {
-          "description": "Used for Character Strings, length 0 to 200.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
-        }
-      }
-    },
-    "createActivityBooking": {
-      "type": "object",
-      "properties": {
-        "activityBooking": {
-          "description": "Information related to activity booking to be created.",
-          "$ref": "#/definitions/activityBookingRQType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "createActivityLocations": {
-      "description": "Request object for creating Activity Locations.",
-      "type": "object",
-      "properties": {
-        "activityLocations": {
-          "description": "Collection of Activity Locations to be created.",
-          "$ref": "#/definitions/activityLocationsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "createActivityStatusCodes": {
-      "description": "Request object for creating Activity Status Codes.",
-      "type": "object",
-      "properties": {
-        "activityStatusCodes": {
-          "description": "Collection of Activity Status Codes to be created.",
-          "$ref": "#/definitions/activityStatusCodesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "createActivityTypes": {
-      "description": "Request object for creating Activity Types.",
-      "type": "object",
-      "properties": {
-        "activityTypes": {
-          "description": "Collection of Activity Types to be created.",
-          "$ref": "#/definitions/activityTypesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "currencyAmountType": {
-      "description": "A monetary value expressed with a currency code.",
-      "type": "object",
-      "properties": {
-        "amount": {
-          "description": "A monetary amount.",
-          "type": "number"
-        },
-        "currencyCode": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        }
-      }
-    },
-    "dateTimeSpanType": {
-      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
-      "type": "object",
-      "properties": {
-        "endDateTime": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "startDateTime": {
-          "type": "string",
-          "format": "date-time"
+        "copyAutoTraceDefinition": {
+          "description": "The hotel code where the trace definition was created.",
+          "type": "object",
+          "properties": {
+            "copyInstructions": {
+              "description": "Instructions which will be considered when copying from the template. If this element is not sent, all the flags will be ignored.",
+              "type": "object",
+              "properties": {
+                "allowOwnerAssignmentsCopy": {
+                  "description": "When true, this will copy the owner assignments to the trace definition.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "sourceHotelCode": {
+              "description": "The hotel code where the trace definition was created.",
+              "type": "string",
+              "maxLength": 20,
+              "minLength": 0
+            },
+            "targetHotelCode": {
+              "description": "The hotel code(s) where the activity type should be copied to.",
+              "$ref": "#/definitions/codeListType"
+            },
+            "traceDefinitionCodeList": {
+              "description": "List of Trace Definition IDs.",
+              "$ref": "#/definitions/uniqueIDListType"
+            }
+          }
         }
       }
     },
@@ -3730,65 +4014,6 @@
           "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
           "type": "string"
         }
-      }
-    },
-    "errorType": {
-      "description": "Standard way to indicate that an error occurred during the processing of an message. If the message successfully processes, but there are business errors, those errors should be passed in the warning element.",
-      "type": "object",
-      "properties": {
-        "code": {
-          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "docURL": {
-          "description": "If present, this URL refers to an online description of the error that occurred.",
-          "type": "string"
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "nodeList": {
-          "description": "An XPath expression that selects all the nodes whose data caused this error. Further, this expression should have an additional contraint which contains the data of the node. This will provide the offending data back to systems that cannot maintain the original message.",
-          "type": "string"
-        },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string"
-        },
-        "shortText": {
-          "description": "An abbreviated version of the error in textual format.",
-          "type": "string"
-        },
-        "status": {
-          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
-          "type": "string"
-        },
-        "tag": {
-          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
-          "type": "string"
-        },
-        "type": {
-          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "value": {
-          "description": "Property Value",
-          "type": "string"
-        }
-      }
-    },
-    "errorsType": {
-      "description": "An error that occurred during the processing of a message.",
-      "type": "array",
-      "maxItems": 99,
-      "items": {
-        "$ref": "#/definitions/errorType"
       }
     },
     "exceptionDetailType": {
@@ -3840,94 +4065,74 @@
         }
       }
     },
-    "fetchActivityBookingsType": {
-      "description": "Used in the request message to describe the \"filtering Criteria\" when executing an activity lookup.",
+    "expressionFieldType": {
       "type": "object",
       "properties": {
-        "activities": {
-          "description": "The specific acitvity information to be used for filtering the Look-up.",
-          "$ref": "#/definitions/activityList"
+        "dataType": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
         },
-        "address": {
-          "description": "Detailed Address information for the customer.",
-          "$ref": "#/definitions/addressType"
+        "fieldDescription": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
         },
-        "hotelId": {
-          "description": "Hotel Code, It is used to filter hotel specific children to this specific hotel code.",
+        "fieldName": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "lovSelected": {
           "type": "string",
           "maxLength": 20,
           "minLength": 0
         },
-        "personName": {
-          "description": "Detailed name information for the customer.",
-          "$ref": "#/definitions/personNameType"
-        },
-        "profileId": {
-          "description": "ProfileID associated with the Activity under lookup.",
-          "$ref": "#/definitions/uniqueIDListType"
-        }
-      }
-    },
-    "fetchActivityLocations": {
-      "description": "Response object after fetching the Activity Locations.",
-      "type": "object",
-      "properties": {
-        "activityLocations": {
-          "description": "Collection of fetched Activity Locations.",
-          "$ref": "#/definitions/activityLocationsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "fetchActivityStatusCodes": {
-      "description": "Response object after fetching the Activity Status Codes.",
-      "type": "object",
-      "properties": {
-        "activityStatusCodes": {
-          "description": "Collection of fetched Activity Status Codes",
-          "$ref": "#/definitions/activityStatusCodesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "fetchActivityTypes": {
-      "description": "Response object after fetching the Activity Types.",
-      "type": "object",
-      "properties": {
-        "activityTypes": {
-          "description": "Collection of fetched Activity Types.",
-          "$ref": "#/definitions/activityTypesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "formattedTextTextType": {
-      "description": "Provides text and indicates whether it is formatted or not.",
-      "type": "object",
-      "properties": {
-        "language": {
-          "description": "Language identification.",
+        "tableName": {
           "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          "maxLength": 40,
+          "minLength": 0
         },
-        "value": {
-          "description": "Property Value",
-          "type": "string"
+        "virtual": {
+          "type": "boolean"
+        }
+      }
+    },
+    "expressionOperatorType": {
+      "type": "object",
+      "properties": {
+        "operatorDescription": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "operatorName": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "parameterSize": {
+          "type": "number"
+        }
+      }
+    },
+    "expressionParameterType": {
+      "type": "object",
+      "properties": {
+        "functionIdOne": {
+          "type": "number"
+        },
+        "functionIdTwo": {
+          "type": "number"
+        },
+        "parameter": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 0
+          }
         }
       }
     },
@@ -3987,139 +4192,18 @@
         "$ref": "#/definitions/instanceLink"
       }
     },
-    "locationNotificationStatus": {
-      "description": "(Enumeration) There are 3 possible values: SET, CLEAR and OTHER",
+    "logicalOperatorType": {
       "type": "string",
       "enum": [
-        "Set",
-        "Clear",
-        "Other"
+        "And",
+        "Or"
       ]
-    },
-    "locationNotificationToBeCreated": {
-      "type": "object",
-      "properties": {
-        "activityTime": {
-          "description": "The scheduled start and End time of Location Notification.",
-          "$ref": "#/definitions/dateTimeSpanType"
-        },
-        "description": {
-          "description": "Description of the Location Notification",
-          "$ref": "#/definitions/formattedTextTextType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "locationNotificationStatus": {
-          "description": "Location Notification Status",
-          "$ref": "#/definitions/locationNotificationStatus"
-        },
-        "locationText": {
-          "description": "Location Text of the Notification",
-          "$ref": "#/definitions/formattedTextTextType"
-        },
-        "otherLocationNotificationStatus": {
-          "type": "string",
-          "maxLength": 2000
-        },
-        "profileId": {
-          "description": "Required unique identifier of the Profile ID",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "reservationId": {
-          "description": "Required unique identifier of the reservation",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
     },
     "operaVersionNumberType": {
       "description": "Current Opera Version Number",
       "type": "string",
       "maxLength": 40,
       "minLength": 0
-    },
-    "personNameType": {
-      "description": "This provides name information for a person.",
-      "type": "object",
-      "properties": {
-        "envelopeGreeting": {
-          "description": "Envelope Greeting of the profile",
-          "type": "string"
-        },
-        "externalSystem": {
-          "description": "When name type is external, indicates the external system the name belongs to.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "givenName": {
-          "description": "Given name, first name or names.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "middleName": {
-          "description": "The middle name of the person name.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "namePrefix": {
-          "description": "Salutation of honorific (e.g. Mr., Mrs., Ms., Miss, Dr.)",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "nameSuffix": {
-          "description": "Hold various name suffixes and letters (e.g. Jr., Sr., III, Ret., Esq.)",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        },
-        "nameTitle": {
-          "description": "Degree or honors (e.g., Ph.D., M.D.)",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "nameTitleSuffix": {
-          "description": "Title Suffix. Must be populated if ADVANCED_TITLE is on.",
-          "type": "integer"
-        },
-        "nameType": {
-          "description": "Type of name of the individual, such as former, nickname, alternate or alias name.",
-          "$ref": "#/definitions/personNameTypeType"
-        },
-        "salutation": {
-          "description": "Salutation of the profile",
-          "type": "string"
-        },
-        "surname": {
-          "description": "Family name, last name. May also be used for full name if the sending system does not have the ability to separate a full name into its parts, e.g. the surname element may be used to pass the full name.",
-          "type": "string",
-          "maxLength": 40,
-          "minLength": 0
-        }
-      }
-    },
-    "personNameTypeType": {
-      "description": "Person's name in an external system.",
-      "type": "string",
-      "enum": [
-        "Primary",
-        "Alternate",
-        "Incognito",
-        "External",
-        "Phonetic"
-      ]
     },
     "status": {
       "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
@@ -4133,9 +4217,43 @@
         }
       }
     },
-    "successType": {
-      "description": "Returning an empty element of this type indicates the successful processing of an message. This is used in conjunction with the Warning Type to report any warnings or business errors.",
-      "type": "object"
+    "translationTextType2000": {
+      "description": "Contains Multiple translated texts and language codes.",
+      "type": "object",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType": {
+      "description": "Language code for the translation.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "description": "Language code for the translation.",
+        "type": "object",
+        "properties": {
+          "language": {
+            "description": "Language identification.",
+            "type": "string",
+            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          },
+          "value": {
+            "description": "Used for Character Strings, length 0 to 2000.",
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 0
+          }
+        }
+      }
     },
     "uniqueIDListType": {
       "description": "Unique Id that references an object uniquely in the system.",
@@ -4232,12 +4350,8 @@
   },
   "tags": [
     {
-      "description": "The Leisure Management module offers a set of APIs to manage the activities for a guest like spa, golf, tours etc. The external system can create, change, cancel activities and send these updates to OPERA Cloud; either attached the activity to the OPERA Cloud Reservation or Profile.",
-      "name": "LeisureManagement"
-    },
-    {
-      "description": "The Leisure Management Configuration module offers a set of operations to manage the configuration of activities like Status codes, locations, types etc. User can create, change, remove and fetch Status codes, locations, types etc.",
-      "name": "LeisureManagementConfig"
+      "description": "The Activity Configuration APIs offers capability of creating, managing, and retrieving Activity configuration elements, such as Activity Type code, Activity Result codes.",
+      "name": "ActivityManagement"
     }
   ],
   "externalDocs": {

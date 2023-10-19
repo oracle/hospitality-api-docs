@@ -1,9 +1,15 @@
 {
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
   "swagger": "2.0",
   "info": {
+    "description": "Opera Content Service offers capability to manage large content such as images and files.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
     "title": "OPERA Cloud Content Service",
-    "description": "Opera Content Service offers capability to manage large content such as images and files.<br /><br />Compatible with OPERA Cloud release 21.5.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
-    "version": "21.5.0.0",
+    "version": "23.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -13,114 +19,11 @@
       "url": "https://opensource.org/licenses/upl"
     }
   },
-  "schemes": [
-    "https"
-  ],
   "basePath": "/med/config/v1",
-  "produces": [
-    "application/json"
-  ],
   "paths": {
     "/customizedLetter/{letterId}": {
       "get": {
-        "summary": "Get customized letter",
-        "description": "Use this API to get a customized letter. <p><strong>OperationId:</strong>getCustomizedLetter</p>",
-        "operationId": "getCustomizedLetter",
-        "parameters": [
-          {
-            "name": "letterId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
-          },
-          {
-            "name": "letterIdContext",
-            "in": "query",
-            "required": false,
-            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "type": "string"
-          },
-          {
-            "name": "letterIdtype",
-            "in": "query",
-            "required": false,
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/x-externalsystem"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
-            "description": "Response object for retrieving customized letter.",
-            "schema": {
-              "$ref": "#/definitions/customizedLetter"
-            }
-          },
-          "204": {
-            "description": "CustomizedLetter not found."
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
+        "description": "Use this API to return a customized letter based on search criteria such as letterId, letterIdContext, letterIdtype. <p><strong>OperationId:</strong>getCustomizedLetter</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -129,20 +32,542 @@
         ],
         "tags": [
           "OperaContent"
-        ]
+        ],
+        "summary": "Get customized letter",
+        "operationId": "getCustomizedLetter",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "name": "letterId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "letterIdContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "letterIdtype",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response object for retrieving customized letter.",
+            "schema": {
+              "$ref": "#/definitions/customizedLetter"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "CustomizedLetter not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/emailFile/{emailId}": {
+      "get": {
+        "description": "Use this API to retrieve email Blob File Stored in File Storage Schema.Its used in  Profiles to fetch Email and Open in an end user's mail client. <p><strong>OperationId:</strong>getEmailFile</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "OperaContent"
+        ],
+        "summary": "Get Email Blob File",
+        "operationId": "getEmailFile",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique OPERA Email ID which is used to find an Email BLOB File from OPERA. This ID is a primary identification of an email file in OPERA.",
+            "name": "emailId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch an email file",
+            "schema": {
+              "$ref": "#/definitions/emailFile"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "EmailFile not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/fileAttachments": {
+      "get": {
+        "description": "Use this API to return file attachments based on search criteria such as id, idContext, idType. <p><strong>OperationId:</strong>getFileAttachment</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "OperaContent"
+        ],
+        "summary": "Get file attachment",
+        "operationId": "getFileAttachment",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "idContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "idType",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch file attachment",
+            "schema": {
+              "$ref": "#/definitions/file"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "FileAttachment not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "description": "Use this API to create a file attachment. <p><strong>OperationId:</strong>uploadFileAttachment</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "OperaContent"
+        ],
+        "summary": "Upload a file attachment",
+        "operationId": "uploadFileAttachment",
+        "parameters": [
+          {
+            "description": "Request to upload a file attachment.",
+            "name": "fileToUpload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/fileToUpload"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
       }
     },
     "/folioReports/email": {
       "post": {
-        "summary": "Email folio report",
         "description": "Use this APU to email folio report. <p><strong>OperationId:</strong>emailFolioReport</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "OperaContent"
+        ],
+        "summary": "Email folio report",
         "operationId": "emailFolioReport",
         "parameters": [
           {
+            "description": "Request to generate and email a folio report.",
             "name": "folioReportToEmail",
             "in": "body",
             "required": true,
-            "description": "Request to generate and email a folio report.",
             "schema": {
               "allOf": [
                 {
@@ -152,77 +577,111 @@
             }
           },
           {
-            "$ref": "#/parameters/authKey"
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-app-key"
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-hotelid"
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-externalsystem"
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
           },
           {
-            "$ref": "#/parameters/Accept-Language"
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
           }
         ],
         "responses": {
           "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
             "headers": {
               "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
                 "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
+                "type": "string",
+                "description": "Audience language"
               },
               "Location": {
                 "type": "string",
                 "description": "Location of newly created resource"
               }
-            },
-            "description": "HATEOAS links which help the consumer to navigate to resources",
-            "schema": {
-              "$ref": "#/definitions/status"
             }
           },
           "400": {
-            "$ref": "#/responses/400"
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "401": {
-            "$ref": "#/responses/401"
+            "description": "Unauthorized"
           },
           "403": {
-            "$ref": "#/responses/403"
+            "description": "Forbidden"
           },
           "404": {
-            "$ref": "#/responses/404"
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "405": {
-            "$ref": "#/responses/405"
+            "description": "Method not allowed"
           },
           "406": {
-            "$ref": "#/responses/406"
+            "description": "Not acceptable."
           },
           "413": {
-            "$ref": "#/responses/413"
+            "description": "Request Entity Too Large"
           },
           "414": {
-            "$ref": "#/responses/414"
+            "description": "Request URI Too Large"
           },
           "415": {
-            "$ref": "#/responses/415"
+            "description": "Unsupported Media Type"
           },
           "500": {
-            "$ref": "#/responses/500"
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "502": {
-            "$ref": "#/responses/502"
+            "description": "Bad Gateway"
           },
           "503": {
-            "$ref": "#/responses/503"
+            "description": "Service Unavailable"
           }
-        },
+        }
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/customizedLetter": {
+      "put": {
+        "description": "Use this API to set a customized letter for a specific reservation based on the hotelId, reservationId, customizedLetter. <p><strong>OperationId:</strong>setCustomizedLetter</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -231,38 +690,31 @@
         ],
         "tags": [
           "OperaContent"
-        ]
-      }
-    },
-    "/hotels/{hotelId}/reservations/{reservationId}/customizedLetter": {
-      "put": {
+        ],
         "summary": "Set customized letter",
-        "description": "You can set a customized letter with this API. <p><strong>OperationId:</strong>setCustomizedLetter</p>",
         "operationId": "setCustomizedLetter",
         "parameters": [
           {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
             "name": "reservationId",
             "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
+            "required": true
           },
           {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
             "name": "hotelId",
             "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
+            "required": true
           },
           {
+            "description": "Request to save customized letter.",
             "name": "customizedLetter",
             "in": "body",
             "required": true,
-            "description": "Request to save customized letter.",
             "schema": {
               "allOf": [
                 {
@@ -272,77 +724,111 @@
             }
           },
           {
-            "$ref": "#/parameters/authKey"
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-app-key"
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-hotelid"
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-externalsystem"
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
           },
           {
-            "$ref": "#/parameters/Accept-Language"
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
           }
         ],
         "responses": {
           "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/customizedLetterStatus"
+            },
             "headers": {
               "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
                 "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
+                "type": "string",
+                "description": "Audience language"
               },
               "Location": {
                 "type": "string",
                 "description": "Location of newly created resource"
               }
-            },
-            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-            "schema": {
-              "$ref": "#/definitions/customizedLetterStatus"
             }
           },
           "400": {
-            "$ref": "#/responses/400"
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "401": {
-            "$ref": "#/responses/401"
+            "description": "Unauthorized"
           },
           "403": {
-            "$ref": "#/responses/403"
+            "description": "Forbidden"
           },
           "404": {
-            "$ref": "#/responses/404"
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "405": {
-            "$ref": "#/responses/405"
+            "description": "Method not allowed"
           },
           "406": {
-            "$ref": "#/responses/406"
+            "description": "Not acceptable."
           },
           "413": {
-            "$ref": "#/responses/413"
+            "description": "Request Entity Too Large"
           },
           "414": {
-            "$ref": "#/responses/414"
+            "description": "Request URI Too Large"
           },
           "415": {
-            "$ref": "#/responses/415"
+            "description": "Unsupported Media Type"
           },
           "500": {
-            "$ref": "#/responses/500"
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "502": {
-            "$ref": "#/responses/502"
+            "description": "Bad Gateway"
           },
           "503": {
-            "$ref": "#/responses/503"
+            "description": "Service Unavailable"
           }
-        },
+        }
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/folioReports": {
+      "get": {
+        "description": "This API will get a folio report for a reservation. <p><strong>OperationId:</strong>getFolioReport</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -351,154 +837,174 @@
         ],
         "tags": [
           "OperaContent"
-        ]
-      }
-    },
-    "/hotels/{hotelId}/reservations/{reservationId}/folioReports": {
-      "get": {
+        ],
         "summary": "Get folio report",
-        "description": "This API will get a folio report for a reservation. <p><strong>OperationId:</strong>getFolioReport</p>",
         "operationId": "getFolioReport",
         "parameters": [
           {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
             "name": "reservationId",
             "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
+            "required": true
           },
           {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
             "name": "hotelId",
             "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
+            "required": true
           },
           {
-            "name": "reservationIdContext",
-            "in": "query",
-            "required": false,
+            "type": "string",
             "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "type": "string"
+            "name": "reservationIdContext",
+            "in": "query"
           },
           {
-            "name": "reservationIdType",
-            "in": "query",
-            "required": false,
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "type": "string"
-          },
-          {
-            "name": "folioWindowNo",
-            "in": "query",
-            "required": false,
-            "description": "Folio window number to generate (defaults to view 1).",
-            "type": "integer"
-          },
-          {
-            "name": "billNumber",
-            "in": "query",
-            "required": false,
-            "description": "Optional bill number to generate.",
-            "type": "integer"
-          },
-          {
-            "name": "folioType",
-            "in": "query",
-            "required": false,
-            "description": "Optional folio type.",
-            "type": "string"
-          },
-          {
-            "name": "folioDate",
-            "in": "query",
-            "required": false,
-            "description": "Optional folio generation date - defaults to hotel business date.",
             "type": "string",
-            "format": "date"
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "reservationIdType",
+            "in": "query"
           },
           {
-            "name": "referenceCurrency",
-            "in": "query",
-            "required": false,
+            "type": "integer",
+            "description": "Folio window number to generate (defaults to view 1).",
+            "name": "folioWindowNo",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Optional bill number to generate.",
+            "name": "billNumber",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Optional folio type.",
+            "name": "folioType",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date",
+            "description": "Optional folio generation date - defaults to hotel business date.",
+            "name": "folioDate",
+            "in": "query"
+          },
+          {
+            "type": "string",
             "description": "Folio currency code.",
-            "type": "string"
+            "name": "referenceCurrency",
+            "in": "query"
           },
           {
-            "$ref": "#/parameters/authKey"
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-app-key"
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-hotelid"
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-externalsystem"
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
           },
           {
-            "$ref": "#/parameters/Accept-Language"
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
           }
         ],
         "responses": {
           "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
             "description": "Response object for folio report.",
             "schema": {
               "$ref": "#/definitions/folioReport"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
             }
           },
           "204": {
             "description": "FolioReport not found."
           },
           "400": {
-            "$ref": "#/responses/400"
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "401": {
-            "$ref": "#/responses/401"
+            "description": "Unauthorized"
           },
           "403": {
-            "$ref": "#/responses/403"
+            "description": "Forbidden"
           },
           "404": {
-            "$ref": "#/responses/404"
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "405": {
-            "$ref": "#/responses/405"
+            "description": "Method not allowed"
           },
           "406": {
-            "$ref": "#/responses/406"
+            "description": "Not acceptable."
           },
           "413": {
-            "$ref": "#/responses/413"
+            "description": "Request Entity Too Large"
           },
           "414": {
-            "$ref": "#/responses/414"
+            "description": "Request URI Too Large"
           },
           "415": {
-            "$ref": "#/responses/415"
+            "description": "Unsupported Media Type"
           },
           "500": {
-            "$ref": "#/responses/500"
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "502": {
-            "$ref": "#/responses/502"
+            "description": "Bad Gateway"
           },
           "503": {
-            "$ref": "#/responses/503"
+            "description": "Service Unavailable"
           }
-        },
+        }
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/registrationCard": {
+      "get": {
+        "description": "Use this API to return a registration card for a reservation based on search criteria such as reservationId, hotelId, reservationIdContext, reservationIdType, regenerate, signedOnly, language, template.  <p><strong>OperationId:</strong>getRegistrationCard</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -507,146 +1013,167 @@
         ],
         "tags": [
           "OperaContent"
-        ]
-      }
-    },
-    "/hotels/{hotelId}/reservations/{reservationId}/registrationCard": {
-      "get": {
+        ],
         "summary": "Get registration card",
-        "description": "This API will get a registration card for a reservation. <p><strong>OperationId:</strong>getRegistrationCard</p>",
         "operationId": "getRegistrationCard",
         "parameters": [
           {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
             "name": "reservationId",
             "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
+            "required": true
           },
           {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
             "name": "hotelId",
             "in": "path",
-            "required": true,
+            "required": true
+          },
+          {
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": ""
-          },
-          {
-            "name": "reservationIdContext",
-            "in": "query",
-            "required": false,
             "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "type": "string"
+            "name": "reservationIdContext",
+            "in": "query"
           },
           {
-            "name": "reservationIdType",
-            "in": "query",
-            "required": false,
+            "type": "string",
             "description": "A reference to the type of object defined by the UniqueID element.",
-            "type": "string"
+            "name": "reservationIdType",
+            "in": "query"
           },
           {
-            "name": "regenerate",
-            "in": "query",
-            "required": false,
+            "type": "boolean",
             "description": "Flag indicating whether a new registration card should be generated even if a signed card already exists.",
-            "type": "boolean"
+            "name": "regenerate",
+            "in": "query"
           },
           {
-            "name": "signedOnly",
-            "in": "query",
-            "required": false,
+            "type": "boolean",
             "description": "Flag indicating whether return only the signed registrationCard if present.",
-            "type": "boolean"
+            "name": "signedOnly",
+            "in": "query"
           },
           {
-            "name": "language",
-            "in": "query",
-            "required": false,
+            "type": "string",
             "description": "Optional language code to use for registration card generation. Default guest language will be applied if not specified.",
-            "type": "string"
+            "name": "language",
+            "in": "query"
           },
           {
-            "name": "template",
-            "in": "query",
-            "required": false,
+            "type": "string",
             "description": "Optional registration card template code to use for registration card generation. Default template will be applied if not specified.",
-            "type": "string"
+            "name": "template",
+            "in": "query"
           },
           {
-            "$ref": "#/parameters/authKey"
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-app-key"
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-hotelid"
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
           },
           {
-            "$ref": "#/parameters/x-externalsystem"
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
           },
           {
-            "$ref": "#/parameters/Accept-Language"
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
           }
         ],
         "responses": {
           "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
             "description": "Response object for registration card.",
             "schema": {
               "$ref": "#/definitions/registrationCard"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
             }
           },
           "204": {
             "description": "RegistrationCard not found."
           },
           "400": {
-            "$ref": "#/responses/400"
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "401": {
-            "$ref": "#/responses/401"
+            "description": "Unauthorized"
           },
           "403": {
-            "$ref": "#/responses/403"
+            "description": "Forbidden"
           },
           "404": {
-            "$ref": "#/responses/404"
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "405": {
-            "$ref": "#/responses/405"
+            "description": "Method not allowed"
           },
           "406": {
-            "$ref": "#/responses/406"
+            "description": "Not acceptable."
           },
           "413": {
-            "$ref": "#/responses/413"
+            "description": "Request Entity Too Large"
           },
           "414": {
-            "$ref": "#/responses/414"
+            "description": "Request URI Too Large"
           },
           "415": {
-            "$ref": "#/responses/415"
+            "description": "Unsupported Media Type"
           },
           "500": {
-            "$ref": "#/responses/500"
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
           },
           "502": {
-            "$ref": "#/responses/502"
+            "description": "Bad Gateway"
           },
           "503": {
-            "$ref": "#/responses/503"
+            "description": "Service Unavailable"
           }
-        },
+        }
+      }
+    },
+    "/images": {
+      "get": {
+        "description": "Use this API to return an image based on search criteria such as linkId, linkIdContext, linkIdType, imageCode, imageParameterCode, imageParameterValue, languageCode, imageStyle, imageId, imageIdContext, imageIdType, base64.  <p><strong>OperationId:</strong>getImage</p>",
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -655,105 +1182,593 @@
         ],
         "tags": [
           "OperaContent"
-        ]
+        ],
+        "summary": "Get image",
+        "operationId": "getImage",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "linkId",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "linkIdContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "linkIdType",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "LogoChain",
+              "Logo",
+              "Profile",
+              "Nationality",
+              "User",
+              "ToolbarItemCode",
+              "Chain",
+              "MembershipType",
+              "MembershipLevel",
+              "Resort",
+              "RoomTypeChain",
+              "RoomType",
+              "RoomNumber",
+              "OooReasonChain",
+              "OooReason",
+              "RoomMaintChain",
+              "RoomMaintenance",
+              "RoomMaintIssue",
+              "FloorPlan",
+              "SiteLayout",
+              "Attraction",
+              "PropertyMap",
+              "InvItemChain",
+              "InvItem",
+              "PackageChain",
+              "Package",
+              "Pool",
+              "RoomConditionChain",
+              "RoomCondition",
+              "FunctionSpace",
+              "FunctionSetupStyle",
+              "TrackItTypeChain",
+              "TrackItType",
+              "Height",
+              "Width"
+            ],
+            "type": "string",
+            "name": "imageCode",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "enum": [
+                "LogoChain",
+                "Logo",
+                "Profile",
+                "Nationality",
+                "User",
+                "ToolbarItemCode",
+                "Chain",
+                "MembershipType",
+                "MembershipLevel",
+                "Resort",
+                "RoomTypeChain",
+                "RoomType",
+                "RoomNumber",
+                "OooReasonChain",
+                "OooReason",
+                "RoomMaintChain",
+                "RoomMaintenance",
+                "RoomMaintIssue",
+                "FloorPlan",
+                "SiteLayout",
+                "Attraction",
+                "PropertyMap",
+                "InvItemChain",
+                "InvItem",
+                "PackageChain",
+                "Package",
+                "Pool",
+                "RoomConditionChain",
+                "RoomCondition",
+                "FunctionSpace",
+                "FunctionSetupStyle",
+                "TrackItTypeChain",
+                "TrackItType",
+                "Height",
+                "Width"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "name": "imageParameterCode",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Image parameter value.",
+            "name": "imageParameterValue",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "languageCode",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "Full",
+              "Thumbnail",
+              "Icon",
+              "Square",
+              "Banner",
+              "Button",
+              "Lowres",
+              "Highres"
+            ],
+            "type": "string",
+            "description": "An enumeration of image styles.",
+            "name": "imageStyle",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "imageId",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "imageIdContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "imageIdType",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "True if the image to be returned as a base64String else if the image to be returned as the binary in MTOM attachment then false .",
+            "name": "base64",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch image(s)",
+            "schema": {
+              "$ref": "#/definitions/image"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "Image not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "description": "Use this API to upload an image. <p><strong>OperationId:</strong>uploadImage</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "OperaContent"
+        ],
+        "summary": "Use this API to Upload an image",
+        "operationId": "uploadImage",
+        "parameters": [
+          {
+            "description": "Request to upload an image.",
+            "name": "imageToUpload",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/imageToUpload"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "delete": {
+        "description": "Use this API to delete an image. <p><strong>OperationId:</strong>removeImage</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "OperaContent"
+        ],
+        "summary": "Use this API to Delete image",
+        "operationId": "removeImage",
+        "parameters": [
+          {
+            "uniqueItems": true,
+            "enum": [
+              "LogoChain",
+              "Logo",
+              "Profile",
+              "Nationality",
+              "User",
+              "ToolbarItemCode",
+              "Chain",
+              "MembershipType",
+              "MembershipLevel",
+              "Resort",
+              "RoomTypeChain",
+              "RoomType",
+              "RoomNumber",
+              "OooReasonChain",
+              "OooReason",
+              "RoomMaintChain",
+              "RoomMaintenance",
+              "RoomMaintIssue",
+              "FloorPlan",
+              "SiteLayout",
+              "Attraction",
+              "PropertyMap",
+              "InvItemChain",
+              "InvItem",
+              "PackageChain",
+              "Package",
+              "Pool",
+              "RoomConditionChain",
+              "RoomCondition",
+              "FunctionSpace",
+              "FunctionSetupStyle",
+              "TrackItTypeChain",
+              "TrackItType",
+              "Height",
+              "Width"
+            ],
+            "type": "string",
+            "name": "imageCode",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used for Character Strings, length 0 to 800.",
+            "name": "imageSet",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "imageId",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "imageIdContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "imageIdType",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
       }
-    }
-  },
-  "parameters": {
-    "authKey": {
-      "name": "authorization",
-      "description": "Bearer token that needs to be passed which is generated post user authentication",
-      "type": "string",
-      "in": "header",
-      "required": true
-    },
-    "x-app-key": {
-      "name": "x-app-key",
-      "description": "Client or Partner’s Application Key",
-      "type": "string",
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-      "in": "header",
-      "required": true
-    },
-    "x-hotelid": {
-      "name": "x-hotelid",
-      "type": "string",
-      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-      "in": "header",
-      "required": true
-    },
-    "x-externalsystem": {
-      "name": "x-externalsystem",
-      "type": "string",
-      "maxLength": 80,
-      "description": "External system code.",
-      "in": "header",
-      "x-example": "EXTERNALSYSTEMCODE"
-    },
-    "Accept-Language": {
-      "name": "Accept-Language",
-      "type": "string",
-      "description": "Language code",
-      "in": "header"
-    },
-    "x-hubid": {
-      "name": "x-hubid",
-      "type": "string",
-      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
-      "in": "header"
-    }
-  },
-  "responses": {
-    "400": {
-      "description": "Bad Request",
-      "schema": {
-        "$ref": "#/definitions/exceptionDetailType"
-      }
-    },
-    "401": {
-      "description": "Unauthorized"
-    },
-    "403": {
-      "description": "Forbidden"
-    },
-    "404": {
-      "description": "Resource not found",
-      "schema": {
-        "$ref": "#/definitions/exceptionDetailType"
-      }
-    },
-    "405": {
-      "description": "Method not allowed"
-    },
-    "406": {
-      "description": "Not acceptable."
-    },
-    "413": {
-      "description": "Request Entity Too Large"
-    },
-    "414": {
-      "description": "Request URI Too Large"
-    },
-    "415": {
-      "description": "Unsupported Media Type"
-    },
-    "500": {
-      "description": "System Error",
-      "schema": {
-        "$ref": "#/definitions/exceptionDetailType"
-      }
-    },
-    "502": {
-      "description": "Bad Gateway"
-    },
-    "503": {
-      "description": "Service Unavailable"
     }
   },
   "definitions": {
     "customizedLetter": {
-      "type": "object",
       "description": "Response object for retrieving customized letter.",
+      "type": "object",
       "properties": {
         "customizedLetterDetails": {
           "description": "Customized letter in HTML or RTF format.",
@@ -767,99 +1782,622 @@
         }
       }
     },
-    "customizedLetterType": {
+    "customizedLetterStatus": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
       "type": "object",
-      "description": "Details about customized letter.",
       "properties": {
-        "hotelId": {
-          "description": "Hotel code that the customized letter belongs to.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+        "links": {
+          "$ref": "#/definitions/links"
         },
-        "reservationId": {
-          "description": "Reservation ID that the customized letter belongs to.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "customizedLetterType": {
+      "description": "Details about customized letter.",
+      "type": "object",
+      "properties": {
         "customizedLetter": {
           "description": "Customized letter in HTML or RTF format.",
           "type": "string",
           "format": "byte"
         },
-        "url": {
-          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
-          "type": "string"
-        },
-        "type": {
-          "description": "A reference to the type of object defined by the UniqueID element.",
+        "hotelId": {
+          "description": "Hotel code that the customized letter belongs to.",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+          "maxLength": 20,
+          "minLength": 0
         },
-        "instance": {
-          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 80
+          "maxLength": 80,
+          "minLength": 0
         },
         "idContext": {
           "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "id": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
+          "maxLength": 80,
+          "minLength": 0
         },
         "idExtension": {
           "description": "Additional identifying value assigned by the creating system.",
           "type": "integer"
-        }
-      }
-    },
-    "uniqueID_Type": {
-      "type": "object",
-      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
-      "properties": {
-        "id": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 80
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "reservationId": {
+          "description": "Reservation ID that the customized letter belongs to.",
+          "$ref": "#/definitions/uniqueID_Type"
         },
         "type": {
           "description": "A reference to the type of object defined by the UniqueID element.",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 40
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
         }
       }
     },
-    "links": {
+    "emailFile": {
+      "description": "Response object for Fetch Email Blob File Operation.",
+      "type": "object",
+      "properties": {
+        "file": {
+          "description": "Email File Blob Details based on email Id Number",
+          "$ref": "#/definitions/emailFileType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "emailFileType": {
+      "description": "ID that uniquely defines an email object",
+      "type": "object",
+      "properties": {
+        "emailFile": {
+          "description": "File attachment in base64 binary format",
+          "type": "string",
+          "format": "byte"
+        },
+        "emailFileName": {
+          "description": "Name of the attachment",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "emailID": {
+          "description": "Unique ID that represents an email.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "emailRecipientType": {
+      "type": "object",
+      "properties": {
+        "emailAddress": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        }
+      }
+    },
+    "emailRecipientsType": {
       "type": "array",
+      "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/instanceLink"
+        "$ref": "#/definitions/emailRecipientType"
+      }
+    },
+    "errorInstance": {
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "title": "Error Instance Details",
+      "required": [
+        "type",
+        "title"
+      ],
+      "properties": {
+        "detail": {
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
+          "type": "string"
+        },
+        "o:errorCode": {
+          "description": "Application error code, which is different from HTTP error code.",
+          "type": "string"
+        },
+        "o:errorPath": {
+          "description": "Path to the problem at the resource or property level.",
+          "type": "string"
+        },
+        "status": {
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
+          "type": "string"
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "title": "Error Detail",
+      "required": [
+        "type",
+        "title"
+      ],
+      "properties": {
+        "detail": {
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
+          "type": "string"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "o:errorCode": {
+          "description": "Application error code, which is different from HTTP error code.",
+          "type": "string"
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "o:errorPath": {
+          "description": "Path to the problem at the resource or property level.",
+          "type": "string"
+        },
+        "status": {
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
+          "type": "string"
+        }
+      }
+    },
+    "file": {
+      "description": "Response to fetch file attachment",
+      "type": "object",
+      "properties": {
+        "fileDetails": {
+          "description": "File Attachement details",
+          "$ref": "#/definitions/fileAttachmentType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fileAttachmentType": {
+      "description": "ID that uniquely determines file attachment",
+      "type": "object",
+      "properties": {
+        "attachmentId": {
+          "description": "Unique ID that represents file attachment",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "fileAttachment": {
+          "description": "File attachment in base64 binary format",
+          "type": "string",
+          "format": "byte"
+        },
+        "fileName": {
+          "description": "Name of the attachment",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        }
+      }
+    },
+    "fileToUpload": {
+      "description": "Request to upload a file attachment.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the attachment file.",
+          "$ref": "#/definitions/stringLength2000"
+        },
+        "fileAttachment": {
+          "description": "Attachment file in base64 binary format.",
+          "type": "string",
+          "format": "byte"
+        },
+        "fileName": {
+          "description": "Name of the attachment.",
+          "$ref": "#/definitions/stringLength1000"
+        },
+        "globalYN": {
+          "description": "Global Yes (Y) or No (N) flag related to the attachment file.",
+          "$ref": "#/definitions/stringLength10"
+        },
+        "hotelId": {
+          "description": "Resort related to the attachment file.",
+          "$ref": "#/definitions/stringLength200"
+        },
+        "linkId": {
+          "description": "Link Id of the attachment.",
+          "$ref": "#/definitions/stringLength200"
+        },
+        "linkType": {
+          "description": "Link Type of the attachment.",
+          "$ref": "#/definitions/stringLength200"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "overwriteExistingFileYN": {
+          "description": "Overwrite Yes (Y) or No (N) flag related to the attachment file.",
+          "$ref": "#/definitions/stringLength10"
+        },
+        "userName": {
+          "description": "User (name) related to the attachment file.",
+          "$ref": "#/definitions/stringLength200"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "folioReport": {
+      "description": "Response object for folio report.",
+      "type": "object",
+      "properties": {
+        "folio": {
+          "description": "Folio report.",
+          "$ref": "#/definitions/folioReportResultType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "folioReportCriteriaType": {
+      "description": "Criteria required to generate or retrieve a folio for a reservation.",
+      "type": "object",
+      "properties": {
+        "billNumber": {
+          "description": "Optional bill number to generate.",
+          "type": "integer"
+        },
+        "folioDate": {
+          "description": "Optional folio generation date - defaults to hotel business date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "folioType": {
+          "description": "Optional folio type.",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "folioWindowNo": {
+          "description": "Folio window number to generate (defaults to view 1).",
+          "type": "integer"
+        },
+        "hotelId": {
+          "description": "Hotel code for the folio.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "referenceCurrency": {
+          "description": "Folio currency code.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "reservationId": {
+          "description": "Reservation ID to generate a folio for.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "folioReportResultType": {
+      "description": "Folio card details, including PDF report.",
+      "type": "object",
+      "properties": {
+        "folio": {
+          "description": "Folio PDF report.",
+          "type": "string",
+          "format": "byte"
+        },
+        "hotelId": {
+          "description": "Hotel code for the folio.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "reservationId": {
+          "description": "Reservation ID identifying the folio.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "folioReportToEmail": {
+      "description": "Request to generate and email a folio report.",
+      "type": "object",
+      "properties": {
+        "emailRecipients": {
+          "description": "List of email recipients for the report.",
+          "$ref": "#/definitions/emailRecipientsType"
+        },
+        "folioInfo": {
+          "description": "Identifies folio to be generated.",
+          "$ref": "#/definitions/folioReportCriteriaType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "image": {
+      "description": "Response to fetch image(s)",
+      "type": "object",
+      "properties": {
+        "images": {
+          "description": "Collection of images",
+          "$ref": "#/definitions/imageResultsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "imageCodeType": {
+      "type": "string",
+      "enum": [
+        "LogoChain",
+        "Logo",
+        "Profile",
+        "Nationality",
+        "User",
+        "ToolbarItemCode",
+        "Chain",
+        "MembershipType",
+        "MembershipLevel",
+        "Resort",
+        "RoomTypeChain",
+        "RoomType",
+        "RoomNumber",
+        "OooReasonChain",
+        "OooReason",
+        "RoomMaintChain",
+        "RoomMaintenance",
+        "RoomMaintIssue",
+        "FloorPlan",
+        "SiteLayout",
+        "Attraction",
+        "PropertyMap",
+        "InvItemChain",
+        "InvItem",
+        "PackageChain",
+        "Package",
+        "Pool",
+        "RoomConditionChain",
+        "RoomCondition",
+        "FunctionSpace",
+        "FunctionSetupStyle",
+        "TrackItTypeChain",
+        "TrackItType",
+        "Height",
+        "Width"
+      ]
+    },
+    "imageParameterType": {
+      "description": "Image parameter code/value pair",
+      "type": "object",
+      "properties": {
+        "imageParameterCode": {
+          "description": "Image parameter code.",
+          "$ref": "#/definitions/imageCodeType"
+        },
+        "imageParameterValue": {
+          "description": "Image parameter value.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        }
+      }
+    },
+    "imageParametersType": {
+      "description": "Collection of image parameters code / value pairs.",
+      "type": "array",
+      "maxItems": 500,
+      "items": {
+        "$ref": "#/definitions/imageParameterType"
+      }
+    },
+    "imageResultType": {
+      "type": "object",
+      "properties": {
+        "base64Image": {
+          "description": "Base64Image image content of the file.",
+          "type": "string"
+        },
+        "image": {
+          "description": "Image file to upload.",
+          "type": "string",
+          "format": "byte"
+        },
+        "imageId": {
+          "description": "ImageId file.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "imageLinkId": {
+          "description": "Image link id file.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "imageSet": {
+          "description": "Image set describing path of image.",
+          "type": "string",
+          "maxLength": 800,
+          "minLength": 0
+        },
+        "linkId": {
+          "description": "LinkID of the file.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "mimeType": {
+          "description": "Mime type of the Image.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        }
+      }
+    },
+    "imageResultsType": {
+      "description": "Collection of image results.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/imageResultType"
+      }
+    },
+    "imageStyleType": {
+      "description": "An enumeration of image styles.",
+      "type": "string",
+      "enum": [
+        "Full",
+        "Thumbnail",
+        "Icon",
+        "Square",
+        "Banner",
+        "Button",
+        "Lowres",
+        "Highres"
+      ]
+    },
+    "imageToUpload": {
+      "description": "Request to upload an image.",
+      "type": "object",
+      "properties": {
+        "images": {
+          "description": "Image upload details including image to upload.",
+          "$ref": "#/definitions/imageUploadInfoType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "imageUploadInfoType": {
+      "description": "List of Image details to upload including image to upload.",
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/imageUploadType"
+      }
+    },
+    "imageUploadType": {
+      "description": "Image upload details",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the image.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "fileExtension": {
+          "description": "File extension of the Image, e.g. JPG, PNG, BMP, etc.",
+          "type": "string",
+          "maxLength": 10,
+          "minLength": 0
+        },
+        "image": {
+          "description": "Image file to upload.",
+          "type": "string",
+          "format": "byte"
+        },
+        "imageCode": {
+          "description": "Image code to upload",
+          "$ref": "#/definitions/imageCodeType"
+        },
+        "imageId": {
+          "description": "Image Id of the image to be replaced.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "imageParameters": {
+          "description": "Zero or more image parameters - code / value pairs which define the image path. These are dependent on the image code type.",
+          "$ref": "#/definitions/imageParametersType"
+        },
+        "imageStyle": {
+          "description": "Style of the image.",
+          "$ref": "#/definitions/imageStyleType"
+        },
+        "languageCode": {
+          "description": "Language code for the image.",
+          "$ref": "#/definitions/languageType"
+        },
+        "linkId": {
+          "description": "Link ID to reference table.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
       }
     },
     "instanceLink": {
-      "type": "object",
       "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "type": "object",
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ],
       "properties": {
         "href": {
           "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
           "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
         },
         "method": {
           "description": "HTTP method for requesting the target of the link.",
@@ -874,55 +2412,164 @@
             "HEAD"
           ]
         },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
         "targetSchema": {
           "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
           "type": "string"
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
         },
         "title": {
           "description": "Exact copy of the \"summary\" field on the linked operation.",
           "type": "string"
         }
-      },
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
-      ]
+      }
     },
-    "warningsType": {
+    "languageType": {
+      "type": "string",
+      "maxLength": 40,
+      "minLength": 0
+    },
+    "links": {
       "type": "array",
-      "description": "Used in conjunction with the Success element to define a business error.",
-      "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/warningType"
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "registrationCard": {
+      "description": "Response object for registration card.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "registrationCard": {
+          "description": "Registration card PDF.",
+          "$ref": "#/definitions/registrationCardType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "registrationCardType": {
+      "description": "Registration card details, including PDF report.",
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel code for the registration card.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "registrationCard": {
+          "description": "Registration card PDF.",
+          "type": "string",
+          "format": "byte"
+        },
+        "reservationId": {
+          "description": "Reservation ID identifying the reservation for the registration card.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "status": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "stringLength10": {
+      "description": "Used for Character Strings, length 0 to 10.",
+      "type": "string",
+      "maxLength": 10,
+      "minLength": 0
+    },
+    "stringLength1000": {
+      "description": "Used for Character Strings, length 0 to 1000.",
+      "type": "string",
+      "maxLength": 1000,
+      "minLength": 0
+    },
+    "stringLength200": {
+      "description": "Used for Character Strings, length 0 to 200.",
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 0
+    },
+    "stringLength2000": {
+      "description": "Used for Character Strings, length 0 to 2000.",
+      "type": "string",
+      "maxLength": 2000,
+      "minLength": 0
+    },
+    "uniqueID_Type": {
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        }
       }
     },
     "warningType": {
-      "type": "object",
       "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "type": "object",
       "properties": {
-        "value": {
-          "type": "string",
-          "description": "Property Value"
-        },
-        "shortText": {
-          "description": "An abbreviated version of the error in textual format.",
-          "type": "string",
-          "maxLength": 2000
-        },
         "code": {
           "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+          "maxLength": 20,
+          "minLength": 0
         },
         "docURL": {
           "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 1
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
           "type": "string",
           "maxLength": 2000
         },
@@ -936,300 +2583,31 @@
           "type": "string",
           "maxLength": 2000
         },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string",
-          "maxLength": 2000
-        },
         "type": {
           "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
           "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+          "maxLength": 20,
+          "minLength": 0
         },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "rph": {
-          "description": "Reference Place Holder used as an index for this warning.",
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 8
+        "value": {
+          "description": "Property Value",
+          "type": "string"
         }
       }
     },
-    "exceptionDetailType": {
-      "title": "Error Detail",
-      "description": "Complex type that contains error details for a REST call.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
-        },
-        "detail": {
-          "type": "string",
-          "description": "Human-readable description specific to this occurrence of the problem."
-        },
-        "instance": {
-          "type": "string",
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Application error code, which is different from HTTP error code."
-        },
-        "o:errorPath": {
-          "type": "string",
-          "description": "Path to the problem at the resource or property level."
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/errorInstance"
-          }
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        }
-      },
-      "required": [
-        "type",
-        "title"
-      ]
-    },
-    "errorInstance": {
-      "title": "Error Instance Details",
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
-        },
-        "detail": {
-          "type": "string",
-          "description": "Human-readable description specific to this occurrence of the problem."
-        },
-        "instance": {
-          "type": "string",
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Application error code, which is different from HTTP error code."
-        },
-        "o:errorPath": {
-          "type": "string",
-          "description": "Path to the problem at the resource or property level."
-        }
-      },
-      "required": [
-        "type",
-        "title"
-      ]
-    },
-    "folioReportToEmail": {
-      "type": "object",
-      "description": "Request to generate and email a folio report.",
-      "properties": {
-        "folioInfo": {
-          "description": "Identifies folio to be generated.",
-          "$ref": "#/definitions/folioReportCriteriaType"
-        },
-        "emailRecipients": {
-          "description": "List of email recipients for the report.",
-          "$ref": "#/definitions/emailRecipientsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "folioReportCriteriaType": {
-      "type": "object",
-      "description": "Criteria required to generate or retrieve a folio for a reservation.",
-      "properties": {
-        "hotelId": {
-          "description": "Hotel code for the folio.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "reservationId": {
-          "description": "Reservation ID to generate a folio for.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "folioWindowNo": {
-          "description": "Folio window number to generate (defaults to view 1).",
-          "type": "integer"
-        },
-        "billNumber": {
-          "description": "Optional bill number to generate.",
-          "type": "integer"
-        },
-        "folioType": {
-          "description": "Optional folio type.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "folioDate": {
-          "description": "Optional folio generation date - defaults to hotel business date.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "referenceCurrency": {
-          "description": "Folio currency code.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        }
-      }
-    },
-    "emailRecipientsType": {
+    "warningsType": {
+      "description": "Used in conjunction with the Success element to define a business error.",
       "type": "array",
       "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/emailRecipientType"
-      }
-    },
-    "emailRecipientType": {
-      "type": "object",
-      "properties": {
-        "emailAddress": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        }
-      }
-    },
-    "status": {
-      "type": "object",
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "properties": {
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        }
-      }
-    },
-    "customizedLetterStatus": {
-      "type": "object",
-      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
-      "properties": {
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "folioReport": {
-      "type": "object",
-      "description": "Response object for folio report.",
-      "properties": {
-        "folio": {
-          "description": "Folio report.",
-          "$ref": "#/definitions/folioReportResultType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "folioReportResultType": {
-      "type": "object",
-      "description": "Folio card details, including PDF report.",
-      "properties": {
-        "hotelId": {
-          "description": "Hotel code for the folio.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "reservationId": {
-          "description": "Reservation ID identifying the folio.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "folio": {
-          "description": "Folio PDF report.",
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "registrationCard": {
-      "type": "object",
-      "description": "Response object for registration card.",
-      "properties": {
-        "registrationCard": {
-          "description": "Registration card PDF.",
-          "$ref": "#/definitions/registrationCardType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "registrationCardType": {
-      "type": "object",
-      "description": "Registration card details, including PDF report.",
-      "properties": {
-        "hotelId": {
-          "description": "Hotel code for the registration card.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "reservationId": {
-          "description": "Reservation ID identifying the reservation for the registration card.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "registrationCard": {
-          "description": "Registration card PDF.",
-          "type": "string",
-          "format": "byte"
-        }
+        "$ref": "#/definitions/warningType"
       }
     }
   },
   "tags": [
     {
-      "name": "OperaContent",
-      "description": "Opera Content Service offers capability to manage big content using MTOM"
+      "description": "Opera Content Service offers capability to manage big content using MTOM",
+      "name": "OperaContent"
     }
   ],
   "externalDocs": {

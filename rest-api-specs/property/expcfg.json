@@ -1,0 +1,5458 @@
+{
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "APIs catering to the managing export master data configuration. The exports feature in OPERA Cloud provides the ability to create and export data files, such as back office data, to third-party interfaces and receiving systems.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "title": "OPERA Cloud Export Configuration API",
+    "version": "23.2",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "basePath": "/exp/config/v1",
+  "paths": {
+    "/availableExports": {
+      "get": {
+        "description": "Use this API to return available exports based on search criteria such as fetchColumns, fetchDataSetup, fetchDestinationSetup, fetchGenerateConfiguration, limit, exportFileId, idExtension, idContext, type, hotelIds, fileGroup, includeInactive, includeComponents. <p><strong>OperationId:</strong>getExportsAvailable</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Return available exports",
+        "operationId": "getExportsAvailable",
+        "parameters": [
+          {
+            "type": "boolean",
+            "name": "fetchColumns",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "name": "fetchDataSetup",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "name": "fetchDestinationSetup",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "name": "fetchGenerateConfiguration",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "exportFileId",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Additional identifying value assigned by the creating system.",
+            "name": "idExtension",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "idContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "maxItems": 4000,
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Hotel code.",
+            "name": "hotelIds",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "Miscellaneous",
+              "Memberships",
+              "Country",
+              "Delphi",
+              "BackOffice",
+              "BackOfficeRevenue",
+              "BackOfficeCityLedger",
+              "BackOfficeMarketStatistics",
+              "BackOfficeDailyStatistics",
+              "CommissionEft"
+            ],
+            "type": "string",
+            "description": "Enumeration of export file groups.",
+            "name": "fileGroup",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Indicates whether inactive records should be returned.",
+            "name": "includeInactive",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "match",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Indicate whether component exports should be included in the request.",
+            "name": "includeComponents",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response object including a list of available exports.",
+            "schema": {
+              "$ref": "#/definitions/exportsAvailable"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportsAvailable not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/columnsAndFunctions": {
+      "get": {
+        "description": "Use this API to return export columns and functions based on search criteria such as fetchDbColumns, fetchOperaApis, fetchPrePostProcedures, dataSource, exportFileId, category. <p><strong>OperationId:</strong>getExportColumnsAndFunctions</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export columns and functions.",
+        "operationId": "getExportColumnsAndFunctions",
+        "parameters": [
+          {
+            "type": "boolean",
+            "name": "fetchDbColumns",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "name": "fetchOperaApis",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "name": "fetchPrePostProcedures",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Data source for which we are supposed to get columns and pre post procedures",
+            "name": "dataSource",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "exportFileId",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "Exports",
+              "CustomNumbers"
+            ],
+            "type": "string",
+            "description": "Enumeration of API Categories.",
+            "name": "category",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response that contains columns, pre post functions and export functions.",
+            "schema": {
+              "$ref": "#/definitions/exportColumnsAndFunctionsDetails"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportColumnsAndFunctions not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/exportMappingCodes": {
+      "put": {
+        "description": " <p><strong>OperationId:</strong>putExportMappingCodes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to update export mapping codes.",
+        "operationId": "putExportMappingCodes",
+        "parameters": [
+          {
+            "description": "Request to create export mapping code for a given export.",
+            "name": "exportMappingCodes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportMappingCodes"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportMappingCodesDetails"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "description": " <p><strong>OperationId:</strong>postExportMappingCodes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to create export mapping codes.",
+        "operationId": "postExportMappingCodes",
+        "parameters": [
+          {
+            "description": "Request to create export mapping code for a given export.",
+            "name": "exportMappingCodes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportMappingCodes"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/exportMappingLinkedTypes": {
+      "put": {
+        "description": " <p><strong>OperationId:</strong>putExportMappingLinkedTypes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to update export mapping linked types.",
+        "operationId": "putExportMappingLinkedTypes",
+        "parameters": [
+          {
+            "description": "Request to fetch codes linked to export mapping codes.",
+            "name": "exportMappingLinkedTypes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportMappingLinkedTypes"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportMappingLinkedTypesDetails"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/exportMappings": {
+      "get": {
+        "description": " <p><strong>OperationId:</strong>getExportMappingsByChain</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export mappings by chain.",
+        "operationId": "getExportMappingsByChain",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+            "name": "hotelId",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "enum": [
+                "TransactionCodes",
+                "MarketCodes",
+                "PackageCodes",
+                "PaymentMethods",
+                "ProfileIdTypes",
+                "StatisticCodes",
+                "PropertyCodes",
+                "CountryCodes",
+                "NationalityCodes",
+                "StateCodes",
+                "DistrictCodes",
+                "CityCodes",
+                "CountryCities",
+                "PurposeOfStayCodes",
+                "TransportationCodes",
+                "CancelReasons",
+                "Gender",
+                "RoomTypes",
+                "IdCountryCodes"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Enumeration  of Types allowed for Export Mapping",
+            "name": "exportMappingConfigs",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch the export definitions for a given export.",
+            "schema": {
+              "$ref": "#/definitions/fetchExportMappings"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportMappingsByChain not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/exportSchedules": {
+      "post": {
+        "description": "Use this API to create export schedules. <p><strong>OperationId:</strong>postExportSchedules</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to create export schedules.",
+        "operationId": "postExportSchedules",
+        "parameters": [
+          {
+            "description": "Request to create export schedules",
+            "name": "exportSchedulesCriteria",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportSchedulesCriteria"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "delete": {
+        "description": "Use this API to delete export schedules based on the jobNames. <p><strong>OperationId:</strong>removeExportSchedules</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to remove export schedules.",
+        "operationId": "removeExportSchedules",
+        "parameters": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Unique name that identifies export schedule",
+            "name": "jobNames",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/exportSchedules/{exportFileId}": {
+      "put": {
+        "description": "Use this API to update export schedules for all hotels in a chain based on the exportFileIdId and exportSchedulesToBeChanged. <p><strong>OperationId:</strong>changeExportSchedulesByChain</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to change export schedules.",
+        "operationId": "changeExportSchedulesByChain",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of export file.",
+            "name": "exportFileId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request object for changing export schedules",
+            "name": "exportSchedulesToBeChanged",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportSchedulesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportSchedulesStatus"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/configTypes/{configType}/exportMappingCodesToLink": {
+      "get": {
+        "description": " <p><strong>OperationId:</strong>getExportMappingCodesToLink</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export mapping codes to link.",
+        "operationId": "getExportMappingCodesToLink",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Configuration Type.",
+            "name": "configType",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "The hotel code for the codes to fetch for linking.",
+            "name": "code",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "The hotel code for the codes to fetch for linking.",
+            "name": "description",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The codes for a given property which are to be linked to the mapping code.",
+            "schema": {
+              "$ref": "#/definitions/exportMappingCodesToLink"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportMappingCodesToLink not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportActivityLog": {
+      "get": {
+        "description": "Use this API to return activity logs for export data for a specific property based on search criteria such as hotelId, activityType, fromDate, toDate, limit, offset, module, parameterName, parameterValue, activityGroup, searchText, userByIds, userForIds.  <p><strong>OperationId:</strong>getExportActivityLog</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch activity logs for Export Data.",
+        "operationId": "getExportActivityLog",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "activityType",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "format": "date",
+            "description": "Search from date for the user activity log.",
+            "name": "fromDate",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "format": "date",
+            "description": "Search to date for the user activity log.",
+            "name": "toDate",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 0,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "name": "offset",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "Reservation",
+              "Contract",
+              "Allotment",
+              "Outlookview",
+              "Profile",
+              "Accountreceivables",
+              "GdsConvRateCodes",
+              "RateCode",
+              "Billing",
+              "Activity"
+            ],
+            "type": "string",
+            "description": "Activity module.",
+            "name": "module",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Name of the parameter.",
+            "name": "parameterName",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Value of the parameter.",
+            "name": "parameterValue",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "activityGroup",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Search text for the user activity log.",
+            "name": "searchText",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "maxItems": 4000,
+              "type": "integer"
+            },
+            "collectionFormat": "multi",
+            "name": "userByIds",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "maxItems": 4000,
+              "type": "integer"
+            },
+            "collectionFormat": "multi",
+            "name": "userForIds",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response object for the request for the export user activity log.",
+            "schema": {
+              "$ref": "#/definitions/exportActivityLog"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportActivityLog not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportMappingId/{exportMappingId}/exportMappings": {
+      "delete": {
+        "description": "Use this API to delete export mappings for a specific property based on the exportMappingId and the hotelId. <p><strong>OperationId:</strong>deleteExistingExportMappings</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to remove export mappings.",
+        "operationId": "deleteExistingExportMappings",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Export Mapping Id.",
+            "name": "exportMappingId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportMappingTypes/{exportMappingTypeId}/exportMappingCodes": {
+      "get": {
+        "description": " <p><strong>OperationId:</strong>getExportMappingCodes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export mapping codes.",
+        "operationId": "getExportMappingCodes",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Export Mapping Type Id.",
+            "name": "exportMappingTypeId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The details of the export mapping code being fetched.",
+            "schema": {
+              "$ref": "#/definitions/fetchExportMappingCodes"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportMappingCodes not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportMappings": {
+      "get": {
+        "description": " <p><strong>OperationId:</strong>getExportMappings</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export mappings.",
+        "operationId": "getExportMappings",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "enum": [
+                "TransactionCodes",
+                "MarketCodes",
+                "PackageCodes",
+                "PaymentMethods",
+                "ProfileIdTypes",
+                "StatisticCodes",
+                "PropertyCodes",
+                "CountryCodes",
+                "NationalityCodes",
+                "StateCodes",
+                "DistrictCodes",
+                "CityCodes",
+                "CountryCities",
+                "PurposeOfStayCodes",
+                "TransportationCodes",
+                "CancelReasons",
+                "Gender",
+                "RoomTypes",
+                "IdCountryCodes"
+              ],
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Enumeration  of Types allowed for Export Mapping",
+            "name": "exportMappingConfigs",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch the export definitions for a given export.",
+            "schema": {
+              "$ref": "#/definitions/fetchExportMappings"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportMappings not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "put": {
+        "description": " <p><strong>OperationId:</strong>putExportMappings</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to update export mappings.",
+        "operationId": "putExportMappings",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request to create export definitions for a given export.",
+            "name": "exportMappings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportMappings"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportMappingsDetails"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "description": " <p><strong>OperationId:</strong>postExportMappings</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to create export mappings.",
+        "operationId": "postExportMappings",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request to create export definitions for a given export.",
+            "name": "exportMappings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportMappings"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportMappings/linkedCodes": {
+      "get": {
+        "description": " <p><strong>OperationId:</strong>getExportMappingLinkedCodes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export mapping linked codes.",
+        "operationId": "getExportMappingLinkedCodes",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Additional identifying value assigned by the creating system.",
+            "name": "idExtension",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "idContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Linked code.",
+            "name": "codeToLink",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "TransactionCodes",
+              "MarketCodes",
+              "PackageCodes",
+              "PaymentMethods",
+              "ProfileIdTypes",
+              "StatisticCodes",
+              "PropertyCodes",
+              "CountryCodes",
+              "NationalityCodes",
+              "StateCodes",
+              "DistrictCodes",
+              "CityCodes",
+              "CountryCities",
+              "PurposeOfStayCodes",
+              "TransportationCodes",
+              "CancelReasons",
+              "Gender",
+              "RoomTypes",
+              "IdCountryCodes"
+            ],
+            "type": "string",
+            "description": "Enumeration  of Types allowed for Export Mapping",
+            "name": "configType",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch codes linked to export mapping codes.",
+            "schema": {
+              "$ref": "#/definitions/exportMappingLinkedCodes"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportMappingLinkedCodes not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportMappings/{exportMappingId}/mappingTypes/{mappingTypeCode}/exportMappingCodes": {
+      "delete": {
+        "description": " <p><strong>OperationId:</strong>deleteExportMappingCodes</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to remove export mapping codes.",
+        "operationId": "deleteExportMappingCodes",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Mapping Type Code.",
+            "name": "mappingTypeCode",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Export Mapping Id.",
+            "name": "exportMappingId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportSchedules": {
+      "get": {
+        "description": "Use this API to return export schedules for a specific property based on search criteria such as hotelId, timeZone, exportFileId, idExtension, idContext, type, exportGroup, exportName, startDate, endDate, frequency, includeInactive.  <p><strong>OperationId:</strong>getExportSchedules</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch export schedules.",
+        "operationId": "getExportSchedules",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Time zone hour and minute specified in the format TZH:TZM example:-05:00",
+            "name": "timeZone",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "name": "exportFileId",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Additional identifying value assigned by the creating system.",
+            "name": "idExtension",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "name": "idContext",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "Miscellaneous",
+              "Memberships",
+              "Country",
+              "BackOffice"
+            ],
+            "type": "string",
+            "description": "Enumeration of export file groups.",
+            "name": "exportGroup",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Export name to restrict export schedules",
+            "name": "exportName",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date",
+            "description": "Start Date to restrict export schedules",
+            "name": "startDate",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date",
+            "description": "End Date to restrict export schedules",
+            "name": "endDate",
+            "in": "query"
+          },
+          {
+            "uniqueItems": true,
+            "enum": [
+              "Once",
+              "Hourly",
+              "Daily",
+              "Weekly",
+              "Monthly",
+              "EndOfDay"
+            ],
+            "type": "string",
+            "description": "Frequency for which export schedules needs to be returned",
+            "name": "frequency",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Indicates whether inactive schedules needs to be returned or not",
+            "name": "includeInactive",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export Schedules collection matching the crieteria specified in the request",
+            "schema": {
+              "$ref": "#/definitions/exportSchedulesDetails"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportSchedules not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/exportSchedules/{exportFileId}": {
+      "put": {
+        "description": "Use this API to update export schedules for a specific property based on the hotelId, exportFileId, exportSchedulesToBeChanged. <p><strong>OperationId:</strong>changeExportSchedules</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to change export schedules.",
+        "operationId": "changeExportSchedules",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID that identifies a single hotel property.",
+            "name": "hotelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of export file.",
+            "name": "exportFileId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Request object for changing export schedules",
+            "name": "exportSchedulesToBeChanged",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exportSchedulesToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+            "schema": {
+              "$ref": "#/definitions/exportSchedulesStatus"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/{exportFileId}/generatedExports": {
+      "get": {
+        "description": " <p><strong>OperationId:</strong>getExportsGenerated</p>",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Export"
+        ],
+        "summary": "Operation to fetch exports generated.",
+        "operationId": "getExportsGenerated",
+        "parameters": [
+          {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique ID of export file.",
+            "name": "exportFileId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Unique ID of export data.",
+            "name": "exportDataId",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response object including a list of generated exports.",
+            "schema": {
+              "$ref": "#/definitions/generatedExports"
+            },
+            "headers": {
+              "Content-Language": {
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "type": "string",
+                "description": "Audience language"
+              }
+            }
+          },
+          "204": {
+            "description": "ExportsGenerated not found."
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "405": {
+            "description": "Method not allowed"
+          },
+          "406": {
+            "description": "Not acceptable."
+          },
+          "413": {
+            "description": "Request Entity Too Large"
+          },
+          "414": {
+            "description": "Request URI Too Large"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/exceptionDetailType"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "activityLogListType": {
+      "type": "object",
+      "properties": {
+        "activityLog": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/activityLogType"
+          }
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        }
+      }
+    },
+    "activityLogType": {
+      "type": "object",
+      "properties": {
+        "actionDescription": {
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "actionType": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "croCode": {
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "hotelId": {
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "iPAddress": {
+          "description": "The IP Address of the machine that performed the activity",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "logDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "logUserId": {
+          "type": "integer"
+        },
+        "logUserName": {
+          "type": "string"
+        },
+        "machineStation": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "refActionId": {
+          "type": "number"
+        }
+      }
+    },
+    "codeType": {
+      "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.",
+      "type": "string",
+      "maxLength": 20,
+      "minLength": 0
+    },
+    "errorInstance": {
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "title": "Error Instance Details",
+      "required": [
+        "type",
+        "title"
+      ],
+      "properties": {
+        "detail": {
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
+          "type": "string"
+        },
+        "o:errorCode": {
+          "description": "Application error code, which is different from HTTP error code.",
+          "type": "string"
+        },
+        "o:errorPath": {
+          "description": "Path to the problem at the resource or property level.",
+          "type": "string"
+        },
+        "status": {
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
+          "type": "string"
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "title": "Error Detail",
+      "required": [
+        "type",
+        "title"
+      ],
+      "properties": {
+        "detail": {
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
+          "type": "string"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "o:errorCode": {
+          "description": "Application error code, which is different from HTTP error code.",
+          "type": "string"
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "o:errorPath": {
+          "description": "Path to the problem at the resource or property level.",
+          "type": "string"
+        },
+        "status": {
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
+          "type": "string"
+        }
+      }
+    },
+    "expDataSourceColumnType": {
+      "description": "Information related to database columns",
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "description": "Database columns description",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "description": {
+          "description": "Database columns description",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "name": {
+          "description": "Database columns Name",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        }
+      }
+    },
+    "expDataSourceColumnsType": {
+      "description": "Function parameters",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/expDataSourceColumnType"
+      }
+    },
+    "expFunctionParamType": {
+      "description": "Parameters related to export functions",
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "description": "Parameter Type",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "name": {
+          "description": "Parameter Name",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "position": {
+          "description": "Paramter Position",
+          "type": "integer"
+        },
+        "required": {
+          "description": "Flag that determines whether parameter is required or not",
+          "type": "boolean"
+        }
+      }
+    },
+    "expFunctionType": {
+      "description": "Information related to export function",
+      "type": "object",
+      "properties": {
+        "functionName": {
+          "description": "Name of the function",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "functionParameter": {
+          "description": "Function parameters",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/expFunctionParamType"
+          }
+        }
+      }
+    },
+    "expFunctionsType": {
+      "description": "Function parameters",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/expFunctionType"
+      }
+    },
+    "exportActivityLog": {
+      "description": "Response object for the request for the export user activity log.",
+      "type": "object",
+      "properties": {
+        "activityLog": {
+          "description": "Collection of the list of Activities(Log) requested.",
+          "$ref": "#/definitions/activityLogListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportCodeDataType": {
+      "description": "Enumeration of export mapping types.",
+      "type": "string",
+      "enum": [
+        "Character",
+        "Date",
+        "Number"
+      ]
+    },
+    "exportColumnDetailType": {
+      "type": "object",
+      "properties": {
+        "columnAlignment": {
+          "description": "Column Alignment.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "columnDataType": {
+          "$ref": "#/definitions/exportColumnInfoType"
+        },
+        "columnFormat": {
+          "description": "Column format.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "columnLength": {
+          "description": "Length of the column.",
+          "type": "integer"
+        },
+        "columnName": {
+          "description": "Name of the column to Export.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "columnOrderBy": {
+          "description": "Order by column.",
+          "type": "integer"
+        },
+        "columnType": {
+          "description": "Type of the column.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "databaseColumn": {
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "description": "Default value of the column.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "exportDataId": {
+          "description": "The internal identifier of the export column. Used in conjunction with the export file ID to create a unique identifier.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "filter": {
+          "description": "Filter on the Additional Source View for XML Complex Elements.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "formula": {
+          "description": "Formula for the Formula Column.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "ignoreLength": {
+          "type": "boolean"
+        },
+        "parentColumnId": {
+          "description": "The internal identifier of the parent export column. This is used if the current column is a child of another column.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "sourceViewName": {
+          "description": "Name of an additional database view that the column, and its descendants, may be derived from. This column, and its descendants, may also be derived from the export header's source view, as well as any ancestor's source view.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "tagRequired": {
+          "type": "boolean"
+        },
+        "xMLAttribute": {
+          "type": "boolean"
+        },
+        "xMLColumnType": {
+          "description": "Indicates the type of XML Column.",
+          "$ref": "#/definitions/exportColumnXMLType"
+        }
+      }
+    },
+    "exportColumnInfoType": {
+      "description": "Enumeration of export file groups.",
+      "type": "string",
+      "enum": [
+        "Data",
+        "Header",
+        "Footer"
+      ]
+    },
+    "exportColumnLengthType": {
+      "description": "Type that determines the length of the export column",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Property Value",
+          "type": "integer"
+        },
+        "variable": {
+          "description": "If variable is true then value cannot be specified and value can be of variable length",
+          "type": "boolean"
+        }
+      }
+    },
+    "exportColumnXMLType": {
+      "description": "Enumeration of export column XML types.",
+      "type": "string",
+      "enum": [
+        "Simple",
+        "Complex",
+        "ComplexAddSource"
+      ]
+    },
+    "exportColumnsAndFunctionsDetails": {
+      "description": "Response that contains columns, pre post functions and export functions.",
+      "type": "object",
+      "properties": {
+        "columnsAndFunctions": {
+          "description": "Contains the list of available columns, pre post functions and export functions.",
+          "$ref": "#/definitions/exportColumnsAndFunctionsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportColumnsAndFunctionsType": {
+      "description": "Contains columns, pre post functions and export functions",
+      "type": "object",
+      "properties": {
+        "dbColumns": {
+          "description": "The list of export records.",
+          "$ref": "#/definitions/expDataSourceColumnsType"
+        },
+        "functions": {
+          "description": "List of db functions available for configuring export",
+          "$ref": "#/definitions/expFunctionsType"
+        },
+        "prePostFunctions": {
+          "description": "List of pre post functions available for this export or for the data source mentioned in the request",
+          "$ref": "#/definitions/expFunctionsType"
+        }
+      }
+    },
+    "exportColumnsType": {
+      "description": "A collection of export columns.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportColumnDetailType"
+      }
+    },
+    "exportComponentType": {
+      "description": "Details of a specific export component.",
+      "type": "object",
+      "properties": {
+        "containsSensitiveData": {
+          "description": "Indicates if the export has sensitive data",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "The description of the export.",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "exportFileId": {
+          "description": "The unique ID that identifies the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportSequence": {
+          "description": "Component export sequence",
+          "type": "integer"
+        },
+        "fileType": {
+          "description": "The file type of the export.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "parameterForm": {
+          "description": "The name of the parameter form used to collect runtime information.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        }
+      }
+    },
+    "exportComponentsType": {
+      "description": "A collection of export components.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportComponentType"
+      }
+    },
+    "exportConfigurationType": {
+      "description": "Type that hold configuration information related to export",
+      "type": "object",
+      "properties": {
+        "columns": {
+          "description": "Columns associated with the given export",
+          "$ref": "#/definitions/exportColumnsType"
+        },
+        "components": {
+          "description": "A listing of components associated with the given export.",
+          "$ref": "#/definitions/exportComponentsType"
+        },
+        "dataSetup": {
+          "description": "Details of processing data for export being setup.",
+          "$ref": "#/definitions/exportDataSetupType"
+        },
+        "destinationSetup": {
+          "description": "Details of the export's destination and format.",
+          "$ref": "#/definitions/exportDestinationType"
+        },
+        "generateConfigSetup": {
+          "description": "Details of how and when the export is to be executed.",
+          "$ref": "#/definitions/exportGenerateConfigurationType"
+        },
+        "summaryInfo": {
+          "description": "The summary information of the given export.",
+          "$ref": "#/definitions/exportHeaderSummaryType"
+        },
+        "xmlColumns": {
+          "description": "Columns associated with the xml export",
+          "$ref": "#/definitions/exportXMLColumnsType"
+        }
+      }
+    },
+    "exportDataSetupType": {
+      "description": "Details of processing data for export being setup.",
+      "type": "object",
+      "properties": {
+        "addNewLine": {
+          "description": "A flag to add new line character after every row of data generated.",
+          "type": "boolean"
+        },
+        "appendToFile": {
+          "description": "A flag to indicate if the data should be appended to an existing file.",
+          "type": "boolean"
+        },
+        "columnSeparator": {
+          "description": "Column separator of the export file.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "componentExport": {
+          "description": "A flag to indicate if this export contains export components.",
+          "type": "boolean"
+        },
+        "compressData": {
+          "description": "A flag to indicate if the export is compressed.",
+          "type": "boolean"
+        },
+        "createHeaderFooter": {
+          "description": "A flag to indicate if Export header and footer should always be created even if no data is generated.",
+          "type": "boolean"
+        },
+        "dataSourceName": {
+          "description": "The source view code.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "filterCondition": {
+          "description": "Where clause for the file to select data form the Source View.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "postExportProcedure": {
+          "description": "The code to execute after running the export, usually to clean up data.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "preExportProcedure": {
+          "description": "The code to execute prior to running the export in order to prepare the data.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "xMLDocumentTypeName": {
+          "description": "For XML exports this defines the optional document type name",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "xMLDocumentTypePublicId": {
+          "description": "For XML exports this defines the optional public id in doc type tag",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "xMLDocumentTypeSystemId": {
+          "description": "For XML exports this defines the optional system id in doc type tag",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "xMLEncoding": {
+          "description": "For XML exports this allows to add the encoding attribute to the xml file header.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "xMLProcessingInstructions": {
+          "description": "For XML exports this allows to add the additional processing instructions to the XML file header if needed.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "xMLRootTag": {
+          "description": "Main tag for the xml document",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        }
+      }
+    },
+    "exportDestinationType": {
+      "description": "Details of the export's destination and format.",
+      "type": "object",
+      "properties": {
+        "encryptionKey": {
+          "description": "Key that will be used during export file encryption; this is only needed if an Encryption Type has been specified.",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "encryptionType": {
+          "description": "Name of an encryption algorithm that will be used to encrypt an export file upon generation. This is used for the Default transport method.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "fileDeliveryConfig": {
+          "description": "Contains the file delivery configuration for an export.",
+          "$ref": "#/definitions/fileDeliveryConfigType"
+        },
+        "fileExtension": {
+          "description": "Formula used to generate the extension of the export file.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "fileName": {
+          "description": "Formula used to generate the name of the export file.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "httpAddress": {
+          "description": "URL address of HTTP server which received export file.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "oXIInterfaceId": {
+          "description": "Interface ID from OXI, required if UploadType is not available.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "protocol": {
+          "description": "Protocol used to upload the export file to HTTP server.",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "sOAPActionInformation": {
+          "description": "Soap Action information if SOAP protocol is used to upload the export file.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "transportMethod": {
+          "description": "Method of transport that will be used to deliver a generated export.",
+          "$ref": "#/definitions/transportMethodType"
+        },
+        "uploadType": {
+          "description": "Protocol used to upload the export file to FTP server.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "useOXIInterface": {
+          "description": "Specify if the OXI interface will be used for export file delivery.",
+          "type": "boolean"
+        },
+        "xMLDocumentName": {
+          "description": "Main tag for the XML document.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "zipFileLocation": {
+          "description": "The zip file location where the zip file is saved after being generated.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "zipFileName": {
+          "description": "The zip file name based on the formula used in the setup.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        }
+      }
+    },
+    "exportGenerateConfigurationType": {
+      "description": "Details of how and when the export is to be executed.",
+      "type": "object",
+      "properties": {
+        "autoExport": {
+          "description": "A flag to set export to generate automatically.",
+          "type": "boolean"
+        },
+        "nightAudit": {
+          "description": "A flag to set export to be run in Night Audit.",
+          "type": "object",
+          "properties": {
+            "nightAuditExportDetail": {
+              "description": "Day of the week, when the export routine is run in the night audit and the NA_FREQUENCY is set to 'Day of Week'.",
+              "type": "string",
+              "maxLength": 20,
+              "minLength": 0
+            },
+            "nightAuditFrequency": {
+              "description": "The frequency at which export should be generated. Eg. Nightly, End of Month or End of Year.",
+              "type": "string",
+              "maxLength": 20,
+              "minLength": 0
+            },
+            "runInNightAudit": {
+              "description": "A flag to set export to be run in Night Audit.",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "exportHeaderSummaryType": {
+      "description": "Details of one export.",
+      "type": "object",
+      "properties": {
+        "containsSensitiveData": {
+          "description": "Indicates if the export has sensitive data",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "The description of the export.",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "exportFileId": {
+          "description": "The unique ID that identifies the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportSequence": {
+          "description": "Component export sequence",
+          "type": "integer"
+        },
+        "exportType": {
+          "description": "The group that the export belongs to.",
+          "$ref": "#/definitions/exportType"
+        },
+        "exportXml": {
+          "description": "Indicates if the export is an XML file",
+          "type": "boolean"
+        },
+        "fileType": {
+          "description": "The file type of the export.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "hotelId": {
+          "description": "The hotel code for the export.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "inactive": {
+          "description": "An indicator which show the active status of the export.",
+          "type": "boolean"
+        },
+        "logLevel": {
+          "description": "Internal number to indicate the log level used when generating the export.",
+          "type": "integer"
+        },
+        "masterExportId": {
+          "description": "The parent export Id if this export has one.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "parameterForm": {
+          "description": "The name of the parameter form used to collect runtime information.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "sourceDescription": {
+          "description": "The description of the source file of the export.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        }
+      }
+    },
+    "exportListType": {
+      "description": "Contains a collection of available export records.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "export": {
+          "description": "The list of export records.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportConfigurationType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        }
+      }
+    },
+    "exportMappingCodeType": {
+      "description": "Details of one export.",
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "description": "Data type of the export mapping code.",
+          "$ref": "#/definitions/exportCodeDataType"
+        },
+        "description": {
+          "description": "Description of the export mapping code.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "exportMappingId": {
+          "description": "Primary key for this mapping type, internal ID.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "lovName": {
+          "description": "Name of the LOV group to be used.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "mappingTypeCode": {
+          "description": "Code for the export mapping type.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "required": {
+          "description": "This flag indicates the configuration item cannot be saved until a mapping for this mapping detail has been entered.",
+          "type": "boolean"
+        },
+        "sequenceNumber": {
+          "description": "Display sequence.",
+          "type": "number"
+        },
+        "useLov": {
+          "description": "This flag show LOV button when linking this mapping code to the configuration item.",
+          "type": "boolean"
+        }
+      }
+    },
+    "exportMappingCodes": {
+      "description": "Request to create export mapping code for a given export.",
+      "type": "object",
+      "properties": {
+        "exportMappingCodes": {
+          "description": "The details of the export mapping code being created.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingCodeType"
+          }
+        },
+        "hotelId": {
+          "description": "The hotel code for the export.",
+          "$ref": "#/definitions/codeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingCodesDetails": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingCodesToLink": {
+      "type": "object",
+      "properties": {
+        "codesToLink": {
+          "description": "The codes for a given property which are to be linked to the mapping code.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingCodesToLinkType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingCodesToLinkType": {
+      "description": "Details of code which is being mapped.",
+      "type": "object",
+      "properties": {
+        "codeToLink": {
+          "description": "The code with which the mapping is linked to in the external system.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "codeToLinkDescription": {
+          "description": "The description of code with which the mapping is linked to in the external system.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "configType": {
+          "description": "Configuration item this export mapping type applies to.",
+          "$ref": "#/definitions/exportMappingConfigType"
+        },
+        "sequenceNumber": {
+          "description": "Display sequence.",
+          "type": "number"
+        }
+      }
+    },
+    "exportMappingConfigType": {
+      "description": "Enumeration  of Types allowed for Export Mapping",
+      "type": "string",
+      "enum": [
+        "TransactionCodes",
+        "MarketCodes",
+        "PackageCodes",
+        "PaymentMethods",
+        "ProfileIdTypes",
+        "StatisticCodes",
+        "PropertyCodes",
+        "CountryCodes",
+        "NationalityCodes",
+        "StateCodes",
+        "DistrictCodes",
+        "CityCodes",
+        "CountryCities",
+        "PurposeOfStayCodes",
+        "TransportationCodes",
+        "CancelReasons",
+        "Gender",
+        "RoomTypes",
+        "IdCountryCodes"
+      ]
+    },
+    "exportMappingLinkedCodeType": {
+      "description": "Details of linked code.",
+      "type": "object",
+      "properties": {
+        "defaultMappedValue": {
+          "description": "Default value.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "exportMappingCode": {
+          "description": "Mapping code attached to linked code.",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        },
+        "exportMappingId": {
+          "description": "Mapping id associated with linked code.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "linkedCode": {
+          "description": "Linked code.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "lovName": {
+          "description": "Name of the LOV group to be used.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        },
+        "mappedValue": {
+          "description": "Linked code.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "mappingCodeDescription": {
+          "description": "Description of the export mapping code.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "mappingTypeDescription": {
+          "description": "Description of the export mapping type.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        }
+      }
+    },
+    "exportMappingLinkedCodes": {
+      "description": "Response to fetch codes linked to export mapping codes.",
+      "type": "object",
+      "properties": {
+        "linkedCodes": {
+          "description": "The linked codes for the given hotel.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingLinkedCodeType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "masterInfo": {
+          "description": "The information details about the mapping code and mapping type.",
+          "$ref": "#/definitions/exportMappingMasterInfoType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingLinkedTypes": {
+      "description": "Request to fetch codes linked to export mapping codes.",
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "The hotel code associated with the linked codes.",
+          "$ref": "#/definitions/codeType"
+        },
+        "linkedCodes": {
+          "description": "The linked codes for the given hotel.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingLinkedCodeType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingLinkedTypesDetails": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingMasterInfoType": {
+      "description": "Contains information about the various mapping types and the mapping codes.",
+      "type": "object",
+      "properties": {
+        "mappingCodes": {
+          "description": "Provides information about the mapping type.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportMappingCodeType"
+          }
+        },
+        "mappingCodesCount": {
+          "type": "integer"
+        },
+        "mappingTypes": {
+          "description": "Provides information about the mapping type.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/exportMappingType"
+          }
+        },
+        "mappingTypesCount": {
+          "type": "integer"
+        }
+      }
+    },
+    "exportMappingType": {
+      "description": "Details of one export.",
+      "type": "object",
+      "properties": {
+        "configType": {
+          "description": "Configuration item this export mapping type applies to.",
+          "$ref": "#/definitions/exportMappingConfigType"
+        },
+        "description": {
+          "description": "Description of the export mapping type.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "exportMappingId": {
+          "description": "Primary key for this mapping type, internal ID.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "hasDefaultValue": {
+          "description": "Specify whether the mapping type has default value.",
+          "type": "boolean"
+        },
+        "mappingType": {
+          "description": "Code for the export mapping type.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        }
+      }
+    },
+    "exportMappings": {
+      "description": "Request to create export definitions for a given export.",
+      "type": "object",
+      "properties": {
+        "exportMapping": {
+          "description": "The details of the export definition being created.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingType"
+          }
+        },
+        "hotelId": {
+          "description": "The hotel code for the export.",
+          "$ref": "#/definitions/codeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportMappingsDetails": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportScheduleEODRepeatIntervalType": {
+      "description": "Frequency for which export schedules needs to be run during EOD",
+      "type": "string",
+      "enum": [
+        "Daily",
+        "Weekly",
+        "Monthly",
+        "Yearly"
+      ]
+    },
+    "exportScheduleFrequencyByHourType": {
+      "description": "Specifies the hour on which the job is to run. Valid values are 0 to 23.",
+      "type": "integer",
+      "maximum": 23,
+      "minimum": 0
+    },
+    "exportScheduleFrequencyDailyType": {
+      "description": "If specified then export is scheduled to run daily",
+      "type": "object",
+      "properties": {
+        "hour": {
+          "description": "Specifies the hour on which the job is to run. Valid values are 0 to 23.",
+          "$ref": "#/definitions/exportScheduleFrequencyByHourType"
+        },
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        }
+      }
+    },
+    "exportScheduleFrequencyEODType": {
+      "description": "If specified then export is scheduled to run during end of day",
+      "type": "object",
+      "properties": {
+        "friday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "repeatInterval": {
+          "description": "Frequency for which export schedules needs to be run during EOD",
+          "$ref": "#/definitions/exportScheduleEODRepeatIntervalType"
+        },
+        "saturday": {
+          "type": "boolean"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exportScheduleFrequencyHourlyType": {
+      "description": "If specified then export is scheduled to run at hourly intervals",
+      "type": "object",
+      "properties": {
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        }
+      }
+    },
+    "exportScheduleFrequencyIntervalType": {
+      "description": "Interval at which export needs to be scheduled",
+      "type": "integer",
+      "maximum": 99,
+      "minimum": 1
+    },
+    "exportScheduleFrequencyMonthlyType": {
+      "description": "If specified then export is scheduled to run Monthly",
+      "type": "object",
+      "properties": {
+        "friday": {
+          "type": "boolean"
+        },
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "weekToRepeat": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 5 or -1",
+          "$ref": "#/definitions/exportScheduleWeekToRepeatType"
+        }
+      }
+    },
+    "exportScheduleFrequencyOnceType": {
+      "description": "If specified then export is scheduled to run only once",
+      "type": "object",
+      "properties": {
+        "runAt": {
+          "description": "Export will be generated using the date and time specified. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        }
+      }
+    },
+    "exportScheduleFrequencyType": {
+      "description": "Frequency at which exports is scheduled to run",
+      "type": "object",
+      "properties": {
+        "daily": {
+          "description": "Run Daily",
+          "$ref": "#/definitions/exportScheduleFrequencyDailyType"
+        },
+        "endOfDay": {
+          "description": "Run during end of day",
+          "$ref": "#/definitions/exportScheduleFrequencyEODType"
+        },
+        "hourly": {
+          "description": "Run Hourly",
+          "$ref": "#/definitions/exportScheduleFrequencyHourlyType"
+        },
+        "monthly": {
+          "description": "Run Monthly",
+          "$ref": "#/definitions/exportScheduleFrequencyMonthlyType"
+        },
+        "once": {
+          "description": "Run only once",
+          "$ref": "#/definitions/exportScheduleFrequencyOnceType"
+        },
+        "weekly": {
+          "description": "Run Weeekly",
+          "$ref": "#/definitions/exportScheduleFrequencyWeeklyType"
+        }
+      }
+    },
+    "exportScheduleFrequencyWeeklyType": {
+      "description": "If specified then export is scheduled to run Weekly",
+      "type": "object",
+      "properties": {
+        "friday": {
+          "type": "boolean"
+        },
+        "interval": {
+          "description": "Determines how often the export needs to run. Value needs to be between 1 and 99",
+          "$ref": "#/definitions/exportScheduleFrequencyIntervalType"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exportScheduleJobNameType": {
+      "description": "Unique name that identifies export schedule",
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 0
+    },
+    "exportScheduleType": {
+      "description": "Type that holds all the information related to export schedule",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "description": "User who created the export schedule",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "Export schedule is expected to end around this time. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        },
+        "exportDescription": {
+          "description": "Export Description",
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 0
+        },
+        "exportFileId": {
+          "description": "Unique Id that identifies export",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "exportGroup": {
+          "description": "Export category",
+          "$ref": "#/definitions/scheduleExportGroupType"
+        },
+        "exportName": {
+          "description": "Name of the export",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "frequency": {
+          "description": "Frequency at which export needs to be scheduled",
+          "$ref": "#/definitions/exportScheduleFrequencyType"
+        },
+        "inactive": {
+          "description": "Indicates whether schedule export is active or not",
+          "type": "boolean"
+        },
+        "jobName": {
+          "description": "Unique name that identifies export schedule",
+          "$ref": "#/definitions/exportScheduleJobNameType"
+        },
+        "nextScheduledRun": {
+          "description": "Export is expected to run at time specified by this element. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        },
+        "runcount": {
+          "description": "Number of time export generated",
+          "type": "integer"
+        },
+        "startDate": {
+          "description": "Export scheduled started at this time. Time will be specified in the format dd-MM-yyyy:hh:mm:ss a Z",
+          "type": "string"
+        },
+        "status": {
+          "description": "Export schedule status",
+          "type": "string"
+        }
+      }
+    },
+    "exportScheduleWeekToRepeatType": {
+      "description": "Frequency for which export schedules needs to be returned",
+      "type": "string",
+      "enum": [
+        "First",
+        "Second",
+        "Third",
+        "Fourth",
+        "Fifth",
+        "Last"
+      ]
+    },
+    "exportSchedulesConfigType": {
+      "description": "Export schedules information that are required to configure schedules",
+      "type": "object",
+      "properties": {
+        "exportSchedules": {
+          "description": "Export Schedule",
+          "$ref": "#/definitions/exportSchedulesType"
+        },
+        "timeZone": {
+          "description": "Time zone hour and minute specified in the format TZH:TZM example:-05:00",
+          "type": "string"
+        }
+      }
+    },
+    "exportSchedulesCriteria": {
+      "description": "Request to create export schedules",
+      "type": "object",
+      "properties": {
+        "exportScheduleConfig": {
+          "description": "Collection of export schedules",
+          "$ref": "#/definitions/exportSchedulesConfigType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesDetails": {
+      "description": "Export Schedules collection matching the crieteria specified in the request",
+      "type": "object",
+      "properties": {
+        "exportSchedules": {
+          "description": "Collection of export schedules",
+          "$ref": "#/definitions/exportSchedulesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesStatus": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesToBeChanged": {
+      "description": "Request object for changing export schedules",
+      "type": "object",
+      "properties": {
+        "exportScheduleConfig": {
+          "description": "Collection of export schedules",
+          "$ref": "#/definitions/exportSchedulesConfigType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "exportSchedulesType": {
+      "description": "Export Schedule",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportScheduleType"
+      }
+    },
+    "exportType": {
+      "description": "Enumeration of export file groups.",
+      "type": "string",
+      "enum": [
+        "Miscellaneous",
+        "Memberships",
+        "Country",
+        "Delphi",
+        "BackOffice",
+        "BackOfficeRevenue",
+        "BackOfficeCityLedger",
+        "BackOfficeMarketStatistics",
+        "BackOfficeDailyStatistics",
+        "CommissionEft"
+      ]
+    },
+    "exportXMLAttributeType": {
+      "description": "Base type that holds information related to xml tag types",
+      "type": "object",
+      "properties": {
+        "exportDataId": {
+          "description": "Id assosicated with this tag. For the ones that needs to be created this tag can be omitted for all others this tag is required",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "length": {
+          "description": "Determines the length of the value for the XML tag",
+          "$ref": "#/definitions/exportColumnLengthType"
+        },
+        "name": {
+          "description": "XML Tag name",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "parentDataID": {
+          "description": "Id of the parrent that holds this tag. If this tag is clid of root tag then this can be omitted.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "required": {
+          "description": "Determines if the tag need to be present in the data even if there is no value available",
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Value for XML tag",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        }
+      }
+    },
+    "exportXMLAttributesType": {
+      "description": "XML attribute type that holds all the information related to attribute tag",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportXMLAttributeType"
+      }
+    },
+    "exportXMLColumnsType": {
+      "description": "XML Columns type that hold information to all the element and attribute configuations",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "description": "Attributes associated with the complex type",
+          "$ref": "#/definitions/exportXMLAttributesType"
+        },
+        "elements": {
+          "description": "Elements associated with the complex type",
+          "$ref": "#/definitions/exportXMLElementsType"
+        }
+      }
+    },
+    "exportXMLComplexType": {
+      "description": "XML simple type that holds all the information related to complex element tag",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "description": "Attributes associated with the complex type",
+          "$ref": "#/definitions/exportXMLAttributesType"
+        },
+        "elements": {
+          "description": "Elements associated with the complex type",
+          "$ref": "#/definitions/exportXMLElementsType"
+        },
+        "name": {
+          "description": "XML simple tag name",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        }
+      }
+    },
+    "exportXMLComplexWithSourceType": {
+      "description": "XML simple type that holds all the information related to complex element tag",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "description": "Attributes associated with the complex type",
+          "$ref": "#/definitions/exportXMLAttributesType"
+        },
+        "elements": {
+          "description": "Elements associated with the complex type",
+          "$ref": "#/definitions/exportXMLElementsType"
+        },
+        "filter": {
+          "description": "Filter data using this attribute",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "name": {
+          "description": "XML simple tag name",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "source": {
+          "description": "Source from where data needs to be extracted",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0
+        }
+      }
+    },
+    "exportXMLElementType": {
+      "description": "Type that holds all attributes associated with this tag together",
+      "type": "object",
+      "properties": {
+        "complexElement": {
+          "description": "XML complex element type that holds all the information related to complex element tag",
+          "$ref": "#/definitions/exportXMLComplexType"
+        },
+        "complexElementWithSource": {
+          "description": "XML complex element type that holds all the information related to complex element with source tag",
+          "$ref": "#/definitions/exportXMLComplexWithSourceType"
+        },
+        "simpleElement": {
+          "description": "XML simple element type that holds all the information related to simple element tag",
+          "$ref": "#/definitions/exportXMLSimpleType"
+        }
+      }
+    },
+    "exportXMLElementsType": {
+      "description": "XML element type that holds all the information related to element tag",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/exportXMLElementType"
+      }
+    },
+    "exportXMLSimpleType": {
+      "description": "Base type that holds information related to xml tag types",
+      "type": "object",
+      "properties": {
+        "exportDataId": {
+          "description": "Id assosicated with this tag. For the ones that needs to be created this tag can be omitted for all others this tag is required",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "length": {
+          "description": "Determines the length of the value for the XML tag",
+          "$ref": "#/definitions/exportColumnLengthType"
+        },
+        "name": {
+          "description": "XML Tag name",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "parentDataID": {
+          "description": "Id of the parrent that holds this tag. If this tag is clid of root tag then this can be omitted.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "required": {
+          "description": "Determines if the tag need to be present in the data even if there is no value available",
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Value for XML tag",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        }
+      }
+    },
+    "exportsAvailable": {
+      "description": "Response object including a list of available exports.",
+      "type": "object",
+      "properties": {
+        "exports": {
+          "description": "Contains the list of available exports.",
+          "$ref": "#/definitions/exportListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fetchExportMappingCodes": {
+      "type": "object",
+      "properties": {
+        "exportMappingCodes": {
+          "description": "The details of the export mapping code being fetched.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingCodeType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fetchExportMappings": {
+      "description": "Response to fetch the export definitions for a given export.",
+      "type": "object",
+      "properties": {
+        "exportMappings": {
+          "description": "The export file ID to delete definition.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exportMappingType"
+          }
+        },
+        "hotelId": {
+          "description": "The hotel code for the export.",
+          "$ref": "#/definitions/codeType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fileDeliveryCommunicationType": {
+      "description": "Enumeration of export file groups.",
+      "type": "string",
+      "enum": [
+        "Ftp",
+        "SftpPublicKey",
+        "SftpPassword",
+        "SftpCn",
+        "Http",
+        "FileSystem"
+      ]
+    },
+    "fileDeliveryConfigType": {
+      "type": "object",
+      "properties": {
+        "communicationType": {
+          "description": "Communication type: FTP, HTTP or FILE_SYSTEM.",
+          "$ref": "#/definitions/fileDeliveryCommunicationType"
+        },
+        "compressFile": {
+          "description": "Whether to compress the file before delivery.",
+          "type": "boolean"
+        },
+        "deliveryStatus": {
+          "description": "Status of the last delivery.",
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 0
+        },
+        "deliveryTime": {
+          "description": "Time of day at which the file will be attempted to deliver, if desired.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "directory": {
+          "description": "Directory to which the file is delivered while using FTP or FILE_SYSTEM.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "enableSafeCreate": {
+          "description": "Whether to create a temporary file and move it to actual file once entire data is written to the file (to prevent consumers from reading incomplete files).",
+          "type": "boolean"
+        },
+        "hostURL": {
+          "description": "Host address for FTP or URL for HTTP.",
+          "type": "string",
+          "maxLength": 250,
+          "minLength": 0
+        },
+        "password": {
+          "description": "Password to authenticate while connecting through FTP or HTTP.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "retryCount": {
+          "description": "Number of delivery attempts to be made each day, in case of failures.",
+          "type": "number"
+        },
+        "retryInterval": {
+          "description": "Number of seconds to wait between delivery attempts in case of failures.",
+          "type": "number"
+        },
+        "sOAPAction": {
+          "description": "For SOAP version 1.1, value of SOAPAction to be passed.",
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 0
+        },
+        "sOAPVersion": {
+          "description": "Version of SOAP protocol to use.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "tempDirectory": {
+          "description": "In safe create mode, original directory where the file should be created.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "useAsciiTransfer": {
+          "description": "Whether to transfer the file in ASCII or binary mode.",
+          "type": "boolean"
+        },
+        "useSOAPProtocol": {
+          "description": "Whether to deliver the file using SOAP protocol.",
+          "type": "boolean"
+        },
+        "userId": {
+          "description": "User id to authenticate while connecting through FTP or HTTP.",
+          "type": "string",
+          "maxLength": 30,
+          "minLength": 0
+        },
+        "validAuthentication": {
+          "description": "Indicates if the authentication information in this configuration is valid.",
+          "type": "boolean"
+        },
+        "validUpdateDate": {
+          "description": "Date and time when the last validation of connection information was performed.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "generatedExportListType": {
+      "description": "Contains a collection of available export instance records.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "exportDataHeader": {
+          "description": "The list of export instance records.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/generatedExportType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        }
+      }
+    },
+    "generatedExportStatusType": {
+      "description": "Status indicates whether job is running or not",
+      "type": "string",
+      "enum": [
+        "InQueue",
+        "Running",
+        "Completed",
+        "Failed"
+      ]
+    },
+    "generatedExportType": {
+      "description": "Information of one generated export.",
+      "type": "object",
+      "properties": {
+        "checksumEnabled": {
+          "description": "A flag that shows whether the checksum functionality is enabled.",
+          "type": "boolean"
+        },
+        "dataFromDate": {
+          "description": "The beginning date for the export.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "dataHeader": {
+          "description": "The unique ID that identifies the export.",
+          "$ref": "#/definitions/exportHeaderSummaryType"
+        },
+        "dataToDate": {
+          "description": "The ending date for the export.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "exportDataId": {
+          "description": "The unique ID that identifies this instance of the export.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "generatedDate": {
+          "description": "The date that the export was generated.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "generatedErrors": {
+          "description": "The errors generated during the export.",
+          "type": "string",
+          "maxLength": 4000,
+          "minLength": 0
+        },
+        "generatedFileExtension": {
+          "description": "The generated file extension.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "generatedFileLocation": {
+          "description": "The generated file location.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "generatedFileName": {
+          "description": "The generated file name.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        },
+        "generatedFilePath": {
+          "description": "The generated file path.",
+          "type": "string",
+          "maxLength": 4000,
+          "minLength": 0
+        },
+        "hTTPUpload": {
+          "description": "A flag to indicate if export file has to be uploaded automatically by IAS to HTTP site",
+          "type": "boolean"
+        },
+        "hasCreditCardData": {
+          "description": "A flag that shows whether the there is credit card information in the export. Certain restrictions apply when this is detected.",
+          "type": "boolean"
+        },
+        "jobCompleted": {
+          "description": "A Flag that indicates whether job completed succesfully or not.",
+          "type": "boolean"
+        },
+        "status": {
+          "description": "The current status of the export",
+          "$ref": "#/definitions/generatedExportStatusType"
+        },
+        "totalRecords": {
+          "description": "The total number of records generated.",
+          "type": "integer"
+        },
+        "zipFileName": {
+          "description": "The zip file name based on the formula used in the setup.",
+          "type": "string",
+          "maxLength": 2000,
+          "minLength": 0
+        }
+      }
+    },
+    "generatedExports": {
+      "description": "Response object including a list of generated exports.",
+      "type": "object",
+      "properties": {
+        "generatedExports": {
+          "description": "Contains the list of available exports.",
+          "$ref": "#/definitions/generatedExportListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "instanceLink": {
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "type": "object",
+      "required": [
+        "href",
+        "rel",
+        "method",
+        "operationId"
+      ],
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "operaVersionNumberType": {
+      "description": "Current Opera Version Number",
+      "type": "string",
+      "maxLength": 40,
+      "minLength": 0
+    },
+    "scheduleExportGroupType": {
+      "description": "Enumeration of export file groups.",
+      "type": "string",
+      "enum": [
+        "Miscellaneous",
+        "Memberships",
+        "Country",
+        "BackOffice"
+      ]
+    },
+    "status": {
+      "description": "Existing Operations Responses will eventually be modified to be extended from this type.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "transportMethodType": {
+      "description": "Enumeration of transport methods used to deliver exports.",
+      "type": "string",
+      "enum": [
+        "Ftp",
+        "Sftp",
+        "SftpCn",
+        "Http",
+        "FileSystem",
+        "Default"
+      ]
+    },
+    "uniqueID_Type": {
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "maxLength": 80,
+          "minLength": 0
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 0
+        }
+      }
+    },
+    "warningType": {
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "maxLength": 8,
+          "minLength": 1
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 0
+        },
+        "value": {
+          "description": "Property Value",
+          "type": "string"
+        }
+      }
+    },
+    "warningsType": {
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "The Export Service provides operations used by Opera to configure and generate file exports of Opera data.",
+      "name": "Export"
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
