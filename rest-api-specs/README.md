@@ -6,7 +6,7 @@ An easy to read version is available here: [Oracle Hospitality Integration Platf
 
 ## Get Help
 
-Ask questions on by sending us an email to <hospitality_apis_ww_group@oracle.com>.
+Ask questions on by sending us an email to <hospitality-integrations_ww@oracle.com>.
 
 ## Get Involved
 
