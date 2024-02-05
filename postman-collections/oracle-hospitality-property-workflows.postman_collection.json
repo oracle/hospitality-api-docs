@@ -1,18 +1,18 @@
 {
 	"info": {
-		"_postman_id": "220b637d-2f5c-4627-817d-51cfdb176a77",
+		"_postman_id": "bb991839-e27c-40d6-b731-eb65d4433ddd",
 		"name": "2. Property REST API Workflows",
-		"description": "#### ORACLE Hospitality OPERA Cloud Rest APIs\r\n\r\nThis Postman Collection offers many API call samples on how to perform different functional workflows against Oracle Hospitality REST APIs and OHIP (e.g. digital check-in and checkout). For more information visit [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/). \r\n\r\nNew to OHIP?  Watch this free on demand video about [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  \r\n\r\nTo find out more about this Postman collection watch this free on demand video [Understanding Apiary Documentation & Postman Collections](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  \r\n\r\nNote that some of the APIs in this Postman collection are Early Adopter APIs (v0).  To find out about becoming an Early Adopter watch this free on demand video [Why be an OHIP Early Adopter](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  \r\n\r\nExplanations of the common workflows are available in [this workflows document](https://github.com/oracle/hospitality-api-docs/blob/main/postman-collections/WORKFLOWS.md).  \r\n\r\nThis document and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl). Copyright c 2021 Oracle and/or its affiliates.",
+		"description": "#### ORACLE Hospitality OPERA Cloud Rest APIs\r\n\r\nThis Postman Collection offers many API call samples on how to perform different functional workflows against Oracle Hospitality REST APIs and OHIP (e.g. digital check-in and checkout). For more information visit [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/). \r\n\r\nNew to OHIP?  Watch this free on demand video about [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  \r\n\r\nTo find out more about this Postman collection watch this free on demand video [Understanding Apiary Documentation & Postman Collections](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).  \r\n\r\nExplanations of the common workflows are available in [this workflows document](https://github.com/oracle/hospitality-api-docs/blob/main/postman-collections/WORKFLOWS.md).  \r\n\r\nThis document and all content within is available under the [Universal Permissive License v 1.0](http://oss.oracle.com/licenses/upl). Copyright c 2021,2024 Oracle and/or its affiliates.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15729853",
-		"_collection_link": "https://hospitalityapis.postman.co/workspace/Team-Workspace~f6e529a2-8cdb-43d1-8526-1aa5d61f48e4/collection/15729853-220b637d-2f5c-4627-817d-51cfdb176a77?action=share&source=collection_link&creator=15729853"
+		"_collection_link": "https://hospitalityapis.postman.co/workspace/Team-Workspace~f6e529a2-8cdb-43d1-8526-1aa5d61f48e4/collection/15729853-bb991839-e27c-40d6-b731-eb65d4433ddd?action=share&source=collection_link&creator=15729853"
 	},
 	"item": [
 		{
 			"name": "OAuth Token",
 			"item": [
 				{
-					"name": "Get OAuth Token //initialiize currentdate",
+					"name": "Get OAuth Token for Resource Owner environments",
 					"event": [
 						{
 							"listen": "test",
@@ -23,7 +23,11 @@
 									"//Set currentdate and currentdateplus1 variables\r",
 									"var moment = require('moment');\r",
 									"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
-									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))"
+									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))\r",
+									"var uuid = require('uuid');\r",
+									"var myUUID = uuid.v4();\r",
+									"pm.environment.set(\"MyGUID\", myUUID);\r",
+									"pm.environment.set(\"HashedAppKey\", CryptoJS.SHA256(pm.environment.get(\"AppKey\")).toString());"
 								],
 								"type": "text/javascript"
 							}
@@ -53,6 +57,92 @@
 									"value": false,
 									"type": "boolean"
 								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-app-key",
+								"type": "text",
+								"value": "{{AppKey}}"
+							},
+							{
+								"key": "enterpriseId",
+								"value": "{{EnterpriseId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{Username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{Password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostName}}/oauth/v1/tokens",
+							"host": [
+								"{{HostName}}"
+							],
+							"path": [
+								"oauth",
+								"v1",
+								"tokens"
+							]
+						},
+						"description": "Use this API to request an oAuth token when the environment is a Resource Owner environment. You can see which oAuth flow an environment supports by looking at the Environment page in the OHIP Developer Portal. For more information see (Authenticating to Oracle Hospitality Property APIs)\\[[https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80](https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80)\\] under the heading \"Resource Owner-Based Authentication\".\n\nTo call this API you will need:\n\n1. To know the environment is a Resource Owner environment - see above\n    \n2. A valid ClientId and ClientSecret\n    \n3. An integration user and its password that has been approved by the environment owner\n    \n4. A valid application key\n    \n\nBecause of this, oAuth tokens may only be used when calling the given environment.\n\noAuth tokens expire after 60 minutes. We recommend obtaining a new oAuth token every 50 minutes, but not more frequently."
+					},
+					"response": []
+				},
+				{
+					"name": "Get OAuth Token for Client Credentials environments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);\r",
+									"//Set currentdate and currentdateplus1 variables\r",
+									"var moment = require('moment');\r",
+									"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))\r",
+									"var uuid = require('uuid');\r",
+									"var myUUID = uuid.v4();\r",
+									"pm.environment.set(\"MyGUID\", myUUID);\r",
+									"pm.environment.set(\"HashedAppKey\", CryptoJS.SHA256(pm.environment.get(\"AppKey\")).toString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "undefined",
+									"type": "any"
+						}
 							]
 						},
 						"method": "POST",
@@ -99,7 +189,8 @@
 								"v1",
 								"tokens"
 							]
-						}
+						},
+						"description": "Use this API to request an oAuth token when the environment is a Client Credentials environment. You can see which oAuth flow an environment supports by looking at the Environment page in the OHIP Developer Portal. For more information see (Authenticating to Oracle Hospitality Property APIs)\\[[https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80](https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80)\\] under the heading \"Client Credentials-Based Authentication\".\n\nTo call this API you will need:\n\n1. To know the environment is a Client Credentials environment - see above\n2. A valid ClientId and ClientSecret\n3. A valid EnterpriseId\n    \n4. A valid application key\n    \n\nBecause of this, oAuth tokens may only be used when calling the given environment.\n\noAuth tokens expire after 60 minutes. We recommend obtaining a new oAuth token every 50 minutes, but not more frequently."
 					},
 					"response": []
 				}
@@ -740,13 +831,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/packages?includeGroup=true&sellSeparate=true&startDate=2022-03-16&endDate=2022-03-21&adults=1&children=0&fetchInstructions=Header&fetchInstructions=CalculatedPrice&fetchInstructions=Items&ticketPostingRhythm=true&hotelId={{HotelId}}",
+									"raw": "{{HostName}}/rtp/v1/packages?includeGroup=true&sellSeparate=true&startDate=2022-03-16&endDate=2022-03-21&adults=1&children=0&fetchInstructions=Header&fetchInstructions=CalculatedPrice&fetchInstructions=Items&ticketPostingRhythm=true&hotelId={{HotelId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"packages"
 									],
 									"query": [
@@ -842,13 +933,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/tickets",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/tickets",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -905,13 +996,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/tickets?retrieveIssuedOnly=false&retrieveNotIssuedOnly=false",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/tickets?retrieveIssuedOnly=false&retrieveNotIssuedOnly=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -975,13 +1066,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/tickets",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/tickets",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -1521,13 +1612,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/reservations/{{ReservationId}}/split",
+									"raw": "{{HostName}}/rsv/v1/reservations/{{ReservationId}}/split",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"reservations",
 										"{{ReservationId}}",
 										"split"
@@ -1570,13 +1661,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/linkedSummary",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/linkedSummary",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -1867,13 +1958,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/rooms?roomType=SUP&hotelRoomStatus=Inspected&hotelRoomFrontOfficeStatus=Vacant",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/rooms?roomType=SUP&hotelRoomStatus=Inspected&hotelRoomFrontOfficeStatus=Vacant",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rooms"
@@ -1954,13 +2045,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomAssignments",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomAssignments",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -2621,13 +2712,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios?folioWindowNo=1&reservationBalanceOnly=false&fetchInstructions=Payment&fetchInstructions=Postings&fetchInstructions=Transactioncodes&fetchInstructions=Totalbalance",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios?folioWindowNo=1&reservationBalanceOnly=false&fetchInstructions=Payment&fetchInstructions=Postings&fetchInstructions=Transactioncodes&fetchInstructions=Totalbalance",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -2739,13 +2830,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/transactionCodes?includeArticles=true",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/transactionCodes?includeArticles=true",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"transactionCodes"
@@ -2852,13 +2943,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -2911,13 +3002,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/payments",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/payments",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -2970,13 +3061,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -3029,13 +3120,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -3088,13 +3179,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts/reinstate",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts/reinstate",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -3141,8 +3232,14 @@
 										"exec": [
 											"var jsonData = JSON.parse(responseBody);\r",
 											"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);\r",
-											"var jsonData = JSON.parse(responseBody);\r",
-											"postman.setEnvironmentVariable(\"RefreshToken\", jsonData.refresh_token);"
+											"//Set currentdate and currentdateplus1 variables\r",
+											"var moment = require('moment');\r",
+											"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
+											"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))\r",
+											"var uuid = require('uuid');\r",
+											"var myUUID = uuid.v4();\r",
+											"pm.environment.set(\"MyGUID\", myUUID);\r",
+											"pm.environment.set(\"HashedAppKey\", CryptoJS.SHA256(pm.environment.get(\"AppKey\")).toString());"
 										],
 										"type": "text/javascript"
 									}
@@ -3249,13 +3346,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/crm/v0/profiles?profileName=Smith&givenName=Ann",
+									"raw": "{{HostName}}/crm/v1/profiles?profileName=Smith&givenName=Ann",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"crm",
-										"v0",
+										"v1",
 										"profiles"
 									],
 									"query": [
@@ -3362,13 +3459,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/par/v0/hotels/{{HotelId}}/availability?roomStayStartDate={{currentdate}}&roomStayEndDate={{currentdateplus1}}&adults=1&children=0&roomStayQuantity=1&limit=10&ratePlanCode={{RatePlanCode}}",
+									"raw": "{{HostName}}/par/v1/hotels/{{HotelId}}/availability?roomStayStartDate={{currentdate}}&roomStayEndDate={{currentdateplus1}}&adults=1&children=0&roomStayQuantity=1&limit=10&ratePlanCode={{RatePlanCode}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"par",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"availability"
@@ -3580,13 +3677,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/rooms?roomType={{RoomTypeCode}}&roomFeatureCode=AWAY",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/rooms?roomType={{RoomTypeCode}}&roomFeatureCode=AWAY1",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rooms"
@@ -3607,10 +3704,6 @@
 											"value": "{{RoomTypeCode}}"
 										},
 										{
-											"key": "roomFeatureCode",
-											"value": "AWAY"
-										},
-										{
 											"key": "hotelRoomStatus",
 											"value": "Inspected",
 											"disabled": true
@@ -3619,6 +3712,10 @@
 											"key": "hotelRoomFrontOfficeStatus",
 											"value": "Vacant",
 											"disabled": true
+										},
+										{
+											"key": "roomFeatureCode",
+											"value": "AWAY1"
 										}
 									]
 								},
@@ -3668,13 +3765,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomAssignments",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomAssignments",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -3897,13 +3994,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomKeys",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomKeys",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -3957,13 +4054,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/serviceRequests",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/serviceRequests",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests"
@@ -4015,13 +4112,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -4137,13 +4234,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios?folioWindowNo=1&fetchInstructions=Postings&fetchInstructions=Transactioncodes&limit=50",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios?folioWindowNo=1&fetchInstructions=Postings&fetchInstructions=Transactioncodes&limit=50",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -4244,13 +4341,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -4303,13 +4400,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/payments",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/payments",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -4362,13 +4459,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -4421,13 +4518,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/checkOuts",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -4835,13 +4932,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/blk/v0/defaultBlockCode?blockName=Oracle Conference&hotelId={{HotelId}}&blockCodeTemplate=AAAAAAMMYY&startDate=2021-08-20",
+									"raw": "{{HostName}}/blk/v1/defaultBlockCode?blockName=Oracle Conference&hotelId={{HotelId}}&blockCodeTemplate=AAAAAAMMYY&startDate=2021-08-20",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
-										"v0",
+										"v1",
 										"defaultBlockCode"
 									],
 									"query": [
@@ -4913,13 +5010,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/blk/v0/hotels/{{HotelId}}/block",
+									"raw": "{{HostName}}/blk/v1/hotels/{{HotelId}}/block",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"block"
@@ -4974,13 +5071,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/blk/v0/hotels/{{HotelId}}/block",
+									"raw": "{{HostName}}/blk/v1/hotels/{{HotelId}}/block",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"block"
@@ -5012,13 +5109,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/blk/v0/hotels/{{HotelId}}/block",
+											"raw": "{{HostName}}/blk/v1/hotels/{{HotelId}}/block",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"blk",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"block"
@@ -5148,13 +5245,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/blk/v0/hotels/{{HotelId}}/blocks/{{BlockId}}",
+									"raw": "{{HostName}}/blk/v1/hotels/{{HotelId}}/blocks/{{BlockId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"blocks",
@@ -5191,14 +5288,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/blk/config/v0/blockStatusCodes/nextStatusCodes",
+									"raw": "{{HostName}}/blk/config/v1/blockStatusCodes/nextStatusCodes",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
 										"config",
-										"v0",
+										"v1",
 										"blockStatusCodes",
 										"nextStatusCodes"
 									],
@@ -5253,13 +5350,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/blk/v0/hotels/{{HotelId}}/blocks/{{BlockId}}/status",
+									"raw": "{{HostName}}/blk/v1/hotels/{{HotelId}}/blocks/{{BlockId}}/status",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"blocks",
@@ -5316,13 +5413,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/blk/v0/hotels/{{HotelId}}/blocks/{{BlockId}}/postingMaster",
+									"raw": "{{HostName}}/blk/v1/hotels/{{HotelId}}/blocks/{{BlockId}}/postingMaster",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"blk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"blocks",
@@ -5796,13 +5893,13 @@
 									"raw": "{\r\n    \"ratePlan\": {\r\n        \"primaryDetails\": {\r\n            \"description\": {\r\n                \"defaultText\": \"Rate Code Description Goes Here\"\r\n            },\r\n            \"startSellDate\": \"2021-01-03\",\r\n            \"endSellDate\": \"2021-12-31\",\r\n            \"privilegedRate\": false,\r\n            \"privilegedRateRestriction\": false,\r\n            \"lockStatus\": \"Unlocked\"\r\n        },\r\n        \"classifications\": {\r\n            \"rateCategory\": \"HOTEL\",\r\n            \"marketCode\": \"LEISURE\"\r\n        },\r\n        \"transactionDetails\": {\r\n            \"folioText\": {\r\n                \"defaultText\": \"Accommodation\"\r\n            },\r\n            \"transactionCode\": \"1000\",\r\n            \"currencyCode\": \"USD\",\r\n            \"rateIncludesTax\": true\r\n        },\r\n        \"rateCommission\": {},\r\n        \"roomTypeList\": [\r\n            {\r\n                \"code\": \"ECO\"\r\n            },\r\n            {\r\n                \"code\": \"SGL\"\r\n            },\r\n            {\r\n                \"code\": \"DBL\"\r\n            },\r\n            {\r\n                \"code\": \"SUP\"\r\n            },\r\n            {\r\n                \"code\": \"JSUI\"\r\n            },\r\n            {\r\n                \"code\": \"SUI\"\r\n            }\r\n        ],\r\n        \"ratePackages\": {\r\n            \"packages\": [],\r\n            \"packageGroups\": []\r\n        },\r\n        \"controls\": {\r\n            \"sell\": {\r\n                \"minimumStayThrough\": \"1\",\r\n                \"minimumLengthOfStay\": \"1\"\r\n            },\r\n            \"yield\": {\r\n                \"yieldable\": \"NonYieldable\"\r\n            }\r\n        },\r\n        \"distribution\": {\r\n            \"restrictionUpdate\": false,\r\n            \"rateUpdate\": false,\r\n            \"myFidelioUploadAllowed\": false,\r\n            \"channelRateMappingExists\": false,\r\n            \"channelAllowed\": false\r\n        },\r\n        \"ratePlanBasedOnRates\": [\r\n            {\r\n                \"basedOnRatePlanType\": \"None\"\r\n            }\r\n        ],\r\n        \"approvalNotes\": [\r\n            {}\r\n        ],\r\n        \"mobileCheckinAllowed\": false,\r\n        \"mobileCheckoutAllowed\": false,\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"ratePlanCode\": \"RACK123\",\r\n        \"supressRate\": false,\r\n        \"printRate\": true,\r\n        \"discountAllowed\": false,\r\n        \"redemption\": false,\r\n        \"bARRate\": false,\r\n        \"daily\": false,\r\n        \"tiered\": false,\r\n        \"dayUse\": false,\r\n        \"dayType\": false,\r\n        \"complimentary\": false,\r\n        \"houseUse\": false,\r\n        \"negotiated\": false,\r\n        \"ownerRate\": false,\r\n        \"membershipEligible\": true,\r\n        \"advancedDailyBase\": false,\r\n        \"advancedDailyRate\": false\r\n    }\r\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans",
+									"raw": "{{HostName}}/rtp/v1/hotels/{{HotelId}}/ratePlans",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"ratePlans"
@@ -5852,13 +5949,13 @@
 									"raw": "{\r\n    \"ratePlan\": {\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"code\": \"PACKADD\"\r\n    },\r\n    \"packages\": {\r\n        \"packages\": [\r\n            {\r\n                \"scheduleExceptions\": [],\r\n                \"quantity\": \"1\",\r\n                \"header\": {\r\n                    \"primaryDetails\": {\r\n                        \"beginSellDate\": \"2020-01-01\",\r\n                        \"endSellDate\": \"2031-01-31\"\r\n                    },\r\n                    \"postingAttributes\": {\r\n                        \"addToRate\": false,\r\n                        \"printSeparateLine\": false,\r\n                        \"sellSeparate\": false,\r\n                        \"postNextDay\": false,\r\n                        \"forecastNextDay\": true,\r\n                        \"deliveryTimeRequired\": false,\r\n                        \"formula\": \"\",\r\n                        \"startTime\": \"2021-03-12\",\r\n                        \"endTime\": \"2031-03-12\",\r\n                        \"postingRhythm\": {\r\n                            \"type\": \"EveryNight\"\r\n                        },\r\n                        \"priceCalculationRule\": \"PerPerson\"\r\n                    }\r\n                },\r\n                \"schedules\": [\r\n                    {\r\n                        \"schedulePrices\": [\r\n                            {\r\n                                \"unitPrice\": \"25\",\r\n                                \"bucket\": \"Bucket1\"\r\n                            }\r\n                        ],\r\n                        \"start\": \"2020-01-01\",\r\n                        \"end\": \"2031-01-31\"\r\n                    }\r\n                ],\r\n                \"hotelId\": \"{{HotelId}}\",\r\n                \"code\": \"BKFSTINC\",\r\n                \"description\": \"Breakfast\"\r\n            }\r\n        ]\r\n    }\r\n}'"
 								},
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/packages",
+									"raw": "{{HostName}}/rtp/v1/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/packages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"ratePlans",
@@ -5911,13 +6008,13 @@
 									"raw": "{\r\n    \"ratePlan\": {\r\n        \"primaryDetails\": {\r\n            \"description\": {\r\n                \"defaultText\": \"Description of rate code \"\r\n            },\r\n            \"startSellDate\": \"2021-07-03\",\r\n            \"endSellDate\": \"2021-08-31\",\r\n            \"privilegedRate\": false,\r\n            \"privilegedRateRestriction\": false,\r\n            \"lockStatus\": \"Unlocked\"\r\n        },\r\n        \"classifications\": {\r\n            \"rateCategory\": \"PHONE\",\r\n            \"marketCode\": \"BUSINESS\"\r\n        },\r\n        \"roomTypeList\": [\r\n            {\r\n                \"code\": \"ECO\"\r\n            },\r\n            {\r\n                \"code\": \"SUP\"\r\n            }\r\n        ],\r\n        \"mobileCheckinAllowed\": false,\r\n        \"mobileCheckoutAllowed\": false,\r\n        \"hotelId\": \"{{HotelId}}\",\r\n        \"ratePlanCode\": \"{{RatePlanCode}}\",\r\n        \"supressRate\": false,\r\n        \"printRate\": true,\r\n        \"discountAllowed\": false,\r\n        \"redemption\": false,\r\n        \"bARRate\": false,\r\n        \"daily\": false,\r\n        \"tiered\": false,\r\n        \"dayUse\": false,\r\n        \"dayType\": false,\r\n        \"complimentary\": false,\r\n        \"houseUse\": false,\r\n        \"negotiated\": false,\r\n        \"ownerRate\": false,\r\n        \"membershipEligible\": true,\r\n        \"advancedDailyBase\": false,\r\n        \"advancedDailyRate\": false\r\n    }\r\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}",
+									"raw": "{{HostName}}/rtp/v1/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"ratePlans",
@@ -6050,13 +6147,13 @@
 									"raw": "{\r\n    \"ratePlanScheduleList\": [\r\n        {\r\n            \"roomTypeList\": [\r\n                \"DLXK\",\r\n                \"DLXQ\"\r\n            ],\r\n            \"sunday\": true,\r\n            \"monday\": true,\r\n            \"tuesday\": true,\r\n            \"wednesday\": true,\r\n            \"thursday\": true,\r\n            \"friday\": true,\r\n            \"saturday\": true,\r\n            \"rateAmounts\": {\r\n                \"onePersonRate\": \"200\",\r\n                \"twoPersonRate\": \"200\",\r\n                \"threePersonRate\": \"235\",\r\n                \"fourPersonRate\": \"270\",\r\n                \"oneChildRate\": \"150\",\r\n                \"twoChildrenRate\": \"175\",\r\n                \"threeChildrenRate\": \"200\",\r\n                \"rateByAgeBuckets\": [\r\n                    {\r\n                        \"minimumAge\": \"1\",\r\n                        \"maximumAge\": \"17\"\r\n                    }\r\n                ],\r\n                \"minimumChildrenForFreeStay\": \"1\",\r\n                \"overrideFloorAmount\": true\r\n            },\r\n            \"classifications\": {},\r\n            \"rateSchedulePackages\": {\r\n                \"packages\": [],\r\n                \"packageGroups\": []\r\n            },\r\n            \"tierID\": \"1\",\r\n            \"start\": \"2020-11-01\",\r\n            \"end\": \"2020-11-30\"\r\n        }\r\n    ],\r\n    \"hotelId\": \"{{HotelId}}\",\r\n    \"ratePlanCode\": \"{{RatePlanCode}}\"\r\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
+									"raw": "{{HostName}}/rtp/v1/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"ratePlans",
@@ -6108,13 +6205,13 @@
 									"raw": "{\r\n    \"ratePlanScheduleList\": [\r\n        {\r\n            \"roomTypeList\": [\r\n                \"DLXK\",\r\n                \"DLXQ\"\r\n            ],\r\n            \"sunday\": true,\r\n            \"monday\": true,\r\n            \"tuesday\": true,\r\n            \"wednesday\": true,\r\n            \"thursday\": true,\r\n            \"friday\": true,\r\n            \"saturday\": true,\r\n            \"rateAmounts\": {\r\n                \"onePersonRate\": \"220\",\r\n                \"twoPersonRate\": \"250\",\r\n                \"threePersonRate\": \"280\",\r\n                \"fourPersonRate\": \"300\",\r\n                \"rateByAgeBuckets\": [\r\n                    {\r\n                        \"minimumAge\": \"1\",\r\n                        \"maximumAge\": \"17\"\r\n                    }\r\n                ],\r\n                \"overrideFloorAmount\": true\r\n            },\r\n            \"classifications\": {},\r\n            \"rateSchedulePackages\": {\r\n                \"packages\": [\r\n                    {\r\n                        \"header\": {},\r\n                        \"schedules\": [],\r\n                        \"code\": \"PKG2\",\r\n                        \"description\": \"Chocolates Package\"\r\n                    }\r\n                ],\r\n                \"packageGroups\": []\r\n            },\r\n            \"tierID\": \"1\",\r\n            \"start\": \"2020-12-01\",\r\n            \"end\": \"2020-12-31\"\r\n        }\r\n    ],\r\n    \"hotelId\": \"{{HotelId}}\",\r\n    \"ratePlanCode\": \"{{RatePlanCode}}\"\r\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
+									"raw": "{{HostName}}/rtp/v1/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"ratePlans",
@@ -6167,13 +6264,13 @@
 									"raw": "{\r\n    \"ratePlanScheduleList\": [\r\n        {\r\n            \"ratePlanScheduleId\": {\r\n                \"type\": \"RateSetId\",\r\n                \"id\": \"199827\"\r\n            },\r\n            \"ratePlanScheduleDetail\": {\r\n                \"roomTypeList\": [\r\n                    \"ECO\",\r\n                    \"SUP\"\r\n                ],\r\n                \"sunday\": true,\r\n                \"monday\": true,\r\n                \"tuesday\": true,\r\n                \"wednesday\": true,\r\n                \"thursday\": true,\r\n                \"friday\": true,\r\n                \"saturday\": true,\r\n                \"rateAmounts\": {\r\n                    \"onePersonRate\": \"305\",\r\n                    \"twoPersonRate\": \"305\",\r\n                    \"threePersonRate\": \"344\",\r\n                    \"fourPersonRate\": \"340\",\r\n                    \"fivePersonRate\": \"400\",\r\n                    \"rateByAgeBuckets\": [\r\n                        {\r\n                            \"minimumAge\": \"0\",\r\n                            \"maximumAge\": \"3\"\r\n                        },\r\n                        {\r\n                            \"minimumAge\": \"4\",\r\n                            \"maximumAge\": \"10\"\r\n                        },\r\n                        {\r\n                            \"minimumAge\": \"11\",\r\n                            \"maximumAge\": \"17\"\r\n                        }\r\n                    ],\r\n                    \"overrideFloorAmount\": true\r\n                },\r\n                \"rateAmountBoundaries\": {\r\n                    \"minimum\": {\r\n                        \"onePersonRate\": \"300\"\r\n                    },\r\n                    \"maximum\": {}\r\n                },\r\n                \"classifications\": {},\r\n                \"rateSchedulePackages\": {\r\n                    \"packages\": [],\r\n                    \"packageGroups\": []\r\n                },\r\n                \"tierID\": \"1\",\r\n                \"start\": \"2021-03-11\",\r\n                \"end\": \"2021-03-31\"\r\n            }\r\n        }\r\n    ],\r\n    \"hotelId\": \"{{HotelId}}\",\r\n    \"ratePlanCode\": \"{{RatePlanCode}}\"\r\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
+									"raw": "{{HostName}}/rtp/v1/hotels/{{HotelId}}/ratePlans/{{RatePlanCode}}/schedules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"ratePlans",
@@ -6316,13 +6413,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/rooms/maintenanceCodes/{{MaintenanceCode}}",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/rooms/maintenanceCodes/{{MaintenanceCode}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rooms",
@@ -6368,13 +6465,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/rooms/{{RoomId}}/maintenances/{{maintenanceId}}",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/rooms/{{RoomId}}/maintenances/{{maintenanceId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rooms",
@@ -6421,13 +6518,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/maintenances/{{MainteananceId}}/resolve",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/maintenances/{{MainteananceId}}/resolve",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"maintenances",
@@ -6473,13 +6570,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/maintenances/{{MainteananceId}}/unResolve",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/maintenances/{{MainteananceId}}/unResolve",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"maintenances",
@@ -6516,13 +6613,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/maintenances/{{MainteananceId}}",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/maintenances/{{MainteananceId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"maintenances",
@@ -6557,13 +6654,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/rooms/maintenances?roomMaintenanceStatus=All",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/rooms/maintenances?roomMaintenanceStatus=All",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rooms",
@@ -6647,13 +6744,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/serviceRequests",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/serviceRequests",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests"
@@ -6704,13 +6801,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/serviceRequests",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/serviceRequests",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests"
@@ -6769,13 +6866,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/serviceRequests/{{ServiceRequestId}}",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/serviceRequests/{{ServiceRequestId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests",
@@ -7051,13 +7148,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/shareRateAmount",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/shareRateAmount",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -7114,13 +7211,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/shares",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/shares",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -7173,13 +7270,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/shares",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/shares",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -7956,14 +8053,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules"
@@ -8014,14 +8111,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules"
@@ -8069,14 +8166,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules/action/validate",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules/action/validate",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules",
@@ -8114,14 +8211,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules?searchByRoomType=false",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules?searchByRoomType=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules"
@@ -8944,14 +9041,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules"
@@ -9002,14 +9099,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules"
@@ -9057,14 +9154,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules/action/validate",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules/action/validate",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules",
@@ -9102,14 +9199,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/rsv/config/v0/hotels/{{HotelId}}/upsellRules?searchByRoomType=true",
+									"raw": "{{HostName}}/rsv/config/v1/hotels/{{HotelId}}/upsellRules?searchByRoomType=true",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"upsellRules"
@@ -9192,13 +9289,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -9251,13 +9348,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -9443,13 +9540,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/reservationId/roomKeys",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/reservationId/roomKeys",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -9863,13 +9960,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/events",
+									"raw": "{{HostName}}/evm/v1/events",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"events"
 									]
 								}
@@ -9901,14 +9998,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/inventoryItems?usedForEvents=true&startDateTime=2021-06-01+08:00:00.0&endDateTime=2021-06-01+09:00:00.0",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/inventoryItems?usedForEvents=true&startDateTime=2021-06-01+08:00:00.0&endDateTime=2021-06-01+09:00:00.0",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"inventoryItems"
@@ -9972,13 +10069,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventsResources"
@@ -10023,13 +10120,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"events",
@@ -10066,13 +10163,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources?blockId={{BlockId}}&eventIds={{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources?blockId={{BlockId}}&eventIds={{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventsResources"
@@ -10188,13 +10285,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"events",
@@ -10276,7 +10373,7 @@
 							},
 							"response": [
 								{
-									"name": "3. get Function Space Event Types (v1)",
+									"name": "3. get Function Space Event Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -10445,7 +10542,7 @@
 							},
 							"response": [
 								{
-									"name": "4. get Catering Event Status LOV (v1)",
+									"name": "4. get Catering Event Status LOV",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -10581,14 +10678,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/functionSpaces",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"functionSpaces"
@@ -10597,7 +10694,7 @@
 							},
 							"response": [
 								{
-									"name": "5a. get Function Spaces (v0)",
+									"name": "5a. get Function Spaces",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -10611,14 +10708,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/functionSpaces",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"functionSpaces"
@@ -11102,14 +11199,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/functionspaceSetupStyles?fetchInactive=false",
+									"raw": "{{HostName}}/evm/config/v1/functionspaceSetupStyles?fetchInactive=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"functionspaceSetupStyles"
 									],
 									"query": [
@@ -11132,7 +11229,7 @@
 							},
 							"response": [
 								{
-									"name": "7a. get Function Space Setup Styles (v0)",
+									"name": "7a. get Function Space Setup Styles",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -11146,14 +11243,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/functionspaceSetupStyles?fetchInactive=false",
+											"raw": "{{HostName}}/evm/config/v1/functionspaceSetupStyles?fetchInactive=false",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"functionspaceSetupStyles"
 											],
 											"query": [
@@ -11636,20 +11733,20 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/events",
+									"raw": "{{HostName}}/evm/v1/events",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"events"
 									]
 								}
 							},
 							"response": [
 								{
-									"name": "8. post Event with Function Space (V0)",
+									"name": "8. post Event with Function Space",
 									"originalRequest": {
 										"method": "POST",
 										"header": [
@@ -11674,13 +11771,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/events",
+											"raw": "{{HostName}}/evm/v1/events",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"events"
 											]
 										}
@@ -11788,14 +11885,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/inventoryItems?usedForEvents=true&startDateTime=2022-11-01T08:00:00&endDateTime=2022-11-02T17:00:00&includeItemsFromTemplates=true&eventTypecodes=AMBREAK",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/inventoryItems?usedForEvents=true&startDateTime=2022-11-01T08:00:00&endDateTime=2022-11-02T17:00:00&includeItemsFromTemplates=true&eventTypecodes=AMBREAK",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"inventoryItems"
@@ -11844,7 +11941,7 @@
 							},
 							"response": [
 								{
-									"name": "9. get Inventory Items (Fetch Avail Items) (v0)",
+									"name": "9. get Inventory Items (Fetch Avail Items)",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -11858,14 +11955,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/inventoryItems?eventTypecodes=MEET&usedForEvents=true&startDateTime=2019-10-26T08:00:00&endDateTime=2019-10-26T17:00:00&includeItemsFromTemplates=true",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/inventoryItems?eventTypecodes=MEET&usedForEvents=true&startDateTime=2019-10-26T08:00:00&endDateTime=2019-10-26T17:00:00&includeItemsFromTemplates=true",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"inventoryItems"
@@ -12010,14 +12107,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringMenus?eventTypesCodes=AMBREAK",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringMenus?eventTypesCodes=AMBREAK",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"cateringMenus"
@@ -12114,7 +12211,7 @@
 							},
 							"response": [
 								{
-									"name": "10. get Catering Menus (v1)",
+									"name": "10. get Catering Menus",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -12338,13 +12435,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventsResources"
@@ -12378,13 +12475,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"eventsResources"
@@ -12501,13 +12598,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventsResources"
@@ -12541,13 +12638,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"eventsResources"
@@ -12679,13 +12776,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2019-11-08&eventEndDate=2019-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2019-11-08&eventEndDate=2019-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"functionalSpace"
@@ -12852,13 +12949,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2019-11-08&eventEndDate=2019-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2019-11-08&eventEndDate=2019-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"functionalSpace"
@@ -13108,14 +13205,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2022-10-26&endDateTime=2022-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2022-10-26&pkgTmpltType=Packages",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2022-10-26&endDateTime=2022-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2022-10-26&pkgTmpltType=Packages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"cateringPackages"
@@ -13176,7 +13273,7 @@
 							},
 							"response": [
 								{
-									"name": "3a. get Catering Packages (v0)",
+									"name": "3a. get Catering Packages",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -13190,14 +13287,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26&pkgTmpltType=Packages",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26&pkgTmpltType=Packages",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"cateringPackages"
@@ -13363,14 +13460,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
+									"raw": "{{HostName}}/evm/config/v1/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"cateringPackages"
 									],
 									"query": [
@@ -13402,7 +13499,7 @@
 							},
 							"response": [
 								{
-									"name": "3b. get Catering Packages Multi Properties (v0)",
+									"name": "3b. get Catering Packages Multi Properties",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -13416,14 +13513,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
+											"raw": "{{HostName}}/evm/config/v1/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"cateringPackages"
 											],
 											"query": [
@@ -13568,13 +13665,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/blocks/{{BlockId}}/cateringPackages",
+									"raw": "{{HostName}}/evm/v1/blocks/{{BlockId}}/cateringPackages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"blocks",
 										"{{BlockId}}",
 										"cateringPackages"
@@ -13583,7 +13680,7 @@
 							},
 							"response": [
 								{
-									"name": "4. post Catering Event Pkg to Block (v0)",
+									"name": "4. post Catering Event Pkg to Block",
 									"originalRequest": {
 										"method": "POST",
 										"header": [
@@ -13613,13 +13710,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/blocks/{{BlockId}}/cateringPackages",
+											"raw": "{{HostName}}/evm/v1/blocks/{{BlockId}}/cateringPackages",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"blocks",
 												"{{BlockId}}",
 												"cateringPackages"
@@ -13751,14 +13848,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2022-10-26&pkgTmpltType=Templates",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2022-10-26&pkgTmpltType=Templates",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"cateringPackages"
@@ -13819,7 +13916,7 @@
 							},
 							"response": [
 								{
-									"name": "3a. get Catering Templates  (v0)",
+									"name": "3a. get Catering Templates ",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -13833,14 +13930,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26&pkgTmpltType=Templates",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26&pkgTmpltType=Templates",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"cateringPackages"
@@ -13998,14 +14095,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
+									"raw": "{{HostName}}/evm/config/v1/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"cateringPackages"
 									],
 									"query": [
@@ -14032,7 +14129,7 @@
 							},
 							"response": [
 								{
-									"name": "3b. get Catering Packages Multi Properties (v0)",
+									"name": "3b. get Catering Packages Multi Properties",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -14046,14 +14143,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
+											"raw": "{{HostName}}/evm/config/v1/cateringPackages?hotelIds={{HotelId}}&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"cateringPackages"
 											],
 											"query": [
@@ -14398,13 +14495,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/blocks/{{BlockId}}/cateringPackages",
+									"raw": "{{HostName}}/evm/v1/blocks/{{BlockId}}/cateringPackages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"blocks",
 										"{{BlockId}}",
 										"cateringPackages"
@@ -14413,7 +14510,7 @@
 							},
 							"response": [
 								{
-									"name": "5. post Catering Event Template to Block (v0)",
+									"name": "5. post Catering Event Template to Block",
 									"originalRequest": {
 										"method": "POST",
 										"header": [
@@ -14443,13 +14540,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/blocks/{{BlockId}}/cateringPackages",
+											"raw": "{{HostName}}/evm/v1/blocks/{{BlockId}}/cateringPackages",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"blocks",
 												"{{BlockId}}",
 												"cateringPackages"
@@ -15218,13 +15315,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources?blockId={{BlockId}}&eventIds={{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources?blockId={{BlockId}}&eventIds={{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventsResources"
@@ -15259,13 +15356,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources?blockId={{BlockId}}&eventIds={{EventId}}",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources?blockId={{BlockId}}&eventIds={{EventId}}",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"eventsResources"
@@ -16334,14 +16431,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/functionSpaceTypes",
+									"raw": "{{HostName}}/evm/config/v1/functionSpaceTypes",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"functionSpaceTypes"
 									],
 									"query": [
@@ -16365,7 +16462,7 @@
 							},
 							"response": [
 								{
-									"name": "4. get Function Space Types (v0)",
+									"name": "4. get Function Space Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -16379,14 +16476,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/functionSpaceTypes",
+											"raw": "{{HostName}}/evm/config/v1/functionSpaceTypes",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"functionSpaceTypes"
 											],
 											"query": [
@@ -16507,14 +16604,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/functionSpaces",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"functionSpaces"
@@ -16523,7 +16620,7 @@
 							},
 							"response": [
 								{
-									"name": "5a. get Function Spaces (v0)",
+									"name": "5a. get Function Spaces",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -16537,14 +16634,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/functionSpaces",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"functionSpaces"
@@ -16821,14 +16918,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/functionspaceSetupStyles?fetchInactive=false",
+									"raw": "{{HostName}}/evm/config/v1/functionspaceSetupStyles?fetchInactive=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"functionspaceSetupStyles"
 									],
 									"query": [
@@ -16851,7 +16948,7 @@
 							},
 							"response": [
 								{
-									"name": "6a. get Function Space Setup Styles (v0)",
+									"name": "6a. get Function Space Setup Styles",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -16865,14 +16962,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/functionspaceSetupStyles?fetchInactive=false",
+											"raw": "{{HostName}}/evm/config/v1/functionspaceSetupStyles?fetchInactive=false",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"functionspaceSetupStyles"
 											],
 											"query": [
@@ -17180,7 +17277,7 @@
 							},
 							"response": [
 								{
-									"name": "7a. get Function Space Event Types (v1)",
+									"name": "7a. get Function Space Event Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -17479,13 +17576,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventcalendar?eventStartDate=2022-10-26&eventEndDate=2022-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&sortingBy=Name",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventcalendar?eventStartDate=2022-10-26&eventEndDate=2022-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&sortingBy=Name",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventcalendar"
@@ -17545,7 +17642,7 @@
 							},
 							"response": [
 								{
-									"name": "8a. getEventCalendar (v0)",
+									"name": "8a. getEventCalendar",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -17561,13 +17658,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventcalendar?eventStartDate=2019-10-26&eventEndDate=2019-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&sortingBy=Name",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventcalendar?eventStartDate=2019-10-26&eventEndDate=2019-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&sortingBy=Name",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"eventcalendar"
@@ -17725,13 +17822,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/v0/eventcalendar?eventStartDate=2022-10-26&eventEndDate=2022-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&hotelIds={{HotelId}}&sortingBy=Name",
+									"raw": "{{HostName}}/evm/v1/eventcalendar?eventStartDate=2022-10-26&eventEndDate=2022-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&hotelIds={{HotelId}}&sortingBy=Name",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"eventcalendar"
 									],
 									"query": [
@@ -17793,7 +17890,7 @@
 							},
 							"response": [
 								{
-									"name": "8b. getEventCalendar MultiHotel  (v0)",
+									"name": "8b. getEventCalendar MultiHotel ",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -17809,13 +17906,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/v0/eventcalendar?eventStartDate=2019-10-26&eventEndDate=2019-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&hotelIds={{HotelId}}&sortingBy=Name",
+											"raw": "{{HostName}}/evm/v1/eventcalendar?eventStartDate=2019-10-26&eventEndDate=2019-10-27&eventLabel=Booking&display=ALL&monday=true&tuesday=true&wednesday=true&thursday=true&friday=true&saturday=true&sunday=true&hotelIds={{HotelId}}&sortingBy=Name",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"eventcalendar"
 											],
 											"query": [
@@ -17999,13 +18096,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2022-11-08&eventEndDate=2022-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2022-11-08&eventEndDate=2022-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"functionalSpace"
@@ -18172,13 +18269,13 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2019-11-08&eventEndDate=2019-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/functionalSpace?checkInventory=true&eventStartDate=2019-11-08&eventEndDate=2019-11-09&showForceAlternate=true&fetchInstructions=FunctionSpaceCount&functionSpaceSearchMode=Both&functionSpaceAdditionalSearchMode=Both&masterRateCode=CUSTOM&masterSetupCode=CLS",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"functionalSpace"
@@ -18454,14 +18551,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/functionSpaces",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"functionSpaces"
@@ -18470,7 +18567,7 @@
 							},
 							"response": [
 								{
-									"name": "get Function Spaces (v0)",
+									"name": "get Function Spaces",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -18484,14 +18581,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/functionSpaces",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/functionSpaces",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"functionSpaces"
@@ -18597,14 +18694,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/functionSpaceTypes",
+									"raw": "{{HostName}}/evm/config/v1/functionSpaceTypes",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"functionSpaceTypes"
 									],
 									"query": [
@@ -18628,7 +18725,7 @@
 							},
 							"response": [
 								{
-									"name": "get Function Space Types (v0)",
+									"name": "get Function Space Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -18642,14 +18739,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/functionSpaceTypes",
+											"raw": "{{HostName}}/evm/config/v1/functionSpaceTypes",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"functionSpaceTypes"
 											],
 											"query": [
@@ -18770,14 +18867,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/functionspaceSetupStyles?fetchInactive=false",
+									"raw": "{{HostName}}/evm/config/v1/functionspaceSetupStyles?fetchInactive=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"functionspaceSetupStyles"
 									],
 									"query": [
@@ -18800,7 +18897,7 @@
 							},
 							"response": [
 								{
-									"name": "get Function Space Setup Styles (v0)",
+									"name": "get Function Space Setup Styles",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -18814,14 +18911,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/functionspaceSetupStyles?fetchInactive=false",
+											"raw": "{{HostName}}/evm/config/v1/functionspaceSetupStyles?fetchInactive=false",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"functionspaceSetupStyles"
 											],
 											"query": [
@@ -18953,14 +19050,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/functionspaceLocations?hotelIds={{HotelId}}",
+									"raw": "{{HostName}}/evm/config/v1/functionspaceLocations?hotelIds={{HotelId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"functionspaceLocations"
 									],
 									"query": [
@@ -18973,7 +19070,7 @@
 							},
 							"response": [
 								{
-									"name": "get Function space Locations (v0)",
+									"name": "get Function space Locations",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -18987,14 +19084,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/functionspaceLocations?hotelIds={{HotelId}}",
+											"raw": "{{HostName}}/evm/config/v1/functionspaceLocations?hotelIds={{HotelId}}",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"functionspaceLocations"
 											],
 											"query": [
@@ -19125,7 +19222,7 @@
 							},
 							"response": [
 								{
-									"name": "get Function Space Event Types (v1)",
+									"name": "get Function Space Event Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -19933,14 +20030,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/mealTypes",
+									"raw": "{{HostName}}/evm/config/v1/mealTypes",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"mealTypes"
 									],
 									"query": [
@@ -19964,7 +20061,7 @@
 							},
 							"response": [
 								{
-									"name": "get Meal Types (v0)",
+									"name": "get Meal Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -19978,14 +20075,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/mealTypes",
+											"raw": "{{HostName}}/evm/config/v1/mealTypes",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"mealTypes"
 											],
 											"query": [
@@ -21577,7 +21674,7 @@
 							},
 							"response": [
 								{
-									"name": "get Function Space Event Types (v1)",
+									"name": "get Function Space Event Types",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -21709,14 +21806,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26",
+									"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"cateringPackages"
@@ -21772,7 +21869,7 @@
 							},
 							"response": [
 								{
-									"name": "get Catering Templates-Packages (v0) All",
+									"name": "get Catering Templates-Packages All",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
@@ -21786,14 +21883,14 @@
 											}
 										],
 										"url": {
-											"raw": "{{HostName}}/evm/config/v0/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26",
+											"raw": "{{HostName}}/evm/config/v1/hotels/{{HotelId}}/cateringPackages?duration=3&startDateTime=2019-10-26&endDateTime=2019-10-28&fetchInstructions=PackageInfo&fetchInstructions=BlockPackageInfo&sellDate=2019-10-26",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
 												"config",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"cateringPackages"
@@ -22160,13 +22257,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"events",
@@ -22201,13 +22298,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"events",
@@ -22325,13 +22422,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"events",
@@ -22366,13 +22463,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"events",
@@ -22490,13 +22587,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"eventsResources"
@@ -22530,13 +22627,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/eventsResources",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/eventsResources",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"eventsResources"
@@ -22653,13 +22750,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+									"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"evm",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"events",
@@ -22669,7 +22766,7 @@
 							},
 							"response": [
 								{
-									"name": "Delete Event (v0)",
+									"name": "Delete Event",
 									"originalRequest": {
 										"method": "DELETE",
 										"header": [
@@ -22694,13 +22791,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{HostName}}/evm/v0/hotels/{{HotelId}}/events/{{EventId}}",
+											"raw": "{{HostName}}/evm/v1/hotels/{{HotelId}}/events/{{EventId}}",
 											"host": [
 												"{{HostName}}"
 											],
 											"path": [
 												"evm",
-												"v0",
+												"v1",
 												"hotels",
 												"{{HotelId}}",
 												"events",
@@ -22833,13 +22930,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/rooms?roomType=SUP&hotelRoomStatus=Inspected&hotelRoomFrontOfficeStatus=Vacant",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/rooms?roomType=SUP&hotelRoomStatus=Inspected&hotelRoomFrontOfficeStatus=Vacant",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rooms"
@@ -22923,14 +23020,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rm/config/v0/hotels/{{HotelId}}/roomMoveReasons?fetchInactive=false",
+									"raw": "{{HostName}}/rm/config/v1/hotels/{{HotelId}}/roomMoveReasons?fetchInactive=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rm",
 										"config",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"roomMoveReasons"
@@ -22992,13 +23089,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/rooms/{{RoomId}}/roomMoves",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/rooms/{{RoomId}}/roomMoves",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -23057,13 +23154,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomMoveHistory",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/roomMoveHistory",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -23145,13 +23242,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/transactionCodes?includeArticles=true",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/transactionCodes?includeArticles=true",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"transactionCodes"
@@ -23258,13 +23355,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -23320,13 +23417,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios?folioWindowNo=1&reservationBalanceOnly=false&fetchInstructions=Payment&fetchInstructions=Postings&fetchInstructions=Transactioncodes&fetchInstructions=Totalbalance",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/folios?folioWindowNo=1&reservationBalanceOnly=false&fetchInstructions=Payment&fetchInstructions=Postings&fetchInstructions=Transactioncodes&fetchInstructions=Totalbalance",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24501,13 +24598,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24515,7 +24612,7 @@
 										"guestMessages"
 									]
 								},
-								"description": "**HPI-GuestMessages - Post new Guest text message to PMS**\n\n/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages  \n  \n\nExternal system sends a new guest text message to the PMS for a specific checked in reservationId.\n\n**messageText** = Guest message text to store in PMS\n\n**messageDate** = Date and Time the message has been created\n\n**typeOfMessage** = \"Tm\" = text message\n\n**operator** =\n\n**deliveryStatus** = \"Nr\" - not received\n\n**textMessageSentBy** = App Id / name\n\nIn response of the POST new message the PMS sends a Message Id\n\n**id:** \"xxx\""
+								"description": "**HPI-GuestMessages - Post new Guest text message to PMS**\n\n/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages  \n  \n\nExternal system sends a new guest text message to the PMS for a specific checked in reservationId.\n\n**messageText** = Guest message text to store in PMS\n\n**messageDate** = Date and Time the message has been created\n\n**typeOfMessage** = \"Tm\" = text message\n\n**operator** =\n\n**deliveryStatus** = \"Nr\" - not received\n\n**textMessageSentBy** = App Id / name\n\nIn response of the POST new message the PMS sends a Message Id\n\n**id:** \"xxx\""
 							},
 							"response": []
 						},
@@ -24629,13 +24726,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/{{guestMessageId}}",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/{{guestMessageId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24644,7 +24741,7 @@
 										"{{guestMessageId}}"
 									]
 								},
-								"description": "**HPI-GuestMessages Update Message delivery status**\n\nusing\n\n/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/30290\n\nsending the messageId to update in the URI\n\nwith the message details in the body\n\n**deliveryStatus** \\= \"Mr\" (delivered) or \"Nr\" (not delivered).\n\n**deliveryDate** = Date and time stamp when the message has been delivered\n\n**deliveredBy** = App Id /Name (will be shown on the message information in PMS)"
+								"description": "**HPI-GuestMessages Update Message delivery status**\n\nusing\n\n/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/30290\n\nsending the messageId to update in the URI\n\nwith the message details in the body\n\n**deliveryStatus** \\= \"Mr\" (delivered) or \"Nr\" (not delivered).\n\n**deliveryDate** = Date and time stamp when the message has been delivered\n\n**deliveredBy** = App Id /Name (will be shown on the message information in PMS)"
 							},
 							"response": []
 						},
@@ -24690,13 +24787,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/{{guestMessageId}}",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/{{guestMessageId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24705,7 +24802,7 @@
 										"{{guestMessageId}}"
 									]
 								},
-								"description": "**HPI-GuestMessages - Delete Guest message from PMS**\n\nusing\n\nDELETE\n\n/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/30290\n\nthe URI contains the MessageId to delete."
+								"description": "**HPI-GuestMessages - Delete Guest message from PMS**\n\nusing\n\nDELETE\n\n/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/30290\n\nthe URI contains the MessageId to delete."
 							},
 							"response": []
 						}
@@ -24788,13 +24885,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24802,7 +24899,7 @@
 										"guestLocators"
 									]
 								},
-								"description": "**HPI Locator - set a new locator**\n\n/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators\n\nExample message to set a new Guest Locator for a specific reservation.\n\n**dateSpan:** Date for when the locator information shall be active (the guest is meant to be on a specific location)\n\n**timeSpan:** Time span (from to) for when the locator information shall be active (the guest is meant to be at a specific location)\n\n**locatorText:** Location name\n\n**locatorOn:** Date and time when the locator has been set (information in locator detail in PMS)\n\n**locatorBy:** system which set the locator"
+								"description": "**HPI Locator - set a new locator**\n\n/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators\n\nExample message to set a new Guest Locator for a specific reservation.\n\n**dateSpan:** Date for when the locator information shall be active (the guest is meant to be on a specific location)\n\n**timeSpan:** Time span (from to) for when the locator information shall be active (the guest is meant to be at a specific location)\n\n**locatorText:** Location name\n\n**locatorOn:** Date and time when the locator has been set (information in locator detail in PMS)\n\n**locatorBy:** system which set the locator"
 							},
 							"response": []
 						},
@@ -24851,13 +24948,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24865,7 +24962,7 @@
 										"guestLocators"
 									]
 								},
-								"description": "**HPI Locator - Retrieve locator**\n\nGET  \n/rsv/v0/hotels/SAND01/reservations/47009/guestLocators\n\nExample message to retrieve locators for a specific reservation.\n\nrequires the reservationId in the URI."
+								"description": "**HPI Locator - Retrieve locator**\n\nGET  \n/rsv/v1/hotels/SAND01/reservations/47009/guestLocators\n\nExample message to retrieve locators for a specific reservation.\n\nrequires the reservationId in the URI."
 							},
 							"response": []
 						},
@@ -24911,13 +25008,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators/{{locatorId}}",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators/{{locatorId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -24926,7 +25023,7 @@
 										"{{locatorId}}"
 									]
 								},
-								"description": "**HPI Locator - Delete guest locator**\n\nDEL  \n/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators/\\[locatorId\\]  \n  \n\nExample message to delete locators for a specific reservation in PMS\n\nrequires the **reservationId** and the specific **locatorId.**"
+								"description": "**HPI Locator - Delete guest locator**\n\nDEL  \n/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestLocators/\\[locatorId\\]  \n  \n\nExample message to delete locators for a specific reservation in PMS\n\nrequires the **reservationId** and the specific **locatorId.**"
 							},
 							"response": []
 						}
@@ -24998,13 +25095,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25012,7 +25109,7 @@
 										"charges"
 									]
 								},
-								"description": "**HPI PostRequest sample for one amount to post to a reservation account**\n\n/csh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains\n\ntransactionCode = \"2000\"  \namount to post = \"59.90\" USD  \nQuantity = 1  \nPosting detail information:  \nReference = \"Restaurant Breakfast\"  \nRemark = \"Breakfast Buffet\"  \nPOS Check number = \"21112301\"  \nFolioWindowNo = 2 (optional to send)  \ncashierId = 113 (this is the PMS Cashier of the app)  \nPosting date = 2021-11-23 (incomeAuditDate)"
+								"description": "**HPI PostRequest sample for one amount to post to a reservation account**\n\n/csh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains\n\ntransactionCode = \"2000\"  \namount to post = \"59.90\" USD  \nQuantity = 1  \nPosting detail information:  \nReference = \"Restaurant Breakfast\"  \nRemark = \"Breakfast Buffet\"  \nPOS Check number = \"21112301\"  \nFolioWindowNo = 2 (optional to send)  \ncashierId = 113 (this is the PMS Cashier of the app)  \nPosting date = 2021-11-23 (incomeAuditDate)"
 							},
 							"response": []
 						},
@@ -25058,13 +25155,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25072,7 +25169,7 @@
 										"charges"
 									]
 								},
-								"description": "**HPI PostRequest sample for one amount to post to a reservation account - no cashierId , no folioWindowNo**\n\n/csh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains\n\ntransactionCode = \"2000\"  \namount to post = \"23.50\" USD  \nQuantity = 1  \nPosting detail information:  \nReference = \"Restaurant Breakfast\"  \nRemark = \"Breakfast Buffet\"  \nPOS Check number = \"21112303\"  \nPosting date = 2021-11-23 (incomeAuditDate)\n\n**Here no cashierId & no folioWindowNo values sent**"
+								"description": "**HPI PostRequest sample for one amount to post to a reservation account - no cashierId , no folioWindowNo**\n\n/csh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains\n\ntransactionCode = \"2000\"  \namount to post = \"23.50\" USD  \nQuantity = 1  \nPosting detail information:  \nReference = \"Restaurant Breakfast\"  \nRemark = \"Breakfast Buffet\"  \nPOS Check number = \"21112303\"  \nPosting date = 2021-11-23 (incomeAuditDate)\n\n**Here no cashierId & no folioWindowNo values sent**"
 							},
 							"response": []
 						},
@@ -25118,13 +25215,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25132,7 +25229,7 @@
 										"charges"
 									]
 								},
-								"description": "**HPI PostRequest sample for two amounts (subtotals) to post to a reservation account**\n\n/csh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"27.50\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"211221601\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:transactionCode = \"2010\"  \n    amount to post = \"10.50\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"211221601\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-11-22 (incomeAuditDate)"
+								"description": "**HPI PostRequest sample for two amounts (subtotals) to post to a reservation account**\n\n/csh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"27.50\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"211221601\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:transactionCode = \"2010\"  \n    amount to post = \"10.50\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"211221601\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-11-22 (incomeAuditDate)"
 							},
 							"response": []
 						},
@@ -25178,13 +25275,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25192,7 +25289,7 @@
 										"charges"
 									]
 								},
-								"description": "**HPI PostRequest sample for three amounts (subtotals) to post to a reservation account**\n\n/csh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"3.20\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:  \n    transactionCode = \"2010\"  \n    amount to post = \"3.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal3:  \n    transactionCode = \"2011\"  \n    amount to post = \"4.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Bev\"  \n    Remark = \"Lunch Bev\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-12-02 (incomeAuditDate)"
+								"description": "**HPI PostRequest sample for three amounts (subtotals) to post to a reservation account**\n\n/csh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"3.20\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:  \n    transactionCode = \"2010\"  \n    amount to post = \"3.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal3:  \n    transactionCode = \"2011\"  \n    amount to post = \"4.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Bev\"  \n    Remark = \"Lunch Bev\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-12-02 (incomeAuditDate)"
 							},
 							"response": []
 						},
@@ -25238,13 +25335,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25252,7 +25349,7 @@
 										"charges"
 									]
 								},
-								"description": "**HPI PostRequest sample for void three amounts (subtotals) to post to a reservation account sending negative amount value**\n\n/csh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"-3.20\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:  \n    transactionCode = \"2010\"  \n    amount to post = \"-3.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal3:  \n    transactionCode = \"2011\"  \n    amount to post = \"-4.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Bev\"  \n    Remark = \"Lunch Bev\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-12-02 (incomeAuditDate)\n\n**Note for void postings:**\n\nin case a guest check needs to be voided due to reason (e.g. wrong payment or wrong reservation used) always void ALL sub amounts as to show clear postings on the guest account."
+								"description": "**HPI PostRequest sample for void three amounts (subtotals) to post to a reservation account sending negative amount value**\n\n/csh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"-3.20\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:  \n    transactionCode = \"2010\"  \n    amount to post = \"-3.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal3:  \n    transactionCode = \"2011\"  \n    amount to post = \"-4.30\" USD  \n    Quantity = 1  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Bev\"  \n    Remark = \"Lunch Bev\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-12-02 (incomeAuditDate)\n\n**Note for void postings:**\n\nin case a guest check needs to be voided due to reason (e.g. wrong payment or wrong reservation used) always void ALL sub amounts as to show clear postings on the guest account."
 							},
 							"response": []
 						},
@@ -25298,13 +25395,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25312,7 +25409,7 @@
 										"charges"
 									]
 								},
-								"description": "**HPI PostRequest sample for void three amounts (subtotals) to post to a reservation account sending negative postingQuantity value**\n\n/csh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"**3.20**\" USD  \n    Quantity = **\\-1**  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:  \n    transactionCode = \"2010\"  \n    amount to post = \"**3.30**\" USD  \n    Quantity = **\\-1**  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal3:  \n    transactionCode = \"2011\"  \n    amount to post = \"**4.30**\" USD  \n    Quantity = **\\-1**  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Bev\"  \n    Remark = \"Lunch Bev\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-12-02 (incomeAuditDate)\n\n**Note for void postings:**\n\nin case a guest check needs to be voided due to reason (e.g. wrong payment or wrong reservation used) always void ALL sub amounts as to show clear postings on the guest account."
+								"description": "**HPI PostRequest sample for void three amounts (subtotals) to post to a reservation account sending negative postingQuantity value**\n\n/csh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nwhere body contains values for\n\n*   subtotal1:  \n    transactionCode = \"2000\"  \n    amount to post = \"**3.20**\" USD  \n    Quantity = **\\-1**  \n    Posting detail information:  \n    Reference = \"Restaurant Breakfast\"  \n    Remark = \"Breakfast Buffet\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal2:  \n    transactionCode = \"2010\"  \n    amount to post = \"**3.30**\" USD  \n    Quantity = **\\-1**  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Food\"  \n    Remark = \"Lunch Food\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\n*   subtotal3:  \n    transactionCode = \"2011\"  \n    amount to post = \"**4.30**\" USD  \n    Quantity = **\\-1**  \n    Posting detail information:  \n    Reference = \"Restaurant Lunch Bev\"  \n    Remark = \"Lunch Bev\"  \n    POS Check number = \"21120204\"  \n    FolioWindowNo = 2 (optional to send)  \n    cashierId = 113 (this is the PMS Cashier of the app)\n    \n\nPosting date = 2021-12-02 (incomeAuditDate)\n\n**Note for void postings:**\n\nin case a guest check needs to be voided due to reason (e.g. wrong payment or wrong reservation used) always void ALL sub amounts as to show clear postings on the guest account."
 							},
 							"response": []
 						}
@@ -25384,13 +25481,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25398,7 +25495,7 @@
 										"charges"
 									]
 								},
-								"description": "**A Post charges sample**\n\ncsh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 22.26 USD\n\nposting to transactionCode \"3000\"\n\nQuantity = 1\n\nPosting Date : 2021-12-22 (Dec 22 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Phone national\"\n\nRemark: \"021311370\" (= Dialled phone number)\n\nPostIt flag is set = false\n\n**Note:**\n\ncall duration is not supported (yet) can be sent in Reference or Remark values for informational purpose"
+								"description": "**A Post charges sample**\n\ncsh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 22.26 USD\n\nposting to transactionCode \"3000\"\n\nQuantity = 1\n\nPosting Date : 2021-12-22 (Dec 22 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Phone national\"\n\nRemark: \"021311370\" (= Dialled phone number)\n\nPostIt flag is set = false\n\n**Note:**\n\ncall duration is not supported (yet) can be sent in Reference or Remark values for informational purpose"
 							},
 							"response": []
 						},
@@ -25444,13 +25541,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25458,7 +25555,7 @@
 										"charges"
 									]
 								},
-								"description": "**A Post charges sample**\n\ncsh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 18.99 USD\n\nposting to transactionCode \"3010\"\n\nQuantity = 1\n\nPosting Date : 2021-12-22 (Dec 22 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"HSIA Access\"\n\nRemark: \"1 Day Pass\" (= detail info for guest on folio)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
+								"description": "**A Post charges sample**\n\ncsh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 18.99 USD\n\nposting to transactionCode \"3010\"\n\nQuantity = 1\n\nPosting Date : 2021-12-22 (Dec 22 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"HSIA Access\"\n\nRemark: \"1 Day Pass\" (= detail info for guest on folio)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
 							},
 							"response": []
 						},
@@ -25504,13 +25601,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25518,7 +25615,7 @@
 										"charges"
 									]
 								},
-								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 2.50 USD\n\nposting to transactionCode \"4510\"\n\nPMS article code \"10\"\n\nQuantity = 1\n\nPosting Date : 2021-10-05 (Oct 05 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Minibar Snacks\"\n\nRemark: \"Art 10\" (= detailed information)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
+								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 2.50 USD\n\nposting to transactionCode \"4510\"\n\nPMS article code \"10\"\n\nQuantity = 1\n\nPosting Date : 2021-10-05 (Oct 05 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Minibar Snacks\"\n\nRemark: \"Art 10\" (= detailed information)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
 							},
 							"response": []
 						},
@@ -25564,13 +25661,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25578,7 +25675,7 @@
 										"charges"
 									]
 								},
-								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 2.50 USD\n\nposting to transactionCode \"4510\"\n\nPMS article code \"10\"\n\nQuantity = 1\n\nPosting Date : 2021-10-05 (Oct 05 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Minibar Snacks\"\n\nRemark: \"Art 10\" (= detailed information)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
+								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 2.50 USD\n\nposting to transactionCode \"4510\"\n\nPMS article code \"10\"\n\nQuantity = 1\n\nPosting Date : 2021-10-05 (Oct 05 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Minibar Snacks\"\n\nRemark: \"Art 10\" (= detailed information)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
 							},
 							"response": []
 						},
@@ -25624,13 +25721,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25638,7 +25735,7 @@
 										"charges"
 									]
 								},
-								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 5.00 USD\n\nposting to transactionCode \"4510\"\n\nQuantity = 1\n\nPosting Date : 2021-10-05 (Oct 05 2021)\n\nwith no Posting information (Reference / Remark tags for posting details:\n\nPostIt flag is set = false"
+								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 5.00 USD\n\nposting to transactionCode \"4510\"\n\nQuantity = 1\n\nPosting Date : 2021-10-05 (Oct 05 2021)\n\nwith no Posting information (Reference / Remark tags for posting details:\n\nPostIt flag is set = false"
 							},
 							"response": []
 						},
@@ -25684,13 +25781,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/csh/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
+									"raw": "{{HostName}}/csh/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/charges",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"csh",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -25698,7 +25795,7 @@
 										"charges"
 									]
 								},
-								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v0/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 2.00 USD\n\nposting to transactionCode \"4510\"\n\nPMS article code \"02\"\n\nArticle Quantity = 5\n\nPosting Date : 2021-12-22 (Dec 22 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Minibar Snacks\"\n\nRemark: \"Peanuts x 4\" (= detailed information)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
+								"description": "**A Post charges sample for Minibar posting**\n\ncsh/v1/hotels/**HotelId**/reservations/**ReservationId**/charges\n\nfor ReservationId set in URL\n\nwith amount of 2.00 USD\n\nposting to transactionCode \"4510\"\n\nPMS article code \"02\"\n\nArticle Quantity = 5\n\nPosting Date : 2021-12-22 (Dec 22 2021)\n\nwith Posting information for the posting detail:\n\nReference: \"Minibar Snacks\"\n\nRemark: \"Peanuts x 4\" (= detailed information)\n\nPostIt flag is set = false\n\n**Note:**\n\nReference or Remark values only for informational purpose"
 							},
 							"response": []
 						}
@@ -25986,13 +26083,13 @@
 									"raw": "{\n    \"criteria\": {\n        \"hotelId\": \"{{HotelId}}\",\n        \"roomList\": [\n            \"104\"\n        ],\n        \"status\": \"DoNotDisturb\"\n    }\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/serviceRequests",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/serviceRequests",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests"
@@ -26006,7 +26103,7 @@
 										}
 									]
 								},
-								"description": "**HPI-RoomEquipment - Change Guest Service Status**\n\n/hsk/v0/hotels/{{HotelId}}/serviceRequests  \n\nExample API message to change a Guest Service Status for a specific room\n\n**GuestServiceStatus** option can be set by a hotel guest itself through a vendor system option to set a Do Not Disturb or a Make Up Room notification similar to the Door sign he can hang out outside the room door so housekeeping or Room service staff is aware.\n\nroomList = Room number\n\nstatus = DoNotDisturb, MakeUpRoom or NoStatusSelected"
+								"description": "**HPI-RoomEquipment - Change Guest Service Status**\n\n/hsk/v1/hotels/{{HotelId}}/serviceRequests  \n\nExample API message to change a Guest Service Status for a specific room\n\n**GuestServiceStatus** option can be set by a hotel guest itself through a vendor system option to set a Do Not Disturb or a Make Up Room notification similar to the Door sign he can hang out outside the room door so housekeeping or Room service staff is aware.\n\nroomList = Room number\n\nstatus = DoNotDisturb, MakeUpRoom or NoStatusSelected"
 							},
 							"response": []
 						},
@@ -26048,13 +26145,13 @@
 									"raw": "{\n    \"criteria\": {\n        \"hotelId\": \"{{HotelId}}\",\n        \"roomList\": [\n            \"104\"\n        ],\n        \"status\": \"MakeUpRoom\"\n    }\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/serviceRequests",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/serviceRequests",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests"
@@ -26110,13 +26207,13 @@
 									"raw": "{\n    \"criteria\": {\n        \"hotelId\": \"{{HotelId}}\",\n        \"roomList\": [\n            \"104\"\n        ],\n        \"status\": \"NoStatusSelected\"\n    }\n}"
 								},
 								"url": {
-									"raw": "{{HostName}}/hsk/v0/hotels/{{HotelId}}/serviceRequests",
+									"raw": "{{HostName}}/hsk/v1/hotels/{{HotelId}}/serviceRequests",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"hsk",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"serviceRequests"
@@ -26176,13 +26273,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26190,7 +26287,7 @@
 										"guestMessages"
 									]
 								},
-								"description": "**HPI-RoomEquipment - Set New Voice mail notification**\n\nPOST /rsv/v0/hotels/**HotelId**/reservations/**ReservationId**/guestMessages  \n  \n\nTypically used by telephone systems who handle voice mail on a phone set of a room.\n\nExample API message to set or update a Voice mail notification for a specific reservation (Not Room!!) when a voice mail has been left on a phone set.  \nThis will create a new Guest Text message in the PMS for the specific reservation.\n\n#### **values:**\n\n**messageText**: Message text being visible in the guest text message created in PMS\n\n**messageDate:** Date message is being created\n\n**typeOfMessage:** Tm - Text Message\n\n**receipient:** (optional) Guest name, first name (if available)\n\n**operator:** System sending the message\n\n**deliveryStatus:** \"Nr\" - new message (not received)\n\n**textMessageSentBy:** System / user sending the message"
+								"description": "**HPI-RoomEquipment - Set New Voice mail notification**\n\nPOST /rsv/v1/hotels/**HotelId**/reservations/**ReservationId**/guestMessages  \n  \n\nTypically used by telephone systems who handle voice mail on a phone set of a room.\n\nExample API message to set or update a Voice mail notification for a specific reservation (Not Room!!) when a voice mail has been left on a phone set.  \nThis will create a new Guest Text message in the PMS for the specific reservation.\n\n#### **values:**\n\n**messageText**: Message text being visible in the guest text message created in PMS\n\n**messageDate:** Date message is being created\n\n**typeOfMessage:** Tm - Text Message\n\n**receipient:** (optional) Guest name, first name (if available)\n\n**operator:** System sending the message\n\n**deliveryStatus:** \"Nr\" - new message (not received)\n\n**textMessageSentBy:** System / user sending the message"
 							},
 							"response": []
 						},
@@ -26236,13 +26333,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/30040",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/guestMessages/30040",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26251,7 +26348,7 @@
 										"30040"
 									]
 								},
-								"description": "**HPI-RoomEquipment - Update New Voice mail notification**\n\nPUT /rsv/v0/hotels/**HotelId**/reservations/**ReservationId**/guestMessages  \n\nTypically used by telephone systems who handle voice mail on a phone set of a room.\n\nExample API message to update a Voice mail notification for a specific reservation (Not Room!!) when a voice mail has been checked by the hotel guest.  \nThis will update the existing Guest Text message in the PMS with status \"delivered\" for the specific reservation.\n\n#### **values:**\n\n**messageText**: Message text being visible in the guest text message created in PMS\n\n**messageDate:** Date message is being created\n\n**typeOfMessage:** Tm - Text Message\n\n**recipient:** (optional) Guest name, first name (if available)\n\n**deliveryStatus:** \"Mr\" - message received/delivered\n\n**deliveryDate:** Date/time stamp the message has been delivered / system sent the update message\n\n**deliveredBy:** system/user which sends the status update."
+								"description": "**HPI-RoomEquipment - Update New Voice mail notification**\n\nPUT /rsv/v1/hotels/**HotelId**/reservations/**ReservationId**/guestMessages  \n\nTypically used by telephone systems who handle voice mail on a phone set of a room.\n\nExample API message to update a Voice mail notification for a specific reservation (Not Room!!) when a voice mail has been checked by the hotel guest.  \nThis will update the existing Guest Text message in the PMS with status \"delivered\" for the specific reservation.\n\n#### **values:**\n\n**messageText**: Message text being visible in the guest text message created in PMS\n\n**messageDate:** Date message is being created\n\n**typeOfMessage:** Tm - Text Message\n\n**recipient:** (optional) Guest name, first name (if available)\n\n**deliveryStatus:** \"Mr\" - message received/delivered\n\n**deliveryDate:** Date/time stamp the message has been delivered / system sent the update message\n\n**deliveredBy:** system/user which sends the status update."
 							},
 							"response": []
 						}
@@ -26323,13 +26420,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26383,13 +26480,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26443,13 +26540,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26503,13 +26600,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26563,13 +26660,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26623,13 +26720,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls?callTime=2022-11-17+19:00:00&startDate=2022-11-17",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls?callTime=2022-11-17+19:00:00&startDate=2022-11-17",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -26734,13 +26831,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/queuedReservations/{{ReservationId}}",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/queuedReservations/{{ReservationId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"queuedReservations",
@@ -26795,13 +26892,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/queuedReservations",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/queuedReservations",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"queuedReservations"
@@ -27034,13 +27131,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/queuedReservations/{{ReservationId}}",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/queuedReservations/{{ReservationId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"queuedReservations",
@@ -27095,13 +27192,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/queueReservationsStatistics?metric=AverageCheckInTime",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/queueReservationsStatistics?metric=AverageCheckInTime",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"queueReservationsStatistics"
@@ -27187,13 +27284,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/wakeUpCalls?hotelIds={{HotelId}}&fetchPending=true&fetchNoAnswer=true&fetchCompleted=false&fetchCancelled=false",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/wakeUpCalls?hotelIds={{HotelId}}&fetchPending=true&fetchNoAnswer=true&fetchCompleted=false&fetchCancelled=false",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"wakeUpCalls"
@@ -27273,13 +27370,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -27324,13 +27421,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -27375,13 +27472,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/fof/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls?newCallTime=2021-10-07+12:00:00&id=898395&callTime=2021-10-07+12:00:00&startDate=2021-10-07",
+									"raw": "{{HostName}}/fof/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/wakeUpCalls?newCallTime=2021-10-07+12:00:00&id=898395&callTime=2021-10-07+12:00:00&startDate=2021-10-07",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"fof",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
@@ -27492,13 +27589,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/par/v0/hotels/{{HotelId}}/availability?roomStayStartDate={{currentdate}}&roomStayEndDate={{currentdateplus1}}&roomStayQuantity=2&adults=1&children=0&limit=5",
+									"raw": "{{HostName}}/par/v1/hotels/{{HotelId}}/availability?roomStayStartDate={{currentdate}}&roomStayEndDate={{currentdateplus1}}&roomStayQuantity=2&adults=1&children=0&limit=5",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"par",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"availability"
@@ -27729,13 +27826,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/par/v0/hotels/{{HotelId}}/rates/{{RatePlanCode}}",
+									"raw": "{{HostName}}/par/v1/hotels/{{HotelId}}/rates/{{RatePlanCode}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"par",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"rates",
@@ -27931,13 +28028,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/par/v0/hotels/{{HotelId}}/guarantees?hotelId={{HotelId}}&ratePlanCode={{RatePlanCode}}&arrivalDate={{currentdate}}",
+									"raw": "{{HostName}}/par/v1/hotels/{{HotelId}}/guarantees?hotelId={{HotelId}}&ratePlanCode={{RatePlanCode}}&arrivalDate={{currentdate}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"par",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"guarantees"
@@ -28056,13 +28153,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/rtp/v0/packages?fetchInstructions=Header&fetchInstructions=Items&startDate=2021-04-07&endDate=2021-04-08&children=0&adults=1&hotelId={{HotelId}}&packageCode=CHAMP",
+									"raw": "{{HostName}}/rtp/v1/packages?fetchInstructions=Header&fetchInstructions=Items&startDate=2021-04-07&endDate=2021-04-08&children=0&adults=1&hotelId={{HotelId}}&packageCode=CHAMP",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rtp",
-										"v0",
+										"v1",
 										"packages"
 									],
 									"query": [
@@ -28243,13 +28340,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/crm/v0/profiles?profileName=Smith&profileType=Guest&summaryInfo=true&searchType=Any&fetchInstructions=Comment",
+									"raw": "{{HostName}}/crm/v1/profiles?profileName=Smith&profileType=Guest&summaryInfo=true&searchType=Any&fetchInstructions=Comment",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"crm",
-										"v0",
+										"v1",
 										"profiles"
 									],
 									"query": [
@@ -29069,13 +29166,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{HostName}}/par/v0/hotels/{{HotelId}}/availableUpsells?numberOfRooms=1&ratePlanCode=BARBB&roomType=SUP&startDate=2021-03-22&endDate=2021-03-23&fixedRate=false&reservationStatus=Reserved&rateDate=2021-03-22&requiredAmount=90&adults=1&rateAmount=90&profileId={{ProfileId}}&reservationId={{ReservationId}}",
+									"raw": "{{HostName}}/par/v1/hotels/{{HotelId}}/availableUpsells?numberOfRooms=1&ratePlanCode=BARBB&roomType=SUP&startDate=2021-03-22&endDate=2021-03-23&fixedRate=false&reservationStatus=Reserved&rateDate=2021-03-22&requiredAmount=90&adults=1&rateAmount=90&profileId={{ProfileId}}&reservationId={{ReservationId}}",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"par",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"availableUpsells"
@@ -29254,13 +29351,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{HostName}}/rsv/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/upsell",
+									"raw": "{{HostName}}/rsv/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/upsell",
 									"host": [
 										"{{HostName}}"
 									],
 									"path": [
 										"rsv",
-										"v0",
+										"v1",
 										"hotels",
 										"{{HotelId}}",
 										"reservations",
