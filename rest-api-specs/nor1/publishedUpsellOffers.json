@@ -1,0 +1,537 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "An upsell service that can be consumed to display upgrade offers to a hotel guest prior to arrival. Pre-arrival upsells are becoming increasingly important due to the adoption of mobile and kiosk check-in which reduces the opportunity for front-desk upselling. Upgrade offers are based on PRiME(R) AI/ML decision intelligence and OPERA real-time inventory. The service allows instant fulfillment of the upgrade offer.<br /><br /> Compatible with OPERA Cloud release 1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2023 Oracle and/or its affiliates.</p>",
+    "version": "1.0.0",
+    "title": "Nor1 Integrated Upsell API",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "host": "oracle.api.com",
+  "basePath": "/ohcgep/v1",
+  "tags": [
+    {
+      "name": "Nor1 Integrated Upsell API",
+      "description": "API to serve Upsell offers to customers and third parties"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "parameters": {
+    "accept": {
+      "name": "Accept",
+      "in": "header",
+      "required": true,
+      "type": "string",
+      "enum": [
+        "application/json; charset=UTF-8",
+        "application/json"
+      ],
+      "x-example": "application/json; charset=UTF-8"
+    },
+    "acceptForPost": {
+      "name": "consumes",
+      "in": "header",
+      "type": "string",
+      "enum": [
+        "application/json; charset=UTF-8",
+        "application/json"
+      ],
+      "x-example": "application/json"
+    },
+    "authorization": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "string",
+      "x-example": "Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "in": "header",
+      "type": "string",
+      "x-example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    },
+    "providerId": {
+      "name": "providerId",
+      "in": "header",
+      "type": "string",
+      "x-example": "SAN",
+      "description": "Partner's Unique Nor1 Provider ID"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "in": "header",
+      "type": "string",
+      "description": "Language code"
+    }
+  },
+  "paths": {
+    "/hotels/{hotelId}/reservations/{reservationId}/arrivalDate/{arrivalDate}/upsellOffers": {
+      "get": {
+        "summary": "Get Upsell Offers for a reservation",
+        "description": "This API will allow a user to retrieve a retrieve a list of available upsell offers based on the search criteria specified in the request body, inventory availability and current reservation details. <p><strong>OperationId:</strong> getUpsellOffers</p>",
+        "operationId": "getUpsellOffers",
+        "tags": [
+          "Upsell Offers"
+        ],
+        "produces": [
+          "application/json; charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/accept"
+          },
+          {
+            "$ref": "#/parameters/authorization"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/providerId"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-example": "SAND01",
+            "pattern": "^[A-Z0-9]{6-10}$",
+            "description": "Unique ID of the hotel where reservation is searched based on reservation Id."
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-example": "17158",
+            "pattern": "^[0-9]{5-7}$",
+            "description": "A unique identifying value for reservation assigned by the creating system."
+          },
+          {
+            "name": "arrivalDate",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-example": "2022-03-28",
+            "format": "date",
+            "description": "Arrival Date of the reservation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "x-example": "en-GB"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/UpsellOffers"
+            }
+          },
+          "204": {
+            "description": "No Offers Found"
+          },
+          "404": {
+            "description": "Unable to find HotelId or ReservationId",
+            "schema": {
+              "$ref": "#/definitions/errorInstanceNF"
+            }
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/errorInstanceISE"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      },
+      "post": {
+        "summary": "Post Upsell Offers for a reservation",
+        "description": "This API will allow a user to update a reservation with an offer selected from the list of available upsell offers based on the unique offer id specified in the request body. <p><strong>OperationId:</strong> postUpsellOffers</p>",
+        "operationId": "postUpsellOffers",
+        "tags": [
+          "API to serve Fulfill Upsell Offers to customers and thirdparties"
+        ],
+        "produces": [
+          "application/json; charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/acceptForPost"
+          },
+          {
+            "$ref": "#/parameters/authorization"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/providerId"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-example": "SAND01",
+            "pattern": "^[A-Z0-9]{6-10}$",
+            "description": "Unique ID of the hotel where reservation is searched based on reservation Id."
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-example": "17158",
+            "pattern": "^[0-9]{5-7}$",
+            "description": "A unique identifying value for reservation assigned by the creating system."
+          },
+          {
+            "name": "arrivalDate",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "x-example": "2022-03-28",
+            "format": "date",
+            "description": "Arrival Date of the reservation."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "schema": {
+              "$ref": "#/definitions/UpsellOffers"
+            }
+          },
+          "404": {
+            "description": "Unable to find HotelId or ReservationId",
+            "schema": {
+              "$ref": "#/definitions/errorInstanceNF"
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "schema": {
+              "$ref": "#/definitions/errorInstanceUMT"
+            }
+          },
+          "500": {
+            "description": "System Error",
+            "schema": {
+              "$ref": "#/definitions/errorInstanceISE"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UpsellOffers": {
+      "type": "object",
+      "description": "Success and Failure Summary Data",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Items"
+          }
+        },
+        "totalResults": {
+          "type": "number",
+          "example": 1
+        },
+        "offset": {
+          "type": "number",
+          "example": 0
+        },
+        "count": {
+          "type": "number",
+          "example": 1
+        },
+        "hasMore": {
+          "type": "boolean",
+          "example": false
+        },
+        "limit": {
+          "type": "number",
+          "example": 0
+        }
+      }
+    },
+    "Items": {
+      "type": "object",
+      "description": "Success and Failure Summary Data",
+      "properties": {
+        "upsellOffers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UpsellOffer"
+          }
+        }
+      }
+    },
+    "UpsellOffer": {
+      "type": "object",
+      "properties": {
+        "offerType": {
+          "type": "string",
+          "example": "room_upgrade",
+          "description": "describes type of an offer"
+        },
+        "selectionType": {
+          "type": "string",
+          "description": "",
+          "example": "zero_to_one",
+          "enum": [
+            "zeroToOne",
+            "zeroToMany"
+          ]
+        },
+        "offers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Offers"
+          }
+        }
+      }
+    },
+    "Offers": {
+      "type": "object",
+      "properties": {
+        "offerId": {
+          "type": "string",
+          "format": "uuid",
+          "description": "A unique upsell ID per upsell offer"
+        },
+        "name": {
+          "type": "string",
+          "example": "Deluxe King Suite",
+          "description": "offer name"
+        },
+        "description": {
+          "type": "string",
+          "example": "Rest easy in the 600-square-foot suite with sitting area and cityscape views. Enjoy pillow top mattress, pull out sofa bed, premium mini bar, 24 hour room service, and a large marble bathroom."
+        },
+        "images": {
+          "$ref": "#/definitions/Image"
+        },
+        "price": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "example": 33.94
+            },
+            "currency": {
+              "type": "string",
+              "description": "This is an ISO 4217(https://en.wikipedia.org/wiki/ISO_4217) currency code.",
+              "example": "USD"
+            }
+          }
+        },
+        "savings": {
+          "type": "string",
+          "example": 16.06
+        },
+        "chargeFrequency": {
+          "type": "string",
+          "example": "per_unit_per_night"
+        },
+        "fixedCharge": {
+          "type": "number",
+          "example": 33.94
+        },
+        "roomTypeCode": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "example": "SGL"
+          }
+        }
+      }
+    },
+    "Image": {
+      "type": "object",
+      "properties": {
+        "big": {
+          "type": "string",
+          "example": "https://example.com/img_url1.jpg"
+        },
+        "small": {
+          "type": "string",
+          "example": "https://example.com/img_url2.jpg"
+        }
+      }
+    },
+    "Item": {
+      "type": "object",
+      "properties": {
+        "offerId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "errorDetail": {
+      "type": "object",
+      "description": "Complex type that contains error detail",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Holds error details in short"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Holds error details"
+        },
+        "errorCode": {
+          "type": "string",
+          "description": "Holds specific error code"
+        }
+      }
+    },
+    "errorInstanceISE": {
+      "type": "object",
+      "description": "Complex type that contains internal server error instance details for a REST call",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Holds error type",
+          "example": "http://www.example.org/protocols/.."
+        },
+        "title": {
+          "type": "string",
+          "description": "Holds error details in short",
+          "example": "Internal Server Error"
+        },
+        "status": {
+          "type": "number",
+          "example": 500
+        },
+        "detail": {
+          "type": "string",
+          "description": "Holds error details",
+          "example": "Internal Server Error"
+        },
+        "errorCode": {
+          "type": "string",
+          "description": "Holds specific error code"
+        },
+        "errorDetails": {
+          "type": "array",
+          "description": "Holds List of errors",
+          "items": {
+            "$ref": "#/definitions/errorDetail"
+          }
+        }
+      }
+    },
+    "errorInstanceNF": {
+      "type": "object",
+      "description": "Complex type that contains not found error instance details for a REST call",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Holds error type",
+          "example": "http://www.example.org/protocols/.."
+        },
+        "title": {
+          "type": "string",
+          "description": "Holds error details in short",
+          "example": "Not Found"
+        },
+        "status": {
+          "type": "number",
+          "example": 404
+        },
+        "detail": {
+          "type": "string",
+          "description": "Holds error details",
+          "example": "Unable to find HotelId or ReservationId"
+        },
+        "errorCode": {
+          "type": "string",
+          "description": "Holds specific error code"
+        },
+        "errorDetails": {
+          "type": "array",
+          "description": "Holds List of errors",
+          "items": {
+            "$ref": "#/definitions/errorDetail"
+          }
+        }
+      }
+    },
+    "errorInstanceUMT": {
+      "type": "object",
+      "description": "Complex type that contains refuse request error instance details for a REST call",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Holds error type",
+          "example": "http://www.example.org/protocols/.."
+        },
+        "title": {
+          "type": "string",
+          "description": "Holds error details in short",
+          "example": "Unsupported Media Type"
+        },
+        "status": {
+          "type": "number",
+          "example": 415
+        },
+        "detail": {
+          "type": "string",
+          "description": "Holds error details",
+          "example": "Unsupported Media Type"
+        },
+        "errorCode": {
+          "type": "string",
+          "description": "Holds specific error code"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}

@@ -1,24 +1,33 @@
 {
 	"info": {
-		"_postman_id": "5d8f4647-86af-4b40-859d-126dc7ebbf25",
+		"_postman_id": "ef882897-a02c-431c-8942-7827cbbc5023",
 		"name": "4. Nor1 Upgrade REST APIs",
+		"description": "APIs to cater for Nor1 eXpress Upgrades\n\nOracle’s Nor1 eXpress Upgrade allows hotels and resorts to present confirmed room upsell offers to guests before arrival, allowing the hotel to monetize inventory and avoid oversold conversations at check-in. Nor1 eXpress Upgrade offers allows instant fulfillment of the offer and updates the reservation in OPERA Cloud in real time.\n\nFor further detailed information on Nor1 eXpress, please refer to the eXpress User Guide located [here](https://docs.oracle.com/en/industries/hospitality/nor1-cloud/norug/ch_express_upgrades.htm#EXpressUpgrades-95A131F1).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15729853",
-		"_collection_link": "https://www.postman.com/hospitalityapis/workspace/oracle-hospitality-apis/collection/15729853-5d8f4647-86af-4b40-859d-126dc7ebbf25?action=share&source=collection_link&creator=15729853"
+		"_collection_link": "https://hospitalityapis.postman.co/workspace/Team-Workspace~f6e529a2-8cdb-43d1-8526-1aa5d61f48e4/collection/15729853-ef882897-a02c-431c-8942-7827cbbc5023?action=share&source=collection_link&creator=15729853"
 	},
 	"item": [
 		{
 			"name": "OAuth Token",
 			"item": [
 				{
-					"name": "Get OAuth Token",
+					"name": "Get OAuth Token for Resource Owner environments",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
-									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);"
+									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);\r",
+									"//Set currentdate and currentdateplus1 variables\r",
+									"var moment = require('moment');\r",
+									"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))\r",
+									"var uuid = require('uuid');\r",
+									"var myUUID = uuid.v4();\r",
+									"pm.environment.set(\"MyGUID\", myUUID);\r",
+									"pm.environment.set(\"HashedAppKey\", CryptoJS.SHA256(pm.environment.get(\"AppKey\")).toString());"
 								],
 								"type": "text/javascript"
 							}
@@ -47,6 +56,92 @@
 									"key": "showPassword",
 									"value": false,
 									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-app-key",
+								"type": "text",
+								"value": "{{AppKey}}"
+							},
+							{
+								"key": "enterpriseId",
+								"value": "{{EnterpriseId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{Username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{Password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostName}}/oauth/v1/tokens",
+							"host": [
+								"{{HostName}}"
+							],
+							"path": [
+								"oauth",
+								"v1",
+								"tokens"
+							]
+						},
+						"description": "Use this API to request an oAuth token when the environment is a Resource Owner environment. You can see which oAuth flow an environment supports by looking at the Environment page in the OHIP Developer Portal. For more information see (Authenticating to Oracle Hospitality Property APIs)\\[[https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80](https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80)\\] under the heading \"Resource Owner-Based Authentication\".\n\nTo call this API you will need:\n\n1. To know the environment is a Resource Owner environment - see above\n    \n2. A valid ClientId and ClientSecret\n    \n3. An integration user and its password that has been approved by the environment owner\n    \n4. A valid application key\n    \n\nBecause of this, oAuth tokens may only be used when calling the given environment.\n\noAuth tokens expire after 60 minutes. We recommend obtaining a new oAuth token every 50 minutes, but not more frequently."
+					},
+					"response": []
+				},
+				{
+					"name": "Get OAuth Token for Client Credentials environments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);\r",
+									"//Set currentdate and currentdateplus1 variables\r",
+									"var moment = require('moment');\r",
+									"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")))\r",
+									"pm.environment.set('currentdateplus1', moment().add(1, 'days').format((\"YYYY-MM-DD\")))\r",
+									"var uuid = require('uuid');\r",
+									"var myUUID = uuid.v4();\r",
+									"pm.environment.set(\"MyGUID\", myUUID);\r",
+									"pm.environment.set(\"HashedAppKey\", CryptoJS.SHA256(pm.environment.get(\"AppKey\")).toString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "undefined",
+									"type": "any"
 								}
 							]
 						},
@@ -94,144 +189,145 @@
 								"v1",
 								"tokens"
 							]
-						}
+						},
+						"description": "Use this API to request an oAuth token when the environment is a Client Credentials environment. You can see which oAuth flow an environment supports by looking at the Environment page in the OHIP Developer Portal. For more information see (Authenticating to Oracle Hospitality Property APIs)\\[[https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80](https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80)\\] under the heading \"Client Credentials-Based Authentication\".\n\nTo call this API you will need:\n\n1. To know the environment is a Client Credentials environment - see above\n2. A valid ClientId and ClientSecret\n3. A valid EnterpriseId\n    \n4. A valid application key\n    \n\nBecause of this, oAuth tokens may only be used when calling the given environment.\n\noAuth tokens expire after 60 minutes. We recommend obtaining a new oAuth token every 50 minutes, but not more frequently."
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "Nor1 Upgrade API",
+			"name": "Upsell Offers API",
 			"item": [
 				{
-					"name": "Upsell Offers API",
-					"item": [
+					"name": "Get Upsell Offers",
+					"event": [
 						{
-							"name": "get Upsell Offers",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"var jsonData = JSON.parse(responseBody);\r",
-											"postman.setEnvironmentVariable(\"SelectedOfferId\", jsonData.items[0].upsellOffers[0].offers[0].offerId);"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									},
-									{
-										"key": "providerId",
-										"value": "{{ProviderId}}",
-										"type": "text"
-									}
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"SelectedOfferId\", jsonData.items[0].upsellOffers[0].offers[0].offerId);"
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HostName}}/ohcgep/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/arrivalDate/{{ArrivalDate}}/upsellOffers",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"ohcgep",
-										"v0",
-										"hotels",
-										"{{HotelId}}",
-										"reservations",
-										"{{ReservationId}}",
-										"arrivalDate",
-										"{{ArrivalDate}}",
-										"upsellOffers"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Post Upsell Offer",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "x-app-key",
-										"value": "{{AppKey}}",
-										"type": "text"
-									},
-									{
-										"key": "providerId",
-										"value": "{{ProviderId}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n   \"offerId\": \"{{SelectedOfferId}}\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{HostName}}/ohcgep/v0/hotels/{{HotelId}}/reservations/{{ReservationId}}/arrivalDate/{{ArrivalDate}}/upsellOffers",
-									"host": [
-										"{{HostName}}"
-									],
-									"path": [
-										"ohcgep",
-										"v0",
-										"hotels",
-										"{{HotelId}}",
-										"reservations",
-										"{{ReservationId}}",
-										"arrivalDate",
-										"{{ArrivalDate}}",
-										"upsellOffers"
-									]
-								}
-							},
-							"response": []
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "providerId",
+								"value": "{{ProviderId}}",
+								"type": "default"
+							},
+							{
+								"key": "x-app-key",
+								"value": "{{AppKey}}",
+								"type": "default"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{LanguageCode}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HostName}}/ohcgep/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/arrivalDate/{{ArrivalDate}}/upsellOffers",
+							"host": [
+								"{{HostName}}"
+							],
+							"path": [
+								"ohcgep",
+								"v1",
+								"hotels",
+								"{{HotelId}}",
+								"reservations",
+								"{{ReservationId}}",
+								"arrivalDate",
+								"{{ArrivalDate}}",
+								"upsellOffers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Upsell Offer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "providerId",
+								"value": "{{ProviderId}}",
+								"type": "default"
+							},
+							{
+								"key": "x-app-key",
+								"value": "{{AppKey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"offerId\": \"{{SelectedOfferId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HostName}}/ohcgep/v1/hotels/{{HotelId}}/reservations/{{ReservationId}}/arrivalDate/{{ArrivalDate}}/upsellOffers",
+							"host": [
+								"{{HostName}}"
+							],
+							"path": [
+								"ohcgep",
+								"v1",
+								"hotels",
+								"{{HotelId}}",
+								"reservations",
+								"{{ReservationId}}",
+								"arrivalDate",
+								"{{ArrivalDate}}",
+								"upsellOffers"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
