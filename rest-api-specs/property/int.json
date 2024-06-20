@@ -1,120 +1,101 @@
 {
-  "produces": [
-    "application/json"
-  ],
-  "schemes": [
-    "https"
-  ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs to get Business Events generated in OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
     "title": "OPERA Cloud Integration Processor API",
-    "version": "23.2",
+    "description": "APIs to get Business Events generated in OPERA Cloud.<br /><br />Compatible with OPERA Cloud release 23.5.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "23.5",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality-integrations_ww@oracle.com"
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
     "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
     }
   },
+  "schemes": [
+    "https"
+  ],
   "basePath": "/int/v1",
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/externalSystem/{extSystemCode}/businessEvents": {
       "get": {
-        "description": "Business Event messages are placed in a queue. Use this API to dequeue/fetch the Business Event messages based on the external system for all hotels within the same chain. In order to get events, you must have a unique consumer code for the External System and hotels. <p><strong>OperationId:</strong>getBusinessEventsByExternalSystem</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "IntegrationProcessor"
-        ],
         "summary": "Get Business Events by External System",
+        "description": "Business Event messages are placed in a queue. Use this API to dequeue/fetch the Business Event messages based on the external system for all hotels within the same chain. In order to get events, you must have a unique consumer code for the External System and hotels. <p><strong>OperationId:</strong>getBusinessEventsByExternalSystem</p>",
         "operationId": "getBusinessEventsByExternalSystem",
         "parameters": [
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "External system code which will be used to dequeue the events",
             "name": "extSystemCode",
             "in": "path",
-            "required": true
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "External system code which will be used to dequeue the events"
           },
           {
-            "type": "integer",
-            "default": 1,
-            "description": "Number of messages web service should dequeue from the BE queue.",
             "name": "limit",
-            "in": "query"
+            "in": "query",
+            "default": 1,
+            "required": false,
+            "description": "Number of messages web service should dequeue from the BE queue.",
+            "type": "integer"
           },
           {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/authKey"
           },
           {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-app-key"
           },
           {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-hotelid"
           },
           {
-            "maxLength": 80,
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "External system code.",
-            "name": "x-externalsystem",
-            "in": "header"
+            "$ref": "#/parameters/x-externalsystem"
           },
           {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
+            "$ref": "#/parameters/Accept-Language"
           }
         ],
         "responses": {
           "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
             "description": "Provides business event message dequeued from BE queue as response",
             "schema": {
               "$ref": "#/definitions/businessEvents"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
             },
             "examples": {
               "application/json": {
                 "businessEventData": [
                   {
                     "businessEvent": {
+                      "header": {
+                        "moduleName": 14,
+                        "actionType": "UPDATE PROFILE",
+                        "actionId": "561139",
+                        "primaryKey": "42212",
+                        "publisherId": "18371",
+                        "createdDateTime": "2019-11-24 21:30:52.0",
+                        "hotelId": "HOTEL1"
+                      },
                       "details": [
                         {
                           "dataElement": "FIRST NAME"
                         },
                         {
                           "dataElement": "NAME",
-                          "newValue": "Safe Travel One",
-                          "oldValue": "Safe Travel"
+                          "oldValue": "Safe Travel",
+                          "newValue": "Safe Travel One"
                         },
                         {
                           "dataElement": "IATA NUMBER",
@@ -122,22 +103,13 @@
                         },
                         {
                           "dataElement": "EMAIL",
-                          "newValue": "contactus@example.com",
-                          "oldValue": "info@example.com"
+                          "oldValue": "info@example.com",
+                          "newValue": "contactus@example.com"
                         },
                         {
                           "dataElement": "WEBPAGE"
                         }
-                      ],
-                      "header": {
-                        "actionId": "561139",
-                        "actionType": "UPDATE PROFILE",
-                        "createdDateTime": "2019-11-24 21:30:52.0",
-                        "hotelId": "HOTEL1",
-                        "moduleName": 14,
-                        "primaryKey": "42212",
-                        "publisherId": "18371"
-                      }
+                      ]
                     },
                     "businessEventId": {
                       "id": "1971132"
@@ -145,6 +117,15 @@
                   },
                   {
                     "businessEvent": {
+                      "header": {
+                        "moduleName": 14,
+                        "actionType": "NEW PROFILE",
+                        "actionId": "561141",
+                        "primaryKey": "494139",
+                        "publisherId": "27234",
+                        "createdDateTime": "2019-11-24 21:43:59.0",
+                        "hotelId": "HOTEL1"
+                      },
                       "details": [
                         {
                           "dataElement": "FIRST NAME",
@@ -157,16 +138,7 @@
                         {
                           "dataElement": "WEBPAGE"
                         }
-                      ],
-                      "header": {
-                        "actionId": "561141",
-                        "actionType": "NEW PROFILE",
-                        "createdDateTime": "2019-11-24 21:43:59.0",
-                        "hotelId": "HOTEL1",
-                        "moduleName": 14,
-                        "primaryKey": "494139",
-                        "publisherId": "27234"
-                      }
+                      ]
                     },
                     "businessEventId": {
                       "id": "1971133"
@@ -178,58 +150,8 @@
           },
           "204": {
             "description": "BusinessEventsByExternalSystem not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
-        }
-      }
-    },
-    "/externalSystem/{extSystemCode}/hotels/{hotelId}/businessEvents": {
-      "get": {
-        "description": "Business Event messages are placed in a queue. Use this API to fetch(dequeue) the Business Event messages based on the External System and Hotel ID. In order to get property specific business event messages, you must have a unique consumer code (OPERA Cloud UI > Toolbox > External Database) for the External System and the Hotel ID. <p><strong>OperationId:</strong>getBusinessEvents</p>",
+        },
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -238,90 +160,85 @@
         ],
         "tags": [
           "IntegrationProcessor"
-        ],
+        ]
+      }
+    },
+    "/externalSystem/{extSystemCode}/hotels/{hotelId}/businessEvents": {
+      "get": {
         "summary": "Get Business Events by External System and Hotel ID",
+        "description": "Business Event messages are placed in a queue. Use this API to fetch(dequeue) the Business Event messages based on the External System and Hotel ID. In order to get property specific business event messages, you must have a unique consumer code (OPERA Cloud UI > Toolbox > External Database) for the External System and the Hotel ID. <p><strong>OperationId:</strong>getBusinessEvents</p>",
         "operationId": "getBusinessEvents",
         "parameters": [
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique OPERA Hotel code",
             "name": "hotelId",
             "in": "path",
-            "required": true
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Hotel code"
           },
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "External system code which will be used to dequeue the events.",
             "name": "extSystemCode",
             "in": "path",
-            "required": true
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "External system code which will be used to dequeue the events."
           },
           {
-            "type": "integer",
-            "default": 1,
-            "description": "Number of messages web service should dequeue from the BE queue.",
             "name": "limit",
-            "in": "query"
+            "in": "query",
+            "default": 1,
+            "required": false,
+            "description": "Number of messages web service should dequeue from the BE queue.",
+            "type": "integer"
           },
           {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/authKey"
           },
           {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-app-key"
           },
           {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-hotelid"
           },
           {
-            "maxLength": 80,
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "External system code.",
-            "name": "x-externalsystem",
-            "in": "header"
+            "$ref": "#/parameters/x-externalsystem"
           },
           {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
+            "$ref": "#/parameters/Accept-Language"
           }
         ],
         "responses": {
           "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
             "description": "Provides business event message dequeued from BE queue as response",
             "schema": {
               "$ref": "#/definitions/businessEvents"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
             },
             "examples": {
               "application/json": {
                 "businessEventData": [
                   {
                     "businessEvent": {
+                      "header": {
+                        "moduleName": "Profile",
+                        "actionType": "NEW PROFILE",
+                        "actionId": "561141",
+                        "primaryKey": "1280812",
+                        "publisherId": "57475",
+                        "createdDateTime": "2021-07-08 10:50:04.0",
+                        "hotelId": "HOTEL1"
+                      },
                       "details": [
                         {
                           "dataElement": "FIRST NAME",
@@ -331,16 +248,7 @@
                           "dataElement": "NAME",
                           "newValue": "Smith"
                         }
-                      ],
-                      "header": {
-                        "actionId": "561141",
-                        "actionType": "NEW PROFILE",
-                        "createdDateTime": "2021-07-08 10:50:04.0",
-                        "hotelId": "HOTEL1",
-                        "moduleName": "Profile",
-                        "primaryKey": "1280812",
-                        "publisherId": "57475"
-                      }
+                      ]
                     },
                     "businessEventId": {
                       "id": "1971133"
@@ -348,11 +256,20 @@
                   },
                   {
                     "businessEvent": {
+                      "header": {
+                        "moduleName": "Profile",
+                        "actionType": "UPDATE PROFILE",
+                        "actionId": "561142",
+                        "primaryKey": "1280812",
+                        "publisherId": "57475",
+                        "createdDateTime": "2021-07-08 11:01:47.0",
+                        "hotelId": "HOTEL1"
+                      },
                       "details": [
                         {
                           "dataElement": "FIRST NAME",
-                          "newValue": "John",
-                          "oldValue": "Jonathan"
+                          "oldValue": "Jonathan",
+                          "newValue": "John"
                         },
                         {
                           "dataElement": "MIDDLE",
@@ -360,8 +277,8 @@
                         },
                         {
                           "dataElement": "NAME",
-                          "newValue": "Smith",
-                          "oldValue": "Smith"
+                          "oldValue": "Smith",
+                          "newValue": "Smith"
                         },
                         {
                           "dataElement": "EMAIL",
@@ -379,16 +296,7 @@
                           "dataElement": "COUNTRY",
                           "newValue": "GB"
                         }
-                      ],
-                      "header": {
-                        "actionId": "561142",
-                        "actionType": "UPDATE PROFILE",
-                        "createdDateTime": "2021-07-08 11:01:47.0",
-                        "hotelId": "HOTEL1",
-                        "moduleName": "Profile",
-                        "primaryKey": "1280812",
-                        "publisherId": "57475"
-                      }
+                      ]
                     },
                     "businessEventId": {
                       "id": "1971132"
@@ -396,6 +304,16 @@
                   },
                   {
                     "businessEvent": {
+                      "header": {
+                        "moduleName": "Reservation",
+                        "actionType": "NEW RESERVATION",
+                        "actionId": 2130690,
+                        "primaryKey": "919074",
+                        "parentActionId": 2130689,
+                        "publisherId": 57489,
+                        "createdDateTime": "2021-07-08 11:15:38.0",
+                        "hotelId": "HOTEL1"
+                      },
                       "details": [
                         {
                           "dataElement": "ACTION DATE",
@@ -477,17 +395,7 @@
                           "dataElement": "RESORT",
                           "newValue": "HOTEL1"
                         }
-                      ],
-                      "header": {
-                        "actionId": 2130690,
-                        "actionType": "NEW RESERVATION",
-                        "createdDateTime": "2021-07-08 11:15:38.0",
-                        "hotelId": "HOTEL1",
-                        "moduleName": "Reservation",
-                        "parentActionId": 2130689,
-                        "primaryKey": "919074",
-                        "publisherId": 57489
-                      }
+                      ]
                     },
                     "businessEventId": {
                       "id": "2130690"
@@ -495,104 +403,104 @@
                   },
                   {
                     "businessEvent": {
+                      "header": {
+                        "moduleName": "Reservation",
+                        "actionType": "UPDATE RESERVATION",
+                        "actionId": 2240137,
+                        "primaryKey": "934171",
+                        "parentActionId": 2240136,
+                        "publisherId": 57491,
+                        "createdDateTime": "2021-07-08 11:35:36.0",
+                        "hotelId": "HOTEL1"
+                      },
                       "details": [
                         {
                           "dataElement": "NAME",
-                          "newValue": "Smith",
-                          "oldValue": "Smith"
+                          "oldValue": "Smith",
+                          "newValue": "Smith"
                         },
                         {
                           "dataElement": "FIRST NAME",
-                          "newValue": "John",
-                          "oldValue": "John"
+                          "oldValue": "John",
+                          "newValue": "John"
                         },
                         {
                           "dataElement": "CONFIRMATION NO",
-                          "newValue": "1515034",
-                          "oldValue": "1515034"
+                          "oldValue": "1515034",
+                          "newValue": "1515034"
                         },
                         {
                           "dataElement": "CONFIRMATION LEG NO",
-                          "newValue": "1",
-                          "oldValue": "1"
+                          "oldValue": "1",
+                          "newValue": "1"
                         },
                         {
                           "dataElement": "GUEST NAME ID",
-                          "newValue": "1280812",
-                          "oldValue": "1280812"
+                          "oldValue": "1280812",
+                          "newValue": "1280812"
                         },
                         {
                           "dataElement": "RESERVATION STATUS",
-                          "newValue": "CHECKED IN",
-                          "oldValue": "RESERVED"
+                          "oldValue": "RESERVED",
+                          "newValue": "CHECKED IN"
                         },
                         {
                           "dataElement": "ARRIVAL DATE",
-                          "newValue": "2021-07-27",
-                          "oldValue": "2021-07-27"
+                          "oldValue": "2021-07-27",
+                          "newValue": "2021-07-27"
                         },
                         {
                           "dataElement": "ARRIVAL TIME",
-                          "newValue": "16:21:34",
-                          "oldValue": "16:21:34"
+                          "oldValue": "16:21:34",
+                          "newValue": "16:21:34"
                         },
                         {
                           "dataElement": "LENGTH OF STAY",
-                          "newValue": "1",
-                          "oldValue": "1"
+                          "oldValue": "1",
+                          "newValue": "1"
                         },
                         {
                           "dataElement": "DEPARTURE DATE",
-                          "newValue": "2021-07-28",
-                          "oldValue": "2021-07-28"
+                          "oldValue": "2021-07-28",
+                          "newValue": "2021-07-28"
                         },
                         {
                           "dataElement": "NUMBER OF ROOMS",
-                          "newValue": "1",
-                          "oldValue": "1"
+                          "oldValue": "1",
+                          "newValue": "1"
                         },
                         {
                           "dataElement": "ROOM TYPE",
-                          "newValue": "DLXK",
-                          "oldValue": "DLXK"
+                          "oldValue": "DLXK",
+                          "newValue": "DLXK"
                         },
                         {
                           "dataElement": "ROOM",
-                          "newValue": "123458",
-                          "oldValue": "123458"
+                          "oldValue": "123458",
+                          "newValue": "123458"
                         },
                         {
                           "dataElement": "ADULTS",
-                          "newValue": "1",
                           "oldValue": "1",
+                          "newValue": "1",
                           "scopeFrom": "2021-07-27",
                           "scopeTo": "2021-07-28"
                         },
                         {
                           "dataElement": "RATE AMOUNT",
-                          "newValue": "100",
                           "oldValue": "100",
+                          "newValue": "100",
                           "scopeFrom": "2021-07-27",
                           "scopeTo": "2021-07-28"
                         },
                         {
                           "dataElement": "RATE CODE",
-                          "newValue": "BARRATE1",
                           "oldValue": "BARRATE1",
+                          "newValue": "BARRATE1",
                           "scopeFrom": "2021-07-27",
                           "scopeTo": "2021-07-28"
                         }
-                      ],
-                      "header": {
-                        "actionId": 2240137,
-                        "actionType": "UPDATE RESERVATION",
-                        "createdDateTime": "2021-07-08 11:35:36.0",
-                        "hotelId": "HOTEL1",
-                        "moduleName": "Reservation",
-                        "parentActionId": 2240136,
-                        "primaryKey": "934171",
-                        "publisherId": 57491
-                      }
+                      ]
                     },
                     "businessEventId": {
                       "id": "2240137"
@@ -604,57 +512,134 @@
           },
           "204": {
             "description": "BusinessEvents not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
-        }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "IntegrationProcessor"
+        ]
       }
     }
   },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
   "definitions": {
+    "businessEvents": {
+      "type": "object",
+      "description": "Provides business event message dequeued from BE queue as response",
+      "properties": {
+        "businessEventData": {
+          "description": "List of BusinessEvents dequeued for given external system",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/businessEventDataType"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/instanceLink"
+          }
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
     "businessEventDataType": {
       "type": "object",
       "properties": {
@@ -668,64 +653,45 @@
         }
       }
     },
-    "businessEventDetailType": {
+    "businessEventType": {
       "type": "object",
       "properties": {
-        "dataElement": {
-          "description": "Name of the data element, such as arrival date, departure date, etc.",
-          "type": "string"
+        "header": {
+          "description": "Business event header type.",
+          "$ref": "#/definitions/businessEventHeaderType"
         },
-        "elementRole": {
-          "description": "Element role used to correlate fields of each record, when a collection of records is represented, such as phone role for phones.",
-          "type": "string"
-        },
-        "elementSequence": {
-          "description": "Sequence number used to correlate fields of each record, when a collection of records is represented.",
-          "type": "integer"
-        },
-        "elementType": {
-          "description": "Element type used to correlate fields of each record, when a collection of records is represented, such as phone type for phones.",
-          "type": "string"
-        },
-        "newValue": {
-          "description": "Value of the element after this action took place. In case of date values, format used is YYYY-MM-DD.",
-          "type": "string"
-        },
-        "oldValue": {
-          "description": "Value of the element when this action took place. In case of date values, format used is YYYY-MM-DD.",
-          "type": "string"
-        },
-        "scopeFrom": {
-          "description": "Begin date from when this value is applicable, such as daily element date, block grid date etc.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "scopeTo": {
-          "description": "End date till when this value is applicable, such as daily element date, block grid date etc.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
+        "details": {
+          "description": "Business event details collection.",
+          "$ref": "#/definitions/businessEventDetailsType"
         }
-      }
-    },
-    "businessEventDetailsType": {
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/businessEventDetailType"
       }
     },
     "businessEventHeaderType": {
       "type": "object",
       "properties": {
-        "actionId": {
-          "description": "Unique action instance id of the business event, uniqueness is guaranteed intra-module only.",
-          "type": "number"
+        "moduleName": {
+          "description": "Business event module name.",
+          "$ref": "#/definitions/businessEventModuleType"
         },
         "actionType": {
           "description": "Business event action type, such as new reservation, update profile, etc.",
           "type": "string"
+        },
+        "actionId": {
+          "description": "Unique action instance id of the business event, uniqueness is guaranteed intra-module only.",
+          "type": "number"
+        },
+        "primaryKey": {
+          "description": "Primary key value of the business event, such as resv name id, allotment header id, name id etc.",
+          "type": "string"
+        },
+        "parentActionId": {
+          "description": "Action instance id of the parent business event, if the action triggered this event was a side effect of another action.",
+          "type": "number"
+        },
+        "publisherId": {
+          "description": "Internal id of the application or system user that triggered this event.",
+          "type": "number"
         },
         "createdDateTime": {
           "description": "Timestamp of the business event.",
@@ -735,48 +701,8 @@
         "hotelId": {
           "description": "The property this business event is associated with.",
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "moduleName": {
-          "description": "Business event module name.",
-          "$ref": "#/definitions/businessEventModuleType"
-        },
-        "parentActionId": {
-          "description": "Action instance id of the parent business event, if the action triggered this event was a side effect of another action.",
-          "type": "number"
-        },
-        "primaryKey": {
-          "description": "Primary key value of the business event, such as resv name id, allotment header id, name id etc.",
-          "type": "string"
-        },
-        "publisherId": {
-          "description": "Internal id of the application or system user that triggered this event.",
-          "type": "number"
-        }
-      }
-    },
-    "businessEventIDType": {
-      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "idContext": {
-          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "type": {
-          "description": "A reference to the type of object defined by the UniqueID element.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     },
@@ -803,142 +729,94 @@
         "StayRecords"
       ]
     },
-    "businessEventType": {
-      "type": "object",
-      "properties": {
-        "details": {
-          "description": "Business event details collection.",
-          "$ref": "#/definitions/businessEventDetailsType"
-        },
-        "header": {
-          "description": "Business event header type.",
-          "$ref": "#/definitions/businessEventHeaderType"
-        }
+    "businessEventDetailsType": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/businessEventDetailType"
       }
     },
-    "businessEvents": {
-      "description": "Provides business event message dequeued from BE queue as response",
+    "businessEventDetailType": {
       "type": "object",
       "properties": {
-        "businessEventData": {
-          "description": "List of BusinessEvents dequeued for given external system",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/businessEventDataType"
-          }
-        },
-        "links": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/instanceLink"
-          }
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "errorInstance": {
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "title": "Error Instance Details",
-      "required": [
-        "type",
-        "title"
-      ],
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
+        "dataElement": {
+          "description": "Name of the data element, such as arrival date, departure date, etc.",
           "type": "string"
         },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
+        "oldValue": {
+          "description": "Value of the element when this action took place. In case of date values, format used is YYYY-MM-DD.",
           "type": "string"
         },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
+        "newValue": {
+          "description": "Value of the element after this action took place. In case of date values, format used is YYYY-MM-DD.",
           "type": "string"
         },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
+        "scopeFrom": {
+          "description": "Begin date from when this value is applicable, such as daily element date, block grid date etc.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+        "scopeTo": {
+          "description": "End date till when this value is applicable, such as daily element date, block grid date etc.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "elementSequence": {
+          "description": "Sequence number used to correlate fields of each record, when a collection of records is represented.",
           "type": "integer"
         },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+        "elementType": {
+          "description": "Element type used to correlate fields of each record, when a collection of records is represented, such as phone type for phones.",
           "type": "string"
         },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
+        "elementRole": {
+          "description": "Element role used to correlate fields of each record, when a collection of records is represented, such as phone role for phones.",
           "type": "string"
         }
       }
     },
-    "exceptionDetailType": {
-      "description": "Complex type that contains error details for a REST call.",
+    "businessEventIDType": {
       "type": "object",
-      "title": "Error Detail",
-      "required": [
-        "type",
-        "title"
-      ],
       "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/errorInstance"
-          }
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
         "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
         }
-      }
+      },
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote)."
     },
     "instanceLink": {
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "type": "object",
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
-      ],
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "properties": {
         "href": {
           "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
           "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
         },
         "method": {
           "description": "HTTP method for requesting the target of the link.",
@@ -953,22 +831,13 @@
             "HEAD"
           ]
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
         "targetSchema": {
           "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
           "type": "string"
         },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
         },
         "title": {
           "description": "Exact copy of the \"summary\" field on the linked operation.",
@@ -976,45 +845,35 @@
         }
       }
     },
-    "links": {
+    "warningsType": {
       "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/instanceLink"
+        "$ref": "#/definitions/warningType"
       }
     },
     "warningType": {
-      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
       "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
       "properties": {
-        "code": {
-          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+        "value": {
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "docURL": {
-          "description": "If present, this URL refers to an online description of the error that occurred.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "rph": {
-          "description": "Reference Place Holder used as an index for this warning.",
-          "type": "string",
-          "maxLength": 8,
-          "minLength": 1
+          "description": "Property Value"
         },
         "shortText": {
           "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
           "type": "string",
           "maxLength": 2000
         },
@@ -1028,31 +887,129 @@
           "type": "string",
           "maxLength": 2000
         },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
         "type": {
           "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+          "minLength": 0,
+          "maxLength": 20
         },
-        "value": {
-          "description": "Property Value",
-          "type": "string"
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
         }
       }
     },
-    "warningsType": {
-      "description": "Used in conjunction with the Success element to define a business error.",
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "links": {
       "type": "array",
-      "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/warningType"
+        "$ref": "#/definitions/instanceLink"
       }
     }
   },
   "tags": [
     {
-      "description": "The Integration Processor Service provides a set of operations which help the external customers and vendors to process Business Events generated in OPERA.",
-      "name": "IntegrationProcessor"
+      "name": "IntegrationProcessor",
+      "description": "The Integration Processor Service provides a set of operations which help the external customers and vendors to process Business Events generated in OPERA."
     }
   ],
   "externalDocs": {

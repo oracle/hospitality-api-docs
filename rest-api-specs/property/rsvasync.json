@@ -1,622 +1,382 @@
 {
-  "produces": [
-    "application/json"
-  ],
-  "schemes": [
-    "https"
-  ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs to cater for Reservation Asynchronous functionality in OPERA Cloud. This includes viewing reservation data along with its revenue. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
     "title": "OPERA Cloud Reservation Asynchronous API",
-    "version": "23.2",
+    "description": "APIs to cater for Reservation Asynchronous functionality in OPERA Cloud. This includes viewing reservation data along with its revenue. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "23.5",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality-integrations_ww@oracle.com"
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
     "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
     }
   },
+  "schemes": [
+    "https"
+  ],
   "basePath": "/rsv/async/v1",
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/reservations/dailySummary": {
       "post": {
-        "description": "Use this API to get a reservation daily summary for a property within a given date range. Maximum limit of date range is 94 days, but the recommendation is to use a date range proportionate to the size of the hotel. Returns a header parameter Location that can be used in the getReservationsProcessStatus operation.  Use event driven APIs (see https://docs.oracle.com/cd/F29336_01/doc.201/f27480/c_business_events.htm#OHIPU-BusinessEvents-F0AC1F1C) to get real time reservation updates.  <p><strong>OperationId:</strong>startReservationsDailySummaryProcess</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "ReservationAsync"
-        ],
         "summary": "Fetch past, present and future Reservations Daily Summary",
+        "description": "Use this API to get a reservation daily summary for a property within a given date range. Maximum limit of date range is 94 days, but the recommendation is to use a date range proportionate to the size of the hotel. Returns a header parameter Location that can be used in the getReservationsProcessStatus operation.  Use event driven APIs (see https://docs.oracle.com/cd/F29336_01/doc.201/f27480/c_business_events.htm#OHIPU-BusinessEvents-F0AC1F1C) to get real time reservation updates.  <p><strong>OperationId:</strong>startReservationsDailySummaryProcess</p>",
         "operationId": "startReservationsDailySummaryProcess",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request object for fetching future reservations asynchronously.",
-            "name": "criteria",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/criteria"
-            }
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
+        "x-interaction": [
+          "async-polling"
         ],
         "responses": {
           "202": {
-            "description": "Location of process status resource",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Location": {
                 "type": "string",
                 "description": "Location of process status resource"
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+            },
+            "description": "Location of process status resource"
           }
         },
-        "x-interaction": [
-          "async-polling"
+        "parameters": [
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "criteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for fetching future reservations asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/criteria"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ReservationAsync"
         ]
       }
     },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/reservations/dailySummary/{summaryId}": {
-      "get": {
-        "description": "Use this API to retrieve a property&apos;s reservation daily summary within the dates given in the startReservationsDailySummaryProcess API request. You can get the value of the summaryId from the Location header returned by the getReservationsProcessStatus operation after the process is completed.  <p><strong>OperationId:</strong>getReservationsDailySummary</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "ReservationAsync"
-        ],
-        "summary": "Get results of Reservations Daily Summary",
-        "operationId": "getReservationsDailySummary",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "summaryId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for fetched future reservations.",
-            "schema": {
-              "$ref": "#/definitions/reservationsDailySummaryDetails"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      },
       "head": {
-        "description": "Use this to check whether the process to generate reservations daily summaries is complete. You can get value of summaryId from the Location header returned by the startReservationsDailySummaryProcess operation. <p><strong>OperationId:</strong>getReservationsProcessStatus</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "ReservationAsync"
-        ],
         "summary": "Check status of Reservation Daily Summary process",
+        "description": "Use this to check whether the process to generate reservations daily summaries is complete. You can get value of summaryId from the Location header returned by the startReservationsDailySummaryProcess operation. <p><strong>OperationId:</strong>getReservationsProcessStatus</p>",
         "operationId": "getReservationsProcessStatus",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "summaryId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again."
-              },
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
                 "enum": [
                   "Processing",
                   "Invalid"
-                ],
+                ]
+              },
+              "Cache-Control": {
                 "type": "string",
-                "description": "Status of the requested process."
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
               }
-            }
+            },
+            "description": "Response for status of scheduled asynchronous process."
           },
           "201": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
               },
               "Location": {
                 "type": "string",
                 "description": "Location of newly created resource once the status of process run is Complete."
-              },
-              "Status": {
-                "enum": [
-                  "Completed"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+            },
+            "description": "Response for status of scheduled asynchronous process."
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "summaryId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ReservationAsync"
+        ]
+      },
+      "get": {
+        "summary": "Get results of Reservations Daily Summary",
+        "description": "Use this API to retrieve a property&apos;s reservation daily summary within the dates given in the startReservationsDailySummaryProcess API request. You can get the value of the summaryId from the Location header returned by the getReservationsProcessStatus operation after the process is completed.  <p><strong>OperationId:</strong>getReservationsDailySummary</p>",
+        "operationId": "getReservationsDailySummary",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetched future reservations.",
+            "schema": {
+              "$ref": "#/definitions/reservationsDailySummaryDetails"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "summaryId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ReservationAsync"
+        ]
       }
     }
   },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
   "definitions": {
-    "criteria": {
-      "description": "Request object for fetching future reservations asynchronously.",
-      "type": "object",
-      "properties": {
-        "criteria": {
-          "$ref": "#/definitions/reservationsDailySummarySearchType"
-        }
-      }
-    },
-    "dailySummaryType": {
-      "description": "Statistic information related to a specific reservation stay date.",
-      "type": "object",
-      "properties": {
-        "adults": {
-          "description": "Number of adults of the reservation.",
-          "type": "integer"
-        },
-        "bookedRoomType": {
-          "description": "Booked room type.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "channel": {
-          "description": "Classifies the Channel field on reservation screen through which the reservation is made.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "children": {
-          "description": "Number of children of the reservation.",
-          "type": "integer"
-        },
-        "fbRevenue": {
-          "description": "Food and Beverage Revenue generated by the reservation.",
-          "type": "number"
-        },
-        "fbRevenueCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "marketCode": {
-          "description": "Holds the code that relates to the market being sold (e.g., the corporate market, packages).",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "netRateAmount": {
-          "description": "Net Amount generated by the reservation.",
-          "type": "number"
-        },
-        "netRateAmountCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "otherRevenue": {
-          "description": "Other Revenue generated by the reservation.",
-          "type": "number"
-        },
-        "otherRevenueCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "packageRevenue": {
-          "description": "Package Revenue generated by the reservation.",
-          "type": "number"
-        },
-        "packageRevenueCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "rateAmount": {
-          "description": "A monetary amount.",
-          "type": "number"
-        },
-        "rateAmountCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "rateCode": {
-          "description": "The rate plan code of the reservation.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "room": {
-          "description": "Room number.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "roomRevenue": {
-          "description": "Room Revenue generated by the reservation.",
-          "type": "number"
-        },
-        "roomRevenueCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "roomType": {
-          "description": "Room type.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "roomTypeCharged": {
-          "description": "Room type charged for the reservation.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "sourceCode": {
-          "description": "The entity/channel who made the reservation.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "tax": {
-          "description": "Tax Revenue generated by the reservation.",
-          "type": "number"
-        },
-        "taxCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "totalRevenue": {
-          "description": "Total Revenue generated by the reservation.",
-          "type": "number"
-        },
-        "totalRevenueCurrency": {
-          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string",
-          "maxLength": 3,
-          "minLength": 3
-        },
-        "trxDate": {
-          "description": "Reservation stay date for which the daily statistics are projected.",
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "errorInstance": {
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "title": "Error Instance Details",
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
-        }
-      }
-    },
     "exceptionDetailType": {
+      "title": "Error Detail",
       "description": "Complex type that contains error details for a REST call.",
       "type": "object",
-      "title": "Error Detail",
       "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
         "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
         },
         "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
         },
         "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         },
         "o:errorDetails": {
           "description": "Details of the error message, consisting of a hierarchical tree structure.",
@@ -625,31 +385,62 @@
             "$ref": "#/definitions/errorInstance"
           }
         },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
         },
         "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
         },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         }
       }
     },
     "instanceLink": {
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "properties": {
         "href": {
           "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
           "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
         },
         "method": {
           "description": "HTTP method for requesting the target of the link.",
@@ -664,40 +455,17 @@
             "HEAD"
           ]
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
         "targetSchema": {
           "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
           "type": "string"
         },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
         },
         "title": {
           "description": "Exact copy of the \"summary\" field on the linked operation.",
           "type": "string"
-        }
-      }
-    },
-    "lastModifiedDateType": {
-      "description": "Start and End Modified Dates of Reservations after which the results are to be fetched",
-      "type": "object",
-      "properties": {
-        "endLastModifiedDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "startLastModifiedDate": {
-          "type": "string",
-          "format": "date-time"
         }
       }
     },
@@ -707,9 +475,448 @@
         "$ref": "#/definitions/instanceLink"
       }
     },
+    "reservationsDailySummarySearchType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "The Hotel Code for which the reservation search will be performed.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "timeSpan": {
+          "description": "The start date and time span for the search to be performed.",
+          "$ref": "#/definitions/timeSpanType"
+        },
+        "lastModifiedDate": {
+          "description": "Start and End Modified Dates of Reservations after which the results are to be fetched",
+          "$ref": "#/definitions/lastModifiedDateType"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, whild Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "lastModifiedDateType": {
+      "type": "object",
+      "description": "Start and End Modified Dates of Reservations after which the results are to be fetched",
+      "properties": {
+        "startLastModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endLastModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "reservationDailySummaryType": {
+      "type": "object",
+      "description": "Daily summary information related to a reservation.",
+      "properties": {
+        "reservationIdList": {
+          "description": "Collection of reservation identifiers like Reservation Name ID, Confirmation Number, etc.",
+          "$ref": "#/definitions/reservationIdList"
+        },
+        "resvStatus": {
+          "description": "Indicates the status of the reservation.",
+          "$ref": "#/definitions/pMS_ResStatusType"
+        },
+        "sharedYn": {
+          "description": "Indicates whether the reservation has any sharers. Y indicates true and N indicates false.",
+          "type": "string"
+        },
+        "sharersList": {
+          "description": "Collection of Confirmation Numbers of Sharers.",
+          "type": "string"
+        },
+        "sharersResvIdList": {
+          "description": "The unique identifier reservationId List of the shared reservations.",
+          "type": "string"
+        },
+        "arrival": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "departure": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "checkedOutDate": {
+          "description": "The date the reservation was checked out.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "cancellationDate": {
+          "description": "The date the reservation was canceled.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "bookingDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "nationality": {
+          "description": "Affiliation or ethnicity to a particular country.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "resvType": {
+          "description": "Type of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "noOfRooms": {
+          "description": "Number of rooms of the reservation.",
+          "type": "integer"
+        },
+        "blockCode": {
+          "description": "Block code of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "guestCountry": {
+          "description": "Country code for guest's primary address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "travelAgentId": {
+          "description": "ID of the travel agent for the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "travelAgentName": {
+          "description": "Name of the travel agent for the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "iataCode": {
+          "description": "IATA Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "companyId": {
+          "description": "ID of the company for the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "companyName": {
+          "description": "Name of the company for the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "groupId": {
+          "description": "ID of the group for the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "groupName": {
+          "description": "Name of the group for the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "sourceId": {
+          "description": "ID of the source for the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "sourceName": {
+          "description": "Name of the source for the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "resvContactId": {
+          "description": "ID of the contact for the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "resvContactName": {
+          "description": "Name of the contact for the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "createDateTime": {
+          "description": "Business Date when the reservation was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedDateTime": {
+          "description": "Business Date when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedDate": {
+          "description": "Business Date when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "membershipId": {
+          "description": "Card Number of the membership.Either membershipId or membershipNumber will be returned.",
+          "type": "string"
+        },
+        "membershipNumber": {
+          "description": "Card Number of the membership.Either membershipId or membershipNumber will be returned.",
+          "type": "string"
+        },
+        "membershipType": {
+          "description": "Type of membership.",
+          "type": "string"
+        },
+        "membershipLevel": {
+          "description": "Indicates the membership level.",
+          "type": "string"
+        },
+        "children1": {
+          "description": "Number of children classified under the first Age Qualifying Group.",
+          "type": "integer"
+        },
+        "children2": {
+          "description": "Number of children classified under the second Age Qualifying Group.",
+          "type": "integer"
+        },
+        "children3": {
+          "description": "Number of children classified under the third Age Qualifying Group.",
+          "type": "integer"
+        },
+        "cancellationReasonCode": {
+          "type": "string"
+        },
+        "bookingMedium": {
+          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made. Either bookingMedium or origin_of_booking will be present in the response.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "origin_of_booking": {
+          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made.Either bookingMedium or origin_of_booking will be present in the response.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "dailySummary": {
+          "description": "Collection of daily summary for the reservation.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/dailySummaryType"
+          }
+        },
+        "createdHotelDateTime": {
+          "description": "Business Date in property timezone when the reservation was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "modifiedHotelDateTime": {
+          "description": "Business Date in property timezone when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "uniqueIDListType": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "reservationIdList": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "dailySummaryType": {
+      "type": "object",
+      "description": "Statistic information related to a specific reservation stay date.",
+      "properties": {
+        "rateCode": {
+          "description": "The rate plan code of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "rateAmount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "rateAmountCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "marketCode": {
+          "description": "Holds the code that relates to the market being sold (e.g., the corporate market, packages).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "Room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "bookedRoomType": {
+          "description": "Booked room type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "room": {
+          "description": "Room number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "netRateAmount": {
+          "description": "Net Amount generated by the reservation.",
+          "type": "number"
+        },
+        "netRateAmountCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "roomRevenue": {
+          "description": "Room Revenue generated by the reservation.",
+          "type": "number"
+        },
+        "roomRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "fbRevenue": {
+          "description": "Food and Beverage Revenue generated by the reservation.",
+          "type": "number"
+        },
+        "fbRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "otherRevenue": {
+          "description": "Other Revenue generated by the reservation.",
+          "type": "number"
+        },
+        "otherRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "totalRevenue": {
+          "description": "Total Revenue generated by the reservation.",
+          "type": "number"
+        },
+        "totalRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "packageRevenue": {
+          "description": "Package Revenue generated by the reservation.",
+          "type": "number"
+        },
+        "packageRevenueCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "tax": {
+          "description": "Tax Revenue generated by the reservation.",
+          "type": "number"
+        },
+        "taxCurrency": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "roomTypeCharged": {
+          "description": "Room type charged for the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "trxDate": {
+          "description": "Reservation stay date for which the daily statistics are projected.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "sourceCode": {
+          "description": "The entity/channel who made the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channel": {
+          "description": "Classifies the Channel field on reservation screen through which the reservation is made.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "adults": {
+          "description": "Number of adults of the reservation.",
+          "type": "integer"
+        },
+        "children": {
+          "description": "Number of children of the reservation.",
+          "type": "integer"
+        }
+      }
+    },
     "pMS_ResStatusType": {
-      "description": "This reservation is in checked in status and the business date is past departure date. This could occur when ORS and PMS are in same environment.",
       "type": "string",
+      "description": "This reservation is in checked in status and the business date is past departure date. This could occur when ORS and PMS are in same environment.",
       "enum": [
         "Reserved",
         "Requested",
@@ -725,211 +932,18 @@
         "PendingCheckout"
       ]
     },
-    "reservationDailySummaryType": {
-      "description": "Daily summary information related to a reservation.",
+    "criteria": {
       "type": "object",
+      "description": "Request object for fetching future reservations asynchronously.",
       "properties": {
-        "arrival": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "blockCode": {
-          "description": "Block code of the reservation.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "bookingDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "bookingMedium": {
-          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made. Either bookingMedium or origin_of_booking will be present in the response.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "cancellationDate": {
-          "description": "The date the reservation was canceled.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "cancellationReasonCode": {
-          "type": "string"
-        },
-        "checkedOutDate": {
-          "description": "The date the reservation was checked out.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "children1": {
-          "description": "Number of children classified under the first Age Qualifying Group.",
-          "type": "integer"
-        },
-        "children2": {
-          "description": "Number of children classified under the second Age Qualifying Group.",
-          "type": "integer"
-        },
-        "children3": {
-          "description": "Number of children classified under the third Age Qualifying Group.",
-          "type": "integer"
-        },
-        "companyId": {
-          "description": "ID of the company for the reservation.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "companyName": {
-          "description": "Name of the company for the reservation.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
-        },
-        "createDateTime": {
-          "description": "Business Date when the reservation was created.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "dailySummary": {
-          "description": "Collection of daily summary for the reservation.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/dailySummaryType"
-          }
-        },
-        "departure": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "groupId": {
-          "description": "ID of the group for the reservation.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "groupName": {
-          "description": "Name of the group for the reservation.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
-        },
-        "guestCountry": {
-          "description": "Country code for guest's primary address.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "iataCode": {
-          "description": "IATA Code.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "lastModifiedDate": {
-          "description": "Business Date when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifiedDateTime": {
-          "description": "Business Date when the reservation was modified.Either lastModifiedDateTime or lastModifiedDate will be returned.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "membershipId": {
-          "description": "Card Number of the membership.Either membershipId or membershipNumber will be returned.",
-          "type": "string"
-        },
-        "membershipLevel": {
-          "description": "Indicates the membership level.",
-          "type": "string"
-        },
-        "membershipNumber": {
-          "description": "Card Number of the membership.Either membershipId or membershipNumber will be returned.",
-          "type": "string"
-        },
-        "membershipType": {
-          "description": "Type of membership.",
-          "type": "string"
-        },
-        "nationality": {
-          "description": "Affiliation or ethnicity to a particular country.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "noOfRooms": {
-          "description": "Number of rooms of the reservation.",
-          "type": "integer"
-        },
-        "origin_of_booking": {
-          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made.Either bookingMedium or origin_of_booking will be present in the response.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "reservationIdList": {
-          "description": "Collection of reservation identifiers like Reservation Name ID, Confirmation Number, etc.",
-          "$ref": "#/definitions/reservationIdList"
-        },
-        "resvContactId": {
-          "description": "ID of the contact for the reservation.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "resvContactName": {
-          "description": "Name of the contact for the reservation.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
-        },
-        "resvStatus": {
-          "description": "Indicates the status of the reservation.",
-          "$ref": "#/definitions/pMS_ResStatusType"
-        },
-        "resvType": {
-          "description": "Type of the reservation.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "sharedYn": {
-          "description": "Indicates whether the reservation has any sharers. Y indicates true and N indicates false.",
-          "type": "string"
-        },
-        "sharersList": {
-          "description": "Collection of Confirmation Numbers of Sharers.",
-          "type": "string"
-        },
-        "sourceId": {
-          "description": "ID of the source for the reservation.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "sourceName": {
-          "description": "Name of the source for the reservation.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
-        },
-        "travelAgentId": {
-          "description": "ID of the travel agent for the reservation.",
-          "$ref": "#/definitions/uniqueID_Type"
-        },
-        "travelAgentName": {
-          "description": "Name of the travel agent for the reservation.",
-          "type": "string",
-          "maxLength": 200,
-          "minLength": 0
+        "criteria": {
+          "$ref": "#/definitions/reservationsDailySummarySearchType"
         }
       }
     },
-    "reservationIdList": {
-      "description": "Unique Id that references an object uniquely in the system.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/uniqueID_Type"
-      }
-    },
     "reservationsDailySummaryDetails": {
-      "description": "Reservation Daily Summary Details.",
       "type": "object",
+      "description": "Reservation Daily Summary Details.",
       "properties": {
         "reservations": {
           "type": "array",
@@ -939,66 +953,12 @@
           }
         }
       }
-    },
-    "reservationsDailySummarySearchType": {
-      "type": "object",
-      "properties": {
-        "hotelId": {
-          "description": "The Hotel Code for which the reservation search will be performed.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "lastModifiedDate": {
-          "description": "Start and End Modified Dates of Reservations after which the results are to be fetched",
-          "$ref": "#/definitions/lastModifiedDateType"
-        },
-        "timeSpan": {
-          "description": "The start date and time span for the search to be performed.",
-          "$ref": "#/definitions/timeSpanType"
-        }
-      }
-    },
-    "timeSpanType": {
-      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, whild Duration provides a measure of time to add to the StartDate to yield end date.",
-      "type": "object",
-      "properties": {
-        "duration": {
-          "type": "string"
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "startDate": {
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "uniqueID_Type": {
-      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "string",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "type": {
-          "description": "A reference to the type of object defined by the UniqueID element.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        }
-      }
     }
   },
   "tags": [
     {
-      "description": "The Reservation Asynchronous module provides capability for an external system to retrieve reservation related data using an asynchronous approach.",
-      "name": "ReservationAsync"
+      "name": "ReservationAsync",
+      "description": "The Reservation Asynchronous module provides capability for an external system to retrieve reservation related data using an asynchronous approach."
     }
   ],
   "externalDocs": {

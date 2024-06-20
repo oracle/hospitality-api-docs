@@ -1,29 +1,86 @@
 {
-  "produces": [
-    "application/json"
-  ],
-  "schemes": [
-    "https"
-  ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs to cater for Back Office Operations functionality in OPERA Cloud. <br /><br /> A common BackOffice industry term is End of Day.  This closes and balances each day's business activities. It reconciles guest folios and processes credit card transactions. The End of Day routine rolls the business date forward and prints final reports.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
     "title": "OPERA Cloud Back Office Operations API",
-    "version": "23.2",
+    "description": "APIs to cater for Back Office Operations functionality in OPERA Cloud. <br /><br /> A common BackOffice industry term is End of Day.  This closes and balances each day's business activities. It reconciles guest folios and processes credit card transactions. The End of Day routine rolls the business date forward and prints final reports.<br /><br />Compatible with OPERA Cloud release 23.5.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "23.5",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality-integrations_ww@oracle.com"
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
     "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
     }
   },
+  "schemes": [
+    "https"
+  ],
   "basePath": "/bof/v1",
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/hotels/{hotelId}/businessDate": {
       "get": {
+        "summary": "Fetch end of day business dates",
         "description": "Use this API to find out the current business date of a specified hotel. <p><strong>OperationId:</strong>getBusinessDate</p>",
+        "operationId": "getBusinessDate",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID that identifies a single hotel property."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetching active end of day status for multiple hotels.",
+            "schema": {
+              "$ref": "#/definitions/businessDate"
+            },
+            "examples": {
+              "application/json": {
+                "hotels": [
+                  {
+                    "hotelId": "HOTEL1",
+                    "businessDate": "2020-04-05"
+                  }
+                ]
+              }
+            }
+          },
+          "204": {
+            "description": "BusinessDate not found."
+          }
+        },
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -32,136 +89,105 @@
         ],
         "tags": [
           "BackOfficeOperations"
-        ],
-        "summary": "Fetch end of day business dates",
-        "operationId": "getBusinessDate",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID that identifies a single hotel property.",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "maxLength": 80,
-            "type": "string",
-            "x-example": "EXTERNALSYSTEMCODE",
-            "description": "External system code.",
-            "name": "x-externalsystem",
-            "in": "header"
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for fetching active end of day status for multiple hotels.",
-            "schema": {
-              "$ref": "#/definitions/businessDate"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
-            },
-            "examples": {
-              "application/json": {
-                "hotels": [
-                  {
-                    "businessDate": "2020-04-05",
-                    "hotelId": "HOTEL1"
-                  }
-                ]
-              }
-            }
-          },
-          "204": {
-            "description": "BusinessDate not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
+        ]
       }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
     }
   },
   "definitions": {
     "businessDate": {
-      "description": "Response for fetching active end of day status for multiple hotels.",
       "type": "object",
+      "description": "Response for fetching active end of day status for multiple hotels.",
       "properties": {
         "hotels": {
           "description": "Collection of hotels and its active end of days.",
@@ -175,133 +201,54 @@
         }
       }
     },
-    "errorInstance": {
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "title": "Error Instance Details",
-      "required": [
-        "type",
-        "title"
-      ],
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
-        }
-      }
-    },
-    "exceptionDetailType": {
-      "description": "Complex type that contains error details for a REST call.",
-      "type": "object",
-      "title": "Error Detail",
-      "required": [
-        "type",
-        "title"
-      ],
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/errorInstance"
-          }
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
-        }
-      }
-    },
-    "hotelActiveEndOfDayType": {
-      "description": "Defines hotel and its active end of days.",
-      "type": "object",
-      "properties": {
-        "businessDate": {
-          "description": "Current open business date of hotel.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "hotelId": {
-          "description": "Hotel code of the active end of days.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        }
-      }
-    },
     "hotelActiveEndOfDaysType": {
-      "description": "Collection of hotels and its active end of days.",
       "type": "array",
+      "description": "Collection of hotels and its active end of days.",
       "maxItems": 4000,
       "items": {
         "$ref": "#/definitions/hotelActiveEndOfDayType"
       }
     },
-    "instanceLink": {
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+    "hotelActiveEndOfDayType": {
       "type": "object",
-      "required": [
-        "href",
-        "rel",
-        "method",
-        "operationId"
-      ],
+      "description": "Defines hotel and its active end of days.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel code of the active end of days.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "businessDate": {
+          "description": "Current open business date of hotel.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "properties": {
         "href": {
           "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
           "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
         },
         "method": {
           "description": "HTTP method for requesting the target of the link.",
@@ -316,22 +263,13 @@
             "HEAD"
           ]
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
         "targetSchema": {
           "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
           "type": "string"
         },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
         },
         "title": {
           "description": "Exact copy of the \"summary\" field on the linked operation.",
@@ -339,51 +277,35 @@
         }
       }
     },
-    "links": {
+    "warningsType": {
       "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/instanceLink"
+        "$ref": "#/definitions/warningType"
       }
     },
-    "operaVersionNumberType": {
-      "description": "Current Opera Version Number",
-      "type": "string",
-      "maxLength": 40,
-      "minLength": 0
-    },
     "warningType": {
-      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
       "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
       "properties": {
-        "code": {
-          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+        "value": {
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "docURL": {
-          "description": "If present, this URL refers to an online description of the error that occurred.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "language": {
-          "description": "Language identification.",
-          "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "rph": {
-          "description": "Reference Place Holder used as an index for this warning.",
-          "type": "string",
-          "maxLength": 8,
-          "minLength": 1
+          "description": "Property Value"
         },
         "shortText": {
           "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
           "type": "string",
           "maxLength": 2000
         },
@@ -397,31 +319,123 @@
           "type": "string",
           "maxLength": 2000
         },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
         "type": {
           "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+          "minLength": 0,
+          "maxLength": 20
         },
-        "value": {
-          "description": "Property Value",
-          "type": "string"
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
         }
       }
     },
-    "warningsType": {
-      "description": "Used in conjunction with the Success element to define a business error.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/warningType"
-      }
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
     }
   },
   "tags": [
     {
-      "description": "This module provides APIs to service Back Office operations for property, such as managing end-of-day, getting the properties current business date, and perform cashier closure.",
-      "name": "BackOfficeOperations"
+      "name": "BackOfficeOperations",
+      "description": "This module provides APIs to service Back Office operations for property, such as managing end-of-day, getting the properties current business date, and perform cashier closure."
     }
   ],
   "externalDocs": {
