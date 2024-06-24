@@ -1,0 +1,971 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud CRM Asynchronous API",
+    "description": "APIs to insert Stay Records related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "23.5",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/crm/async/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/stayRecords": {
+      "post": {
+        "summary": "This API facilitates uploading stage records to LCS.",
+        "description": "A user can upload various stay records to OPERA by specifying stay record column details in the request.<p><strong>OperationId:</strong>stayRecords</p>",
+        "operationId": "stayRecords",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/links"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "criteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for uploading stage records to LCS asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/stayRecords"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CRMAsync"
+        ]
+      }
+    },
+    "/stayRecords/{requestId}": {
+      "head": {
+        "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": "Use this to check whether the request sent have been processed. <p><strong>OperationId:</strong>getStayRecordsProcessStatus</p>",
+        "operationId": "getStayRecordsProcessStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CRMAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API facilitates fetching the status for stay records uploaded.",
+        "description": "Use this to check whether the request sent have been processed. <p><strong>OperationId:</strong>getStayRecordsProcess</p>",
+        "operationId": "getStayRecordsProcess",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for stay records uploaded",
+            "schema": {
+              "$ref": "#/definitions/stayRecordStatus"
+            }
+          },
+          "204": {
+            "description": "Stay Record not found."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CRMAsync"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or PartnerAC/AAs Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a stay record is successfully processed to repory any warnings or business error.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "stayDailyRatesType": {
+      "type": "object",
+      "properties": {
+        "transactionDate": {
+          "description": "Date on which the transaction was done.",
+          "type": "string",
+          "format": "date"
+        },
+        "bookedRoomType": {
+          "description": "Specifies the type of room booked.",
+          "type": "string"
+        },
+        "currencyCode": {
+          "description": "Specifies the code assigned to the currency.",
+          "type": "string"
+        },
+        "pseudoRoom": {
+          "description": "Specifies if the room is a pseudo room.",
+          "type": "boolean"
+        },
+        "marketCode": {
+          "description": "Specifies the market code.",
+          "type": "string"
+        },
+        "rateCode": {
+          "description": "Specifies the rate code.",
+          "type": "string"
+        },
+        "rateAmount": {
+          "description": "Specifies the amount added to a particular rate code.",
+          "type": "number"
+        },
+        "roomNumber": {
+          "description": "Describes the number assigned to a room.",
+          "type": "string"
+        },
+        "roomType": {
+          "description": "Describes the type of the room.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "transactionDate",
+        "rateCode"
+      ]
+    },
+    "stayMembershipsType": {
+      "type": "object",
+      "properties": {
+        "membershipNumber": {
+          "description": "A unique value given to a membership.",
+          "type": "string"
+        },
+        "membershipType": {
+          "description": "Specifies the type of membership.",
+          "type": "string"
+        }
+      }
+    },
+    "stayProfilesType": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "description": "Checks if the profile is primary.",
+          "type": "boolean"
+        },
+        "nameId": {
+          "description": "Specifies the unique id that is assigned to a profile.",
+          "type": "number"
+        },
+        "pmsNameId": {
+          "description": "Specifies the pms id that is assigned to a profile.",
+          "type": "string"
+        },
+        "profileRole": {
+          "description": "Describes the role associated with the profile.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profileRole"
+      ]
+    },
+    "stayRecordsType": {
+      "type": "object",
+      "properties": {
+        "UDFC01": {
+          "description": "Describes the user defined field 01",
+          "type": "string"
+        },
+        "UDFC02": {
+          "description": "Describes the user defined field 02",
+          "type": "string"
+        },
+        "UDFC03": {
+          "description": "Describes the user defined field 03",
+          "type": "string"
+        },
+        "UDFC04": {
+          "description": "Describes the user defined field 04",
+          "type": "string"
+        },
+        "UDFC05": {
+          "description": "Describes the user defined field 05",
+          "type": "string"
+        },
+        "UDFC06": {
+          "description": "Describes the user defined field 06",
+          "type": "string"
+        },
+        "UDFC07": {
+          "description": "Describes the user defined field 07",
+          "type": "string"
+        },
+        "UDFC08": {
+          "description": "Describes the user defined field 08",
+          "type": "string"
+        },
+        "UDFC09": {
+          "description": "Describes the user defined field 09",
+          "type": "string"
+        },
+        "UDFC10": {
+          "description": "Describes the user defined field 10",
+          "type": "string"
+        },
+        "UDFD01": {
+          "description": "Describes the user defined field 01",
+          "type": "string",
+          "format": "date"
+        },
+        "UDFD02": {
+          "description": "Describes the user defined field 02",
+          "type": "string",
+          "format": "date"
+        },
+        "UDFD03": {
+          "description": "Describes the user defined field 03",
+          "type": "string",
+          "format": "date"
+        },
+        "UDFD04": {
+          "description": "Describes the user defined field 04",
+          "type": "string",
+          "format": "date"
+        },
+        "UDFD05": {
+          "description": "Describes the user defined field 05",
+          "type": "string",
+          "format": "date"
+        },
+        "UDFN01": {
+          "description": "Describes the user defined field 10",
+          "type": "number"
+        },
+        "UDFN02": {
+          "description": "Describes the user defined field 10",
+          "type": "number"
+        },
+        "UDFN03": {
+          "description": "Describes the user defined field 10",
+          "type": "number"
+        },
+        "UDFN04": {
+          "description": "Describes the user defined field 10",
+          "type": "number"
+        },
+        "UDFN05": {
+          "description": "Describes the user defined field 10",
+          "type": "number"
+        },
+        "adults": {
+          "description": "Describes the number of adults",
+          "type": "number"
+        },
+        "arrivalDate": {
+          "description": "Specifies the date of arrival",
+          "type": "string",
+          "format": "date"
+        },
+        "baseRateAmount": {
+          "description": "Specifies the base rate amount",
+          "type": "number"
+        },
+        "baseRateCode": {
+          "description": "Specifies the base rate code",
+          "type": "string"
+        },
+        "baseRateCurrencyCode": {
+          "description": "Specifies the currency code of the base rate",
+          "type": "string"
+        },
+        "blockCode": {
+          "description": "Specifies the block code",
+          "type": "string"
+        },
+        "bookedRoomType": {
+          "description": "Specifies the type of room booked.",
+          "type": "string"
+        },
+        "bookingDate": {
+          "description": "Specifies the date of booking.",
+          "type": "string",
+          "format": "date"
+        },
+        "cancellationDate": {
+          "description": "Specifies the date of cancellation",
+          "type": "string",
+          "format": "date"
+        },
+        "channel": {
+          "description": "Specifies the channel",
+          "type": "string"
+        },
+        "children": {
+          "description": "specifies the number of children",
+          "type": "number"
+        },
+        "companyId": {
+          "description": "Specifies the id assigned to the company",
+          "type": "string"
+        },
+        "confirmationLegNumber": {
+          "description": "Specifies the confirmation leg number",
+          "type": "number"
+        },
+        "confirmationNumber": {
+          "description": "Specifies the confirmation number",
+          "type": "string"
+        },
+        "currencyCode": {
+          "description": "Specifies the currency code",
+          "type": "string"
+        },
+        "departureDate": {
+          "description": "Specifies the date of departure",
+          "type": "string",
+          "format": "date"
+        },
+        "exhangeRate": {
+          "description": "Specifies the exchange rate",
+          "type": "number"
+        },
+        "externalReservationId": {
+          "description": "Describes the id assigned to an external reservation",
+          "type": "string"
+        },
+        "groupId": {
+          "description": "Specifies the id assigned to a group",
+          "type": "string"
+        },
+        "guestNameId": {
+          "description": "Specifies the id assigned to a guest name",
+          "type": "string"
+        },
+        "hotelCode": {
+          "description": "Specifies the code assigned to a property",
+          "type": "string"
+        },
+        "complimentary": {
+          "description": "Describes if complimentary or not",
+          "type": "boolean"
+        },
+        "primaryShare": {
+          "description": "Describes if it is a primary share",
+          "type": "boolean"
+        },
+        "miscellaneousId": {
+          "description": "Specifies the miscellaneous id",
+          "type": "string"
+        },
+        "paymentMethod": {
+          "description": "Specifies the payment method used",
+          "type": "string"
+        },
+        "posCode": {
+          "description": "Specifies the postal code",
+          "type": "string"
+        },
+        "promotionCode": {
+          "description": "Specifies the promotion code",
+          "type": "string"
+        },
+        "reservationStatus": {
+          "description": "Describes the reservation status ie CANCELLED, CHECKED OUT, ARRIVAL etc",
+          "type": "string"
+        },
+        "reservationExpectedArrivalTime": {
+          "description": "Specifies the expected arrival time of the reservation",
+          "type": "string",
+          "format": "date"
+        },
+        "reservationExpectedDepartureTime": {
+          "description": "Specifies the expected departure time of the reservation",
+          "type": "string",
+          "format": "date"
+        },
+        "reservationInsertSource": {
+          "description": "Specifies the insert source for the reservation",
+          "type": "string"
+        },
+        "reservationInsertSourceType": {
+          "description": "Specifies the insert source type for the reservation",
+          "type": "string"
+        },
+        "roomNumber": {
+          "description": "Describes the number assigned to a room.",
+          "type": "string"
+        },
+        "roomRevenue": {
+          "description": "Specifies the revenue for the room.",
+          "type": "number"
+        },
+        "roomType": {
+          "description": "Describes the type of the room.",
+          "type": "string"
+        },
+        "shareId": {
+          "description": "Specifies the share id.",
+          "type": "string"
+        },
+        "sourceCode": {
+          "description": "Specifies the source code.",
+          "type": "string"
+        },
+        "sourceId": {
+          "description": "Specifies the source id.",
+          "type": "string"
+        },
+        "stageStatus": {
+          "description": "Specifies the stage status.",
+          "type": "string"
+        },
+        "stageSuspenseReason": {
+          "description": "Specifies the stage suspense reason.",
+          "type": "string"
+        },
+        "totalRevenue": {
+          "description": "Specifies the total revenue.",
+          "type": "number"
+        },
+        "travelAgentId": {
+          "description": "Specifies the travel agent id",
+          "type": "string"
+        }
+      }
+    },
+    "stayRevenuesDetailsType": {
+      "type": "object",
+      "properties": {
+        "folioView": {
+          "description": "",
+          "type": "string"
+        },
+        "revenueAmount": {
+          "description": "Specifies the amount of revenue.",
+          "type": "number"
+        },
+        "stayRevenues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/stayRevenuesType"
+          }
+        }
+      }
+    },
+    "stayRevenuesType": {
+      "type": "object",
+      "properties": {
+        "revenueAmount": {
+          "description": "Specifies the amount of revenue.",
+          "type": "number"
+        },
+        "revenueBucketCode": {
+          "description": "Specifies the bucket code to which the revenue belongs.",
+          "type": "string"
+        },
+        "transactionDate": {
+          "description": "Date on which the transaction was done.",
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "revenueBucketCode",
+        "transactionDate"
+      ]
+    },
+    "stayRecord": {
+      "type": "object",
+      "properties": {
+        "resort": {
+          "description": "Specifies the property name",
+          "type": "string"
+        },
+        "stayDailyRates": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayDailyRatesType"
+          }
+        },
+        "stayMemberships": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayMembershipsType"
+          }
+        },
+        "stayProfiles": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayProfilesType"
+          }
+        },
+        "stayRecordsList": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayRecordsType"
+          }
+        },
+        "stayRevenuesDetails": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/stayRevenuesDetailsType"
+          }
+        }
+      }
+    },
+    "stayRecords": {
+      "type": "object",
+      "description": "Complex type that contains list of stay record types",
+      "properties": {
+        "stayRecords": {
+          "type": "array",
+          "description": "Array list of stay records",
+          "items": {
+            "$ref": "#/definitions/stayRecord"
+          }
+        }
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "stayRecordStatus": {
+      "type": "object",
+      "description": "Response for stay record uploaded status.",
+      "properties": {
+        "warnings": {
+          "description": "List of warnings that occurred.",
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "CRMAsync",
+      "description": "The CRM Async Web Service provides capability to implement stay records related asynchronous operations in OPERA Cloud."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}

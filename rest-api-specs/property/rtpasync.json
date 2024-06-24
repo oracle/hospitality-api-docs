@@ -1,804 +1,441 @@
 {
-  "produces": [
-    "application/json"
-  ],
-  "schemes": [
-    "https"
-  ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
     "title": "Opera Cloud Rate Plan Asynchronous Service API",
-    "version": "23.2",
+    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "23.5",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality-integrations_ww@oracle.com"
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
     "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
     }
   },
+  "schemes": [
+    "https"
+  ],
   "basePath": "/rtp/async/v1",
+  "produces": [
+    "application/json"
+  ],
   "paths": {
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/bestAvailableLOS": {
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules": {
       "post": {
-        "description": "Use this API to start the process of adding and updating best available rate plans by day or by length of stay. Returns a header parameter Location that can be used in the getBestAvailableRatePlansProcessStatus operation. <p><strong>OperationId:</strong>startSetBestAvailableRatePlansProcess</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "API to initiate setting best available rate plans process.",
-        "operationId": "startSetBestAvailableRatePlansProcess",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID of the hotel in OPERA",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request for configuring best available rate plans.",
-            "name": "bestAvailableRatePlans",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/bestAvailableRatePlans"
-            }
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
+        "summary": "API to initiate rate plans&apos; price update process",
+        "description": "Use this API to start the process to add and update daily rate plans&apos; pricing schedule. Returns a header parameter Location that can be used in the getDailyRatePlanSchedulesProcessStatus operation. <p><strong>OperationId:</strong>startSetDailyRatePlanSchedulesProcess</p>",
+        "operationId": "startSetDailyRatePlanSchedulesProcess",
+        "x-interaction": [
+          "async-polling"
         ],
         "responses": {
           "202": {
-            "description": "Location of process status resource",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Location": {
                 "type": "string",
                 "description": "Location of process status resource"
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+            },
+            "description": "Location of process status resource"
           }
         },
-        "x-interaction": [
-          "async-polling"
-        ]
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/bestAvailableLOS/{requestId}": {
-      "get": {
-        "description": "Use this API to get the result of the process to set best available rate plans, which will include details of any data that has been failed to process. You can get the value of the summaryId from the Location header returned by the getBestAvailableRatePlansProcessStatus operation after the process is completed. <p><strong>OperationId:</strong>getBestAvailableRatePlans</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "Get results of a daily rate plan schedule process",
-        "operationId": "getBestAvailableRatePlans",
         "parameters": [
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
             "name": "hotelId",
             "in": "path",
-            "required": true
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
           },
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
             "name": "extSystemCode",
             "in": "path",
-            "required": true
-          },
-          {
+            "required": true,
             "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "This asynchronous callback base type is used as a base for an extension for Opera Web Services Callback Requests to provide uniform implementation.",
-            "schema": {
-              "$ref": "#/definitions/bestAvailableRatePlansStatus"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
-            }
-          },
-          "204": {
-            "description": "BestAvailableRatePlans not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      },
-      "head": {
-        "description": "Use this API to check whether the setting of best available rate plans process is completed. You can get value of summaryId from the Location header returned by the startSetBestAvailableRatePlansProcess operation.<p><strong>OperationId:</strong>getBestAvailableRatePlansProcessStatus</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "Check status of setting best available rate plans process",
-        "operationId": "getBestAvailableRatePlansProcessStatus",
-        "parameters": [
-          {
-            "maxLength": 2000,
             "minLength": 1,
-            "type": "string",
-            "name": "requestId",
-            "in": "path",
-            "required": true
+            "maxLength": 2000
           },
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for status of scheduled asynchronous process.",
-            "headers": {
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again."
-              },
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Status": {
-                "enum": [
-                  "Processing",
-                  "Invalid"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
-              }
-            }
-          },
-          "201": {
-            "description": "Response for status of scheduled asynchronous process.",
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource once the status of process run is Complete."
-              },
-              "Status": {
-                "enum": [
-                  "Completed"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules": {
-      "post": {
-        "description": "Use this API to start the process to add and update daily rate plans&apos; pricing schedule. Returns a header parameter Location that can be used in the getDailyRatePlanSchedulesProcessStatus operation. <p><strong>OperationId:</strong>startSetDailyRatePlanSchedulesProcess</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "API to initiate rate plans&apos; price update process",
-        "operationId": "startSetDailyRatePlanSchedulesProcess",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request for configuring daily rate plan schedules.",
             "name": "dailyRatePlanSchedules",
             "in": "body",
             "required": true,
+            "description": "Request for configuring daily rate plan schedules.",
             "schema": {
               "$ref": "#/definitions/dailyRatePlanSchedules"
             }
           },
           {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/authKey"
           },
           {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-app-key"
           },
           {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-hotelid"
           },
           {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
+            "$ref": "#/parameters/Accept-Language"
           }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules/{requestId}": {
+      "head": {
+        "summary": "Check status of setting daily rate plan schedule process",
+        "description": "Use this API to check whether the rate plan pricing schedule process is completed. You can get value of summaryId from the Location header returned by the startSetDailyRatePlanSchedulesProcess operation.<p><strong>OperationId:</strong>getDailyRatePlanSchedulesProcessStatus</p>",
+        "operationId": "getDailyRatePlanSchedulesProcessStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      },
+      "get": {
+        "summary": "Get results of a daily rate plan schedule process",
+        "description": "Use this API to get the result of the daily rate plans schedule process, which will include details of any data that has failed to process. You can get the value of the summaryId from the Location header returned by the getDailyRatePlanSchedulesProcessStatus operation after the process is completed. <p><strong>OperationId:</strong>getDailyRatePlanSchedules</p>",
+        "operationId": "getDailyRatePlanSchedules",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for configured daily rate plan schedules",
+            "schema": {
+              "$ref": "#/definitions/dailyRatePlanSchedulesStatus"
+            }
+          },
+          "204": {
+            "description": "DailyRatePlanSchedules not found."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/bestAvailableLOS": {
+      "post": {
+        "summary": "API to initiate setting best available rate plans process.",
+        "description": "Use this API to start the process of adding and updating best available rate plans by day or by length of stay. Returns a header parameter Location that can be used in the getBestAvailableRatePlansProcessStatus operation. <p><strong>OperationId:</strong>startSetBestAvailableRatePlansProcess</p>",
+        "operationId": "startSetBestAvailableRatePlansProcess",
+        "x-interaction": [
+          "async-polling"
         ],
         "responses": {
           "202": {
-            "description": "Location of process status resource",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Location": {
                 "type": "string",
                 "description": "Location of process status resource"
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+            },
+            "description": "Location of process status resource"
           }
         },
-        "x-interaction": [
-          "async-polling"
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel in OPERA"
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "bestAvailableRatePlans",
+            "in": "body",
+            "required": true,
+            "description": "Request for configuring best available rate plans.",
+            "schema": {
+              "$ref": "#/definitions/bestAvailableRatePlans"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
         ]
       }
     },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/dailySchedules/{requestId}": {
-      "get": {
-        "description": "Use this API to get the result of the daily rate plans schedule process, which will include details of any data that has failed to process. You can get the value of the summaryId from the Location header returned by the getDailyRatePlanSchedulesProcessStatus operation after the process is completed. <p><strong>OperationId:</strong>getDailyRatePlanSchedules</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "Get results of a daily rate plan schedule process",
-        "operationId": "getDailyRatePlanSchedules",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for configured daily rate plan schedules",
-            "schema": {
-              "$ref": "#/definitions/dailyRatePlanSchedulesStatus"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
-            }
-          },
-          "204": {
-            "description": "DailyRatePlanSchedules not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/bestAvailableLOS/{requestId}": {
       "head": {
-        "description": "Use this API to check whether the rate plan pricing schedule process is completed. You can get value of summaryId from the Location header returned by the startSetDailyRatePlanSchedulesProcess operation.<p><strong>OperationId:</strong>getDailyRatePlanSchedulesProcessStatus</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "Check status of setting daily rate plan schedule process",
-        "operationId": "getDailyRatePlanSchedulesProcessStatus",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
+        "summary": "Check status of setting best available rate plans process",
+        "description": "Use this API to check whether the setting of best available rate plans process is completed. You can get value of summaryId from the Location header returned by the startSetBestAvailableRatePlansProcess operation.<p><strong>OperationId:</strong>getBestAvailableRatePlansProcessStatus</p>",
+        "operationId": "getBestAvailableRatePlansProcessStatus",
         "responses": {
           "200": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again."
-              },
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
                 "enum": [
                   "Processing",
                   "Invalid"
-                ],
+                ]
+              },
+              "Cache-Control": {
                 "type": "string",
-                "description": "Status of the requested process."
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
               }
-            }
+            },
+            "description": "Response for status of scheduled asynchronous process."
           },
           "201": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
               },
               "Location": {
                 "type": "string",
                 "description": "Location of newly created resource once the status of process run is Complete."
-              },
-              "Status": {
-                "enum": [
-                  "Completed"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+            },
+            "description": "Response for status of scheduled asynchronous process."
           }
-        }
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/headers": {
-      "post": {
-        "description": " <p><strong>OperationId:</strong>startSetRatePlansHeadersProcess</p>",
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -807,33 +444,385 @@
         ],
         "tags": [
           "RatePlanAsync"
-        ],
-        "summary": "Operation to start the update of rate header flags. Recommendation is not to exceed 250 rate codes in one request.",
-        "operationId": "startSetRatePlansHeadersProcess",
+        ]
+      },
+      "get": {
+        "summary": "Get results of a daily rate plan schedule process",
+        "description": "Use this API to get the result of the process to set best available rate plans, which will include details of any data that has been failed to process. You can get the value of the summaryId from the Location header returned by the getBestAvailableRatePlansProcessStatus operation after the process is completed. <p><strong>OperationId:</strong>getBestAvailableRatePlans</p>",
+        "operationId": "getBestAvailableRatePlans",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "This asynchronous callback base type is used as a base for an extension for Opera Web Services Callback Requests to provide uniform implementation.",
+            "schema": {
+              "$ref": "#/definitions/bestAvailableRatePlansStatus"
+            }
+          },
+          "204": {
+            "description": "BestAvailableRatePlans not found."
+          }
+        },
         "parameters": [
           {
-            "maxLength": 2000,
-            "minLength": 1,
+            "name": "requestId",
+            "in": "path",
+            "required": true,
             "type": "string",
-            "description": "Unique ID of the hotel in OPERA",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
             "name": "hotelId",
             "in": "path",
-            "required": true
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
           },
           {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique code of the external system",
             "name": "extSystemCode",
             "in": "path",
-            "required": true
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
           },
           {
-            "description": "Request object to change rate plan.",
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/rates/hurdles": {
+      "post": {
+        "summary": "Operation to configure hurdle rates.",
+        "description": " <p><strong>OperationId:</strong>startHurdleRatesProcess</p>",
+        "operationId": "startHurdleRatesProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel in OPERA"
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique code of the external system"
+          },
+          {
+            "name": "hurdleRates",
+            "in": "body",
+            "required": true,
+            "description": "Request for configuring hurdle rates.",
+            "schema": {
+              "$ref": "#/definitions/hurdleRates"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/rates/hurdles/{requestId}": {
+      "head": {
+        "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getHurdleRatesProcessStatus</p>",
+        "operationId": "getHurdleRatesProcessStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID to fetch status of configured hurdle rates."
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique code of the external system."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of Hotel in OPERA."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API facilitates fetching of status for configured hurdle rates.",
+        "description": " <p><strong>OperationId:</strong>getHurdleRates</p>",
+        "operationId": "getHurdleRates",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/hurdleRatesStatus"
+            }
+          },
+          "204": {
+            "description": "Hurdle Rates not found."
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of Hotel in OPERA."
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique code of the external system."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID to fetch status of configured hurdle rates."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/headers": {
+      "post": {
+        "summary": "Operation to start the update of rate header flags. Recommendation is not to exceed 250 rate codes in one request.",
+        "description": " <p><strong>OperationId:</strong>startSetRatePlansHeadersProcess</p>",
+        "operationId": "startSetRatePlansHeadersProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel in OPERA"
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique code of the external system"
+          },
+          {
             "name": "ratePlan",
             "in": "body",
             "required": true,
+            "description": "Request object to change rate plan.",
             "schema": {
               "allOf": [
                 {
@@ -843,483 +832,123 @@
             }
           },
           {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/authKey"
           },
           {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-app-key"
           },
           {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
+            "$ref": "#/parameters/x-hotelid"
           },
           {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
+            "$ref": "#/parameters/Accept-Language"
           }
         ],
-        "responses": {
-          "202": {
-            "description": "Location of process status resource",
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of process status resource"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "x-interaction": [
-          "async-polling"
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
         ]
       }
     },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/ratePlans/headers/{requestId}": {
-      "get": {
-        "description": " <p><strong>OperationId:</strong>getRatePlansHeaders</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "This API facilitates fetching of status for configured rate plans.",
-        "operationId": "getRatePlansHeaders",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID of Hotel in OPERA.",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique code of the external system.",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID to fetch status of configured rate plans.",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "HATEOAS links which help the consumer to navigate to resources",
-            "schema": {
-              "$ref": "#/definitions/hurdleRatesStatus"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
-            }
-          },
-          "204": {
-            "description": "Hurdle Rates not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      },
       "head": {
-        "description": " <p><strong>OperationId:</strong>getRatePlansHeadersProcessStatus</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
         "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getRatePlansHeadersProcessStatus</p>",
         "operationId": "getRatePlansHeadersProcessStatus",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID to fetch status of configured rate plans.",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique code of the external system.",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID of Hotel in OPERA.",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again."
-              },
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
                 "enum": [
                   "Processing",
                   "Invalid"
-                ],
+                ]
+              },
+              "Cache-Control": {
                 "type": "string",
-                "description": "Status of the requested process."
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
               }
-            }
+            },
+            "description": "Response for status of scheduled asynchronous process."
           },
           "201": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
               },
               "Location": {
                 "type": "string",
                 "description": "Location of newly created resource once the status of process run is Complete."
-              },
-              "Status": {
-                "enum": [
-                  "Completed"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/rates/hurdles": {
-      "post": {
-        "description": " <p><strong>OperationId:</strong>startHurdleRatesProcess</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "RatePlanAsync"
-        ],
-        "summary": "Operation to configure hurdle rates.",
-        "operationId": "startHurdleRatesProcess",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID of the hotel in OPERA",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique code of the external system",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request for configuring hurdle rates.",
-            "name": "hurdleRates",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/hurdleRates"
-            }
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Location of process status resource",
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of process status resource"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+            },
+            "description": "Response for status of scheduled asynchronous process."
           }
         },
-        "x-interaction": [
-          "async-polling"
-        ]
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/rates/hurdles/{requestId}": {
-      "get": {
-        "description": " <p><strong>OperationId:</strong>getHurdleRates</p>",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID to fetch status of configured rate plans."
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique code of the external system."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of Hotel in OPERA."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1328,126 +957,72 @@
         ],
         "tags": [
           "RatePlanAsync"
-        ],
-        "summary": "This API facilitates fetching of status for configured hurdle rates.",
-        "operationId": "getHurdleRates",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID of Hotel in OPERA.",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique code of the external system.",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID to fetch status of configured hurdle rates.",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
+        ]
+      },
+      "get": {
+        "summary": "This API facilitates fetching of status for configured rate plans.",
+        "description": " <p><strong>OperationId:</strong>getRatePlansHeaders</p>",
+        "operationId": "getRatePlansHeaders",
         "responses": {
           "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
             "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
               "$ref": "#/definitions/hurdleRatesStatus"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
             }
           },
           "204": {
             "description": "Hurdle Rates not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
-        }
-      },
-      "head": {
-        "description": " <p><strong>OperationId:</strong>getHurdleRatesProcessStatus</p>",
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of Hotel in OPERA."
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique code of the external system."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID to fetch status of configured rate plans."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -1456,156 +1031,451 @@
         ],
         "tags": [
           "RatePlanAsync"
-        ],
-        "summary": "This API returns the status of asynchronous process scheduled for given id.",
-        "operationId": "getHurdleRatesProcessStatus",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID to fetch status of configured hurdle rates.",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique code of the external system.",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "description": "Unique ID of Hotel in OPERA.",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for status of scheduled asynchronous process.",
-            "headers": {
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again."
-              },
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Status": {
-                "enum": [
-                  "Processing",
-                  "Invalid"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
-              }
-            }
-          },
-          "201": {
-            "description": "Response for status of scheduled asynchronous process.",
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource once the status of process run is Complete."
-              },
-              "Status": {
-                "enum": [
-                  "Completed"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
+        ]
       }
     }
   },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
   "definitions": {
-    "bestAvailableRateCodesType": {
-      "description": "Collection of best available rate codes.",
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      }
+    },
+    "links": {
       "type": "array",
-      "maxItems": 25,
       "items": {
-        "type": "string",
-        "maxLength": 20,
-        "minLength": 0
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "dailyRatePlanScheduleType": {
+      "type": "object",
+      "description": "Daily rate plan schedule details.",
+      "properties": {
+        "rateAmounts": {
+          "description": "Daily rate amounts to be applied.",
+          "$ref": "#/definitions/scheduleRateAmountsType"
+        },
+        "rateDate": {
+          "description": "The rate date for which the daily rate amounts will be applied.",
+          "type": "string",
+          "format": "date"
+        },
+        "ratePlanCode": {
+          "description": "The rate code for which the daily rate amounts will be applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "The room type label for which the daily rate amounts will be applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "scheduleRateAmountsType": {
+      "type": "object",
+      "properties": {
+        "onePersonRate": {
+          "description": "Rate amount for one person.",
+          "type": "number"
+        },
+        "twoPersonRate": {
+          "description": "Rate amount for two persons.",
+          "type": "number"
+        },
+        "threePersonRate": {
+          "description": "Rate amount for three persons.",
+          "type": "number"
+        },
+        "fourPersonRate": {
+          "description": "Rate amount for four persons.",
+          "type": "number"
+        },
+        "fivePersonRate": {
+          "description": "Rate amount for five persons.",
+          "type": "number"
+        },
+        "extraPersonRate": {
+          "description": "Rate amount for each extra person.",
+          "type": "number"
+        },
+        "extraChildRate": {
+          "description": "Rate amount for each extra Child.",
+          "type": "number"
+        },
+        "oneChildRate": {
+          "description": "Rate amount for one Child.",
+          "type": "number"
+        },
+        "twoChildrenRate": {
+          "description": "Rate amount for two Children.",
+          "type": "number"
+        },
+        "threeChildrenRate": {
+          "description": "Rate amount for three Children.",
+          "type": "number"
+        },
+        "fourChildrenRate": {
+          "description": "Rate amount for four Children.",
+          "type": "number"
+        },
+        "rateByAgeBuckets": {
+          "description": "Collection of rate amount by age bracket.",
+          "$ref": "#/definitions/rateByAgeBucketsType"
+        },
+        "minimumChildrenForFreeStay": {
+          "description": "Minimum number of children needed to get free stay.",
+          "type": "integer"
+        },
+        "pointsRequired": {
+          "description": "The number of award points required for applying this rate plan schedule.",
+          "type": "number"
+        },
+        "overrideFloorAmount": {
+          "description": "true if floor amount needs to be override",
+          "type": "boolean"
+        }
+      }
+    },
+    "rateByAgeBucketsType": {
+      "type": "array",
+      "description": "Rate amount by age bucket.",
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/definitions/rateByAgeBucketType"
+      }
+    },
+    "rateByAgeBucketType": {
+      "type": "object",
+      "description": "Rate amount by age bucket.",
+      "properties": {
+        "rateAmount": {
+          "description": "Rate amount by age bucket.",
+          "type": "number"
+        },
+        "minimumAge": {
+          "description": "Minimum age for age bucket.",
+          "type": "integer"
+        },
+        "maximumAge": {
+          "description": "Maximum age for age bucket.",
+          "type": "integer"
+        }
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "dailyRatePlanSchedules": {
+      "description": "Daily rate plan schedules.",
+      "type": "object",
+      "properties": {
+        "dailyRatePlanSchedule": {
+          "description": "Collection of daily rate plan schedules.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/dailyRatePlanScheduleType"
+          }
+        }
+      }
+    },
+    "dailyRatePlanSchedulesStatus": {
+      "type": "object",
+      "description": "Response for configured best available rate plans status.",
+      "properties": {
+        "warnings": {
+          "description": "List of warnings that occurred.",
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "bestAvailableRatePlansType": {
+      "description": "Collection of best available rate plans.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": {
+        "$ref": "#/definitions/bestAvailableRatePlanType"
       }
     },
     "bestAvailableRatePlanType": {
-      "description": "Defines best available rate plans.",
       "type": "object",
+      "description": "Defines best available rate plans.",
       "properties": {
+        "ratePlanCodes": {
+          "description": "Collection of best available rate plan codes.",
+          "$ref": "#/definitions/bestAvailableRateCodesType"
+        },
+        "rateDate": {
+          "description": "Validity of best available rate plan.",
+          "type": "string",
+          "format": "date"
+        },
         "los1": {
           "description": "Indicates Length of Stay 1 configuration.",
           "type": "boolean"
@@ -1637,21 +1507,22 @@
         "los8": {
           "description": "Indicates Length of Stay 8 configuration.",
           "type": "boolean"
-        },
-        "rateDate": {
-          "description": "Validity of best available rate plan.",
-          "type": "string",
-          "format": "date"
-        },
-        "ratePlanCodes": {
-          "description": "Collection of best available rate plan codes.",
-          "$ref": "#/definitions/bestAvailableRateCodesType"
         }
       }
     },
+    "bestAvailableRateCodesType": {
+      "type": "array",
+      "description": "Collection of best available rate codes.",
+      "maxItems": 25,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
+      }
+    },
     "bestAvailableRatePlans": {
-      "description": "Request for configuring best available rate plans.",
       "type": "object",
+      "description": "Request for configuring best available rate plans.",
       "properties": {
         "bestAvailableRatePlans": {
           "description": "Best available rate plans to be configured.",
@@ -1660,389 +1531,130 @@
       }
     },
     "bestAvailableRatePlansStatus": {
-      "description": "Response for configured best available rate plans status.",
       "type": "object",
+      "description": "Response for configured best available rate plans status.",
       "properties": {
-        "links": {
-          "$ref": "#/definitions/links"
-        },
         "warnings": {
           "description": "List of warnings that occurred.",
           "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
         }
       }
     },
-    "bestAvailableRatePlansType": {
-      "description": "Collection of best available rate plans.",
+    "hurdleRates": {
       "type": "array",
-      "maxItems": 1000,
-      "minItems": 1,
+      "description": "Hurdle rates to be configured.",
+      "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/bestAvailableRatePlanType"
-      }
-    },
-    "dailyRatePlanScheduleType": {
-      "description": "Daily rate plan schedule details.",
-      "type": "object",
-      "properties": {
-        "rateAmounts": {
-          "description": "Daily rate amounts to be applied.",
-          "$ref": "#/definitions/scheduleRateAmountsType"
-        },
-        "rateDate": {
-          "description": "The rate date for which the daily rate amounts will be applied.",
-          "type": "string",
-          "format": "date"
-        },
-        "ratePlanCode": {
-          "description": "The rate code for which the daily rate amounts will be applied.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "roomType": {
-          "description": "The room type label for which the daily rate amounts will be applied.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        }
-      }
-    },
-    "dailyRatePlanSchedules": {
-      "description": "Daily rate plan schedules.",
-      "type": "object",
-      "properties": {
-        "dailyRatePlanSchedule": {
-          "description": "Collection of daily rate plan schedules.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/dailyRatePlanScheduleType"
-          }
-        }
-      }
-    },
-    "dailyRatePlanSchedulesStatus": {
-      "description": "Response for configured best available rate plans status.",
-      "type": "object",
-      "properties": {
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "description": "List of warnings that occurred.",
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "errorInstance": {
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "title": "Error Instance Details",
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
-        }
-      }
-    },
-    "exceptionDetailType": {
-      "description": "Complex type that contains error details for a REST call.",
-      "type": "object",
-      "title": "Error Detail",
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/errorInstance"
-          }
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
-        }
+        "$ref": "#/definitions/hurdleRateType"
       }
     },
     "hurdleRateType": {
-      "description": "Unique identifier for hurdle rate.",
       "type": "object",
+      "description": "Unique identifier for hurdle rate.",
       "properties": {
-        "ceiling": {
-          "description": "Maximum number of rooms to sell for which the delta is applicable to be aded to hurdle rate.",
+        "hurdleDate": {
+          "description": "Hurdle date for which the hurdle rate is scheduled.",
+          "type": "string",
+          "format": "date"
+        },
+        "roomType": {
+          "description": "Room type for which the hurdle rate applies to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomCategory": {
+          "description": "Internal room category of the room type for which the hurdle rate applies to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "yieldCategory": {
+          "description": "Yield category for which the hurdle rate applies to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "lengthOfStay": {
+          "description": "Length of stay for which the hurdle rate applies to.",
+          "type": "number"
+        },
+        "yieldMarketCode": {
+          "description": "Yield market code for which the hurdle rate applies to.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "hurdle": {
+          "description": "Defines the amount to be reached before rate code or room type is made available.",
           "type": "number"
         },
         "delta": {
           "description": "Defines the amount to be added to hurdle rate for each additional rooms sold up to the ceiling.",
           "type": "number"
         },
-        "hurdle": {
-          "description": "Defines the amount to be reached before rate code or room type is made available.",
-          "type": "number"
-        },
-        "hurdleDate": {
-          "description": "Hurdle date for which the hurdle rate is scheduled.",
-          "type": "string",
-          "format": "date"
-        },
-        "lengthOfStay": {
-          "description": "Length of stay for which the hurdle rate applies to.",
+        "ceiling": {
+          "description": "Maximum number of rooms to sell for which the delta is applicable to be aded to hurdle rate.",
           "type": "number"
         },
         "maximumSolds": {
           "description": "Maximum number of rooms to sell.",
           "type": "number"
         },
-        "override": {
-          "description": "Specifies whether to override hurdle rate or not.",
-          "type": "boolean"
-        },
-        "roomCategory": {
-          "description": "Internal room category of the room type for which the hurdle rate applies to.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "roomType": {
-          "description": "Room type for which the hurdle rate applies to.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
         "roomsSold": {
           "description": "Defines the actual number of rooms sold.",
           "type": "number"
         },
-        "yieldCategory": {
-          "description": "Yield category for which the hurdle rate applies to.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "yieldMarketCode": {
-          "description": "Yield market code for which the hurdle rate applies to.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+        "override": {
+          "description": "Specifies whether to override hurdle rate or not.",
+          "type": "boolean"
         }
       }
     },
-    "hurdleRates": {
-      "description": "Hurdle rates to be configured.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/hurdleRateType"
+    "hurdleRatesStatus": {
+      "type": "object",
+      "description": "Response for configured hurdle rates.",
+      "properties": {
+        "warnings": {
+          "description": "List of warnings that occurred.",
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
       }
     },
-    "hurdleRatesStatus": {
-      "description": "Response for configured hurdle rates.",
+    "ratePlans": {
       "type": "object",
+      "description": "Request object to create rate plan.",
       "properties": {
+        "ratePlans": {
+          "type": "array",
+          "description": "Rate plan code details to be created.",
+          "items": {
+            "$ref": "#/definitions/ratePlanType"
+          }
+        },
         "links": {
           "$ref": "#/definitions/links"
         },
         "warnings": {
-          "description": "List of warnings that occurred.",
           "$ref": "#/definitions/warningsType"
         }
       }
     },
-    "instanceLink": {
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
-      "type": "object",
-      "properties": {
-        "href": {
-          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
-          "type": "string"
-        },
-        "method": {
-          "description": "HTTP method for requesting the target of the link.",
-          "type": "string",
-          "enum": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE",
-            "PATCH",
-            "OPTIONS",
-            "HEAD"
-          ]
-        },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
-        "targetSchema": {
-          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
-          "type": "string"
-        },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
-        },
-        "title": {
-          "description": "Exact copy of the \"summary\" field on the linked operation.",
-          "type": "string"
-        }
-      }
-    },
-    "links": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/instanceLink"
-      }
-    },
-    "rateByAgeBucketType": {
-      "description": "Rate amount by age bucket.",
-      "type": "object",
-      "properties": {
-        "maximumAge": {
-          "description": "Maximum age for age bucket.",
-          "type": "integer"
-        },
-        "minimumAge": {
-          "description": "Minimum age for age bucket.",
-          "type": "integer"
-        },
-        "rateAmount": {
-          "description": "Rate amount by age bucket.",
-          "type": "number"
-        }
-      }
-    },
-    "rateByAgeBucketsType": {
-      "description": "Rate amount by age bucket.",
-      "type": "array",
-      "maxItems": 3,
-      "items": {
-        "$ref": "#/definitions/rateByAgeBucketType"
-      }
-    },
-    "ratePlanDistributionType": {
-      "type": "object",
-      "properties": {
-        "channelAllowed": {
-          "description": "Rate plan Code is available for channels.",
-          "type": "boolean"
-        },
-        "myFidelioUploadAllowed": {
-          "description": "Rate plan to be uploaded to MyFidleio and published.",
-          "type": "boolean"
-        },
-        "rateUpdate": {
-          "description": "Rate updates for the rate plan to be sent to channels?",
-          "type": "boolean"
-        },
-        "restrictionUpdate": {
-          "description": "Restriction updates for the rate plan to be sent to channels?",
-          "type": "boolean"
-        }
-      }
-    },
     "ratePlanType": {
-      "description": "The Rate plan code Details.",
       "type": "object",
+      "description": "The Rate plan code Details.",
       "properties": {
-        "advancedDailyBase": {
-          "description": "Flag to identify if Rate Code is Advanced Daily Base Rate Code",
-          "type": "boolean"
-        },
-        "advancedDailyRate": {
-          "description": "Flag to identify if Rate Code is Advanced Daily Rate",
-          "type": "boolean"
-        },
-        "barRate": {
-          "description": "Is rate plan code of BAR Rate type?",
-          "type": "boolean"
-        },
-        "complimentary": {
-          "description": "Is rate plan code complimentary?",
-          "type": "boolean"
-        },
-        "daily": {
-          "description": "Is rate plan code a daily rate?",
-          "type": "boolean"
-        },
-        "dayType": {
-          "description": "Indicates if rate Calendar factors such as adder/multiplier should be used for price calculation.",
-          "type": "boolean"
-        },
-        "dayUse": {
-          "description": "Is rate plan code for day use?",
-          "type": "boolean"
-        },
-        "discountAllowed": {
-          "description": "Is rate plan code discounted?",
-          "type": "boolean"
-        },
-        "distribution": {
-          "description": "Distribution setup for the rate code.",
-          "$ref": "#/definitions/ratePlanDistributionType"
-        },
-        "houseUse": {
-          "description": "Is rate plan code for house use?",
-          "type": "boolean"
-        },
-        "membershipEligible": {
-          "description": "Is rate plan code flagged as eligible for memberships? This flag controls whether the guest stay, which this rate plan is attached to, qualifies for point calculations for Frequent Flyer or Frequent Guest programs. If the rate plan associated to the reservation has not been flagged for Membership then the guest will not earn any points/miles for their stay.",
-          "type": "boolean"
+        "ratePlanCode": {
+          "description": "Rate plan Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "mobileCheckinAllowed": {
           "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
@@ -2050,6 +1662,50 @@
         },
         "mobileCheckoutAllowed": {
           "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
+          "type": "boolean"
+        },
+        "supressRate": {
+          "description": "Is rate amount suppressed for the rate plan?",
+          "type": "boolean"
+        },
+        "printRate": {
+          "description": "Is Rate amount printed on the reports for the rate plan?",
+          "type": "boolean"
+        },
+        "discountAllowed": {
+          "description": "Is rate plan code discounted?",
+          "type": "boolean"
+        },
+        "redemption": {
+          "description": "Is redemption allowed on the rate code?",
+          "type": "boolean"
+        },
+        "barRate": {
+          "description": "Is rate plan code of BAR Rate type?",
+          "type": "boolean"
+        },
+        "daily": {
+          "description": "Is rate plan code a daily rate?",
+          "type": "boolean"
+        },
+        "tiered": {
+          "description": "Is rate plan code a tiered rate?",
+          "type": "boolean"
+        },
+        "dayUse": {
+          "description": "Is rate plan code for day use?",
+          "type": "boolean"
+        },
+        "dayType": {
+          "description": "Indicates if rate Calendar factors such as adder/multiplier should be used for price calculation.",
+          "type": "boolean"
+        },
+        "complimentary": {
+          "description": "Is rate plan code complimentary?",
+          "type": "boolean"
+        },
+        "houseUse": {
+          "description": "Is rate plan code for house use?",
           "type": "boolean"
         },
         "negotiated": {
@@ -2060,178 +1716,213 @@
           "description": "Is rate plan code flagged as an owner rate plan? Owner rate plans have special functionality for no-shows depending on the Rolling Noshow Preference application setting.",
           "type": "boolean"
         },
-        "printRate": {
-          "description": "Is Rate amount printed on the reports for the rate plan?",
+        "membershipEligible": {
+          "description": "Is rate plan code flagged as eligible for memberships? This flag controls whether the guest stay, which this rate plan is attached to, qualifies for point calculations for Frequent Flyer or Frequent Guest programs. If the rate plan associated to the reservation has not been flagged for Membership then the guest will not earn any points/miles for their stay.",
           "type": "boolean"
         },
-        "ratePlanCode": {
-          "description": "Rate plan Code",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "redemption": {
-          "description": "Is redemption allowed on the rate code?",
+        "advancedDailyBase": {
+          "description": "Flag to identify if Rate Code is Advanced Daily Base Rate Code",
           "type": "boolean"
         },
-        "supressRate": {
-          "description": "Is rate amount suppressed for the rate plan?",
+        "advancedDailyRate": {
+          "description": "Flag to identify if Rate Code is Advanced Daily Rate",
           "type": "boolean"
         },
-        "tiered": {
-          "description": "Is rate plan code a tiered rate?",
-          "type": "boolean"
+        "distribution": {
+          "description": "Distribution setup for the rate code.",
+          "$ref": "#/definitions/ratePlanDistributionType"
         }
       }
     },
-    "ratePlans": {
-      "description": "Request object to create rate plan.",
+    "ratePlanPrimaryDetailsType": {
       "type": "object",
       "properties": {
-        "links": {
-          "$ref": "#/definitions/links"
+        "description": {
+          "description": "Description of the rate plan.",
+          "$ref": "#/definitions/translationTextType2000"
         },
-        "ratePlans": {
-          "description": "Rate plan code details to be created.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ratePlanType"
-          }
+        "startSellDate": {
+          "description": "Start sell date of the rate plan.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "scheduleRateAmountsType": {
-      "type": "object",
-      "properties": {
-        "extraChildRate": {
-          "description": "Rate amount for each extra Child.",
-          "type": "number"
+        "endSellDate": {
+          "description": "End sell date of the rate plan.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         },
-        "extraPersonRate": {
-          "description": "Rate amount for each extra person.",
-          "type": "number"
-        },
-        "fivePersonRate": {
-          "description": "Rate amount for five persons.",
-          "type": "number"
-        },
-        "fourChildrenRate": {
-          "description": "Rate amount for four Children.",
-          "type": "number"
-        },
-        "fourPersonRate": {
-          "description": "Rate amount for four persons.",
-          "type": "number"
-        },
-        "minimumChildrenForFreeStay": {
-          "description": "Minimum number of children needed to get free stay.",
-          "type": "integer"
-        },
-        "oneChildRate": {
-          "description": "Rate amount for one Child.",
-          "type": "number"
-        },
-        "onePersonRate": {
-          "description": "Rate amount for one person.",
-          "type": "number"
-        },
-        "overrideFloorAmount": {
-          "description": "true if floor amount needs to be override",
+        "privilegedRate": {
+          "description": "The particular rate code is marked as privileged making it restrictive on who can update information.",
           "type": "boolean"
         },
-        "pointsRequired": {
-          "description": "The number of award points required for applying this rate plan schedule.",
-          "type": "number"
+        "privilegedRateRestriction": {
+          "description": "The restrictions marked on the rate code are marked as privileged making it restrictive on who can update information.",
+          "type": "boolean"
         },
-        "rateByAgeBuckets": {
-          "description": "Collection of rate amount by age bracket.",
-          "$ref": "#/definitions/rateByAgeBucketsType"
-        },
-        "threeChildrenRate": {
-          "description": "Rate amount for three Children.",
-          "type": "number"
-        },
-        "threePersonRate": {
-          "description": "Rate amount for three persons.",
-          "type": "number"
-        },
-        "twoChildrenRate": {
-          "description": "Rate amount for two Children.",
-          "type": "number"
-        },
-        "twoPersonRate": {
-          "description": "Rate amount for two persons.",
-          "type": "number"
+        "lockStatus": {
+          "description": "Specifies the lock status of the rate code. Rates can be Unlocked, Externally locked, locked at Property level, or locked at Central level.",
+          "$ref": "#/definitions/rateCodeLockStatusType"
         }
       }
     },
-    "warningType": {
-      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+    "ratePlanClassificationsType": {
       "type": "object",
       "properties": {
-        "code": {
-          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+        "rateCategory": {
+          "description": "Rate Category for the rate plan.",
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+          "minLength": 0,
+          "maxLength": 20
         },
-        "docURL": {
-          "description": "If present, this URL refers to an online description of the error that occurred.",
+        "marketCode": {
+          "description": "Market code for the rate plan.",
           "type": "string",
-          "maxLength": 2000
+          "minLength": 0,
+          "maxLength": 20
         },
-        "language": {
-          "description": "Language identification.",
+        "sourceCode": {
+          "description": "Source code for the rate plan.",
           "type": "string",
-          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
-        },
-        "recordId": {
-          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "rph": {
-          "description": "Reference Place Holder used as an index for this warning.",
-          "type": "string",
-          "maxLength": 8,
-          "minLength": 1
-        },
-        "shortText": {
-          "description": "An abbreviated version of the error in textual format.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "status": {
-          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "tag": {
-          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "type": {
-          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "value": {
-          "description": "Property Value",
-          "type": "string"
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     },
-    "warningsType": {
-      "description": "Used in conjunction with the Success element to define a business error.",
+    "ratePlanControlsType": {
+      "type": "object",
+      "properties": {
+        "sell": {
+          "description": "Sell controls for the rate code i.e. min. Length of stay, max Length of Stay etc.",
+          "$ref": "#/definitions/ratePlanSellControlsType"
+        },
+        "yield": {
+          "description": "Yield controls for the rate code i.e. Is rate yieldable? Rate bucket it belongs to? Yield Market it belongs to? etc .",
+          "$ref": "#/definitions/ratePlanYieldControlsType"
+        }
+      }
+    },
+    "ratePlanDistributionType": {
+      "type": "object",
+      "properties": {
+        "restrictionUpdate": {
+          "description": "Restriction updates for the rate plan to be sent to channels?",
+          "type": "boolean"
+        },
+        "rateUpdate": {
+          "description": "Rate updates for the rate plan to be sent to channels?",
+          "type": "boolean"
+        },
+        "myFidelioUploadAllowed": {
+          "description": "Rate plan to be uploaded to MyFidleio and published.",
+          "type": "boolean"
+        },
+        "channelAllowed": {
+          "description": "Rate plan Code is available for channels.",
+          "type": "boolean"
+        }
+      }
+    },
+    "rateRoomTypeListType": {
       "type": "array",
+      "description": "Details of each room type",
       "maxItems": 4000,
       "items": {
-        "$ref": "#/definitions/warningType"
+        "$ref": "#/definitions/rateRoomTypeDetailType"
+      }
+    },
+    "rateRoomTypeDetailType": {
+      "type": "object",
+      "description": "Details of single room type",
+      "properties": {
+        "code": {
+          "description": "Room type code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "translationTextType2000": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "baseType": {
+      "type": "string",
+      "description": "Simple type for base type, flat or differential.",
+      "enum": [
+        "Flat",
+        "Differential"
+      ]
+    },
+    "rateCodeLockStatusType": {
+      "type": "string",
+      "description": "Indicates that the rate code is locked by the central system and cannot be edited at the property level.",
+      "enum": [
+        "Unlocked",
+        "External",
+        "Property",
+        "Central"
+      ]
+    },
+    "ratePlanApprovalStatusType": {
+      "type": "string",
+      "description": "Indicates that the Rate Plan is approved for selling.",
+      "enum": [
+        "NewUnapproved",
+        "ChangedUnapproved",
+        "Rejected",
+        "Approved"
+      ]
+    },
+    "ratePlanSellControlsType": {
+      "type": "object",
+      "properties": {
+        "minimumStayThrough": {
+          "description": "Minimum number of nights the guest has to stay through to consume this rate plan code.",
+          "type": "integer"
+        },
+        "minimumLengthOfStay": {
+          "description": "Minimum number of nights the guest has to stay to consume this rate plan code.",
+          "type": "integer"
+        }
+      }
+    },
+    "ratePlanYieldControlsType": {
+      "type": "object",
+      "properties": {
+        "yieldable": {
+          "description": "Is rate plan code Yieldable / non-yieldable / stay-pattern?",
+          "$ref": "#/definitions/ratePlanYieldableType"
+        }
+      }
+    },
+    "ratePlanYieldableType": {
+      "type": "string",
+      "description": "Simple type for valid values for Yieldable element for the Rate plan code.",
+      "enum": [
+        "Yieldable",
+        "NonYieldable",
+        "StayPattern"
+      ]
+    },
+    "yieldMarketCodeListType": {
+      "type": "array",
+      "description": "Yield Market Code for the rate plan code.",
+      "maxItems": 4000,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 20
       }
     }
   },

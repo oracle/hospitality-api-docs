@@ -1,817 +1,646 @@
 {
-  "produces": [
-    "application/json"
-  ],
-  "schemes": [
-    "https"
-  ],
   "swagger": "2.0",
   "info": {
-    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 23.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
     "title": "OPERA Cloud Block Reservation Asynchronous API",
-    "version": "23.2",
+    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "23.5",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality-integrations_ww@oracle.com"
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
     "license": {
       "name": "UPL",
       "url": "https://opensource.org/licenses/upl"
     }
   },
+  "schemes": [
+    "https"
+  ],
   "basePath": "/blk/async/v1",
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/blocks/allocationSummary": {
       "post": {
-        "description": "This API will fetch Block allocation information for a hotel, and specified date range.  The block allocated inventory, rates and room type statistics are returned as part of the response. <p><strong>OperationId:</strong>startBlockAllocationSummaryProcess</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "BlockAsync"
-        ],
         "summary": "This API facilitates fetching block allocation summary for a Hotel.",
+        "description": "This API will fetch Block allocation information for a hotel, and specified date range.  The block allocated inventory, rates and room type statistics are returned as part of the response. <p><strong>OperationId:</strong>startBlockAllocationSummaryProcess</p>",
         "operationId": "startBlockAllocationSummaryProcess",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Request object for fetching block allocation summary asynchronously.",
-            "name": "criteria",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/criteria"
-            }
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
+        "x-interaction": [
+          "async-polling"
         ],
         "responses": {
           "202": {
-            "description": "Location of process status resource",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Location": {
                 "type": "string",
                 "description": "Location of process status resource"
               }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
+              "$ref": "#/definitions/links"
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
           }
         },
-        "x-interaction": [
-          "async-polling"
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "criteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for fetching block allocation summary asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/criteria"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
         ]
       }
     },
     "/externalSystems/{extSystemCode}/hotels/{hotelId}/blocks/allocationSummary/{requestId}": {
-      "get": {
-        "description": "This API will fetch Block allocation information for a hotel, and specified date range.  The block allocated inventory, rates and room type statistics are returned as part of the response. <p><strong>OperationId:</strong>getBlockAllocationSummary</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "BlockAsync"
-        ],
-        "summary": "This API returns a hotel's block allocation summary for a scheduled process.",
-        "operationId": "getBlockAllocationSummary",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Callback request object for fetched block allocation summary.",
-            "schema": {
-              "$ref": "#/definitions/blockAllocationSummary"
-            },
-            "headers": {
-              "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "type": "string",
-                "description": "Audience language"
-              }
-            }
-          },
-          "204": {
-            "description": "BlockAllocationSummary not found."
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "413": {
-            "description": "Request Entity Too Large"
-          },
-          "414": {
-            "description": "Request URI Too Large"
-          },
-          "415": {
-            "description": "Unsupported Media Type"
-          },
-          "500": {
-            "description": "System Error",
-            "schema": {
-              "$ref": "#/definitions/exceptionDetailType"
-            }
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      },
       "head": {
-        "description": " <p><strong>OperationId:</strong>getBlockAllocationSummaryProcessStatus</p>",
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "BlockAsync"
-        ],
         "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getBlockAllocationSummaryProcessStatus</p>",
         "operationId": "getBlockAllocationSummaryProcessStatus",
-        "parameters": [
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "requestId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true
-          },
-          {
-            "maxLength": 2000,
-            "minLength": 1,
-            "type": "string",
-            "name": "hotelId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Bearer token that needs to be passed which is generated post user authentication",
-            "name": "authorization",
-            "in": "header",
-            "required": true
-          },
-          {
-            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-            "type": "string",
-            "description": "Client or Partner's Application Key",
-            "name": "x-app-key",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
-            "name": "x-hotelid",
-            "in": "header",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "Language code",
-            "name": "Accept-Language",
-            "in": "header"
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again."
-              },
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
               },
               "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
                 "enum": [
                   "Processing",
                   "Invalid"
-                ],
+                ]
+              },
+              "Cache-Control": {
                 "type": "string",
-                "description": "Status of the requested process."
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
               }
-            }
+            },
+            "description": "Response for status of scheduled asynchronous process."
           },
           "201": {
-            "description": "Response for status of scheduled asynchronous process.",
             "headers": {
               "Content-Language": {
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "type": "string",
-                "description": "Audience language"
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
               },
               "Location": {
                 "type": "string",
                 "description": "Location of newly created resource once the status of process run is Complete."
-              },
-              "Status": {
-                "enum": [
-                  "Completed"
-                ],
-                "type": "string",
-                "description": "Status of the requested process."
               }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API returns a hotel's block allocation summary for a scheduled process.",
+        "description": "This API will fetch Block allocation information for a hotel, and specified date range.  The block allocated inventory, rates and room type statistics are returned as part of the response. <p><strong>OperationId:</strong>getBlockAllocationSummary</p>",
+        "operationId": "getBlockAllocationSummary",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Callback request object for fetched block allocation summary.",
+            "schema": {
+              "$ref": "#/definitions/blockAllocationSummary"
             }
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "405": {
-            "description": "Method not allowed"
-          },
-          "406": {
-            "description": "Not acceptable."
-          },
-          "500": {
-            "description": "System Error"
-          },
-          "502": {
-            "description": "Bad Gateway"
-          },
-          "503": {
-            "description": "Service Unavailable"
+          "204": {
+            "description": "BlockAllocationSummary not found."
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/allocation": {
+      "post": {
+        "summary": "This API facilitates setting Block Allocations for a Hotel.",
+        "description": "Use this API to add block room type allocations and rates to a specified Block. <p><strong>OperationId:</strong>startBlockAllocationProcess</p>",
+        "operationId": "startBlockAllocationProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "allocation",
+            "in": "body",
+            "required": true,
+            "description": "A Request message that sets the room allocations as a collection of room types and dates.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/allocation"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/links"
+            }
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/allocation/{requestId}": {
+      "head": {
+        "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getBlockAllocationProcessStatus</p>",
+        "operationId": "getBlockAllocationProcessStatus",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API returns information about the set allocation process.",
+        "description": "This API will fetch Block allocation warnings for a hotel to allow for overbooking information to be returned as part of the response. <p><strong>OperationId:</strong>getBlockAllocationProcessInfo</p>",
+        "operationId": "getBlockAllocationProcessInfo",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Callback request object for fetched block allocation process information.",
+            "schema": {
+              "$ref": "#/definitions/processDetails"
+            }
+          },
+          "204": {
+            "description": "BlockAllocationProcessInfo not found."
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
       }
     }
   },
+  "parameters": {
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
   "definitions": {
-    "blockActualRevenueType": {
-      "description": "Indicates the sum of revenue breakup per room type per block per allocation date for the reservations. Applicable for past dates, business date or future dates.",
-      "type": "object",
-      "properties": {
-        "currency": {
-          "description": "Currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string"
-        },
-        "foodRevenue": {
-          "description": "Indicates food revenue amount.",
-          "type": "number"
-        },
-        "foodRevenueTax": {
-          "description": "Indicates food revenue tax amount.",
-          "type": "number"
-        },
-        "nonRevenue": {
-          "description": "Indicates non revenue amount.",
-          "type": "number"
-        },
-        "nonRevenueTax": {
-          "description": "Indicates non revenue tax amount.",
-          "type": "number"
-        },
-        "otherRevenue": {
-          "description": "Indicates other revenue amount.",
-          "type": "number"
-        },
-        "otherRevenueTax": {
-          "description": "Indicates other revenue tax amount.",
-          "type": "number"
-        },
-        "roomRevenue": {
-          "description": "Indicates room revenue amount.",
-          "type": "number"
-        },
-        "roomRevenueTax": {
-          "description": "Indicates room revenue tax amount.",
-          "type": "number"
-        },
-        "totalRevenue": {
-          "description": "Indicates total revenue amount.",
-          "type": "number"
-        },
-        "totalRevenueTax": {
-          "description": "Indicates total revenue tax amount.",
-          "type": "number"
-        }
-      }
-    },
-    "blockAllocationSummary": {
-      "description": "Response object for fetched block allocation summary.",
-      "type": "array",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/blockAllocationSummaryType"
-      }
-    },
-    "blockAllocationSummaryType": {
-      "type": "object",
-      "properties": {
-        "allocationDates": {
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/roomAllocationDateType"
-          }
-        },
-        "blockCode": {
-          "description": "Defined block code for the block.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "blockId": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "number",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "blockName": {
-          "description": "Name of the block.",
-          "type": "string",
-          "maxLength": 2000,
-          "minLength": 0
-        },
-        "blockType": {
-          "description": "Indicates the internal type of the block like G, etc.",
-          "type": "string",
-          "maxLength": 1,
-          "minLength": 0
-        },
-        "cancellationCode": {
-          "description": "Code that idenfies the reason for cancellation.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "cancellationDate": {
-          "description": "Cancellation Date.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "cancellationDescription": {
-          "description": "Description that explains the reason for cancellation.",
-          "type": "string",
-          "maxLength": 2000,
-          "minLength": 0
-        },
-        "cateringOwner": {
-          "description": "Catering Owner",
-          "type": "integer"
-        },
-        "cateringOwnerCode": {
-          "description": "Primary Catering Owner Code",
-          "type": "string",
-          "maxLength": 10,
-          "minLength": 0
-        },
-        "cateringOwnerResort": {
-          "description": "Property of Catering Owner",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "createDateTime": {
-          "description": "The business date the block was created.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "cutOffDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "cutOffDays": {
-          "type": "integer"
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "lastModifiedDate": {
-          "description": "Date Time when the block was modified last.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "marketCode": {
-          "description": "Market Code of the block.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "masterBlockId": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "number",
-          "maxLength": 80,
-          "minLength": 0
-        },
-        "owner": {
-          "description": "Owner ID",
-          "type": "integer"
-        },
-        "ownerCode": {
-          "description": "Block Owner Code",
-          "type": "string",
-          "maxLength": 10,
-          "minLength": 0
-        },
-        "ownerResort": {
-          "description": "Property of Business Block Owner",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "ratePlanCode": {
-          "description": "Rate code associated with Block.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "reservationMethod": {
-          "description": "Booking Method.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "roomsOwner": {
-          "description": "Rooms Owner",
-          "type": "integer"
-        },
-        "roomsOwnerCode": {
-          "description": "Primary Rooms Owner Code",
-          "type": "string",
-          "maxLength": 10,
-          "minLength": 0
-        },
-        "roomsOwnerResort": {
-          "description": "Property of Rooms Owner",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "sourceCode": {
-          "description": "Source of the Block.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        },
-        "startDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "status": {
-          "description": "Booking Status of the block.",
-          "type": "string",
-          "maxLength": 20,
-          "minLength": 0
-        }
-      }
-    },
-    "blockGridInvType": {
-      "description": "Indicates the inventory values ( occupancy or availability ) per person occupancy.",
-      "type": "object",
-      "properties": {
-        "fourPerson": {
-          "description": "Indicates the four person inventory value ( occupancy or availability ).",
-          "type": "integer"
-        },
-        "onePerson": {
-          "description": "Indicates the one person inventory value ( occupancy or availability ).",
-          "type": "integer"
-        },
-        "sellLimit": {
-          "description": "Indicates the sell limit",
-          "type": "integer"
-        },
-        "threePerson": {
-          "description": "Indicates the three person inventory value ( occupancy or availability ).",
-          "type": "integer"
-        },
-        "twoPerson": {
-          "description": "Indicates the two person inventory value ( occupancy or availability ).",
-          "type": "integer"
-        }
-      }
-    },
-    "blockGridRatesType": {
-      "description": "Indicates the rate amount values per person occupancy.",
-      "type": "object",
-      "properties": {
-        "extraPerson": {
-          "description": "Indicates the extra person occupancy rate amount.",
-          "type": "number"
-        },
-        "fourPerson": {
-          "description": "Indicates the four person occupancy rate amount.",
-          "type": "number"
-        },
-        "onePerson": {
-          "description": "Indicates the one person occupancy rate amount.",
-          "type": "number"
-        },
-        "threePerson": {
-          "description": "Indicates the three person occupancy rate amount.",
-          "type": "number"
-        },
-        "twoPerson": {
-          "description": "Indicates the two person occupancy rate amount.",
-          "type": "number"
-        }
-      }
-    },
-    "blockPotenitalRevenueType": {
-      "description": "Indicates the sum of revenue breakup per room type per block per allocation date for the reservations. Applicable for business date or future dates.",
-      "type": "object",
-      "properties": {
-        "currency": {
-          "description": "Currency code to reflect the currency in which an amount may be expressed.",
-          "type": "string"
-        },
-        "foodRevenue": {
-          "description": "Indicates food revenue amount.",
-          "type": "number"
-        },
-        "foodRevenueTax": {
-          "description": "Indicates food revenue tax amount.",
-          "type": "number"
-        },
-        "nonRevenue": {
-          "description": "Indicates non revenue amount.",
-          "type": "number"
-        },
-        "nonRevenueTax": {
-          "description": "Indicates non revenue tax amount.",
-          "type": "number"
-        },
-        "otherRevenue": {
-          "description": "Indicates other revenue amount.",
-          "type": "number"
-        },
-        "otherRevenueTax": {
-          "description": "Indicates other revenue tax amount.",
-          "type": "number"
-        },
-        "roomRevenue": {
-          "description": "Indicates room revenue amount.",
-          "type": "number"
-        },
-        "roomRevenueTax": {
-          "description": "Indicates room revenue tax amount.",
-          "type": "number"
-        },
-        "totalRevenue": {
-          "description": "Indicates total revenue amount.",
-          "type": "number"
-        },
-        "totalRevenueTax": {
-          "description": "Indicates total revenue tax amount.",
-          "type": "number"
-        }
-      }
-    },
-    "criteria": {
-      "description": "Request object for fetching block allocation summary asynchronously.",
-      "type": "object",
-      "properties": {
-        "endDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "endLastModifiedDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "occupancyDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "startDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "startLastModifiedDate": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "errorInstance": {
-      "description": "Complex type that contains error instance details for a REST call.",
-      "type": "object",
-      "title": "Error Instance Details",
-      "properties": {
-        "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
-        },
-        "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
-        },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
-        },
-        "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
-        }
-      }
-    },
     "exceptionDetailType": {
+      "title": "Error Detail",
       "description": "Complex type that contains error details for a REST call.",
       "type": "object",
-      "title": "Error Detail",
       "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
         "detail": {
-          "description": "Human-readable description specific to this occurrence of the problem.",
-          "type": "string"
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
         },
         "instance": {
-          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced.",
-          "type": "string"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
         },
         "o:errorCode": {
-          "description": "Application error code, which is different from HTTP error code.",
-          "type": "string"
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         },
         "o:errorDetails": {
           "description": "Details of the error message, consisting of a hierarchical tree structure.",
@@ -820,31 +649,62 @@
             "$ref": "#/definitions/errorInstance"
           }
         },
-        "o:errorPath": {
-          "description": "Path to the problem at the resource or property level.",
-          "type": "string"
-        },
-        "status": {
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "type": "integer"
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
         },
         "title": {
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "type": "string"
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
         },
-        "type": {
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML).",
-          "type": "string"
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
         }
       }
     },
     "instanceLink": {
-      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
       "properties": {
         "href": {
           "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
           "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
         },
         "method": {
           "description": "HTTP method for requesting the target of the link.",
@@ -859,22 +719,13 @@
             "HEAD"
           ]
         },
-        "operationId": {
-          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
-          "type": "string"
-        },
-        "rel": {
-          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
-          "type": "string"
-        },
         "targetSchema": {
           "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
           "type": "string"
         },
-        "templated": {
-          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
-          "type": "boolean",
-          "default": false
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
         },
         "title": {
           "description": "Exact copy of the \"summary\" field on the linked operation.",
@@ -886,6 +737,240 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "blockAllocationSummaryType": {
+      "type": "object",
+      "properties": {
+        "blockId": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "number",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "blockCode": {
+          "description": "Defined block code for the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "blockName": {
+          "description": "Name of the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "masterBlockId": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "number",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "status": {
+          "description": "Booking Status of the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "marketCode": {
+          "description": "Market Code of the block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "cutOffDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "cutOffDays": {
+          "type": "integer"
+        },
+        "cancellationDate": {
+          "description": "Cancellation Date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "cancellationCode": {
+          "description": "Code that idenfies the reason for cancellation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "cancellationDescription": {
+          "description": "Description that explains the reason for cancellation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "cateringOwner": {
+          "description": "Catering Owner",
+          "type": "integer"
+        },
+        "cateringOwnerCode": {
+          "description": "Primary Catering Owner Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10
+        },
+        "cateringOwnerResort": {
+          "description": "Property of Catering Owner",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "owner": {
+          "description": "Owner ID",
+          "type": "integer"
+        },
+        "ownerCode": {
+          "description": "Block Owner Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10
+        },
+        "ownerResort": {
+          "description": "Property of Business Block Owner",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomsOwner": {
+          "description": "Rooms Owner",
+          "type": "integer"
+        },
+        "roomsOwnerCode": {
+          "description": "Primary Rooms Owner Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10
+        },
+        "roomsOwnerResort": {
+          "description": "Property of Rooms Owner",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "createDateTime": {
+          "description": "The business date the block was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "blockType": {
+          "description": "Indicates the internal type of the block like G, etc.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1
+        },
+        "reservationMethod": {
+          "description": "Booking Method.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": "Rate code associated with Block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "lastModifiedDate": {
+          "description": "Date Time when the block was modified last.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "sourceCode": {
+          "description": "Source of the Block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "allocationDates": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomAllocationDateType"
+          }
+        },
+        "bookingMedium": {
+          "description": "Booking Medium of the Block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
       }
     },
     "roomAllocationDateType": {
@@ -908,47 +993,605 @@
     "roomAllocationDetailsType": {
       "type": "object",
       "properties": {
-        "actualRevenue": {
-          "description": "The break up of actual revenue for room type. Applicable for past dates, business date or future dates.",
-          "$ref": "#/definitions/blockActualRevenueType"
+        "originalRooms": {
+          "description": "The total original( forecasted ) rooms for the block.",
+          "type": "integer"
+        },
+        "roomType": {
+          "description": "The room type for which the allocation details are listed.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "currentRooms": {
           "description": "The total current( projected + pickup ) rooms for the block.",
-          "type": "integer"
-        },
-        "inventory": {
-          "description": "The break up of projected rooms by occupancy.",
-          "$ref": "#/definitions/blockGridInvType"
-        },
-        "originalRooms": {
-          "description": "The total original( forecasted ) rooms for the block.",
           "type": "integer"
         },
         "pickupRooms": {
           "description": "The total pickup rooms for the block.",
           "type": "integer"
         },
-        "potentialRevenue": {
-          "description": "The break up of potential revenue for room type. Applicable for business date or future dates.",
-          "$ref": "#/definitions/blockPotenitalRevenueType"
+        "inventory": {
+          "description": "The break up of projected rooms by occupancy.",
+          "$ref": "#/definitions/blockGridInvType"
         },
         "rates": {
           "description": "The break up of occupancy rates.",
           "$ref": "#/definitions/blockGridRatesType"
         },
-        "roomType": {
-          "description": "The room type for which the allocation details are listed.",
+        "actualRevenue": {
+          "description": "The break up of actual revenue for room type. Applicable for past dates, business date or future dates.",
+          "$ref": "#/definitions/blockActualRevenueType"
+        },
+        "potentialRevenue": {
+          "description": "The break up of potential revenue for room type. Applicable for business date or future dates.",
+          "$ref": "#/definitions/blockPotenitalRevenueType"
+        }
+      }
+    },
+    "blockGridInvType": {
+      "type": "object",
+      "description": "Indicates the inventory values ( occupancy or availability ) per person occupancy.",
+      "properties": {
+        "onePerson": {
+          "description": "Indicates the one person inventory value ( occupancy or availability ).",
+          "type": "integer"
+        },
+        "twoPerson": {
+          "description": "Indicates the two person inventory value ( occupancy or availability ).",
+          "type": "integer"
+        },
+        "threePerson": {
+          "description": "Indicates the three person inventory value ( occupancy or availability ).",
+          "type": "integer"
+        },
+        "fourPerson": {
+          "description": "Indicates the four person inventory value ( occupancy or availability ).",
+          "type": "integer"
+        },
+        "sellLimit": {
+          "description": "Indicates the sell limit",
+          "type": "integer"
+        }
+      }
+    },
+    "blockActualRevenueType": {
+      "type": "object",
+      "description": "Indicates the sum of revenue breakup per room type per block per allocation date for the reservations. Applicable for past dates, business date or future dates.",
+      "properties": {
+        "roomRevenue": {
+          "description": "Indicates room revenue amount.",
+          "type": "number"
+        },
+        "foodRevenue": {
+          "description": "Indicates food revenue amount.",
+          "type": "number"
+        },
+        "otherRevenue": {
+          "description": "Indicates other revenue amount.",
+          "type": "number"
+        },
+        "nonRevenue": {
+          "description": "Indicates non revenue amount.",
+          "type": "number"
+        },
+        "totalRevenue": {
+          "description": "Indicates total revenue amount.",
+          "type": "number"
+        },
+        "roomRevenueTax": {
+          "description": "Indicates room revenue tax amount.",
+          "type": "number"
+        },
+        "foodRevenueTax": {
+          "description": "Indicates food revenue tax amount.",
+          "type": "number"
+        },
+        "otherRevenueTax": {
+          "description": "Indicates other revenue tax amount.",
+          "type": "number"
+        },
+        "nonRevenueTax": {
+          "description": "Indicates non revenue tax amount.",
+          "type": "number"
+        },
+        "totalRevenueTax": {
+          "description": "Indicates total revenue tax amount.",
+          "type": "number"
+        },
+        "currency": {
+          "description": "Currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string"
+        }
+      }
+    },
+    "blockPotenitalRevenueType": {
+      "type": "object",
+      "description": "Indicates the sum of revenue breakup per room type per block per allocation date for the reservations. Applicable for business date or future dates.",
+      "properties": {
+        "roomRevenue": {
+          "description": "Indicates room revenue amount.",
+          "type": "number"
+        },
+        "foodRevenue": {
+          "description": "Indicates food revenue amount.",
+          "type": "number"
+        },
+        "otherRevenue": {
+          "description": "Indicates other revenue amount.",
+          "type": "number"
+        },
+        "nonRevenue": {
+          "description": "Indicates non revenue amount.",
+          "type": "number"
+        },
+        "totalRevenue": {
+          "description": "Indicates total revenue amount.",
+          "type": "number"
+        },
+        "roomRevenueTax": {
+          "description": "Indicates room revenue tax amount.",
+          "type": "number"
+        },
+        "foodRevenueTax": {
+          "description": "Indicates food revenue tax amount.",
+          "type": "number"
+        },
+        "otherRevenueTax": {
+          "description": "Indicates other revenue tax amount.",
+          "type": "number"
+        },
+        "nonRevenueTax": {
+          "description": "Indicates non revenue tax amount.",
+          "type": "number"
+        },
+        "totalRevenueTax": {
+          "description": "Indicates total revenue tax amount.",
+          "type": "number"
+        },
+        "currency": {
+          "description": "Currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string"
+        }
+      }
+    },
+    "blockGridRatesType": {
+      "type": "object",
+      "description": "Indicates the rate amount values per person occupancy.",
+      "properties": {
+        "onePerson": {
+          "description": "Indicates the one person occupancy rate amount.",
+          "type": "number"
+        },
+        "twoPerson": {
+          "description": "Indicates the two person occupancy rate amount.",
+          "type": "number"
+        },
+        "threePerson": {
+          "description": "Indicates the three person occupancy rate amount.",
+          "type": "number"
+        },
+        "fourPerson": {
+          "description": "Indicates the four person occupancy rate amount.",
+          "type": "number"
+        },
+        "extraPerson": {
+          "description": "Indicates the extra person occupancy rate amount.",
+          "type": "number"
+        }
+      }
+    },
+    "criteria": {
+      "type": "object",
+      "description": "Request object for fetching block allocation summary asynchronously.",
+      "properties": {
+        "startDate": {
           "type": "string",
-          "maxLength": 20,
-          "minLength": 0
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "occupancyDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "startLastModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endLastModifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "blockAllocationSummary": {
+      "type": "array",
+      "description": "Response object for fetched block allocation summary.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/blockAllocationSummaryType"
+      }
+    },
+    "blockId": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
+          "type": "integer"
+        }
+      }
+    },
+    "setBlockGridInvType": {
+      "type": "object",
+      "description": "Indicates the inventory values (occupancy or availability) per person occupancy.",
+      "properties": {
+        "onePerson": {
+          "description": "Indicates the one person inventory value (occupancy or availability).",
+          "type": "integer"
+        },
+        "twoPerson": {
+          "description": "Indicates the two person inventory value (occupancy or availability).",
+          "type": "integer"
+        },
+        "threePerson": {
+          "description": "Indicates the three person inventory value (occupancy or availability).",
+          "type": "integer"
+        },
+        "fourPerson": {
+          "description": "Indicates the four person inventory value (occupancy or availability).",
+          "type": "integer"
+        },
+        "sellLimit": {
+          "description": "Indicates the sell limit",
+          "type": "integer"
+        },
+        "cutoffDate": {
+          "description": "Indicates the cutoff date.Date when inventory left in the block will be cut-off.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "forceOverbook": {
+          "description": "Indicates whether to overbook the rooms in case there are not enough rooms at the house or room type level.",
+          "type": "boolean"
+        }
+      }
+    },
+    "allocationGridByDateRangeType": {
+      "type": "object",
+      "description": "Indicates the block allocations for a date range. This can be rooms or rate amounts.",
+      "properties": {
+        "inventory": {
+          "description": "Indicates the room inventory values per person occupancy.",
+          "$ref": "#/definitions/setBlockGridInvType"
+        },
+        "rate": {
+          "description": "Indicates the rate amount values per person occupancy.",
+          "$ref": "#/definitions/blockGridRatesType"
+        },
+        "start": {
+          "description": "The starting value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "end": {
+          "description": "The ending value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        }
+      }
+    },
+    "allocationGridByDateRangesType": {
+      "type": "object",
+      "description": "A collection of Allocation objects for a block, such as Current Rooms, Original Rooms, Rate Amounts, etc.",
+      "properties": {
+        "roomAllocationInfo": {
+          "description": "Allocation objects for a block.",
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/allocationGridByDateRangeType"
+          }
+        },
+        "allocation": {
+          "description": "Indicates the type of the Allocation objects.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "sellLimitGridByDateRangeType": {
+      "type": "object",
+      "description": "Indicates the sell limits for a date range. This will be rooms.",
+      "properties": {
+        "start": {
+          "description": "The starting value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "end": {
+          "description": "The ending value of the date range.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "sunday": {
+          "type": "boolean"
+        },
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        },
+        "sellLimit": {
+          "description": "Indicates the sell limit for the date range.",
+          "type": "integer"
+        }
+      }
+    },
+    "allocationGridByRoomTypeType": {
+      "type": "object",
+      "description": "A collection of Allocation objects for a block defined by room type.",
+      "properties": {
+        "allocationGridDates": {
+          "description": "Allocation objects for a block by date ranges.",
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/allocationGridByDateRangesType"
+          }
+        },
+        "sellLimitGridDates": {
+          "description": "Sell limits for a block by date ranges.",
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/sellLimitGridByDateRangeType"
+          }
+        },
+        "roomType": {
+          "description": "Indicates the room type of the Allocation objects.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "allocationGridByRoomTypesType": {
+      "type": "object",
+      "description": "A collection of Allocation objects for a block defined by room type.",
+      "properties": {
+        "hotelId": {
+          "description": "Opera Hotel code for the Set Allocation Grid request.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "blockId": {
+          "description": "Unique block identifier of the block for which the allocations need to be set.",
+          "$ref": "#/definitions/blockId"
+        },
+        "allocationRoomTypes": {
+          "description": "Allocation objects of a block grouped by room types.",
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/allocationGridByRoomTypeType"
+          }
+        },
+        "genericRoomType": {
+          "description": "Indicates if the Allocation objects refer to Generic Room Types (Room Pools).",
+          "type": "boolean"
+        }
+      }
+    },
+    "allocation": {
+      "type": "object",
+      "description": "A Request message that sets the room allocations as a collection of room types and dates.",
+      "properties": {
+        "criteria": {
+          "description": "This element contains the block allocations as a collection of room types and dates.",
+          "$ref": "#/definitions/allocationGridByRoomTypesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "statusType": {
+      "type": "string",
+      "description": "Status of the process.",
+      "enum": [
+        "Success",
+        "Error",
+        "Running",
+        "Stopped",
+        "Warning",
+        "Failed",
+        "Started",
+        "CompletedWithLogs"
+      ]
+    },
+    "codeDescriptionType": {
+      "type": "object",
+      "description": "This contains a generic code and description information.",
+      "properties": {
+        "code": {
+          "description": "Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "cateringEventsProcessedInfoType": {
+      "type": "object",
+      "description": "Status/Info of the processed events.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel code where event will be copied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "blockId": {
+          "description": "BlockID of the event.",
+          "$ref": "#/definitions/blockId"
+        },
+        "eventName": {
+          "description": "Name of event.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 60
+        },
+        "eventType": {
+          "description": "Type of event.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "eventDate": {
+          "description": "Date of the event",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "room": {
+          "description": "The function space room where the event takes place .",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "status": {
+          "description": "Status of the processed event. e.g Completed, Not Processed.",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Reason for not processing the event.",
+          "type": "string"
+        },
+        "processingInfoType": {
+          "description": "Flag to indicate the warning messages from the API",
+          "type": "string"
+        },
+        "processingInfoCode": {
+          "description": "Erorr/Warning code for not processing th event.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "cateringEventsProcessedInfoList": {
+      "type": "array",
+      "description": "Status/Info of the processed events.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/cateringEventsProcessedInfoType"
+      }
+    },
+    "processDetails": {
+      "type": "object",
+      "description": "Response object to hold the details of process.",
+      "properties": {
+        "status": {
+          "description": "Status of the process.",
+          "$ref": "#/definitions/statusType"
+        },
+        "cateringEventsProcessedInfo": {
+          "description": "Status of the processed events after the process.",
+          "$ref": "#/definitions/cateringEventsProcessedInfoList"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     }
   },
   "tags": [
     {
-      "description": "The Block Async Service Web Service provides capability to implement block related asynchronous operations in OPERA Cloud.",
-      "name": "BlockAsync"
+      "name": "BlockAsync",
+      "description": "The Block Async Service Web Service provides capability to implement block related asynchronous operations in OPERA Cloud."
     }
   ],
   "externalDocs": {

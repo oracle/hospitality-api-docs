@@ -12,7 +12,7 @@
     "version": "23.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality-integrations_ww@oracle.com"
+      "email": "hospitality_apis_ww_grp@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -18668,6 +18668,98 @@
             "description": "Service Unavailable"
           }
         }
+      }
+    },
+    "/hotels/{hotelId}/externalRoomKeys": {
+      "post": {
+        "summary": "Requests room key(s)",
+        "description": "API that manages requests for Door Lock Room Keys. This operation is used by OPERA Cloud PMS connected to external Door Lock Systems systems via Outbound Systems configuration: \n\n<strong>OPERA Cloud utilizes this operation </strong>\n\n- to request new or additional room keys - e.g. when guest checks in, or additional keys post check in.\n\n- to request to activate new keys after check on e.g. when a room key has been lost for a room.\n\n- to request a room key which is not related to a guest reservation but valid for a defined time - (for show rooms, repair) - One Shot Key.\n\n- to request to re-encode a key whereby other keys for this room remain active.\n\n- to request to read a key data from a room key and display it to the user in the PMS.\n\n- to request to modify existing key data - upon room move or change of departure date. (online key systems only!!)\n\n- to request to remove / delete a room key from a room on. Usually sent with check out of a reservation.\n\nUse this API to post a room key action to the active Door Lock System.\n\n<strong>Notes on keyType values:</strong>\n\n<strong>keyType = New\n\nkeyType = Lost </strong>\n\nIt is expected that all previous active keys for the room will become invalid.\n\nIt is expected that partner system handles multiple keys being active in case numberOfKeys is >1.\n\n<strong>keyType = Duplicate\n\nkeyType = ReEncode</strong>\n\nIt is expected that existing active keys for this room remain active.\n\n<strong>keyType = OneShot</strong>\n\nIt is expected that the room key is only valid for a room for specific time (for maintenance or Show room).\n\nIt is never related to a reservation.\n\n<strong>keyType = Read</strong> A request to the Key Card system to read Key Card information from requested Key Encoder/reader.\n\nThe Key Read functionality is of pure informational purpose. None of the received information is stored or processed in the PMS, and it is only for display to the user.\n\n<strong>keyType = Remove</strong>\n\nIt is expected that with this request all active keys for a room or reservation will become inactive or invalid so they will not be able to open the room after defined validityEnd time.\n\n<strong>Additional KeyType actions used by Online Door Lock Systems:</strong>\n\n<strong>Online Key card Systems</strong> are systems which do not write guest data to the room key directly but do store guest data internally and send the information to the related door lock.\n\n<strong>keyType = ModifyStay</strong>\n\nFor Online Door Lock Systems - Request to adjust Room key data when guest changes length of stay (validityEnd)\n\n<strong>keyType = RoomMove</strong>\n\nFor Online Door Lock Systems - adjust Room key data when guest performs room move. \n\n<p><strong>OperationId:</strong> postExternalRoomKeys</p>",
+        "operationId": "postExternalRoomKeys",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "name": "roomKey",
+            "in": "body",
+            "required": true,
+            "description": "Request for generation of room key.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomKeyExternal"
+                }
+              ]
+            }
+          },
+          {
+            "type": "string",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+            "type": "string",
+            "description": "Client or Partner's Application Key",
+            "name": "x-app-key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+            "name": "x-hotelid",
+            "in": "header",
+            "required": true
+          },
+          {
+            "maxLength": 80,
+            "type": "string",
+            "x-example": "EXTERNALSYSTEMCODE",
+            "description": "External system code.",
+            "name": "x-externalsystem",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Language code",
+            "name": "Accept-Language",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response from the active Door Locking System Property Interface to the post request.<p><strong>Note on Response messages:</strong>\n\nIt is necessary to specify both the PMS 'encoderTerminal' and the Key Service system's coder (encoderId) in cases where more than one PMS workstation may be addressing one key coder. ORACLE PMS will NOT send another Request command automatically should a negative response be received. The user sees the response and decides if another try should be made.<p>",
+            "schema": {
+              "$ref": "#/definitions/roomKeyExternalDetails"
+            }
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "FrontDeskOperations"
+        ]
       }
     }
   },
@@ -39520,6 +39612,226 @@
           "$ref": "#/definitions/welcomeOfferOptionsType"
         }
       }
+    },
+    "roomKeyOutBoundType": {
+      "type": "string",
+      "description": "Simple type for representing room key type.",
+      "enum": [
+        "New",
+        "Duplicate",
+        "Lost",
+        "OneShot",
+        "RoomMove",
+        "ReEncode",
+        "Remove",
+        "ModifyStay",
+        "Read"
+      ]
+    },
+    "requestType": {
+      "type": "string",
+      "description": "Simple type for representing request type.",
+      "enum": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "roomKeyResponseCodeType": {
+      "type": "string",
+      "description": "Response Code",
+      "enum": [
+        "OK",
+        "BY",
+        "UR",
+        "RY"
+      ]
+    },
+    "roomKeyExternal": {
+      "type": "object",
+      "description": "Request for generation of room key used for OutBound.",
+      "properties": {
+        "encoderId": {
+          "type": "string",
+          "description": "Unique Id as defined by Door Lock System.",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "encoderTerminal": {
+          "type": "string",
+          "description": "The Unique PMS encoder name linked with the encoderId",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "roomId": {
+          "description": "The PMS room number to generate a key for.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "oldRoomId": {
+          "description": "Old Room Number is used when a room move (keyType RoomMove) is performed.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "noOfKeys": {
+          "type": "integer",
+          "description": "Number of keys to be created.The value is always 1",
+          "minimum": 1,
+          "maximum": 1,
+          "default": 1
+        },
+        "reservationIdList": {
+          "description": "Collection of unique reservation identifiers for the reservation we are trying to make a room key for.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "guestShareFlag": {
+          "type": "boolean",
+          "description": "Indicates if Guest is a sharer or not"
+        },
+        "OldGuestShareFlag": {
+          "type": "boolean",
+          "description": "Indicates if old Guest room is a sharer or not when a room move (keyType RoomMove) is performed."
+        },
+        "keyOptions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Lists the access areas defined in PMS valid for the room key."
+        },
+        "keyValidityStart": {
+          "type": "string",
+          "description": "The date/time the room key is valid from.",
+          "format": "date-time"
+        },
+        "keyValidityEnd": {
+          "type": "string",
+          "description": "The date/time the room key is valid to.",
+          "format": "date-time"
+        },
+        "keyType": {
+          "$ref": "#/definitions/roomKeyOutBoundType"
+        },
+        "keyTrack": {
+          "description": "KeyTrack Data.",
+          "$ref": "#/definitions/keyTrackType"
+        },
+        "outBoundCode": {
+          "description": "OutBound Code of the Door Lock System (DLS).",
+          "type": "string"
+        },
+        "additionalRooms": {
+          "description": "Collection of additional rooms to be included in key creation of reservation room.",
+          "type": "array",
+          "maxItems": 999,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "oldAdditionalRooms": {
+          "description": "Collection of old additional rooms in key creation of reservation room when a room move (keyType RoomMove) is performed.",
+          "type": "array",
+          "maxItems": 999,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "userId": {
+          "type": "string",
+          "description": "Unique identifier for the PMS user.",
+          "maxLength": 2000
+        },
+        "requestType": {
+          "$ref": "#/definitions/requestType"
+        },
+        "roomKeyGuests": {
+          "type": "array",
+          "description": "Collection of of Room key guests for multiple guest room key functionality.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomKeyGuest"
+          }
+        }
+      },
+      "required": [
+        "keyType",
+        "encoderTerminal",
+        "encoderId"
+      ]
+    },
+    "roomKeyExternalDetails": {
+      "type": "object",
+      "description": "Response for the key request made to DLS from Opera PMS.",
+      "properties": {
+        "encoderId": {
+          "type": "string",
+          "description": "Unique Id as defined by Door Lock System.",
+          "maxLength": 2000
+        },
+        "encoderTerminal": {
+          "type": "string",
+          "description": "The Unique PMS encoder name linked with the encoderId",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "reservationIdList": {
+          "description": "Collection of unique reservation identifiers for the reservation we are trying to make a room key for.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "roomId": {
+          "description": "The PMS room number to generate a key for.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "keyTrack": {
+          "description": "KeyTrack Data.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/keyTrackType"
+          }
+        },
+        "keyOptions": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Lists all PMS access areas - only send in response for keyType: 'Read' request"
+        },
+        "keyValidityStart": {
+          "type": "string",
+          "description": "Date/Time Key is valid from - only send in response for keyType: 'Read' request",
+          "format": "date-time"
+        },
+        "keyValidityEnd": {
+          "type": "string",
+          "description": "Date/Time Key is valid to - only send in response for keyType: 'Read' request",
+          "format": "date-time"
+        },
+        "responseText": {
+          "type": "string",
+          "description": "A user-friendly text with information on why a request is not successful",
+          "maxLength": 2000
+        },
+        "responseCode": {
+          "$ref": "#/definitions/roomKeyResponseCodeType"
+        },
+        "additionalRooms": {
+          "description": "Collection of additional rooms to be included in key creation of reservation room.",
+          "type": "array",
+          "maxItems": 999,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        }
+      },
+      "required": [
+        "roomId",
+        "responseCode",
+        "encoderTerminal"
+      ]
     }
   },
   "tags": [
