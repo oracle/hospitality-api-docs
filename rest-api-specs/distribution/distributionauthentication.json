@@ -1,0 +1,110 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Distribution Authentication API",
+    "version": "24.2",
+    "description": "<p> API to obtain the access token (in the JWT format) that matches the provided credentials issued by the Oracle Hospitality Distribution administrator for a specific Distribution channel partner. The token will then be used by API users to access OPERA Cloud Distribution APIS. Once a token is created, it can be used in multiple subsequent calls until it expires as defined in this API response. </p>\n<p> Username for a channel partner Distribution API account is provisioned by an Oracle administrator at the channel level. It is not an OPERA Cloud (PMS) user and not created or approved by the hotelier. Additionally, for each property, the hotelier will need to enable the channel so that it can access data for their specific hotel in the reservation context. </p>\n<p> More information on how to request a username and temporary password for a registered channel for Distribution APIs:\n  <ul>\n    <li>Channel partners registered via OHIP receive credential(s) from the Oracle Hospitality Distribution administrator during the channel registration.</li>\n  </ul>\n</p><br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "x-summary": "HDP edge service applying pre authorization and pre routing logic. Example: curl --request POST https://HOSTNAME/hdpba/oauth2/v0/token --header 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8' --header 'Accept: */*' --data-urlencode 'username=USERNAME' --data-urlencode 'password=USERPASSWORD'",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/hdpba/oauth2/v1",
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Authentication service"
+    }
+  ],
+  "paths": {
+    "/token": {
+      "post": {
+        "description": "<p>This is required to access the OPERA Cloud Distribution REST APIs.</p> <h3>Obtaining a token</h3> <p>To obtain a token include the following body parameters:</p> <ul> <li><strong>username</strong>.  set this to your OPERA Cloud Distribution username.</strong></li> <li><strong>password</strong>.  Set this to your OPERA Cloud Distribution user's password.</li> </ul></p><p><strong>OperationId:</strong>getToken</p>",
+        "summary": "Authenticate with the identity server",
+        "operationId": "getToken",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OAuth2TokenResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request. This error is returned if the authentication information provided is not valid."
+          },
+          "401": {
+            "description": "Unauthorized. Username, and/or password doesn't match the IDP records."
+          },
+          "500": {
+            "description": "Returned for any unexpected processing issue that isn't an explicit 400 or 401"
+          }
+        },
+        "parameters": [
+          {
+            "name": "x-app-key",
+            "in": "header",
+            "type": "string",
+            "required": false,
+            "description": "not in use"
+          },
+          {
+            "name": "username",
+            "description": "Your OPERA Cloud Distribution User Name.",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "description": "Your OPERA Cloud Distribution user's password."
+          }
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "tags": [
+          "Authentication"
+        ],
+        "x-internal-id": "v0-oauth2Token-post"
+      }
+    }
+  },
+  "definitions": {
+    "OAuth2TokenResponse": {
+      "type": "object",
+      "description": "OAuth2 token object sent as a response to the token request",
+      "required": [
+        "access_token"
+      ],
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "The access token.  Include this in the header for every subsequent request."
+        },
+        "expires_in": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Time in seconds for the access token to expire (typically, 3600 i.e. 60 minutes)          "
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
