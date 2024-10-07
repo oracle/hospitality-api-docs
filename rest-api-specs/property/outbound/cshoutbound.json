@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Cashiering Outbound API",
-    "description": "APIs to cater for Cashiering related external (outbound) functionality with OPERA. These APIs facilitate various operations related to getting data from an external system, and inserting it into OPERA.<br /><br /> Compatible with OPERA Cloud release 23.5.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "23.5",
+    "description": "APIs to cater for Cashiering related external (outbound) functionality with OPERA. These APIs facilitate various operations related to getting data from an external system, and inserting it into OPERA.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.1",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -72,6 +72,42 @@
           },
           "204": {
             "description": "CompRedemptions not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
           }
         },
         "consumes": [
@@ -150,6 +186,42 @@
             "schema": {
               "$ref": "#/definitions/authorizeCompRedemptionsRS"
             }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
           }
         },
         "consumes": [
@@ -315,6 +387,75 @@
         ]
       }
     },
+    "/hotels/{hotelId}/asyncCompPostingsApproval": {
+      "put": {
+        "summary": "Operation to request for submitting bulk comp postings for vendor approval.",
+        "description": "The API will only submit the request to the vendor and does not wait for the response and it is an asynchronous API. Also, the caller of the API will get an HTTP 200 response code. <p><strong>OperationId:</strong>asyncApproveCompPostings</p>",
+        "operationId": "asyncApproveCompPostings",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "name": "postings",
+            "in": "body",
+            "required": true,
+            "description": "Request object to submit comp transactions request in bulk to gaming system.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/bulkCompTransactionsCriteriaType"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response object for bulk submit comp transactions request.",
+            "schema": {
+              "$ref": "#/definitions/sendBulkCompTransactionsStatus"
+            }
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Cashiering"
+        ]
+      }
+    },
     "/hotels/{hotelId}/compPostingsApproval": {
       "put": {
         "summary": "Operation to request for comp postings approval.",
@@ -464,7 +605,7 @@
     },
     "x-app-key": {
       "name": "x-app-key",
-      "description": "Client or Partner??????s Application Key",
+      "description": "Client or Partner Application Key",
       "type": "string",
       "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
       "in": "header",
@@ -538,6 +679,17 @@
           "type": "string",
           "minLength": 3,
           "maxLength": 3
+        }
+      }
+    },
+    "sendBulkCompTransactionsStatus": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     },
@@ -1157,6 +1309,170 @@
           "items": {
             "$ref": "#/definitions/compTransactionType"
           }
+        }
+      }
+    },
+    "bulkCompTransactionsCriteriaType": {
+      "type": "object",
+      "description": "Contains all transactions to be submitted to the vendor",
+      "properties": {
+        "compPostings": {
+          "description": "List of transactions to be submitted to the vendor.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/bulkCompTransactionType"
+          }
+        }
+      }
+    },
+    "bulkCompTransactionType": {
+      "type": "object",
+      "description": "Contains the transaction to be submitted to the vendor",
+      "properties": {
+        "amount": {
+          "description": "Transaction amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "name": {
+          "description": "Family name, last name or Company Name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "firstName": {
+          "description": "Given name, first name or names.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "membershipId": {
+          "description": "Membership number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "membershipType": {
+          "description": "Membership number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "authorizerId": {
+          "description": "Authorizer Id.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "guestNameId": {
+          "description": "Guest unique identifier.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "resvNameId": {
+          "description": "Reservation id.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "confirmationNo": {
+          "description": "Confirmation number associated with the transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "roomId": {
+          "description": "Room number associated with the transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "compId": {
+          "description": "Comp number associated with the transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "folioNo": {
+          "description": "Window number where the transaction is posted.",
+          "type": "number"
+        },
+        "subGroup": {
+          "description": "Subgroup for the transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "transactionId": {
+          "description": "Transaction Number for which request is being submitted.",
+          "type": "number"
+        },
+        "transactionCode": {
+          "description": "Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "transactionDescription": {
+          "description": "Transaction description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionDate": {
+          "description": "Transaction date of the posting.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "userName": {
+          "description": "User name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "externalUserId": {
+          "description": "External user id.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "cashierId": {
+          "description": "Numeric ID of the cashier.",
+          "type": "number"
+        },
+        "generateCompTransactions": {
+          "type": "array",
+          "description": "List of comp transactions.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/generateCompTransactionType"
+          }
+        }
+      }
+    },
+    "generateCompTransactionType": {
+      "type": "object",
+      "description": "Contains the transaction generate to be submitted to the vendor",
+      "properties": {
+        "amount": {
+          "description": "Transaction amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "transactionId": {
+          "description": "Transaction Number for which request is being submitted.",
+          "type": "number"
+        },
+        "transactionCode": {
+          "description": "Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "transactionDescription": {
+          "description": "Transaction description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionDate": {
+          "description": "Transaction date of the posting.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         }
       }
     },
