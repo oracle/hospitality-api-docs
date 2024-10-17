@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Customer Relationship Management API",
-    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.  There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.  There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -1199,7 +1199,8 @@
                 "Profile",
                 "Indicators",
                 "SalesInfo",
-                "Relationship"
+                "Relationship",
+                "Subscriptions"
               ]
             },
             "required": false
@@ -4665,6 +4666,185 @@
       }
     },
     "/membershipPointsExceptions": {
+      "get": {
+        "summary": "Get membership points exception details",
+        "description": "Use this API to get membership points exceptions.<p><strong>OperationId:</strong>getMembershipPointsExceptions</p><br>The maximum date Range supported between arrival and departure date is 90 days.",
+        "operationId": "getMembershipPointsExceptions",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "minLength": 1,
+            "maxLength": 20,
+            "required": false,
+            "description": "Membership transaction belongs to which Hotel.",
+            "type": "string"
+          },
+          {
+            "name": "profileId",
+            "in": "query",
+            "required": false,
+            "description": "Profile Id of the guest.",
+            "type": "number"
+          },
+          {
+            "name": "arrivalFrom",
+            "in": "query",
+            "required": false,
+            "description": "Arrival From Date to fetch the reservations flagged for Membership Points Exception",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "departureTo",
+            "in": "query",
+            "required": false,
+            "description": "Departure To Date to fetch the reservation flagged for Membership Points Exception",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "membershipType",
+            "in": "query",
+            "required": false,
+            "description": "The type of the membership.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "membershipLevel",
+            "in": "query",
+            "required": false,
+            "description": "The current level of the membership.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "membershipCardNo",
+            "in": "query",
+            "required": false,
+            "description": "The card number associated with this membership.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 20,
+            "maximum": 100,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 1,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "exceptionStatus",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Indicates the type of Exception like Exception not resolved,Points Rejected on Exception etc.,",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "AllExceptions",
+                "PointsAwardedOnException",
+                "PointsRejectedOnException",
+                "ExceptionNotResolved"
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching membership points exceptions.",
+            "schema": {
+              "$ref": "#/definitions/memberPointsExceptions"
+            }
+          },
+          "204": {
+            "description": "MembershipPointsExceptions not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileMembership"
+        ]
+      },
       "put": {
         "summary": "Update membership points exceptions",
         "description": "Use this API to update membership points exceptions.<p><strong>OperationId:</strong>putMembershipPointsExceptions</p>",
@@ -14297,6 +14477,7 @@
         "summary": "Get membership transaction exception details",
         "description": "Use this API to get membership transaction exceptions on a profile. <p><strong>OperationId:</strong>getMembershipTransactionExceptions</p>",
         "operationId": "getMembershipTransactionExceptions",
+        "deprecated": true,
         "parameters": [
           {
             "name": "profileId",
@@ -18086,227 +18267,6 @@
         ]
       }
     },
-    "/stagedProfiles": {
-      "get": {
-        "summary": "Get staged profiles",
-        "description": "The system suspends / stages a profile with a point value between the upper and lower thresholds. When a profile is staged, you must review the suspended profile and determine if it should be merged with an internal profile or added as a new profile. <p><strong>OperationId:</strong>getStagedProfiles</p>",
-        "operationId": "getStagedProfiles",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Indicates maximum number of records a Web Service should return.",
-            "type": "integer"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "default": 0,
-            "required": false,
-            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
-            "type": "integer"
-          },
-          {
-            "name": "hotelIds",
-            "in": "query",
-            "type": "array",
-            "collectionFormat": "multi",
-            "items": {
-              "type": "string",
-              "maxItems": 4000
-            },
-            "required": false
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "type": "array",
-            "collectionFormat": "multi",
-            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-            "items": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "idContext",
-            "in": "query",
-            "type": "array",
-            "collectionFormat": "multi",
-            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
-            "items": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "type": "array",
-            "collectionFormat": "multi",
-            "description": "A reference to the type of object defined by the UniqueID element.",
-            "items": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "required": false,
-            "description": "Family name, last name or Company Name.",
-            "type": "string"
-          },
-          {
-            "name": "givenName",
-            "in": "query",
-            "required": false,
-            "description": "Given name, first name or names.",
-            "type": "string"
-          },
-          {
-            "name": "region",
-            "in": "query",
-            "required": false,
-            "description": "The profile region for which the staged profiles shall be fetched.",
-            "type": "string"
-          },
-          {
-            "name": "countryCode",
-            "in": "query",
-            "required": false,
-            "description": "Code for a country or a nationality.",
-            "type": "string"
-          },
-          {
-            "name": "profileType",
-            "in": "query",
-            "required": false,
-            "description": "Profile type to be included in the search.",
-            "type": "string"
-          },
-          {
-            "name": "importDate",
-            "in": "query",
-            "required": false,
-            "description": "The date on which the staged profiles have been received.",
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "name": "stageStatus",
-            "in": "query",
-            "required": false,
-            "description": "The status of the staged profiles.",
-            "type": "string"
-          },
-          {
-            "name": "applyTo",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "description": "Membership filter of staged profiles.",
-            "uniqueItems": true,
-            "enum": [
-              "StagedProfiles",
-              "MatchingProfiles",
-              "StagedAndMatchingProfiles"
-            ]
-          },
-          {
-            "name": "membershipCodes",
-            "in": "query",
-            "type": "array",
-            "collectionFormat": "multi",
-            "items": {
-              "type": "string",
-              "maxItems": 4000
-            },
-            "required": false
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/x-externalsystem"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
-            "description": "Response object for the staged profiles.",
-            "schema": {
-              "$ref": "#/definitions/stagedProfiles"
-            }
-          },
-          "204": {
-            "description": "StagedProfiles not found."
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "Profile"
-        ]
-      }
-    },
     "/suspendedAddresses": {
       "get": {
         "summary": "Fetch Suspended Profile Addresses",
@@ -19312,7 +19272,7 @@
           "description": "A reference to the type of object defined by the UniqueID element.",
           "type": "string",
           "minLength": 0,
-          "maxLength": 20
+          "maxLength": 25
         },
         "instance": {
           "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
@@ -37446,116 +37406,6 @@
         }
       }
     },
-    "stagedProfiles": {
-      "type": "object",
-      "description": "Response object for the staged profiles.",
-      "properties": {
-        "stagedProfiles": {
-          "description": "A collection of staged profiles.",
-          "$ref": "#/definitions/stagedProfileSummariesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "stagedProfileSummariesType": {
-      "type": "object",
-      "description": "A collection of staged profiles.",
-      "properties": {
-        "profileInfo": {
-          "description": "Basic information about staged profile.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/stagedProfileSummaryType"
-          }
-        },
-        "totalPages": {
-          "description": "Evaluated total page count based on the requested max fetch count.",
-          "type": "integer"
-        },
-        "offset": {
-          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
-          "type": "integer"
-        },
-        "limit": {
-          "description": "Indicates maximum number of records a Web Service should return.",
-          "type": "integer"
-        },
-        "hasMore": {
-          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
-          "type": "boolean"
-        },
-        "totalResults": {
-          "description": "Total number of rows queried",
-          "type": "integer"
-        },
-        "count": {
-          "description": "Total number of rows returned",
-          "type": "integer"
-        }
-      }
-    },
-    "stagedProfileSummaryType": {
-      "type": "object",
-      "description": "Basic information about staged profile.",
-      "properties": {
-        "hotelId": {
-          "description": "Hotel code associated with the staged profile.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "profileIdList": {
-          "description": "List of unique identifier of staged profile.",
-          "$ref": "#/definitions/uniqueIDListType"
-        },
-        "profileName": {
-          "description": "Name information for the staged profile.",
-          "$ref": "#/definitions/profileNameType"
-        },
-        "importDate": {
-          "description": "The date on which the staged profile has been received.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8
-        },
-        "profileType": {
-          "description": "Type of the staged profile.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "region": {
-          "description": "The region of the staged profile.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "country": {
-          "description": "The country of residence where the property is located that has received the staged profile.",
-          "$ref": "#/definitions/countryNameType"
-        },
-        "stageStatus": {
-          "description": "The status of the staged profiles.",
-          "$ref": "#/definitions/stagedProfileStatus"
-        }
-      }
-    },
-    "stagedProfileStatus": {
-      "type": "string",
-      "description": "Simple type for status of the staged profiles.",
-      "enum": [
-        "Valid",
-        "Invalid",
-        "MatchFound",
-        "New"
-      ]
-    },
     "suspendedAddresses": {
       "type": "object",
       "description": "Response object for fetching unique company profile.",
@@ -38181,6 +38031,154 @@
       "type": "string",
       "enum": [
         "IMPORT_TAX_PERC"
+      ]
+    },
+    "memberPointsExceptionType": {
+      "type": "object",
+      "description": "Details about a membership like ProfileID, Card Number, Type, Level, etc.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel code of the membership transaction exceptions.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "profileId": {
+          "description": "The profile to which this membership is associated with.",
+          "$ref": "#/definitions/profileId"
+        },
+        "name": {
+          "description": "The profile name associated with this membership.",
+          "type": "string"
+        },
+        "fromToRangeDate": {
+          "description": "Arrival and Departure date of stay for which you are displaying membership transaction exceptions.",
+          "$ref": "#/definitions/dateRangeType"
+        },
+        "membershipIdNo": {
+          "description": "Unique identifier of this membership.",
+          "type": "number"
+        },
+        "membershipType": {
+          "description": "The type of the membership.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "membershipCardNo": {
+          "description": "The card number associated with this membership.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "membershipLevel": {
+          "description": "The current level of the membership.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "membershipTransactionId": {
+          "description": "Unique identifier associated with the membership transaction.",
+          "$ref": "#/definitions/membershipTransactionId"
+        },
+        "roomsBooked": {
+          "description": "The number of rooms booked.(MR)",
+          "type": "integer"
+        },
+        "backToBack": {
+          "description": "Indicates if back to back membership transaction exceptions have occurred or not.",
+          "type": "boolean"
+        },
+        "averageRate": {
+          "description": "The average rate of the stay.",
+          "type": "number"
+        },
+        "awardPoints": {
+          "description": "Award points associated with this membership points transaction.",
+          "type": "number"
+        },
+        "tierNightPoints": {
+          "description": "Tier night points associated with this membership points transaction.",
+          "type": "number"
+        },
+        "tierStayPoints": {
+          "description": "Tier stay points associated with this membership points transaction.",
+          "type": "number"
+        },
+        "tierRevenuePoints": {
+          "description": "Tier revenue points associated with this membership points transaction.",
+          "type": "number"
+        },
+        "pointsCalculate": {
+          "description": "Points Calculated value(Y/N) for the selected transaction.",
+          "type": "boolean"
+        },
+        "reservationIdList": {
+          "description": "The reservation related ids.",
+          "$ref": "#/definitions/reservationIdList"
+        },
+        "processingMessages": {
+          "description": "The systems records and notes identifying the exception criteria.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "exceptionStatus": {
+          "description": "Indicates the type of Exception like Exception not resolved,Points Rejected on Exception etc.,",
+          "$ref": "#/definitions/membershipExceptionStatusType"
+        }
+      }
+    },
+    "memberPointsExceptions": {
+      "type": "object",
+      "description": "Response object for fetching membership points exceptions.",
+      "properties": {
+        "memberPointsExceptions": {
+          "type": "array",
+          "maxItems": 100,
+          "description": "A collection of membership points exceptions.",
+          "items": {
+            "$ref": "#/definitions/memberPointsExceptionType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipExceptionStatusType": {
+      "type": "string",
+      "description": "List of possible membership exception type.",
+      "enum": [
+        "AllExceptions",
+        "PointsAwardedOnException",
+        "PointsRejectedOnException",
+        "ExceptionNotResolved"
       ]
     }
   },

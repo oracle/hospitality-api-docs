@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block API",
-    "description": "APIs to cater for Business Block functionality in OPERA Cloud. <br /><br /> A block is a group of rooms held for guests who are attending an event, meeting, or function. You can create blocks for family reunions, business conferences, weddings, and so on. You can also set aside rooms for the event (block).<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater for Business Block functionality in OPERA Cloud. <br /><br /> A block is a group of rooms held for guests who are attending an event, meeting, or function. You can create blocks for family reunions, business conferences, weddings, and so on. You can also set aside rooms for the event (block).<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -984,7 +984,8 @@
                 "Statistics",
                 "SummaryStatistics",
                 "Traces",
-                "WashSchedules"
+                "WashSchedules",
+                "IncludeSubBlocks"
               ]
             },
             "required": false
@@ -2142,6 +2143,7 @@
         "summary": "Create alternate dates for a Block",
         "description": "Use this API to create alternate dates for a block. <p><strong>OperationId:</strong>postAlternateDates</p>",
         "operationId": "postAlternateDates",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockId",
@@ -2251,6 +2253,7 @@
         "summary": "Change alternate dates for a Block",
         "description": "Use this API to change alternate dates for a block. <p><strong>OperationId:</strong>putAlternateDates</p>",
         "operationId": "putAlternateDates",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockId",
@@ -2360,6 +2363,7 @@
         "summary": "Delete alternate dates for a Block",
         "description": "Use this API to delete alternate dates for a block. <p><strong>OperationId:</strong>deleteAlternateDates</p>",
         "operationId": "deleteAlternateDates",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockId",
@@ -3265,6 +3269,7 @@
         "summary": "Assign a Block owner",
         "description": "Use this API to assign block owners. <p><strong>OperationId:</strong>postBlockOwners</p>",
         "operationId": "postBlockOwners",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockId",
@@ -3374,6 +3379,7 @@
         "summary": "Delete a Block owner",
         "description": "Use this API to delete a block owner. <p><strong>OperationId:</strong>deleteBlockOwners</p>",
         "operationId": "deleteBlockOwners",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockId",
@@ -3470,6 +3476,7 @@
         "summary": "Change Block owners",
         "description": "Use this API to change block owners. <p><strong>OperationId:</strong>putBlockOwners</p>",
         "operationId": "putBlockOwners",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockId",
@@ -19299,6 +19306,7 @@
         "summary": "Set Contract Defaults",
         "description": "Use this API to set the contract defaults. <p><strong>OperationId:</strong>putContractDefaults</p>",
         "operationId": "putContractDefaults",
+        "deprecated": true,
         "parameters": [
           {
             "name": "blockStatus",
@@ -19464,6 +19472,106 @@
           },
           "204": {
             "description": "DefaultBlockCode not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Block"
+        ]
+      },
+      "post": {
+        "summary": "Create default Block Code for Multiple blocks",
+        "description": "Use this API to retrieve a list of default block code for Multiple blocks based on template. <p><strong>OperationId:</strong>getDefaultBlockCode</p>>",
+        "operationId": "postDefaultBlockCode",
+        "parameters": [
+          {
+            "name": "blockDetails",
+            "in": "body",
+            "required": true,
+            "description": "Request object for generating default block code for multiple blocks.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/blockBasicInfos"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "description": "Location of newly created resource",
+                "type": "string"
+              }
+            },
+            "description": "Response object for generating default block code",
+            "schema": {
+              "$ref": "#/definitions/blockBasicInfos"
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -23279,6 +23387,8 @@
         "summary": "Cancel the Block",
         "description": "Use this API to complete a cancellation of the block. <p><strong>OperationId:</strong>postCancelBlock</p>",
         "operationId": "postCancelBlock",
+        "deprecated": true,
+        "x-alternative": "/hotels/{hotelId}/blocks/{blockId}/status",
         "parameters": [
           {
             "name": "blockId",
@@ -31210,6 +31320,7 @@
         "summary": "Borrow Inventory",
         "description": "Use this API to borrow inventory from the block or house when you encounter an insufficient number of rooms for block a reservation. <p><strong>OperationId:</strong>putInventory</p>",
         "operationId": "putInventory",
+        "deprecated": true,
         "parameters": [
           {
             "name": "inventoryToBorrow",
@@ -31312,6 +31423,7 @@
         "summary": "Return Borrowed Inventory",
         "description": "Use this API to return the previously borrowed inventory on the block back to the original source from which it was borrowed. The original source can be a room type or house inventory, as indicated in the request. <p><strong>OperationId:</strong>putReleasedInventory</p>",
         "operationId": "putReleasedInventory",
+        "deprecated": true,
         "parameters": [
           {
             "name": "borrowedInventoryToReturn",
@@ -40170,6 +40282,10 @@
         },
         "applyBoardInfoToAllEvents": {
           "description": "Indicates whether BoardInfo changes can be applied to all events of the block.",
+          "type": "boolean"
+        },
+        "applyMoveEvents": {
+          "description": "Indicates whether catering event dates are moved when the block dates are changed.",
           "type": "boolean"
         },
         "overrideEventsProcessingWarnings": {
@@ -52240,6 +52356,15 @@
           "description": "Information about the new block.",
           "$ref": "#/definitions/newBlockDetailsType"
         },
+        "subBlocks": {
+          "type": "array",
+          "description": "Collection of sub block details that will be copied along with the source master block.",
+          "minItems": 0,
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/copySubBlockDetail"
+          }
+        },
         "copyInstructions": {
           "description": "Instructions which will be considered when copying from the template. If this element is not sent, all the flags will be ignored.",
           "type": "object",
@@ -52338,6 +52463,10 @@
             },
             "eventForecastFigures": {
               "description": "Event forecast figures will be copied from the source to the events of the new Block.",
+              "type": "boolean"
+            },
+            "masterBlock": {
+              "description": "When true, Master block will be copied along with the sub blocks.",
               "type": "boolean"
             }
           }
@@ -55361,6 +55490,79 @@
         "hotelCodeList": {
           "description": "List of hotel codes for which property leads will be created.",
           "$ref": "#/definitions/hotelCodeListType"
+        }
+      }
+    },
+    "blockBasicInfo": {
+      "type": "object",
+      "description": "Common Type used to store basic information of a block",
+      "properties": {
+        "blockName": {
+          "type": "string",
+          "description": "Name of the block. This is used for generating the default block code",
+          "minLength": 1
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Start date of the block. This is used for generatting the default block code"
+        },
+        "hotelId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "Hotel where the block will be created"
+        },
+        "blockCodeTemplate": {
+          "type": "string",
+          "description": "Format in which the Block Code should be generated.",
+          "maxLength": 20
+        },
+        "blockCode": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "Response object that returns a default block code based on template"
+        }
+      }
+    },
+    "blockBasicInfos": {
+      "type": "object",
+      "description": "Collection of basic block informatioin",
+      "properties": {
+        "blocks": {
+          "description": "Contains a collection of basic block information",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/blockBasicInfo"
+          }
+        }
+      }
+    },
+    "copySubBlockDetail": {
+      "type": "object",
+      "description": "Details of sub blocks that will be copied along with the Source Master Block.",
+      "properties": {
+        "sourceSubBlockId": {
+          "description": "The unique identifier of the source sub block.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "startDate": {
+          "description": "The start date of the new sub block.",
+          "type": "string",
+          "format": "date"
+        },
+        "hotelId": {
+          "description": "The hotel code of the new sub block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "blockcode": {
+          "description": "The block code of the new sub block.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     }

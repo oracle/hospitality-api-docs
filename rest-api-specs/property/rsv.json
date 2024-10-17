@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation API",
-    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest&apos;s arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest&apos;s experience.  All reservations in OPERA Cloud require a guest profile.<br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in the Customer Relationship Management module) and attach it to the reservation during the reservation booking process using the profileId.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest&apos;s arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest&apos;s experience.  All reservations in OPERA Cloud require a guest profile.<br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in the Customer Relationship Management module) and attach it to the reservation during the reservation booking process using the profileId.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -4962,6 +4962,15 @@
             "required": false
           },
           {
+            "name": "reservationId",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -5489,7 +5498,8 @@
               "PlayerSnapshot",
               "FiscalInfo",
               "CorrectionPostings",
-              "Vouchers"
+              "Vouchers",
+              "ScheduledRoomMove"
             ],
             "description": "Represents Reservation search type Player Snapshot."
           },
@@ -6767,9 +6777,49 @@
             "name": "backToBackDateOn",
             "in": "query",
             "required": false,
-            "description": "Fetches all Back to Back reservations that are scheduled to stay over the selected Back to Back date and any additional reservations that are marked as Back to Back for fetched Back to Back reservations.",
+            "description": "Fetches linked Back to Back reservations with the specified Back to Back Date. Fetched reservations will be marked as Back to Back and they will either depart or arrive on the specified Back to Back day.",
             "type": "string",
             "format": "date"
+          },
+          {
+            "name": "scheduledRoomMoveDate",
+            "in": "query",
+            "required": false,
+            "description": "Scheduled Move Rooms Date Criteria. This will parameter be mandatory when search Type is ScheduledRoomMove.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "scheduledRoomMoveStartTime",
+            "in": "query",
+            "required": false,
+            "description": "Start of Scheduled Move Room Time Range Criteria (in 24 hour time format). Applicable when Search Type is ScheduledRoomMove.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8,
+            "pattern": "([0-1]?[0-9]|2[0-3]):[0-5][0-9]"
+          },
+          {
+            "name": "scheduledRoomMoveEndTime",
+            "in": "query",
+            "required": false,
+            "description": "End of Scheduled Move Room Time Range Criteria (in 24 hour time format). Applicable when Search Type is ScheduledRoomMove.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8,
+            "pattern": "([0-1]?[0-9]|2[0-3]):[0-5][0-9]"
+          },
+          {
+            "name": "scheduledRoomMoveStatus",
+            "in": "query",
+            "required": false,
+            "description": "Scheduled Move Room Status Criteria.",
+            "type": "string",
+            "uniqueItems": true,
+            "enum": [
+              "Completed",
+              "Pending"
+            ]
           },
           {
             "$ref": "#/parameters/authKey"
@@ -8309,6 +8359,157 @@
         ]
       }
     },
+    "/hotels/{hotelId}/reservations/statistics": {
+      "get": {
+        "summary": "Get Reservation DistributionReservationsSummary",
+        "description": "Get DistributionReservationsSummary. <p><strong>OperationId:</strong>getDistributionReservationsSummary</p>",
+        "operationId": "getDistributionReservationsSummary",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "This is the Hotel Code of the Reservations"
+          },
+          {
+            "name": "enterpriseId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "This is the EnterpriseId of Hotel Code"
+          },
+          {
+            "name": "channelCode",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "maxItems": 100
+            },
+            "description": "This is the ChannelCode of Hotel Code in the Reservations"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "This is the Last Updated From Date for a Reservation"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "This is the Last Updated To Date for a Reservation"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 20,
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for checking allowed actions, existence of attached records.",
+            "schema": {
+              "$ref": "#/definitions/checkDistributionReservationsSummary"
+            }
+          },
+          "204": {
+            "description": "DistributionReservationsSummary not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
     "/hotels/{hotelId}/reservations/summary": {
       "get": {
         "summary": "Get brief summary for Reservations",
@@ -8566,8 +8767,8 @@
     },
     "/hotels/{hotelId}/reservations/validations": {
       "put": {
-        "summary": "Validate Reservation Change",
-        "description": "Use this API to validate either the guarantee type or stay details of a reservation you are about to create. <p><strong>OperationId:</strong>putValidateReservationChanges</p>",
+        "summary": "Validate Reservation Before Creating or Applying Changes",
+        "description": "Use this API to validate details of a reservation that you are about to create or modify. Elements to be validated will depend on the instructions provided e.g. StayDates, Packages, Shares etc. Use of this api will not change any data on the reservation.<p><strong>OperationId:</strong>putValidateReservationChanges</p>",
         "operationId": "putValidateReservationChanges",
         "parameters": [
           {
@@ -8863,6 +9064,96 @@
             "type": "string"
           },
           {
+            "name": "cancellationNumberList",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "externalReferenceIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "externalSystemCodes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "default": [
+              "External"
+            ],
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "confirmationNumberList",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "taRecordLocatorList",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Travel Agent Record Locators List.",
+            "items": {
+              "type": "string",
+              "maxItems": 30
+            },
+            "required": false
+          },
+          {
+            "name": "reservationStatuses",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Reservation status list for reservations search.",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Cancelled",
+                "CheckedOut",
+                "CheckedIn",
+                "DueIn",
+                "DueOut",
+                "InHouse",
+                "NoShow",
+                "WaitList"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "linkedName",
+            "in": "query",
+            "required": false,
+            "description": "Name of the group of Linked Reservations to be searched.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50
+          },
+          {
             "name": "fetchInstructions",
             "in": "query",
             "type": "array",
@@ -9077,7 +9368,8 @@
                 "AccompanyingGuestProfile",
                 "AccompanyingGuestMembership",
                 "AccompanyingGuestRelationship",
-                "Voucher"
+                "Voucher",
+                "ScheduledRoomMoves"
               ]
             },
             "required": false
@@ -15716,7 +16008,7 @@
           {
             "name": "productCode",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -23142,7 +23434,8 @@
               "OpenBalance",
               "AutoFolioSettlement",
               "Routing",
-              "PlayerSnapshot"
+              "PlayerSnapshot",
+              "ScheduledRoomMoves"
             ],
             "description": "Represents Reservation search type Player Snapshot."
           },
@@ -24258,9 +24551,49 @@
             "name": "backToBackDateOn",
             "in": "query",
             "required": false,
-            "description": "Fetches all Back to Back reservations that are scheduled to stay over the selected Back to Back date and any additional reservations that are marked as Back to Back for fetched Back to Back reservations.",
+            "description": "Fetches linked Back to Back reservations with the specified Back to Back Date. Fetched reservations will be marked as Back to Back and they will either depart or arrive on the specified Back to Back day.",
             "type": "string",
             "format": "date"
+          },
+          {
+            "name": "scheduledRoomMoveDate",
+            "in": "query",
+            "required": false,
+            "description": "Scheduled Move Rooms Date Criteria. This will parameter be mandatory when Search Type is ScheduledRoomMove.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "scheduledRoomMoveStartTime",
+            "in": "query",
+            "required": false,
+            "description": "Start of Scheduled Move Room Time Range Criteria (in 24 hour time format). Applicable when Search Type is ScheduledRoomMove.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8,
+            "pattern": "([0-1]?[0-9]|2[0-3]):[0-5][0-9]"
+          },
+          {
+            "name": "scheduledRoomMoveEndTime",
+            "in": "query",
+            "required": false,
+            "description": "End of Scheduled Move Room Time Range Criteria (in 24 hour time format). Applicable when Search Type is ScheduledRoomMove.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 8,
+            "pattern": "([0-1]?[0-9]|2[0-3]):[0-5][0-9]"
+          },
+          {
+            "name": "scheduledRoomMoveStatus",
+            "in": "query",
+            "required": false,
+            "description": "Scheduled Move Room Status Criteria.",
+            "type": "string",
+            "uniqueItems": true,
+            "enum": [
+              "Completed",
+              "Pending"
+            ]
           },
           {
             "$ref": "#/parameters/authKey"
@@ -27395,7 +27728,7 @@
           "maxLength": 4000
         },
         "fiscalInfo": {
-          "description": "Fiscal related informatin for a reservation.",
+          "description": "Fiscal related information for a reservation.",
           "$ref": "#/definitions/fiscalInfoType"
         },
         "parentReservationHotelId": {
@@ -27403,6 +27736,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "scheduledRoomMoveInfo": {
+          "description": "Scheduled Room Move information for a reservation.",
+          "$ref": "#/definitions/scheduledRoomMoveInfoType"
         }
       }
     },
@@ -27489,6 +27826,10 @@
         "roomOwnershipType": {
           "description": "Provides the information of the assigned reservation room is an Owner, Referral or regular room.This value is returned when Room Rotation OPERA Control is active and room number is assigned to a reservation.",
           "$ref": "#/definitions/reservationRoomOwnershipType"
+        },
+        "scheduledRoomMoveRoomPending": {
+          "type": "boolean",
+          "description": "Pending Scheduled Move Room."
         },
         "ratePlanCode": {
           "description": "Rate plan code",
@@ -27709,7 +28050,7 @@
     },
     "promotionType": {
       "type": "object",
-      "description": "Type to specify a rate promotion. Usually attached to a reservation to indicate a specific promotion is applied to the reservation.",
+      "description": "Type to specify a rate promotion. Usually attached to a reservation to indicate a specific promotion is applied to the reservation. <p>Note: For putReservation when promotion type element is sent with no value, existing promotion codes on the reservation will be removed.</p>",
       "properties": {
         "promotionCode": {
           "description": "Promotion code associated with the rate plan.",
@@ -28998,6 +29339,20 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "profileId": {
+          "description": "Profile Id with attached Routing Instruction.",
+          "$ref": "#/definitions/profileId"
+        },
+        "beginDate": {
+          "description": "Begin Date for attached Routing Instruction.",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "End Date for attached Routing Instruction.",
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -30408,6 +30763,18 @@
         "payeeSharer": {
           "description": "This attribute indicates if the Shared reservation is marked as the Payee Sharer or not.",
           "type": "boolean"
+        },
+        "scheduledRoomMoves": {
+          "description": "Scheduled Room Moves",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/scheduledRoomMoveType"
+          }
+        },
+        "routeAllTransactionsToShare": {
+          "description": "Indicates if this joining reservation should route all transactions to the 'Share To' reservation when including Share Reservations Instructions.",
+          "type": "boolean"
         }
       }
     },
@@ -30796,6 +31163,24 @@
         "allowAutoCheckIn": {
           "description": "It represents whether auto check-in is enabled or not for psuedo room types.",
           "type": "boolean"
+        },
+        "bookingMedium": {
+          "description": "Classifies the medium(Channel field on reservation screen) through which the reservation is made.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "bookingMediumDescription": {
+          "description": "Description of the booking medium.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "purposeOfStay": {
+          "description": "Purpose of stay.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     },
@@ -37092,6 +37477,10 @@
         "profileId": {
           "description": "Unique guest profile identifier for the linked reservation.",
           "$ref": "#/definitions/profileId"
+        },
+        "backToBackSequence": {
+          "description": "This attribute represents Back To Back Sequence of Linked Reservations(e.g. '1 of 2' i.e, 1 indicates Sequence Position of total count 2). This is applicable when OPERA control Back to Back Handling for Linked Reservations is active.",
+          "$ref": "#/definitions/backToBackResSequenceType"
         }
       }
     },
@@ -38808,7 +39197,8 @@
         "RoomAssignedByAI",
         "CustomNameValue",
         "CustomChargeExemptions",
-        "FiscalInfo"
+        "FiscalInfo",
+        "ScheduledRoomMoves"
       ]
     },
     "reservationsInstructionsType": {
@@ -39960,6 +40350,10 @@
         },
         "overrideRoomFeatures": {
           "description": "This flag indicates true/false. When this is true, it will allow to override the room feature preference validation while assigning rooms. The Reservation Room Features OPERA Control will determine which room feature preferences will be validated. When Reservation Room Features is on, the validation will be against the Room Feature preferences attached to the reservation. If the parameter is off, the validation will be against the room feature preferences attached to the profile. This is applicable when the Room Feature Validation OPERA Control is on.",
+          "type": "boolean"
+        },
+        "routeAllTransactionsToShare": {
+          "description": "Indicates if this joining reservation should route all transactions to the 'Share To' reservation when including Share Reservations Instructions.",
           "type": "boolean"
         }
       }
@@ -41248,6 +41642,10 @@
         "roomOwnershipType": {
           "description": "Provides the information of the assigned reservation room is an Owner/Referral or Regular room.This value is returned when Room Rotation OPERA Control is active and room number is assigned to a reservation.",
           "$ref": "#/definitions/reservationRoomOwnershipType"
+        },
+        "existingReservation": {
+          "description": "Details of the existing reservation to be combined as a sharer.",
+          "$ref": "#/definitions/combineShareFromExistingReservationType"
         }
       }
     },
@@ -41324,6 +41722,10 @@
         "timeSpan": {
           "description": "Stay arrival and departure dates.",
           "$ref": "#/definitions/timeSpanType"
+        },
+        "routeAllTransactionsToShareReservationId": {
+          "description": "Reservation ID of an existing reservation to whom all transactions of the joining reservation will be routed to.",
+          "$ref": "#/definitions/uniqueID_Type"
         }
       }
     },
@@ -41891,6 +42293,16 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "beginDate": {
+          "description": "This is the Begin date for the Default Routing Instruction selected.",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "This is the End date for the Default Routing Instruction selected.",
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -42567,7 +42979,8 @@
         "ReservationGuarantee",
         "UpsellsAvailable",
         "InventoryItems",
-        "CompRouting"
+        "CompRouting",
+        "RoomAvailablity"
       ]
     },
     "upsellRateInstructionType": {
@@ -47814,6 +48227,10 @@
         "linkedReservationInfo": {
           "description": "Linked reservation information that needs to be changed.",
           "$ref": "#/definitions/linkedReservationInfoType"
+        },
+        "backToBackToReservationId": {
+          "description": "Unique identifier of the source linked reservation to be marked as Back to Back along with a target linked reservation when the target linked reservation is marked as Back to Back.",
+          "$ref": "#/definitions/uniqueID_Type"
         }
       }
     },
@@ -47828,6 +48245,250 @@
         "totalCount": {
           "description": "Indicates the total count of Back To Back Reservations in the group of Linked Reservations.",
           "type": "integer"
+        }
+      }
+    },
+    "roomOccupancyType": {
+      "description": "Room Occupancy information.",
+      "type": "object",
+      "properties": {
+        "roomId": {
+          "type": "string",
+          "description": "Room Id.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "type": "string",
+          "description": "Room Type.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomIsOccupied": {
+          "type": "boolean",
+          "description": "Indicates if the Room is currently occupied."
+        },
+        "estimatedDepartureTime": {
+          "type": "string",
+          "description": "Estimated Time of Departure of reservation when room status is occupied.",
+          "format": "date-time"
+        },
+        "guestFirstName": {
+          "type": "string",
+          "description": "Guest First/Given Name on reservation when room status is occupied.",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "guestLastName": {
+          "type": "string",
+          "description": "Guest Last Name /Surname on reservation when room status is occupied.",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "combineShareFromExistingReservationType": {
+      "type": "object",
+      "description": "Details of the existing reservation to be combined as a sharer.",
+      "properties": {
+        "routeAllTransactionsToShareReservationId": {
+          "description": "Reservation ID of an existing reservation to whom all transactions of the joining reservation will be routed to.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "dailyRates": {
+          "description": "Collection of room rate information on a daily basis.",
+          "$ref": "#/definitions/dailyRatesType"
+        }
+      }
+    },
+    "scheduledRoomMoveInfoType": {
+      "description": "Scheduled Move information.",
+      "type": "object",
+      "properties": {
+        "moveStatus": {
+          "description": "Scheduled Room Move Status.",
+          "$ref": "#/definitions/scheduledRoomMoveStatusType"
+        },
+        "moveComments": {
+          "type": "string",
+          "description": "Comments about scheduled move.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "moveInRoomOccupancyInfo": {
+          "description": "Scheduled Move In Room Occupancy Information.",
+          "$ref": "#/definitions/roomOccupancyType"
+        },
+        "estimatedMoveTime": {
+          "type": "string",
+          "description": "Estimated Move Time in 24Hour Format"
+        },
+        "moveOutRoomId": {
+          "type": "string",
+          "description": "Scheduled Move Out Room Id.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "moveOutRoomType": {
+          "type": "string",
+          "description": "Scheduled Move Out Room Type.",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "scheduledRoomMoveType": {
+      "description": "Scheduled Move information.",
+      "type": "object",
+      "properties": {
+        "scheduledRoomMoveInfo": {
+          "description": "Scheduled Room Move information for a reservation.",
+          "$ref": "#/definitions/scheduledRoomMoveInfoType"
+        },
+        "roomAssignmentSegmentBegin": {
+          "type": "string",
+          "description": "Date Room Assignment Begins.",
+          "format": "date-time"
+        },
+        "roomAssignmentSegmentEnd": {
+          "type": "string",
+          "description": "Date of the Scheduled Move Room.",
+          "format": "date-time"
+        },
+        "roomAssignmentSegmentNo": {
+          "type": "integer",
+          "description": "Room Assignment Segment Number."
+        }
+      }
+    },
+    "scheduledRoomMoveStatusType": {
+      "type": "string",
+      "description": "Flag indicating scheduled room move status.",
+      "enum": [
+        "Completed",
+        "Pending"
+      ]
+    },
+    "checkDistributionReservationsSummaryType": {
+      "type": "object",
+      "description": "Reservation Statistics and the status of its allowed actions, attached records.",
+      "properties": {
+        "hotelId": {
+          "description": "Property code of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channelCode": {
+          "description": "Channel code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "enterpriseId": {
+          "description": "EnterpriseId of Property.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "arrivalDate": {
+          "description": "Arrival Date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "departureDate": {
+          "description": "Departure Date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "creationDate": {
+          "description": "Creation Date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdateDate": {
+          "description": "LastUpdate Date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "cancellationDate": {
+          "description": "Cancellation Date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "numberOfRooms": {
+          "description": "number of Rooms Booked.",
+          "type": "integer"
+        },
+        "reservationStatus": {
+          "description": "Status of Reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "confirmationId": {
+          "description": "ConfirmationId of Reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "legNumber": {
+          "description": "ConfirmationLeg Number of Reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "reservationId": {
+          "description": "ReservationId of Reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "guestName": {
+          "description": "GuestName.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "checkDistributionReservationsSummary": {
+      "type": "object",
+      "description": "Response for checking allowed actions, existence of attached records, or count of reservations.",
+      "properties": {
+        "checkReservations": {
+          "description": "Collection of reservations Count and the status of its allowed actions, attached records.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/checkDistributionReservationsSummaryType"
+          }
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     }
