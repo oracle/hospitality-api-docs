@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Front Desk Operations Service",
-    "description": "APIs to cater for Front Desk Operations and Front Desk Statistic functionality in OPERA Cloud. <br /><br /> Front Desk features some of the most commonly used operations in OPERA Cloud, such as managing guest arrivals, managing in-house guests, and managing guest departures. Some additional tasks you can complete from the Front Desk menu are room searches, room assignments, and quick check outs as well as opening folios, creating registration cards, setting wake up calls, and sending messages to guests.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater for Front Desk Operations and Front Desk Statistic functionality in OPERA Cloud. <br /><br /> Front Desk features some of the most commonly used operations in OPERA Cloud, such as managing guest arrivals, managing in-house guests, and managing guest departures. Some additional tasks you can complete from the Front Desk menu are room searches, room assignments, and quick check outs as well as opening folios, creating registration cards, setting wake up calls, and sending messages to guests.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -4606,6 +4606,7 @@
         "summary": "Requests room key(s)",
         "description": "API that manages requests for Door Lock Room Keys. This operation is used by OPERA Cloud PMS connected to external Door Lock Systems systems via Outbound Systems configuration: \n\n<strong>OPERA Cloud utilizes this operation </strong>\n\n- to request new or additional room keys - e.g. when guest checks in, or additional keys post check in.\n\n- to request to activate new keys after check on e.g. when a room key has been lost for a room.\n\n- to request a room key which is not related to a guest reservation but valid for a defined time - (for show rooms, repair) - One Shot Key.\n\n- to request to re-encode a key whereby other keys for this room remain active.\n\n- to request to read a key data from a room key and display it to the user in the PMS.\n\n- to request to modify existing key data - upon room move or change of departure date. (online key systems only!!)\n\n- to request to remove / delete a room key from a room on. Usually sent with check out of a reservation.\n\nUse this API to post a room key action to the active Door Lock System.\n\n<strong>Notes on keyType values:</strong>\n\n<strong>keyType = New\n\nkeyType = Lost </strong>\n\nIt is expected that all previous active keys for the room will become invalid.\n\nIt is expected that partner system handles multiple keys being active in case numberOfKeys is >1.\n\n<strong>keyType = Duplicate\n\nkeyType = ReEncode</strong>\n\nIt is expected that existing active keys for this room remain active.\n\n<strong>keyType = OneShot</strong>\n\nIt is expected that the room key is only valid for a room for specific time (for maintenance or Show room).\n\nIt is never related to a reservation.\n\n<strong>keyType = Read</strong> A request to the Key Card system to read Key Card information from requested Key Encoder/reader.\n\nThe Key Read functionality is of pure informational purpose. None of the received information is stored or processed in the PMS, and it is only for display to the user.\n\n<strong>keyType = Remove</strong>\n\nIt is expected that with this request all active keys for a room or reservation will become inactive or invalid so they will not be able to open the room after defined validityEnd time.\n\n<strong>Additional KeyType actions used by Online Door Lock Systems:</strong>\n\n<strong>Online Key card Systems</strong> are systems which do not write guest data to the room key directly but do store guest data internally and send the information to the related door lock.\n\n<strong>keyType = ModifyStay</strong>\n\nFor Online Door Lock Systems - Request to adjust Room key data when guest changes length of stay (validityEnd)\n\n<strong>keyType = RoomMove</strong>\n\nFor Online Door Lock Systems - adjust Room key data when guest performs room move. \n\n<p><strong>OperationId:</strong> postExternalRoomKeys</p>",
         "operationId": "postExternalRoomKeys",
+        "deprecated": true,
         "parameters": [
           {
             "name": "hotelId",
@@ -11287,7 +11288,7 @@
             "name": "includeDueOut",
             "in": "query",
             "required": false,
-            "description": "This flag when set to true will include rooms assigned to due out reservations.",
+            "description": "This flag when set to true when include rooms assigned to due out reservations.",
             "type": "boolean"
           },
           {
@@ -14064,7 +14065,8 @@
                 "AuthorizationInfo",
                 "ExcludeRoomSuggestion",
                 "Keys",
-                "Voucher"
+                "Voucher",
+                "ScheduledRoomMoves"
               ]
             },
             "required": false
@@ -14893,6 +14895,113 @@
         ]
       }
     },
+    "/hotels/{hotelId}/roomKeysExternal": {
+      "post": {
+        "summary": "Requests room key(s)",
+        "description": "API that manages requests for Door Lock Room Keys. This operation is used by OPERA Cloud PMS connected to external Door Lock Systems systems via Outbound Systems configuration: \n\n<strong>OPERA Cloud utilizes this operation </strong>\n\n- to request new or additional room keys - e.g. when guest checks in, or additional keys post check in.\n\n- to request to activate new keys after check on e.g. when a room key has been lost for a room.\n\n- to request a room key which is not related to a guest reservation but valid for a defined time - (for show rooms, repair) - One Shot Key.\n\n- to request to re-encode a key whereby other keys for this room remain active.\n\n- to request to read a key data from a room key and display it to the user in the PMS.\n\n- to request to modify existing key data - upon room move or change of departure date. (online key systems only!!)\n\n- to request to remove / delete a room key from a room on. Usually sent with check out of a reservation.\n\nUse this API to post a room key action to the active Door Lock System.\n\n<strong>Notes on keyType values:</strong>\n\n<strong>keyType = New\n\nkeyType = Lost </strong>\n\nIt is expected that all previous active keys for the room will become invalid.\n\nIt is expected that partner system handles multiple keys being active in case numberOfKeys is >1.\n\n<strong>keyType = Duplicate\n\nkeyType = ReEncode</strong>\n\nIt is expected that existing active keys for this room remain active.\n\n<strong>keyType = OneShot</strong>\n\nIt is expected that the room key is only valid for a room for specific time (for maintenance or Show room).\n\nIt is never related to a reservation.\n\n<strong>keyType = Read</strong> A request to the Key Card system to read Key Card information from requested Key Encoder/reader.\n\nThe Key Read functionality is of pure informational purpose. None of the received information is stored or processed in the PMS, and it is only for display to the user.\n\n<strong>keyType = Remove</strong>\n\nIt is expected that with this request all active keys for a room or reservation will become inactive or invalid so they will not be able to open the room after defined validityEnd time.\n\n<strong>Additional KeyType actions used by Online Door Lock Systems:</strong>\n\n<strong>Online Key card Systems</strong> are systems which do not write guest data to the room key directly but do store guest data internally and send the information to the related door lock.\n\n<strong>keyType = ModifyStay</strong>\n\nFor Online Door Lock Systems - Request to adjust Room key data when guest changes length of stay (validityEnd)\n\n<strong>keyType = RoomMove</strong>\n\nFor Online Door Lock Systems - adjust Room key data when guest performs room move. \n\n<p><strong>OperationId:</strong> postRoomKeysExternal</p>",
+        "operationId": "postRoomKeysExternal",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "name": "roomKey",
+            "in": "body",
+            "required": true,
+            "description": "Request for generation of room key.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/roomKeysExternal"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response from the active Door Locking System Property Interface to the post request.<p><strong>Note on Response messages:</strong>\n\nIt is necessary to specify both the PMS 'encoderTerminal' and the Key Service system's coder (encoderId) in cases where more than one PMS workstation may be addressing one key coder. ORACLE PMS will NOT send another Request command automatically should a negative response be received. The user sees the response and decides if another try should be made.<p>",
+            "schema": {
+              "$ref": "#/definitions/roomKeysExternalDetails"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "FrontDeskOperations"
+        ]
+      }
+    },
     "/hotels/{hotelId}/roomStatusStatistics": {
       "get": {
         "summary": "Get counts of rooms by housekeeping status and front office status.",
@@ -15336,6 +15445,21 @@
               "maxLength": 20
             },
             "required": false
+          },
+          {
+            "name": "includeScheduledMoveOutRoom",
+            "in": "query",
+            "required": false,
+            "description": "This flag when set to true will include rooms assigned to move out reservations. This query parameter is supported when OPERA Control Advanced Daily Details is active.",
+            "type": "boolean"
+          },
+          {
+            "name": "scheduledRoomMoveOutTime",
+            "in": "query",
+            "required": false,
+            "description": "When IncludeMoveOut is enabled, it is the move out time before which to search. It will return rooms assigned to moving reservations that have a scheduled move out time before the entered time. This query parameter is supported when OPERA Control Advanced Daily Details is active",
+            "type": "string",
+            "format": "date-time"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -24656,6 +24780,15 @@
       "type": "object",
       "description": "This type represents the primary room attributes.",
       "properties": {
+        "scheduledRoomMoveOut": {
+          "description": "This flag will be set to true  for rooms assigned to reservations that are scheduled to  move to another room.",
+          "type": "boolean"
+        },
+        "scheduledRoomMoveOutTime": {
+          "description": "It indicates the time of the reservation which is scheduled for move  out.",
+          "type": "string",
+          "format": "date-time"
+        },
         "roomType": {
           "description": "Room type basic information of the room.",
           "$ref": "#/definitions/roomTypeShortInfoType"
@@ -25050,7 +25183,7 @@
               "type": "boolean"
             },
             "departureTime": {
-              "description": "When IncludeDueOut is enable,it is the departure time before which to search.",
+              "description": "When IncludeDueOut is enabled, it is the departure time before which to search. It will return rooms assigned to departing reservations that have an ETD (Estimated Time of Departure) before the entered time.",
               "type": "string",
               "format": "date-time"
             },
@@ -25956,6 +26089,121 @@
         "hasVoucher": {
           "description": "This flag value true indicates the reservation matches a Voucher Rule. It is supported only if OPERA Control Vouchers is active.",
           "type": "boolean"
+        },
+        "scheduledRoomMoves": {
+          "description": "Scheduled Moves",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/scheduledRoomMoveType"
+          }
+        }
+      }
+    },
+    "scheduledRoomMoveType": {
+      "description": "Scheduled Room Move information.",
+      "type": "object",
+      "properties": {
+        "scheduledMoveInfo": {
+          "description": "Scheduled Room Move information for a reservation.",
+          "$ref": "#/definitions/scheduledRoomMoveInfoType"
+        },
+        "roomAssignmentSegmentBegin": {
+          "type": "string",
+          "description": "Date Room Assignment Begins.",
+          "format": "date-time"
+        },
+        "roomAssignmentSegmentEnd": {
+          "type": "string",
+          "description": "Date of the Scheduled Move Room.",
+          "format": "date-time"
+        },
+        "roomAssignmentSegmentNo": {
+          "type": "integer",
+          "description": "Room Assignment Segment Number."
+        }
+      }
+    },
+    "scheduledRoomMoveInfoType": {
+      "description": "Scheduled Room Move information.",
+      "type": "object",
+      "properties": {
+        "moveStatus": {
+          "description": "Scheduled Room Move Status.",
+          "$ref": "#/definitions/scheduledRoomMoveStatusType"
+        },
+        "moveComments": {
+          "type": "string",
+          "description": "Comments about scheduled room move.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "moveInRoomOccupancyInfo": {
+          "description": "Scheduled Move In Room Occupancy Information.",
+          "$ref": "#/definitions/roomOccupancyType"
+        },
+        "estimatedMoveTime": {
+          "type": "string",
+          "description": "Estimated Move Time in 24Hour Format"
+        },
+        "moveOutRoomId": {
+          "type": "string",
+          "description": "Scheduled Move Out Room Id.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "moveOutRoomType": {
+          "type": "string",
+          "description": "Scheduled Move Out Room Type.",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "scheduledRoomMoveStatusType": {
+      "type": "string",
+      "description": "Flag indicating scheduled room move status.",
+      "enum": [
+        "Completed",
+        "Pending"
+      ]
+    },
+    "roomOccupancyType": {
+      "description": "Room Occupancy information.",
+      "type": "object",
+      "properties": {
+        "roomId": {
+          "type": "string",
+          "description": "Room Id.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "type": "string",
+          "description": "Room Type.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomIsOccupied": {
+          "type": "boolean",
+          "description": "Indicates if the Room is currently occupied."
+        },
+        "estimatedDepartureTime": {
+          "type": "string",
+          "description": "Estimated Time of Departure of reservation when room status is occupied.",
+          "format": "date-time"
+        },
+        "guestFirstName": {
+          "type": "string",
+          "description": "Guest First/Given Name on reservation when room status is occupied.",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "guestLastName": {
+          "type": "string",
+          "description": "Guest Last Name /Surname on reservation when room status is occupied.",
+          "minLength": 0,
+          "maxLength": 40
         }
       }
     },
@@ -36597,6 +36845,10 @@
         "overrideRoomFeatures": {
           "description": "This flag indicates true/false. When this is true, it will allow to override the room feature preference validation while assigning rooms. The Reservation Room Features OPERA Control will determine which room feature preferences will be validated. When Reservation Room Features is on, the validation will be against the Room Feature preferences attached to the reservation. If the parameter is off, the validation will be against the room feature preferences attached to the profile. This is applicable when the Room Feature Validation OPERA Control is on.",
           "type": "boolean"
+        },
+        "skipDiscrepantRoom": {
+          "description": "This flag indicates true/false. When it is true, you will be allowed to override the room selection for a skip discrepancy. This flag is available when the Discrepant Rooms OPERA Control is active.",
+          "type": "boolean"
         }
       }
     },
@@ -36993,6 +37245,11 @@
         },
         "roomNumber": {
           "description": "A room number to generate a key for. When creating keys using just the room number, the interface may allow only one-shot keys.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "originalRoomNumber": {
+          "description": "Old Room Number is used when a room move is performed.",
           "type": "string",
           "maxLength": 2000
         },
@@ -38571,6 +38828,338 @@
           "maxLength": 200
         }
       }
+    },
+    "keyOptionsType": {
+      "type": "object",
+      "description": "This contains code and description information for key options.",
+      "properties": {
+        "keyOptionsCode": {
+          "description": "key options code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "keyOptionDescription": {
+          "description": "key options description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "externalRoomKeyType": {
+      "type": "string",
+      "description": "Simple type for representing room key request type. 'HardKey' = request for physical key card with RFID; 'MobileKey' = request for mobile key (no physical key); 'PinCode' = request for PinCode; 'KeyPayload' = request Key image from DLS System",
+      "enum": [
+        "HardKey",
+        "MobileKey",
+        "PinCode",
+        "KeyPayload"
+      ]
+    },
+    "keyUserType": {
+      "type": "string",
+      "description": "Simple type for representing key user type. 'Guest' = request Opera Guest room key",
+      "enum": [
+        "Guest"
+      ]
+    },
+    "printDataType": {
+      "type": "object",
+      "description": "Lists the text, file or picture to print onto a Guest room key (only for roomKeyType is HardKey).",
+      "properties": {
+        "printText": {
+          "description": "key options code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "printFile": {
+          "description": "Base64 format of file representing data to print.",
+          "type": "string",
+          "format": "byte"
+        },
+        "printPicture": {
+          "description": "Base64 format of picture representing data to print.",
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "keyOptionsResponseType": {
+      "type": "object",
+      "description": "This contains code and description information for key options.",
+      "properties": {
+        "keyOptionsCode": {
+          "description": "key options code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "keyOptionDescription": {
+          "description": "key options description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "isEnabled": {
+          "description": "Indicates that the keyOption is enabled for this key.",
+          "type": "boolean"
+        },
+        "default": {
+          "description": "Indicates that this keyOption is a default access.",
+          "type": "boolean"
+        }
+      }
+    },
+    "roomKeysExternal": {
+      "type": "object",
+      "description": "Request for generation of room key used for OutBound.",
+      "properties": {
+        "encoderId": {
+          "type": "string",
+          "description": "Unique Id as defined by Door Lock System.",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "encoderTerminal": {
+          "type": "string",
+          "description": "The Unique PMS encoder name linked with the encoderId",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "roomId": {
+          "description": "The PMS room number to generate a key for.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "oldRoomId": {
+          "description": "Old Room Number is used when a room move (keyType RoomMove) is performed.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "noOfKeys": {
+          "type": "integer",
+          "description": "Number of keys to be created.",
+          "minimum": 1,
+          "maximum": 1
+        },
+        "reservationIdList": {
+          "description": "Collection of unique reservation identifiers for the reservation we are trying to make a room key for.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "guestShareFlag": {
+          "type": "boolean",
+          "description": "Indicates if Guest is a sharer or not"
+        },
+        "OldGuestShareFlag": {
+          "type": "boolean",
+          "description": "Indicates if old Guest room is a sharer or not when a room move (keyType RoomMove) is performed."
+        },
+        "keyValidityStart": {
+          "type": "string",
+          "description": "The date/time the room key is valid from.",
+          "format": "date-time"
+        },
+        "keyValidityEnd": {
+          "type": "string",
+          "description": "The date/time the room key is valid to.",
+          "format": "date-time"
+        },
+        "keyType": {
+          "$ref": "#/definitions/roomKeyOutBoundType"
+        },
+        "keyTrack": {
+          "description": "KeyTrack Data.",
+          "$ref": "#/definitions/keyTrackType"
+        },
+        "outBoundCode": {
+          "description": "OutBound Code of the Door Lock System (DLS).",
+          "type": "string"
+        },
+        "additionalRooms": {
+          "description": "Collection of additional rooms to be included in key creation of reservation room.",
+          "type": "array",
+          "maxItems": 999,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "oldAdditionalRooms": {
+          "description": "Collection of old additional rooms in key creation of reservation room when a room move (keyType RoomMove) is performed.",
+          "type": "array",
+          "maxItems": 999,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "userId": {
+          "type": "string",
+          "description": "Unique identifier for the PMS user.",
+          "maxLength": 2000
+        },
+        "roomKeyGuests": {
+          "type": "array",
+          "description": "Collection of of Room key guests for multiple guest room key functionality.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomKeyGuest"
+          }
+        },
+        "keyOptions": {
+          "description": "Lists the access areas defined in PMS valid for the room key.",
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/definitions/keyOptionsType"
+          }
+        },
+        "keyRequestTime": {
+          "type": "string",
+          "description": "The date/time the room key is requested.",
+          "format": "date-time"
+        },
+        "roomKeyType": {
+          "$ref": "#/definitions/externalRoomKeyType"
+        },
+        "keyUserType": {
+          "$ref": "#/definitions/keyUserType"
+        },
+        "cardSerialNumber": {
+          "description": "Unique identifier of RFID card used for KeyPayload generation. Required when roomKeyType is KeyPayload.",
+          "type": "string",
+          "maxLength": 80
+        },
+        "printData": {
+          "$ref": "#/definitions/printDataType"
+        }
+      },
+      "required": [
+        "keyType",
+        "encoderTerminal",
+        "encoderId",
+        "roomKeyType",
+        "keyUserType",
+        "keyRequestTime"
+      ]
+    },
+    "roomKeysExternalDetails": {
+      "type": "object",
+      "description": "Response for the key request made to DLS from OPERA Cloud.",
+      "properties": {
+        "encoderId": {
+          "type": "string",
+          "description": "Unique Id as defined by Door Lock System.",
+          "maxLength": 2000
+        },
+        "encoderTerminal": {
+          "type": "string",
+          "description": "The Unique PMS encoder name linked with the encoderId",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "reservationIdList": {
+          "description": "Collection of unique reservation identifiers for the reservation we are trying to make a room key for.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "roomId": {
+          "description": "The PMS room number to generate a key for.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "keyTrack": {
+          "description": "KeyTrack Data.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/keyTrackType"
+          }
+        },
+        "keyValidityStart": {
+          "type": "string",
+          "description": "Date/Time Key is valid from - only send in response for keyType: 'Read' request",
+          "format": "date-time"
+        },
+        "keyValidityEnd": {
+          "type": "string",
+          "description": "Date/Time Key is valid to - only send in response for keyType: 'Read' request",
+          "format": "date-time"
+        },
+        "noOfKeys": {
+          "type": "integer",
+          "description": "Number of keys to be created.The value is always 1"
+        },
+        "responseText": {
+          "type": "string",
+          "description": "A user-friendly text with information on why a request is not successful",
+          "maxLength": 2000
+        },
+        "responseCode": {
+          "$ref": "#/definitions/roomKeyResponseCodeType"
+        },
+        "additionalRooms": {
+          "description": "Collection of additional rooms to be included in key creation of reservation room.",
+          "type": "array",
+          "maxItems": 999,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "keyOptions": {
+          "description": "Lists all PMS access areas.",
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/definitions/keyOptionsResponseType"
+          }
+        },
+        "userId": {
+          "type": "string",
+          "description": "Unique identifier for the PMS user.",
+          "maxLength": 2000
+        },
+        "digitalKeyData": {
+          "description": "Base64 format of Mobile Key data provided by DLS System which the external system requested - only send in response for roomKeyType: 'MobileKey'",
+          "type": "string",
+          "format": "byte"
+        },
+        "keyImage": {
+          "description": "Image of the created key - only send in response for roomKeyType: 'KeyPayload'",
+          "type": "string",
+          "format": "byte"
+        },
+        "cardSerialNumber": {
+          "description": "Unique identifier of RFID card used for KeyPayload generation - only send in response for roomKeyType: 'KeyPayload'.",
+          "type": "string",
+          "maxLength": 80
+        },
+        "keyCreationTime": {
+          "type": "string",
+          "description": "Date/Time the key has been generated by Door Locking system.",
+          "format": "date-time"
+        },
+        "roomKeyType": {
+          "$ref": "#/definitions/externalRoomKeyType"
+        },
+        "keyUserType": {
+          "$ref": "#/definitions/keyUserType"
+        }
+      },
+      "required": [
+        "roomId",
+        "responseCode",
+        "encoderTerminal",
+        "roomKeyType",
+        "keyUserType",
+        "keyValidityStart",
+        "keyValidityEnd",
+        "keyCreationTime"
+      ]
     }
   },
   "tags": [

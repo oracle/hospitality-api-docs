@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Activity API",
-    "description": "APIs to cater for Sales Activity functionality in OPERA Cloud. <br /><br /> Activities provide you with an account management tool for managing daily tasks such as appointments, sales calls, contact follow-up, and so on.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater for Sales Activity functionality in OPERA Cloud. <br /><br /> Activities provide you with an account management tool for managing daily tasks such as appointments, sales calls, contact follow-up, and so on.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -503,6 +503,106 @@
             "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
               "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Activity"
+        ]
+      },
+      "put": {
+        "summary": "Operation to update multiple activities",
+        "description": "You can use this API to bulk update activities <p><strong>OperationId:</strong>putBulkActivities</p>",
+        "operationId": "putBulkActivities",
+        "parameters": [
+          {
+            "name": "putBulkActivities",
+            "in": "body",
+            "required": true,
+            "description": "Request object that will Change a list of activities.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/activitiesBulkUpdate"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Status/Info of the processed activities.",
+            "schema": {
+              "$ref": "#/definitions/activitiesBulkUpdateStatus"
             }
           },
           "400": {
@@ -6129,6 +6229,169 @@
       "maxItems": 4000,
       "items": {
         "$ref": "#/definitions/activityId"
+      }
+    },
+    "activitiesBulkUpdate": {
+      "type": "object",
+      "description": "Request object that will Change a list of activities.",
+      "properties": {
+        "activitiesBulkUpdate": {
+          "description": "Activities information, that is going to be updated in batch.",
+          "$ref": "#/definitions/activitiesBulkUpdateType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "activitiesBulkUpdateType": {
+      "type": "object",
+      "description": "Collection of Activity Ids their details to be updated.",
+      "properties": {
+        "activityIdList": {
+          "type": "array",
+          "description": "Selected activities Unique identifier.",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/definitions/activityIdRecord"
+          }
+        },
+        "skipProcessing": {
+          "description": "Boolean flag if True will skip processing activities",
+          "type": "boolean"
+        },
+        "activityRec": {
+          "description": "Selected activities to be updated with these activity details.",
+          "$ref": "#/definitions/activityChanges"
+        }
+      }
+    },
+    "activityChanges": {
+      "type": "object",
+      "description": "Activities details to be updated.",
+      "properties": {
+        "activityClass": {
+          "description": "Indicates the Activity Class.",
+          "$ref": "#/definitions/activityConfigClassType"
+        },
+        "activityType": {
+          "description": "Indicates the Activity Type used for the Activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "activityPurpose": {
+          "description": "Indicates Purpose of the Activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "activityTraceCode": {
+          "description": "Activity Trace code used for the Activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "activityOwner": {
+          "description": "Owner of Activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "startDate": {
+          "description": "Start Date of Activity.",
+          "type": "string",
+          "format": "date"
+        },
+        "startTime": {
+          "description": "Start time of the Activity.",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "End Date of Activity.",
+          "type": "string",
+          "format": "date"
+        },
+        "endTime": {
+          "description": "End time of the Activity.",
+          "type": "string"
+        },
+        "notes": {
+          "description": "Notes associated with an Activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "highPriority": {
+          "description": "Indicates whether Activity has a high priority.",
+          "type": "boolean"
+        },
+        "activityAccount": {
+          "description": "The list of accounts associated with an activity.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "activityContact": {
+          "description": "The list of accounts associated with an activity.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "activityIdRecord": {
+      "type": "object",
+      "description": "Unique identifier for the Activity Record containing activity ID and activity property.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel code to which activity belongs",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "id": {
+          "description": "Unique ID belonging to the activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        }
+      }
+    },
+    "activitiesBulkUpdateStatus": {
+      "type": "object",
+      "properties": {
+        "activitiesBulkUpdateStatusType": {
+          "description": "Status/Info of the processed activities.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/activitiesProcessedInfoType"
+          }
+        }
+      }
+    },
+    "activitiesProcessedInfoType": {
+      "type": "object",
+      "description": "Status/Info of the processed activities.",
+      "properties": {
+        "activityIdRecord": {
+          "description": "The activity details which were not processed.",
+          "$ref": "#/definitions/activityIdRecord"
+        },
+        "reason": {
+          "description": "Reason for not processing the activity.",
+          "type": "string"
+        },
+        "processingInfoType": {
+          "description": "Flag to indicate the warning messages from the API",
+          "type": "string"
+        },
+        "processingInfoCode": {
+          "description": "Erorr/Warning code for not processing the activity.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
       }
     }
   },

@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block Reservation Asynchronous API",
-    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -1063,6 +1063,372 @@
           },
           "204": {
             "description": "AllocationRangesProcessInfo not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/shift": {
+      "post": {
+        "summary": "Shifts the Block start date.",
+        "description": "Use this API to move or shift the dates of a block in OPERA. <p><strong>OperationId:</strong>startShiftBlockProcess</p>",
+        "operationId": "startShiftBlockProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "blockToShift",
+            "in": "body",
+            "required": true,
+            "description": "Request object to shift business block starting date.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/blockToShift"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/links"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/shift/{requestId}": {
+      "head": {
+        "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getShiftBlockProcessStatus</p>",
+        "operationId": "getShiftBlockProcessStatus",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API returns information about the shift block process.",
+        "description": "This API will fetch shift Block warnings and errors to be returned as part of the response. <p><strong>OperationId:</strong>getShiftBlockProcessInfo</p>",
+        "operationId": "getShiftBlockProcessInfo",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Callback request object for fetched shift block process information.",
+            "schema": {
+              "$ref": "#/definitions/processDetails"
+            }
+          },
+          "204": {
+            "description": "Shift Block information not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -2492,6 +2858,57 @@
         "genericRoomType": {
           "description": "Indicates if the Allocation objects refer to Generic Room Types (Room Pools).",
           "type": "boolean"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "shiftBlockCriteriaType": {
+      "type": "object",
+      "properties": {
+        "newStartDate": {
+          "description": "New start date of the business block.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "removeAlternateDates": {
+          "description": "When true, this will remove alternate dates for this block before shifting dates.",
+          "type": "boolean"
+        },
+        "validateAlternateDates": {
+          "description": "When true, this will validate alternate dates for this block before shifting dates.",
+          "type": "boolean"
+        },
+        "overbookAll": {
+          "description": "When true, this will overbook allocated rooms if needed.",
+          "type": "boolean"
+        },
+        "validatePreAllocatedRooms": {
+          "description": "When true, this will validate if there are rooms pre-allocated before shifting the block dates.",
+          "type": "boolean"
+        },
+        "validateTraces": {
+          "description": "When true, this will validate if there are active traces before shifting the block dates.",
+          "type": "boolean"
+        },
+        "overrideEventsProcessingWarnings": {
+          "description": "Indicates whether to ignore any warning during applying the changes to the events associated with the current block.",
+          "type": "boolean"
+        }
+      }
+    },
+    "blockToShift": {
+      "type": "object",
+      "description": "Request object to shift business block starting date.",
+      "properties": {
+        "criteria": {
+          "description": "Contains details of the block to be shifted along with the new start date to be applied.",
+          "$ref": "#/definitions/shiftBlockCriteriaType"
         },
         "links": {
           "$ref": "#/definitions/links"

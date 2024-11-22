@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Cashiering API",
-    "description": "APIs to cater for Cashiering related functionality in OPERA Cloud.<br /><br /> Cashiering provides access to a guest folio, posting journals, receipt histories, currency calculations, credit card settlements, and check a guest out.<br /><br /> Compatible with OPERA Cloud release 24.1.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.1",
+    "description": "APIs to cater for Cashiering related functionality in OPERA Cloud.<br /><br /> Cashiering provides access to a guest folio, posting journals, receipt histories, currency calculations, credit card settlements, and check a guest out.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.2",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -8136,8 +8136,9 @@
     "/hotels/{hotelId}/folio/{folioId}/convert": {
       "put": {
         "summary": "Convert Folio",
-        "description": "You can use this API to Convert folio. <p><strong>OperationId:</strong>convertFolio</p>",
+        "description": "You can use this API to Convert folio.This API is deprecated. Please use putFolioType instead <p><strong>OperationId:</strong>convertFolio</p>",
         "operationId": "convertFolio",
+        "deprecated": true,
         "parameters": [
           {
             "name": "folioId",
@@ -33483,6 +33484,10 @@
         "upgradedByAI": {
           "description": "Represents the room was assigned by AI Room Assignment.",
           "type": "boolean"
+        },
+        "backToBackSequence": {
+          "description": "This attribute represents Back To Back Sequence of Linked Reservations(e.g. '1,2' i.e, 1 indicates Sequence Position of total count 2). This is applicable when OPERA control Back to Back Handling for Linked Reservations is active.",
+          "$ref": "#/definitions/backToBackResSequenceType"
         }
       }
     },
@@ -37693,6 +37698,18 @@
         },
         "allowConvertFolioYn": {
           "description": "Flag to check Folio Conversion Allowed.",
+          "type": "boolean"
+        },
+        "isARAttached": {
+          "description": "Flag to check if the folio has an AR number attached.",
+          "type": "boolean"
+        },
+        "isFiscalFolio": {
+          "description": "Flag to check if the folio type is fiscal or not.",
+          "type": "boolean"
+        },
+        "creditBillGenerated": {
+          "description": "Flag which indicates whether credit folio has been generated.",
           "type": "boolean"
         },
         "accountReceivablesFolio": {
@@ -46652,6 +46669,20 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "backToBackResSequenceType": {
+      "type": "object",
+      "description": "Type object represents Back To Back Sequence Position and Total Count of Linked Back To Back Reservations ordered by consecutive Stay Dates.",
+      "properties": {
+        "position": {
+          "description": "Indicates the Sequence position of Back to Back Reservation.",
+          "type": "integer"
+        },
+        "totalCount": {
+          "description": "Indicates the total count of Back To Back Reservations in the group of Linked Reservations.",
+          "type": "integer"
         }
       }
     }
