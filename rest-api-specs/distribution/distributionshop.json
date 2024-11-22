@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Distribution Shop",
-    "description": "Oracle Hospitality Distribution Shop is for distribution partners to find properties availability, room-rates offers for a single property or a specific room-rate offer detail.<br /><br /> Compatible with OPERA Cloud release 24.2.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.2.0",
+    "description": "Oracle Hospitality Distribution Shop is for distribution partners to find properties availability, room-rates offers for a single property or a specific room-rate offer detail.<br /><br /> Compatible with OPERA Cloud release 24.3.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.3.0",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
     },
@@ -983,7 +983,7 @@
     "RatePlanCodeMatchOnly": {
       "name": "ratePlanCodeMatchOnly",
       "in": "query",
-      "description": "If true, only requested rate plan code will be shown, otherwise all avalable public rate plan codes will be shown along with requested rate plan code.",
+      "description": "If true, only rate plan code specified, otherwise public rate plan codes too",
       "type": "boolean",
       "default": false,
       "required": false,
@@ -1524,6 +1524,13 @@
         "availability": {
           "$ref": "#/definitions/HotelAvailabilityStatus"
         },
+        "restrictions": {
+          "description": "List of restrictions for property, only populated when no rate plan codes are given in request",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Restriction"
+          }
+        },
         "roomTypes": {
           "description": "List of the room types selected during the request including room type information, availability status of the room type, and room amenities.",
           "type": "array",
@@ -1704,8 +1711,36 @@
         }
       ]
     },
+    "Restriction": {
+      "type": "object",
+      "description": "Holds restriction information that is restricting offer from being available",
+      "properties": {
+        "restrictionType": {
+          "type": "string",
+          "description": "Type of restriction. <p> Closed: The offer is not restricted to be available.  </p> <p> ClosedForArrival: Offer is not available with arrival date with this restriction. </p> <p> ClosedForDeparture: Offer is not  available with departure date with this restriction. </p> <p> MinimumStayThrough: Offer duration falls in to this restriction date is not available if minimum number of nights less than set restriction nights. Example if minimum stay through is 2, the offer is not available for less than 2 nights stay. </p> <p> MaximumStayThrough: MaximumStayThrough: Offer duration falls in to this restriction date is not available if maximum number of nights are greater than set restriction nights. Example if maximum stay through is 10, the offer is not available for greater than 10 nights stay. </p> <p> MinimumAdvancedBooking: Offer is not available if arrival date and booking date window is less than this restriction setting. </p> <p> MaximumAdvancedBooking: Offer is not available if arrival date and booking date window is greater than this restriction setting. </p> <p> LOSNotAvailable: If the offer arrival date has this restriction, the offer is available for the duration where length of stay is not restricted. Example if length of stay not available set to Open, close, close, open, open, close, open. Offer arrival date with this restriction is available for number of nights, 1, 4,5, 7, and onwards.</p>",
+          "enum": [
+            "Closed",
+            "ClosedForArrival",
+            "ClosedForDeparture",
+            "MinimumStayThrough",
+            "MaximumStayThrough",
+            "MinimumLengthOfStay",
+            "MaximumLengthOfStay",
+            "MinimumAdvancedBooking",
+            "MaximumAdvancedBooking",
+            "LOSNotAvailable"
+          ]
+        },
+        "restrictionValue": {
+          "type": "integer",
+          "description": "The specific number of days for the selected restriction. This field applies to restriction type MinimumStayThrough, MaximumStayThrough, MinimumLengthOfStay, MaximumLengthOfStay, MinimumAdvancedBooking, and MaximumAdvancedBooking only.",
+          "example": 10
+        }
+      }
+    },
     "PropertyOffersRoomType": {
       "type": "object",
+      "description": "Room Type information",
       "properties": {
         "availabilityStatus": {
           "type": "object",
@@ -1891,6 +1926,13 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/PromotionCodeItem"
+          }
+        },
+        "restrictions": {
+          "description": "List of restrictions for rate plan, only populated when rate plan codes are given in request",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Restriction"
           }
         }
       }
