@@ -1,0 +1,282 @@
+{
+	"info": {
+		"_postman_id": "8e6dd16b-30ad-4d12-9e68-eb35992e7e45",
+		"name": "R&A_ObjectStorage_ParURL",
+		"description": "###### **R&A PAR URL Generation**\n\nFrom the OAS version of Analytics, the end user have the option to Schedule the BI Publisher jobs to Object Storage. To access the files from the Object Storage the users are required to generate the Par URL. The pre-requisite to generate the Par URL is to provide the Environment Variables. On the Left Menu you see the Environments Tab, select {OSVariables} and fill in the variable value as per the table.\n\n| Variable | Value |\n| --- | --- |\n| IDCSHostName | This value is IDCS host: from R&A Login screen.  <br>copy URL up to “/UI” {e.g. [https://idcs-517a23fb2d3bxxxx7140c4c7892862c.identity.oraclecloud.com}](https://idcs-517a23fb2d3bxxxx7140c4c7892862c.identity.oraclecloud.com}) |\n| APPId | This value is accessed from the R&A Portal. The **APP ID**  <br>Controls > File Delivery > Object Storage |\n| APPSecret | This value is accessed from the R&A Portal. By default it is Hidden, click Show and make a Highlight and copy **APP Secret**  <br>Controls > File Delivery > Object Storage |\n| TenantID | Get the TenantID from the About Screen on the R&A Application Portal. |\n| Token | This is blank and is auto populated Not required to provide any value. |\n| PortalEndPoint | This value differs for UAT and PROD.  <br>**UAT:** [https://uat.ohra.oraclehospitality.ocs.oraclecloud.com](https://uat.ohra.oraclehospitality.ocs.oraclecloud.com)  <br>**Prod:** [https://portal.ohra.oraclehospitality.ocs.oraclecloud.com](https://portal.ohra.oraclehospitality.ocs.oraclecloud.com) |\n| Prefix | This is the folder value provided, when scheduling the BI Publisher report.  <br>**Note:** No Special Characters, spaces are allowed. Value is case-sensitive. |\n| FileName | The Name of the file given when scheduling the Report. Value is case-sensitive. |\n| MinutesToExpire | The value is given here for the count of minutes until when the PAR URL is valid. Post the time given, the par url need to be regenerated. |",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36004770"
+	},
+	"item": [
+		{
+			"name": "GetToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"Token\", jsonData.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{APPSecret}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{APPId}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "urn:opc:hgbu:ws:rna:E:{{TenantID}}:all",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{IDCSHostName}}:443/oauth2/v1/token",
+					"host": [
+						"{{IDCSHostName}}"
+					],
+					"port": "443",
+					"path": [
+						"oauth2",
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate PAR URL",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requestName\": \"{{$timestamp}}\",\n    \"prefix\": \"{{Prefix}}\",\n    \"fileName\": \"{{FileName}}\",\n    \"minutesToExpire\": \"{{MinutesToExpire}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{PortalEndPoint}}developer/appapi/v1/os/PARUrl",
+					"host": [
+						"{{PortalEndPoint}}developer"
+					],
+					"path": [
+						"appapi",
+						"v1",
+						"os",
+						"PARUrl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Folder PAR URL",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"requestName\": \"{{$timestamp}}\",\n    \"prefix\": \"{{Prefix}}\",\n    \"minutesToExpire\": \"{{MinutesToExpire}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{PortalEndPoint}}developer/appapi/v1/os/PARUrl",
+					"host": [
+						"{{PortalEndPoint}}developer"
+					],
+					"path": [
+						"appapi",
+						"v1",
+						"os",
+						"PARUrl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Created PAR URL",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{PortalEndPoint}}developer/appapi/v1/os/allPARInfo?expired=0",
+					"host": [
+						"{{PortalEndPoint}}developer"
+					],
+					"path": [
+						"appapi",
+						"v1",
+						"os",
+						"allPARInfo"
+					],
+					"query": [
+						{
+							"key": "expired",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All Expired PAR URL",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{PortalEndPoint}}developer/appapi/v1/os/allPARInfo?expired=1",
+					"host": [
+						"{{PortalEndPoint}}developer"
+					],
+					"path": [
+						"appapi",
+						"v1",
+						"os",
+						"allPARInfo"
+					],
+					"query": [
+						{
+							"key": "expired",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
