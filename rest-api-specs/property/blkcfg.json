@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block Configuration API",
-    "description": "APIs for Block configuration, such as creating, updating, fetching and removing codes related to blocks. <br />< This might include fetching the block cancellation reasons, or creating new block refused reasons.  Wash schedules can be create, or new reservation methods could be added for a property.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.2",
+    "description": "APIs for Block configuration, such as creating, updating, fetching and removing codes related to blocks. <br />< This might include fetching the block cancellation reasons, or creating new block refused reasons.  Wash schedules can be create, or new reservation methods could be added for a property.<br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.4",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -2953,7 +2953,7 @@
     "/hotels/{hotelId}/blockSalesAllowance": {
       "get": {
         "summary": "Get Block Sales Allowance",
-        "description": "You can use this API to get Block Sales Allowance. <p><strong>OperationId:</strong>getBlockSalesAllowance</p>",
+        "description": "You can use this API to get Block Sales Allowance. <p><strong>OperationId:</strong>getBlockSalesAllowance</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getBlockSalesAllowance",
         "parameters": [
           {
@@ -3081,10 +3081,146 @@
         ]
       }
     },
+    "/hotels/{hotelId}/blockSalesAllowance/activityLog": {
+      "get": {
+        "summary": "Get the Block Sales Allowance activity log",
+        "description": "Use this API to facilitate retrieving the Block Sales Allowance activity log. <p><strong>OperationId:</strong>getBlockSalesAllowanceActivityLog</p>",
+        "operationId": "getBlockSalesAllowanceActivityLog",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "maximum": 200,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "description": "Hotel code.",
+            "minLength": 1,
+            "maxLength": 20,
+            "type": "string"
+          },
+          {
+            "name": "changeLogDate",
+            "in": "query",
+            "required": false,
+            "description": "Search date for the user activity log.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "salesAllowanceDate",
+            "in": "query",
+            "required": false,
+            "description": "Sales Allowance date for the user activity log.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "description": "User Id for the user activity log."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching block sales allowance activity log. This object contains collection of user activity log for the block sales allowance changes.",
+            "schema": {
+              "$ref": "#/definitions/blockSalesAllowanceActivityLog"
+            }
+          },
+          "204": {
+            "description": "Block sales allowance activity log not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockConfig"
+        ]
+      }
+    },
     "/hotels/{hotelId}/blockSalesAllowanceRange": {
       "delete": {
         "summary": "Delete block sales allowance range",
-        "description": "You can use this API to delete block sales allowance range. <p><strong>OperationId:</strong>deleteBlockSalesAllowanceRange</p>",
+        "description": "You can use this API to delete block sales allowance range. <p><strong>OperationId:</strong>deleteBlockSalesAllowanceRange</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "deleteBlockSalesAllowanceRange",
         "parameters": [
           {
@@ -3349,7 +3485,7 @@
     "/hotels/{hotelId}/cutoffSchedules": {
       "get": {
         "summary": "Get block cutoff schedule codes.",
-        "description": "This API fetches a list of configured cutoff schedule codes for the property. It returns cutoff schedule code, description, start date, end date and default cutoff days. Cutoff schedule codes can be applied to blocks, to default number of cutoff days per stay date and room type. A default number number of cutoff days can be set on cutoff scheduler header level, and will be applied when no specific number of days has been defined for a date / room type combination within the cutoff schedule dates. <p><strong>OperationId:</strong>getCutoffSchedules</p>",
+        "description": "This API fetches a list of configured cutoff schedule codes for the property. It returns cutoff schedule code, description, start date, end date and default cutoff days. Cutoff schedule codes can be applied to blocks, to default number of cutoff days per stay date and room type. A default number number of cutoff days can be set on cutoff scheduler header level, and will be applied when no specific number of days has been defined for a date / room type combination within the cutoff schedule dates. <p><strong>OperationId:</strong>getCutoffSchedules</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
         "operationId": "getCutoffSchedules",
         "parameters": [
           {
@@ -3588,7 +3724,7 @@
     "/hotels/{hotelId}/cutoffSchedules/{cutoffCodeId}": {
       "get": {
         "summary": "Get cutoff Schedules Details for a cutoff schedule code.",
-        "description": "This API fetches a list of cutoff schedule details for a cutoff schedule code. It returns stay date, room type and cutoff days for cutoff schedule. Cutoff schedule codes can be applied to blocks, to default number of cutoff days per stay date and room type. A default number number of cutoff days can be set on cutoff scheduler header level, and will be applied when no specific number of days has been defined for a date / room type combination within the cutoff schedule dates.<p><strong>OperationId:</strong>getCutoffSchedulesDetails</p>",
+        "description": "This API fetches a list of cutoff schedule details for a cutoff schedule code. It returns stay date, room type and cutoff days for cutoff schedule. Cutoff schedule codes can be applied to blocks, to default number of cutoff days per stay date and room type. A default number number of cutoff days can be set on cutoff scheduler header level, and will be applied when no specific number of days has been defined for a date / room type combination within the cutoff schedule dates.<p><strong>OperationId:</strong>getCutoffSchedulesDetails</p> <p>The maximum allowable limit for this API is <strong>365</strong>.</p>",
         "operationId": "getCutoffSchedulesDetails",
         "parameters": [
           {
@@ -3926,7 +4062,7 @@
     "/hotels/{hotelId}/salesManagers": {
       "get": {
         "summary": "Get Sales Managers by Hotel.",
-        "description": "You can use this API to retrieve multiple Sales Managers for a hotel, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagers</p>",
+        "description": "You can use this API to retrieve multiple Sales Managers for a hotel, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagers</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
         "operationId": "getSalesManagers",
         "parameters": [
           {
@@ -4063,7 +4199,7 @@
     "/hotels/{hotelId}/salesManagers/{salesManagerId}/salesManagerGoals": {
       "get": {
         "summary": "Get Sales Manager Goals by Hotel",
-        "description": "You can use this API to retrieve individual Sales Manager Goals for a hotel, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagerGoals</p>",
+        "description": "You can use this API to retrieve individual Sales Manager Goals for a hotel, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagerGoals</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
         "operationId": "getSalesManagerGoals",
         "parameters": [
           {
@@ -5230,7 +5366,7 @@
     "/salesManagers": {
       "get": {
         "summary": "Get Sales Managers.",
-        "description": "You can use this API to retrieve multiple Sales Managers, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagersMultipleHotelIds</p>",
+        "description": "You can use this API to retrieve multiple Sales Managers, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagersMultipleHotelIds</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
         "operationId": "getSalesManagersMultipleHotelIds",
         "parameters": [
           {
@@ -5476,7 +5612,7 @@
       },
       "get": {
         "summary": "Get Sales Manager Goals",
-        "description": "You can use this API to retrieve individual Sales Manager Goals, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagerGoalsMultipleHotelIds</p>",
+        "description": "You can use this API to retrieve individual Sales Manager Goals, you can narrow the results using different search criteria. <p><strong>OperationId:</strong>getSalesManagerGoalsMultipleHotelIds</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
         "operationId": "getSalesManagerGoalsMultipleHotelIds",
         "parameters": [
           {
@@ -5983,6 +6119,9 @@
         "inactive": {
           "description": "Indicates whether the Block Cancellation Reason is inactive or not, returns TRUE when inactive",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -6317,6 +6456,9 @@
         "inactive": {
           "description": "Indicates whether the Block Lost Reason is inactive or not, returns TRUE when inactive",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -6393,6 +6535,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -6473,6 +6618,9 @@
         "inactive": {
           "description": "Indicates whether the Block Refused Reason is inactive or not, returns TRUE when inactive",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -6796,6 +6944,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -7406,6 +7557,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -7682,6 +7836,119 @@
         },
         "saturday": {
           "type": "boolean"
+        }
+      }
+    },
+    "managedByOptions": {
+      "description": "Describes of the Configuration is Managed by Enterprise or Property.",
+      "type": "string",
+      "enum": [
+        "EnterpriseManaged",
+        "PropertyManaged",
+        "EnterpriseEnforced",
+        "PropertyOverridden"
+      ]
+    },
+    "blockSalesAllowanceActivityLogListType": {
+      "type": "object",
+      "properties": {
+        "activityLog": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/definitions/blockSalesAllowanceActivityLogType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "blockSalesAllowanceActivityLogType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "logDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date on which change happened."
+        },
+        "salesAllowanceDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "sales Allowance Date"
+        },
+        "oldQuantity": {
+          "type": "number",
+          "description": "Value of sales allowance before the change."
+        },
+        "newQuantity": {
+          "type": "number",
+          "description": "Value of sales allowance after the change."
+        },
+        "refActionId": {
+          "type": "number"
+        },
+        "logUserId": {
+          "type": "number",
+          "description": "ID of user who made the change."
+        },
+        "logUserName": {
+          "type": "string",
+          "description": "Name of user who made the change."
+        },
+        "actionType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100,
+          "description": "Action type."
+        },
+        "ipAddress": {
+          "description": "The IP Address of the machine that performed the activity",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "blockSalesAllowanceActivityLog": {
+      "type": "object",
+      "description": "Response object for fetching block sales allowance activity log.",
+      "properties": {
+        "blockSalesAllowance": {
+          "description": "Response object for Block Sales Allowance activity Log.",
+          "$ref": "#/definitions/blockSalesAllowanceActivityLogListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     }
