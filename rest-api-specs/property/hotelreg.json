@@ -1,0 +1,771 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Distribution Hotel Registry",
+    "description": "The document enlists all the following public REST API which support the following functionality in hotel-registry.\n    <p><strong>1.Geolocation Rest API's</strong> - Opera Cloud Distribution Hotel Registry Geolocation REST API(s) Provides capabilities to retrieve a list of hotels by distance to a specific location or attraction.\n    <p><strong>2.Channels API</strong> - Channels Channel Header Information, as to which channels Oracle offers connectivity.\n    <p><strong>3. Hotels API</strong> - Hotels/Properties With the URIs documented here, you will be able to retrieve the properties provisioned for HDP.\n    <p><strong>4. Contacts API</strong> -  Contacts With the URIs here you may retrieve the contacts stored for a property.\n    <p><strong>5. EAddresses API</strong> - EAddresses URIs to retrieve electronic address information for each hotel or contact.\n    <p><strong>6. Phones API</strong> Phones URIs to retrieve phone information for each hotel or contact.<br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.4",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "host": "private-24e2a9-operaclouddistributionhotelregistryapis.apiary-mock.com",
+  "basePath": "/hotelRegistry/v1",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json; charset=utf-8"
+  ],
+  "paths": {
+    "/channels": {
+      "get": {
+        "tags": [
+          "ChannelProvisioning"
+        ],
+        "summary": "View a list of of provisioned channels.",
+        "description": "View a list of of provisioned channels..",
+        "produces": [
+          "application/json; charset=utf-8"
+        ],
+        "operationId": "getChannelsProvisionedOfHotel",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "description": "Unique hotelId",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "language of the (Exception Detail) response ",
+            "type": "string",
+            "x-example": "en",
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/Content-Type"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-tracing-key"
+          },
+          {
+            "$ref": "#/parameters/X-B3-Sampled"
+          },
+          {
+            "$ref": "#/parameters/X-B3-SpanId"
+          },
+          {
+            "$ref": "#/parameters/X-B3-TraceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/channelProvisioningList"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Request data provided is invalid",
+      "schema": {
+        "$ref": "#/definitions/exception"
+      }
+    },
+    "401": {
+      "description": "Unauthorized",
+      "schema": {
+        "$ref": "#/definitions/exception"
+      }
+    },
+    "403": {
+      "description": "Forbidden",
+      "schema": {
+        "$ref": "#/definitions/exception"
+      }
+    },
+    "404": {
+      "description": "Not Found",
+      "schema": {
+        "$ref": "#/definitions/exception"
+      }
+    },
+    "500": {
+      "description": "Internal Server Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetail"
+      }
+    }
+  },
+  "definitions": {
+    "exception": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "example": "OPERAWS-RSV00060: Reservation Id was not found"
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "example": "Reservation Id was not found"
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem. It may or may not provide additional information if dereferenced.",
+          "example": "/uri/to/failed/resource"
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "OPERA error code, which is different from HTTP error code.",
+          "example": "OPERAWS-RSV00060"
+        }
+      },
+      "required": [
+        "title",
+        "status",
+        "detail"
+      ]
+    },
+    "exceptionDetail": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "example": "OPERAWS-RSV00060: Reservation Id was not found"
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "example": "Reservation Id was not found"
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem. It may or may not provide additional information if dereferenced.",
+          "example": "/uri/to/failed/resource"
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "OPERA error code, which is different from HTTP error code.",
+          "example": "OPERAWS-RSV00060"
+        },
+        "o:errorDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exception"
+          }
+        }
+      }
+    },
+    "channelProvisioningList": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/channelProvisioning"
+          }
+        }
+      }
+    },
+    "channelProvisioning": {
+      "type": "object",
+      "properties": {
+        "channelStatus": {
+          "$ref": "#/definitions/channelStatus"
+        },
+        "managementLevel": {
+          "$ref": "#/definitions/managementLevel"
+        },
+        "settings": {
+          "type": "array",
+          "description": "Conversion Room type setting applicable for the channel. Allowed values: External_Mapping, None, Free, Template.",
+          "items": {
+            "$ref": "#/definitions/setting"
+          }
+        },
+        "ariMinDays": {
+          "type": "integer",
+          "description": "Minimum days of ARI to be sent",
+          "example": 1
+        },
+        "ariMaxDays": {
+          "type": "integer",
+          "description": "Maximum days of ARI to be sent",
+          "example": 365
+        },
+        "ratePlanMappingLevel": {
+          "$ref": "#/definitions/ratePlanMappingLevel"
+        },
+        "partnerId": {
+          "type": "string",
+          "description": "Partner owning this channel",
+          "example": "20ab4ac9-fa09-4513-98c2-a0eab01ce3b7"
+        },
+        "finalReservationValidation": {
+          "description": "Determine if this provisioned channel will validate each reservation ultimately before inserting",
+          "type": "boolean",
+          "example": true
+        },
+        "defaultARIMessageFormat": {
+          "$ref": "#/definitions/defaultARIMessageFormat"
+        },
+        "propertyReturnLimit": {
+          "type": "integer",
+          "description": "Maximum number of properties returned in a regional availability request",
+          "example": 1
+        },
+        "rateChange": {
+          "$ref": "#/definitions/rateChange"
+        },
+        "depositRule": {
+          "type": "boolean",
+          "description": "If enabled OHD will send deposit rule to channel if one is defined for the rate code",
+          "example": false
+        },
+        "corpIdRequired": {
+          "type": "boolean",
+          "description": "If enabled OHD requires a corporate ID to validate before processing incoming requests from the channel",
+          "example": false
+        },
+        "negotiatedOnly": {
+          "type": "boolean",
+          "description": "If enabled, OHD will only return negotiated rates. No public rates will be returned to channel",
+          "example": false
+        },
+        "returnAccessCode": {
+          "type": "boolean",
+          "description": "If enabled the access code can be used in availability request messages to return the appropriate response",
+          "example": true
+        },
+        "roomLimitPerBooking": {
+          "type": "integer",
+          "description": "Maximum number of rooms a channel can book in one reservation",
+          "example": 1
+        },
+        "nightSellLimit": {
+          "type": "integer",
+          "description": "Maximum number of nights a channel can request availability for",
+          "example": 1
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique id of channel provisioning.",
+          "example": "21FABE01-AE5E-4227-977C-28C20BD057AB"
+        },
+        "hotelId": {
+          "type": "string",
+          "description": "Id of the hotel in the channel",
+          "example": "1D69C66A"
+        },
+        "channelId": {
+          "type": "string",
+          "description": "ID of Channel",
+          "example": "44fd44f5-ed1e-4d28-a37f-d759e78237fb"
+        },
+        "channelName": {
+          "type": "string",
+          "description": "name of channel (from Channel Registry)",
+          "example": "Expedia Group"
+        },
+        "channelCode": {
+          "type": "string",
+          "description": "code of channel (from Channel Registry)",
+          "example": "EXPEDIA"
+        },
+        "channelType": {
+          "type": "string",
+          "description": "channel type (from Channel Registry)",
+          "example": "OTA"
+        },
+        "channelChainCode": {
+          "type": "string",
+          "description": "Channel chain code. Manual entry, provided by channel in its activation message",
+          "example": "CC"
+        },
+        "channelBrandCode": {
+          "type": "string",
+          "description": "Channel brand code. Manual entry, provided by channel in its activation message",
+          "example": "BC"
+        },
+        "channelPropertyCode": {
+          "type": "string",
+          "description": "Property code in the channel systems (Manual entry, provided by channel in its activation message)",
+          "example": "SMPL-1234"
+        },
+        "channelPropertyName": {
+          "type": "string",
+          "description": "Optional if not specified will return OHD hotel name. Manual entry, provided by channel in its activation message.",
+          "example": "Hotel Saint John"
+        },
+        "channelRoutes": {
+          "type": "array",
+          "description": "Channel Route Urls for each Message types",
+          "items": {
+            "$ref": "#/definitions/channelRouteType"
+          }
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Channel Activation Date",
+          "example": "2020-01-01"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Channel deactivation date",
+          "example": "2050-01-01"
+        },
+        "configurationOptions": {
+          "type": "array",
+          "description": "How the channel should be used",
+          "items": {
+            "$ref": "#/definitions/configurationOption"
+          }
+        },
+        "connectionStatus": {
+          "$ref": "#/definitions/connectionStatus"
+        },
+        "connectionStatusLastChangedOn": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date on which Channel connection status was updated last time."
+        },
+        "connectionStatusLastChangedBy": {
+          "type": "string",
+          "description": "User who updated the channel connection status last time",
+          "example": "John"
+        },
+        "cityCode": {
+          "type": "string",
+          "description": "Channel City Code"
+        },
+        "invoiceTo": {
+          "$ref": "#/definitions/invoiceToType"
+        },
+        "overrideInvoiceTo": {
+          "type": "boolean",
+          "description": "The standard format in which ARI message are being sent to this channel.",
+          "example": false
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Channel Created by user",
+          "example": "John"
+        },
+        "totalPricing": {
+          "type": "boolean",
+          "description": "Channel supports Total pricing",
+          "example": true
+        },
+        "alternateResort": {
+          "type": "boolean",
+          "description": "Channel supports alternate resorts.",
+          "example": true
+        },
+        "alternateRates": {
+          "type": "boolean",
+          "description": "Channel supports alternate rates",
+          "example": true
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Channel Created Date"
+        },
+        "singleRoomRatePerMessage": {
+          "type": "boolean",
+          "description": "ndicates whether the channel expects ARI message per single Room Rate combination. Allowed values : true,false",
+          "example": true
+        }
+      },
+      "required": [
+        "id",
+        "channelName",
+        "channelCode",
+        "channelType",
+        "channelPropertyCode"
+      ]
+    },
+    "channelStatus": {
+      "description": "Channel Status",
+      "type": "string",
+      "enum": [
+        "Active",
+        "Inactive"
+      ],
+      "example": "Active"
+    },
+    "channelRouteType": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Message URL",
+          "type": "string",
+          "pattern": "^(http[s]?|ftp[s]?|sftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+          "example": "https://api.channel1com:443/ari"
+        },
+        "messageType": {
+          "$ref": "#/definitions/newMessageType"
+        }
+      }
+    },
+    "configurationOption": {
+      "type": "string",
+      "description": "Configuration option",
+      "enum": [
+        "ARIPush",
+        "ReservationDelivery"
+      ]
+    },
+    "connectionStatus": {
+      "type": "string",
+      "description": "Current connection status",
+      "enum": [
+        "NEW",
+        "TEST",
+        "MAINTENANCE",
+        "ACTIVE",
+        "INACTIVE"
+      ]
+    },
+    "invoiceToType": {
+      "type": "string",
+      "description": "Who should be billed for net reservations.",
+      "enum": [
+        "Property",
+        "Partner"
+      ],
+      "example": "Property"
+    },
+    "managementLevel": {
+      "type": "string",
+      "description": "How the channel is being managed",
+      "enum": [
+        "Oracle",
+        "Self_Service"
+      ],
+      "example": "Oracle"
+    },
+    "setting": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": " ",
+          "enum": [
+            "conversionRoomType"
+          ],
+          "example": "conversionRoomType"
+        },
+        "value": {
+          "type": "string",
+          "description": "",
+          "enum": [
+            "External_Mapping",
+            "None",
+            "Free",
+            "Template"
+          ]
+        }
+      },
+      "example": "Template",
+      "required": [
+        "key",
+        "value"
+      ]
+    },
+    "ratePlanMappingLevel": {
+      "type": "string",
+      "description": "Mapping level applicable for the channel. Allowed values: RoomRateLevel, RateLevel.",
+      "enum": [
+        "rateLevel",
+        "roomRateLevel"
+      ],
+      "example": "roomRateLevel"
+    },
+    "defaultARIMessageFormat": {
+      "type": "string",
+      "description": "This indicates if the user overwrote the setting where invoices are being sent (Partner or Property).",
+      "enum": [
+        "Oracle_v1",
+        "AdsRateUpdate",
+        "AdsRateAmount"
+      ],
+      "example": "Oracle_v1",
+      "default": "Oracle_v1"
+    },
+    "rateChange": {
+      "type": "string",
+      "enum": [
+        "Average",
+        "Highest",
+        "Lowest",
+        "MostCommon"
+      ],
+      "description": "Allows to specify the booked rate of the stay when there are rate changes",
+      "example": "Highest"
+    },
+    "newMessageType": {
+      "description": "Message type",
+      "type": "string",
+      "enum": [
+        "AvailNotif",
+        "RatePlanNotif",
+        "InvCountNotif",
+        "GetRooms",
+        "GetRatePlans"
+      ],
+      "example": "AvailNotif"
+    }
+  },
+  "parameters": {
+    "latitudeParam": {
+      "name": "latitude",
+      "in": "query",
+      "required": true,
+      "description": "Latitude of reference point. In degrees.",
+      "type": "number",
+      "format": "double",
+      "x-example": 39.457184,
+      "minimum": -90,
+      "maximum": 90
+    },
+    "longitudeParam": {
+      "name": "longitude",
+      "in": "query",
+      "required": true,
+      "description": "Longitude of reference point. In degrees.",
+      "type": "number",
+      "format": "double",
+      "x-example": -0.353322,
+      "minimum": -180,
+      "maximum": 180
+    },
+    "distanceParam": {
+      "name": "distance",
+      "in": "query",
+      "required": true,
+      "description": "Distance quantity",
+      "type": "number",
+      "format": "double",
+      "x-example": 15.5,
+      "minimum": 0.01
+    },
+    "distanceUnitParam": {
+      "name": "distanceUnit",
+      "in": "query",
+      "required": true,
+      "description": "Unit of measure for distance",
+      "type": "string",
+      "enum": [
+        "Kilometers",
+        "Miles"
+      ],
+      "x-example": "Kilometers"
+    },
+    "orderByParam": {
+      "name": "orderBy",
+      "in": "query",
+      "description": "Order by results",
+      "type": "string",
+      "enum": [
+        "DistanceAsc",
+        "DistanceDesc",
+        "HotelNameAsc",
+        "HotelNameDesc",
+        "HotelIdAsc",
+        "HotelIdDesc"
+      ],
+      "x-example": "HotelNameAsc",
+      "default": "DistanceAsc"
+    },
+    "limitResultsNum": {
+      "name": "limit",
+      "in": "query",
+      "description": "Maximum number of records to return.",
+      "type": "integer",
+      "required": false,
+      "default": 10,
+      "x-example": 1,
+      "minimum": 1
+    },
+    "offsetResultsNum": {
+      "name": "offset",
+      "in": "query",
+      "description": "Offset of records.",
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "x-example": 1
+    },
+    "totalResultsNum": {
+      "name": "totalResults",
+      "in": "query",
+      "description": "Total number of records.",
+      "type": "boolean",
+      "required": false,
+      "default": true,
+      "x-example": true
+    },
+    "language": {
+      "name": "lang",
+      "in": "query",
+      "description": "Language.",
+      "type": "string",
+      "required": false,
+      "x-example": "en-GB"
+    },
+    "x-hdp-tracing-key": {
+      "name": "x-hdp-tracing-key",
+      "in": "header",
+      "description": "Unique tracing key e.g. 4664ab3423434a45",
+      "required": true,
+      "type": "string"
+    },
+    "authKey": {
+      "name": "authorization",
+      "in": "header",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "required": true,
+      "type": "string"
+    },
+    "locationNameParam": {
+      "name": "locationName",
+      "description": "Name of the location or POI",
+      "type": "string",
+      "in": "query",
+      "required": true,
+      "x-example": "Valencia Airport"
+    },
+    "hotelIdParam": {
+      "name": "hotelId",
+      "description": "Unique ID of hotel.",
+      "type": "string",
+      "in": "query",
+      "required": false,
+      "minLength": 1,
+      "maxLength": 50,
+      "x-example": "FCC8BA8A-5DBD-468B-9891-A2A26E26EEF3"
+    },
+    "Content-Type": {
+      "name": "Content-Type",
+      "type": "string",
+      "in": "header",
+      "x-example": "application/json; charset=UTF-8",
+      "required": true
+    },
+    "x-hdp-hotel-id": {
+      "name": "x-hdp-hotel-id",
+      "in": "header",
+      "description": "Unique hotel ID e.g. 00efe5a7-fdf1-4315-aac0-9c0999f32854.",
+      "required": true,
+      "type": "string",
+      "x-example": "ID-0"
+    },
+    "X-B3-Sampled": {
+      "name": "X-B3-Sampled",
+      "x-example": 1,
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "X-B3-SpanId": {
+      "name": "X-B3-SpanId",
+      "x-example": "4664ab3423434a45",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "X-B3-TraceId": {
+      "name": "X-B3-TraceId",
+      "x-example": "21a87199c5174ade856686b1ca1d97ea",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "idcs_remote_user": {
+      "name": "idcs_remote_user",
+      "in": "header",
+      "description": "The idcs_remote_user value",
+      "required": true,
+      "type": "string",
+      "x-example": "user@provider.com"
+    },
+    "channelsQ": {
+      "name": "q",
+      "description": "channel search criteria fields (code,name,channelTypeCode,channelStatus,creditCardCode,sourceCode)",
+      "type": "string",
+      "in": "query",
+      "required": false
+    },
+    "channelsOrderBy": {
+      "name": "orderBy",
+      "description": "Comma-separated string of field names, each optionally followed by asc or desc, that specifies the order of items returned in the response payload.",
+      "type": "string",
+      "in": "query",
+      "x-example": "creationDate",
+      "required": false
+    }
+  },
+  "tags": [
+    {
+      "name": "ChannelProvisioning",
+      "description": "Channel related functionalities"
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}

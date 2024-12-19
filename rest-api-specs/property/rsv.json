@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation API",
-    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest&apos;s arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest&apos;s experience.  All reservations in OPERA Cloud require a guest profile.<br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in the Customer Relationship Management module) and attach it to the reservation during the reservation booking process using the profileId.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.2",
+    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest&apos;s arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest&apos;s experience.  All reservations in OPERA Cloud require a guest profile.<br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in the Customer Relationship Management module) and attach it to the reservation during the reservation booking process using the profileId.<br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.4",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -24,7 +24,7 @@
     "/blockReservationStatisticsByDateAndRoomPool": {
       "get": {
         "summary": "Get block Reservation Statistics",
-        "description": "Get block Reservation statistics by date and room pool <p><strong>OperationId:</strong>getBlockReservationStatisticsByDateAndRoomPool</p>",
+        "description": "Get block Reservation statistics by date and room pool <p><strong>OperationId:</strong>getBlockReservationStatisticsByDateAndRoomPool</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getBlockReservationStatisticsByDateAndRoomPool",
         "parameters": [
           {
@@ -241,7 +241,7 @@
     "/calls/statistics": {
       "get": {
         "summary": "Get call statistics",
-        "description": "Use this API to get call statistics. <p><strong>OperationId:</strong>getCallStatistics</p>",
+        "description": "Use this API to get call statistics. <p><strong>OperationId:</strong>getCallStatistics</p> <p>This API allows a time span of <strong>30</strong> days.</p>",
         "operationId": "getCallStatistics",
         "parameters": [
           {
@@ -2124,7 +2124,7 @@
     "/hotels/{hotelId}/confirmationLetters": {
       "get": {
         "summary": "Fetch Confirmation Letters",
-        "description": "Get a list of Reservations for which confirmation letters need to be sent. <p><strong>OperationId:</strong>getConfirmationLetters</p>",
+        "description": "Get a list of Reservations for which confirmation letters need to be sent. <p><strong>OperationId:</strong>getConfirmationLetters</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getConfirmationLetters",
         "parameters": [
           {
@@ -2898,7 +2898,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Instruction to fetch whether the room was assigned/upgraded by AI. This will also include Reservation instruction.",
+            "description": "Instruction on which of the reservation's elements are to be returned e.g. DailySummary will return summarized information for each day of the reservation. Instructions are cumulative i.e. if multiple instructions are sent in a request, then the combined reservation elements would be returned, elements will not be duplicated in the response.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -2940,7 +2940,8 @@
                 "GuestMemberships",
                 "ECertificates",
                 "UpsellInfo",
-                "RoomAssignedByAI"
+                "RoomAssignedByAI",
+                "DailySummary"
               ]
             },
             "required": false
@@ -3132,6 +3133,142 @@
             "description": "Response Body.",
             "schema": {
               "$ref": "#/definitions/changeReservationDetails"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/externalSystems/{externalSystemCode}/reservations/{reservationExternalId}/addOnReservationPackagesByExtId": {
+      "put": {
+        "summary": "Update Add On (Sell Separate) packages on a reservation",
+        "description": "This API will allow you to update Add On (Sell Separate) packages on a reservation's. Note: this API works as a full overlay for Reservation Add On Packages./<p><strong>OperationId:</strong>putAddOnReservationPackagesByExtId</p>",
+        "operationId": "putAddOnReservationPackagesByExtId",
+        "parameters": [
+          {
+            "name": "reservationExternalId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "External reservation ID."
+          },
+          {
+            "name": "externalSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Code to identify the external system from which the request is coming. This is the ExternalSystem ID used to exchange information between OPERA and the external system."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique ID of the hotel where reservation is searched based on External reservation ID."
+          },
+          {
+            "name": "legNumber",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "description": "External system Leg Number for the reservation."
+          },
+          {
+            "name": "reservationAddOnPackages",
+            "in": "body",
+            "required": true,
+            "description": "Request object to overlay addon packages on an existing reservation.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/reservationAddOnPackagesType"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/addOnReservationPackagesType"
             }
           },
           "400": {
@@ -4192,7 +4329,7 @@
     "/hotels/{hotelId}/guestMessages": {
       "get": {
         "summary": "Get guest messages",
-        "description": "Get guest messages which exist on a reservation. <p><strong>OperationId:</strong>getGuestMessages</p>",
+        "description": "Get guest messages which exist on a reservation. <p><strong>OperationId:</strong>getGuestMessages</p> <p>The maximum allowable limit for this API is <strong>100</strong>.</p>",
         "operationId": "getGuestMessages",
         "parameters": [
           {
@@ -5055,7 +5192,7 @@
     "/hotels/{hotelId}/profiles/{profileIdtoShare}/share": {
       "get": {
         "summary": "Get Reservations to share ",
-        "description": "Get Reservations to share by profile id. <p><strong>OperationId:</strong>getReservationsToShareByProfileId</p>",
+        "description": "Get Reservations to share by profile id. <p><strong>OperationId:</strong>getReservationsToShareByProfileId</p> <p>The maximum allowable limit for this API is <strong>100</strong>.</p>",
         "operationId": "getReservationsToShareByProfileId",
         "parameters": [
           {
@@ -5832,6 +5969,13 @@
             "required": false
           },
           {
+            "name": "reservationsWithMembershipType",
+            "in": "query",
+            "required": false,
+            "description": "When set to true, only reservations with a membership belonging to the specified membership type will be returned",
+            "type": "boolean"
+          },
+          {
             "name": "surname",
             "in": "query",
             "required": false,
@@ -6195,7 +6339,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Instruction to fetch whether the room was assigned/upgraded by AI. This will also include Reservation instruction.",
+            "description": "Instruction on which elements of the reservation are to be fetched. Instructions are cumulative i.e. additional elements would be added, but not duplicated.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -6431,6 +6575,21 @@
             "required": false,
             "description": "Use the Number of Days For Settlement, defined for the Reservation.",
             "type": "boolean"
+          },
+          {
+            "name": "daysSinceLastAutoSettled",
+            "in": "query",
+            "required": false,
+            "description": "Use the Number of days since last auto settled.",
+            "type": "number"
+          },
+          {
+            "name": "dateSinceLastAutoSettled",
+            "in": "query",
+            "required": false,
+            "description": "Use the Date since last auto settled.",
+            "type": "string",
+            "format": "date"
           },
           {
             "name": "excludePseudoRoomReservations",
@@ -6820,6 +6979,13 @@
               "Completed",
               "Pending"
             ]
+          },
+          {
+            "name": "excludeBackToBackReservations",
+            "in": "query",
+            "required": false,
+            "description": "When this flag is set to true, it will exclude the linked reservations which are marked as Back to Back in the result. Marking reservations as Back to Back is available when the Back to Back Handling for Linked Reservations OPERA control is active.",
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -8964,7 +9130,7 @@
     "/hotels/{hotelId}/reservations/{reservationIdtoShare}/share": {
       "get": {
         "summary": "Get Reservations to share by Reservation id",
-        "description": "Fetch the reservation that can be shared with an existing reservation. <p><strong>OperationId:</strong>getReservationsToShareByReservationId</p>",
+        "description": "Fetch the reservation that can be shared with an existing reservation. <p><strong>OperationId:</strong>getReservationsToShareByReservationId</p> <p>The maximum allowable limit for this API is <strong>100</strong>.</p>",
         "operationId": "getReservationsToShareByReservationId",
         "parameters": [
           {
@@ -9319,7 +9485,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Instruction to fetch whether the room was assigned/upgraded by AI. This will also include Reservation instruction.",
+            "description": "Instruction on which of the reservation's elements are to be returned e.g. DailySummary will return summarized information for each day of the reservation. Instructions are cumulative i.e. if multiple instructions are sent in a request, then the combined reservation elements would be returned, elements will not be duplicated in the response.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -9369,7 +9535,9 @@
                 "AccompanyingGuestMembership",
                 "AccompanyingGuestRelationship",
                 "Voucher",
-                "ScheduledRoomMoves"
+                "ScheduledRoomMoves",
+                "DailySummary",
+                "RateInfoDetails"
               ]
             },
             "required": false
@@ -9630,168 +9798,170 @@
                 },
                 {
                   "example": {
-                    "reservations": {
-                      "sourceOfSale": {
-                        "sourceType": "PMS",
-                        "sourceCode": "HOTEL1"
-                      },
-                      "roomStay": {
-                        "roomRates": [
-                          {
-                            "total": {
-                              "amountBeforeTax": "120"
-                            },
-                            "rates": {
-                              "rate": [
-                                {
-                                  "base": {
-                                    "amountBeforeTax": "120",
-                                    "currencyCode": "USD"
-                                  },
-                                  "shareDistributionInstruction": "Full",
-                                  "total": {
-                                    "amountBeforeTax": "120"
-                                  },
-                                  "start": "2021-02-27",
-                                  "end": "2021-02-27"
-                                }
-                              ]
-                            },
-                            "guestCounts": {
-                              "adults": "1",
-                              "children": "0"
-                            },
-                            "roomType": "STDK",
-                            "ratePlanCode": "IHUBFAST",
-                            "start": "2021-02-27",
-                            "end": "2021-02-27",
-                            "suppressRate": false,
-                            "marketCode": "CORP",
-                            "marketCodeDescription": "Group Corporate",
-                            "sourceCode": "REF",
-                            "sourceCodeDescription": "Referral",
-                            "numberOfUnits": "1",
-                            "pseudoRoom": false,
-                            "roomTypeCharged": "STDK",
-                            "houseUseOnly": false,
-                            "complimentary": false,
-                            "fixedRate": false,
-                            "discountAllowed": false,
-                            "bogoDiscount": false
-                          }
-                        ],
-                        "guestCounts": {
-                          "adults": "1",
-                          "children": "0"
+                    "reservations": [
+                      {
+                        "sourceOfSale": {
+                          "sourceType": "PMS",
+                          "sourceCode": "HOTEL1"
                         },
-                        "arrivalDate": "2021-02-27",
-                        "departureDate": "2021-02-28",
-                        "guarantee": {
-                          "guaranteeCode": "GDED",
-                          "shortDescription": "Group Deduct"
-                        },
-                        "total": {
-                          "amountBeforeTax": "120",
-                          "amountAfterTax": "121"
-                        },
-                        "roomNumberLocked": false,
-                        "printRate": false,
-                        "remoteCheckInAllowed": false,
-                        "bookingMedium": "PMS",
-                        "bookingMediumDescription": "PMS Channel"
-                      },
-                      "reservationGuests": {
-                        "reservationGuest": [
-                          {
-                            "profileInfo": {
-                              "profileIdList": [
-                                {
-                                  "id": "687128",
-                                  "type": "Profile"
-                                }
-                              ],
-                              "profile": {
-                                "customer": {
-                                  "personName": [
-                                    {
-                                      "givenName": "Sam",
-                                      "surname": "Jones",
-                                      "nameTitle": "Mr",
-                                      "nameType": "Primary"
+                        "roomStay": {
+                          "roomRates": [
+                            {
+                              "total": {
+                                "amountBeforeTax": "120"
+                              },
+                              "rates": {
+                                "rate": [
+                                  {
+                                    "base": {
+                                      "amountBeforeTax": "120",
+                                      "currencyCode": "USD"
                                     },
-                                    {
-                                      "nameType": "External"
-                                    }
-                                  ],
-                                  "language": "E",
-                                  "vipStatus": "GOLD",
-                                  "vipDescription": "Gold Level"
-                                },
-                                "profileType": "Guest"
-                              }
-                            },
-                            "primary": true
-                          }
-                        ]
-                      },
-                      "comments": {
-                        "commentInfo": [
-                          {
-                            "comment": {
-                              "text": {
-                                "value": "The guest will be a late arrival"
+                                    "shareDistributionInstruction": "Full",
+                                    "total": {
+                                      "amountBeforeTax": "120"
+                                    },
+                                    "start": "2021-02-27",
+                                    "end": "2021-02-27"
+                                  }
+                                ]
                               },
-                              "commentTitle": "InHouse Comment",
-                              "notificationLocation": "PROPDFLT",
-                              "type": "RESERVATION",
-                              "internal": false
-                            },
-                            "id": "120303",
-                            "type": "Comment"
-                          },
-                          {
-                            "comment": {
-                              "text": {
-                                "value": "reservation comments"
+                              "guestCounts": {
+                                "adults": "1",
+                                "children": "0"
                               },
-                              "commentTitle": "No Change To Reservation Comment",
-                              "notificationLocation": "GEN",
-                              "type": "RESERVATION",
-                              "internal": false
-                            },
-                            "id": "120304",
-                            "type": "Comment"
-                          },
-                          {
-                            "comment": {
-                              "text": {
-                                "value": "New Cashier Comment"
-                              },
-                              "commentTitle": "New Cashier Comment",
-                              "notificationLocation": "Note1",
-                              "type": "CASHIER",
-                              "internal": false
+                              "roomType": "STDK",
+                              "ratePlanCode": "IHUBFAST",
+                              "start": "2021-02-27",
+                              "end": "2021-02-27",
+                              "suppressRate": false,
+                              "marketCode": "CORP",
+                              "marketCodeDescription": "Group Corporate",
+                              "sourceCode": "REF",
+                              "sourceCodeDescription": "Referral",
+                              "numberOfUnits": "1",
+                              "pseudoRoom": false,
+                              "roomTypeCharged": "STDK",
+                              "houseUseOnly": false,
+                              "complimentary": false,
+                              "fixedRate": false,
+                              "discountAllowed": false,
+                              "bogoDiscount": false
                             }
-                          }
-                        ]
-                      },
-                      "hotelId": "HOTEL1",
-                      "roomStayReservation": true,
-                      "reservationStatus": "Reserved",
-                      "computedReservationStatus": "DueIn",
-                      "walkIn": false,
-                      "printRate": false,
-                      "createBusinessDate": "2021-02-27",
-                      "preRegistered": false,
-                      "upgradeEligible": false,
-                      "allowAutoCheckin": false,
-                      "hasOpenFolio": false,
-                      "allowMobileCheckout": false,
-                      "allowMobileViewFolio": false,
-                      "allowPreRegistration": false,
-                      "optedForCommunication": false,
-                      "chargeCardNumber": "5904606"
-                    }
+                          ],
+                          "guestCounts": {
+                            "adults": "1",
+                            "children": "0"
+                          },
+                          "arrivalDate": "2021-02-27",
+                          "departureDate": "2021-02-28",
+                          "guarantee": {
+                            "guaranteeCode": "GDED",
+                            "shortDescription": "Group Deduct"
+                          },
+                          "total": {
+                            "amountBeforeTax": "120",
+                            "amountAfterTax": "121"
+                          },
+                          "roomNumberLocked": false,
+                          "printRate": false,
+                          "remoteCheckInAllowed": false,
+                          "bookingMedium": "PMS",
+                          "bookingMediumDescription": "PMS Channel"
+                        },
+                        "reservationGuests": {
+                          "reservationGuest": [
+                            {
+                              "profileInfo": {
+                                "profileIdList": [
+                                  {
+                                    "id": "687128",
+                                    "type": "Profile"
+                                  }
+                                ],
+                                "profile": {
+                                  "customer": {
+                                    "personName": [
+                                      {
+                                        "givenName": "Sam",
+                                        "surname": "Jones",
+                                        "nameTitle": "Mr",
+                                        "nameType": "Primary"
+                                      },
+                                      {
+                                        "nameType": "External"
+                                      }
+                                    ],
+                                    "language": "E",
+                                    "vipStatus": "GOLD",
+                                    "vipDescription": "Gold Level"
+                                  },
+                                  "profileType": "Guest"
+                                }
+                              },
+                              "primary": true
+                            }
+                          ]
+                        },
+                        "comments": {
+                          "commentInfo": [
+                            {
+                              "comment": {
+                                "text": {
+                                  "value": "The guest will be a late arrival"
+                                },
+                                "commentTitle": "InHouse Comment",
+                                "notificationLocation": "PROPDFLT",
+                                "type": "RESERVATION",
+                                "internal": false
+                              },
+                              "id": "120303",
+                              "type": "Comment"
+                            },
+                            {
+                              "comment": {
+                                "text": {
+                                  "value": "reservation comments"
+                                },
+                                "commentTitle": "No Change To Reservation Comment",
+                                "notificationLocation": "GEN",
+                                "type": "RESERVATION",
+                                "internal": false
+                              },
+                              "id": "120304",
+                              "type": "Comment"
+                            },
+                            {
+                              "comment": {
+                                "text": {
+                                  "value": "New Cashier Comment"
+                                },
+                                "commentTitle": "New Cashier Comment",
+                                "notificationLocation": "Note1",
+                                "type": "CASHIER",
+                                "internal": false
+                              }
+                            }
+                          ]
+                        },
+                        "hotelId": "HOTEL1",
+                        "roomStayReservation": true,
+                        "reservationStatus": "Reserved",
+                        "computedReservationStatus": "DueIn",
+                        "walkIn": false,
+                        "printRate": false,
+                        "createBusinessDate": "2021-02-27",
+                        "preRegistered": false,
+                        "upgradeEligible": false,
+                        "allowAutoCheckin": false,
+                        "hasOpenFolio": false,
+                        "allowMobileCheckout": false,
+                        "allowMobileViewFolio": false,
+                        "allowPreRegistration": false,
+                        "optedForCommunication": false,
+                        "chargeCardNumber": "5904606"
+                      }
+                    ]
                   }
                 }
               ]
@@ -9933,6 +10103,124 @@
             "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
               "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/addOnReservationPackages": {
+      "put": {
+        "summary": "Update Add On (Sell Separate) packages on a reservation.",
+        "description": "This API will allow you to update Add On (Sell Separate) packages on a reservation. Note: this API works as a full overlay for Reservation's Add On Packages.<p><strong>OperationId:</strong>putAddOnReservationPackages</p>",
+        "operationId": "putAddOnReservationPackages",
+        "parameters": [
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "reservationAddOnPackages",
+            "in": "body",
+            "required": true,
+            "description": "Request object to overlay addon packages on an existing reservation.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/reservationAddOnPackagesType"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/addOnReservationPackagesType"
             }
           },
           "400": {
@@ -10586,7 +10874,7 @@
     "/hotels/{hotelId}/reservations/{reservationId}/cancellationHistory": {
       "get": {
         "summary": "Get cancellation history",
-        "description": "Get cancellation history for a reservation. <p><strong>OperationId:</strong>getCancellationHistory</p>",
+        "description": "Get cancellation history for a reservation. <p><strong>OperationId:</strong>getCancellationHistory</p> <p>This API allows a time span of <strong>30</strong> days.</p>",
         "operationId": "getCancellationHistory",
         "parameters": [
           {
@@ -14846,6 +15134,13 @@
             "required": false
           },
           {
+            "name": "backToBackOnly",
+            "in": "query",
+            "required": false,
+            "description": "Indicates that only reservations marked as Back to Back should be expected in the result. Returned linked Back to Back reservations will belong to the same group of linked Back to Back reservations as the specified reservation with the given reservation name id and hotel code.",
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -16429,6 +16724,126 @@
             "minLength": 1,
             "maxLength": 2000,
             "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/payeeSharer": {
+      "put": {
+        "summary": "Update Payee Sharer Information by ID.",
+        "description": "Use this API to mark or un mark a shared reservation as the payee sharer for the group of shared reservations. <p><strong>OperationId:</strong>putPayeeSharer</p>",
+        "operationId": "putPayeeSharer",
+        "parameters": [
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "changePayeeSharer",
+            "in": "body",
+            "required": true,
+            "description": "Request object to to mark or unmark the payee sharer information.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changePayeeSharerType"
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/authKey"
@@ -18377,7 +18792,7 @@
     "/hotels/{hotelId}/reservations/{reservationId}/routingInstructions": {
       "get": {
         "summary": "Get routing instructions",
-        "description": "Use this API to fetch a reservation's routing instructions. It requires a reservation ID, which can be fetched using getReservations. <p><strong>OperationId:</strong>getRoutingInstructions</p>",
+        "description": "Use this API to fetch a reservation's routing instructions. It requires a reservation ID, which can be fetched using getReservations. <p><strong>OperationId:</strong>getRoutingInstructions</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
         "operationId": "getRoutingInstructions",
         "parameters": [
           {
@@ -18808,6 +19223,134 @@
             "description": "Response Body.",
             "schema": {
               "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/scheduledRoomMoves/{scheduledMoveDate}": {
+      "put": {
+        "summary": "Update Scheduled Room Move Details based on reservationID and move date",
+        "description": "Use this to update an existing scheduled room move for a reservation in a hotel and for a specific date. Use this to update move comments, move time etc. <p><strong>OperationId:</strong>putScheduledRoomMove</p>",
+        "operationId": "putScheduledRoomMove",
+        "parameters": [
+          {
+            "name": "reservationId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "description": "Property code of the reservation.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20,
+            "required": true
+          },
+          {
+            "name": "scheduledMoveDate",
+            "in": "path",
+            "type": "string",
+            "description": "The scheduled date of room move.",
+            "format": "date",
+            "required": true
+          },
+          {
+            "name": "scheduledRoomMoveDetails",
+            "in": "body",
+            "required": true,
+            "description": "Request method to change a scheduled room move details.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/scheduledRoomMoveDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/scheduledRoomMoveDetails"
             }
           },
           "400": {
@@ -21799,6 +22342,20 @@
             "type": "string"
           },
           {
+            "name": "backToBackOnly",
+            "in": "query",
+            "required": false,
+            "description": "Indicates that only reservations marked as Back to Back should be expected in the result.",
+            "type": "boolean"
+          },
+          {
+            "name": "scheduledRoomMoveOnly",
+            "in": "query",
+            "required": false,
+            "description": "Indicates that only reservations having scheduled room moves should be expected in the result.",
+            "type": "boolean"
+          },
+          {
             "name": "dueOut",
             "in": "query",
             "required": false,
@@ -22006,6 +22563,13 @@
               "maxItems": 4000
             },
             "required": false
+          },
+          {
+            "name": "showRoomMoveSegments",
+            "in": "query",
+            "required": false,
+            "description": "If set to true then reservations having past or future room moves will come according to the exact stay dates in the rooms.",
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -23061,7 +23625,7 @@
     "/hotels/{hotelId}/upgradeEligibleReservations": {
       "get": {
         "summary": "Fetch Reservations Eligible for an Upgrade",
-        "description": "You can use this API to fetch Reservations Eligible for an Upgrade. <p><strong>OperationId:</strong>getUpgradeEligibilityReservations</p>",
+        "description": "You can use this API to fetch Reservations Eligible for an Upgrade. <p><strong>OperationId:</strong>getUpgradeEligibilityReservations</p> <p>This API allows a time span of <strong>30</strong> days.</p>",
         "operationId": "getUpgradeEligibilityReservations",
         "parameters": [
           {
@@ -23727,6 +24291,13 @@
             "required": false
           },
           {
+            "name": "reservationsWithMembershipType",
+            "in": "query",
+            "required": false,
+            "description": "When set to true, only reservations with a membership belonging to the specified membership type will be returned",
+            "type": "boolean"
+          },
+          {
             "name": "surname",
             "in": "query",
             "required": false,
@@ -24067,7 +24638,7 @@
             "in": "query",
             "type": "array",
             "collectionFormat": "multi",
-            "description": "Instruction to fetch whether the room was assigned/upgraded by AI. This will also include Reservation instruction.",
+            "description": "Instruction on which of the reservation's elements are to be returned. Instructions are cumulative i.e. if multiple instructions are sent in a request, then the combined reservation elements would be returned, elements will not be duplicated in the response.",
             "uniqueItems": true,
             "items": {
               "type": "string",
@@ -26877,8 +27448,7 @@
         "statisticDate": {
           "description": "Date of statistics.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "blockStats": {
           "description": "Collection of block statistics.",
@@ -27619,8 +28189,7 @@
             "date": {
               "description": "Date when reservation was last cancelled.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             }
           }
         },
@@ -27672,8 +28241,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reservationStatus": {
           "description": "Indicates the status of the reservation.",
@@ -27788,6 +28356,10 @@
         "originalTimeSpan": {
           "description": "The Original Time Span covers the Room Stay dates of the original reservation.",
           "$ref": "#/definitions/timeSpanType"
+        },
+        "bookingTimeSpan": {
+          "description": "The booking time span of the reservation, only applicable when time increments are being used.",
+          "$ref": "#/definitions/bookingTimeSpanType"
         },
         "expectedTimes": {
           "description": "The expected arrival, return and departure times of the guest.",
@@ -27952,6 +28524,16 @@
         "backToBackSequence": {
           "description": "This attribute represents Back To Back Sequence of Linked Reservations(e.g. '1 of 2' i.e, 1 indicates Sequence Position of total count 2). This is applicable when OPERA control Back to Back Handling for Linked Reservations is active.",
           "$ref": "#/definitions/backToBackResSequenceType"
+        },
+        "scheduledRoomMoveResponseType": {
+          "description": "Scheduled Room Move Response Information.",
+          "$ref": "#/definitions/scheduledRoomMoveResponseType"
+        },
+        "backToBackGroupId": {
+          "description": "This attribute represents a common identifier for a subgroup of linked reservations marked as Back to Back in a group of linked reservations.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
         }
       }
     },
@@ -27961,13 +28543,11 @@
       "properties": {
         "startDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "endDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "duration": {
           "type": "string"
@@ -28140,8 +28720,7 @@
         "birthDate": {
           "description": "Date of birth",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "language": {
           "description": "Language identification.",
@@ -28439,8 +29018,7 @@
         "lastStayDate": {
           "description": "Guest's last stay date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "lastStayRoom": {
           "description": "Room Number where the guest stayed.",
@@ -28659,8 +29237,7 @@
         "expirationDate": {
           "description": "Expiration date of the credit card",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expirationDateMasked": {
           "description": "Masked Expiration date of the credit card",
@@ -29009,13 +29586,11 @@
           "properties": {
             "startDate": {
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             },
             "endDate": {
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             },
             "duration": {
               "type": "string"
@@ -29045,8 +29620,7 @@
         "queueDate": {
           "description": "The Business date on which the reservation was due to arrive and is currently placed on Queue for Check In.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -29125,14 +29699,13 @@
           "$ref": "#/definitions/resCompAccountingType"
         },
         "reservationPreConfiguredRoutingInstruction": {
-          "description": "Information regarding the selected preconfigured routing instruction on the reservation.",
+          "description": "Information regarding the selected preconfigured routing instruction on the reservation. This will be used when Multiple Promotion Code Comp Routings is inactive.",
           "$ref": "#/definitions/resPreConfiguredRoutingInstrType"
         },
         "lastRoomAndTaxPostedDate": {
           "description": "Date of the last Room And Tax posting. Used primarily to know the date in case of Advance Billing.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reverseCheckInAllowed": {
           "description": "This attribute is to verify if reverse check-in is allowed for the reservation.",
@@ -29145,6 +29718,10 @@
         "transactionsPosted": {
           "description": "Specifies whether reservation has a financial transaction associated with it.",
           "type": "boolean"
+        },
+        "reservationPreConfiguredRoutingInstructions": {
+          "description": "Information regarding the selected preconfigured routing instructions on the reservation. This will be used when Multiple Promotion Code Comp Routings is active.",
+          "$ref": "#/definitions/reservationPreConfiguredRoutingInstructionsType"
         }
       }
     },
@@ -29353,6 +29930,10 @@
           "description": "End Date for attached Routing Instruction.",
           "type": "string",
           "format": "date"
+        },
+        "folioView": {
+          "description": "Folio Window.",
+          "type": "integer"
         }
       }
     },
@@ -29416,14 +29997,12 @@
         "dueDate": {
           "description": "Deposit Due Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "postingDate": {
           "description": "Deposit Posting Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "hasPaid": {
           "description": "Resolves whether reservation has paid deposit.",
@@ -29941,8 +30520,7 @@
         "date": {
           "description": "Date on which the award details like points required and penalty points are applicable.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "pointsRequired": {
           "description": "Points required for the award detail date.",
@@ -30049,8 +30627,7 @@
         "expirationDate": {
           "description": "Expiration Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "gift": {
           "description": "Signifies whether award is gift or not.",
@@ -30129,8 +30706,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -30467,8 +31043,7 @@
             "date": {
               "description": "Date when reservation was last cancelled.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             }
           }
         },
@@ -30625,20 +31200,17 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "createBusinessDate": {
           "description": "Business Date when the reservation was created.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reinstateDate": {
           "description": "Business Date when the reservation was last reinstated.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "party": {
           "description": "Party/PartyCode when reservation is part of a party(a small group).",
@@ -30775,6 +31347,20 @@
         "routeAllTransactionsToShare": {
           "description": "Indicates if this joining reservation should route all transactions to the 'Share To' reservation when including Share Reservations Instructions.",
           "type": "boolean"
+        },
+        "backToBackGroupId": {
+          "description": "This attribute represents a common identifier for a subgroup of linked reservations marked as Back to Back in a group of linked reservations.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "overrideSharesStayingPastDepartureCheck": {
+          "description": "Indicates to override the check on shared reservations to whom changes can be propagated until their departure date.",
+          "type": "boolean"
+        },
+        "trxCodesInfo": {
+          "description": "Summary of Transaction codes information which are related to reservation.",
+          "$ref": "#/definitions/trxCodesInfoType"
         }
       }
     },
@@ -30807,6 +31393,10 @@
         "departureDate": {
           "type": "string",
           "format": "date"
+        },
+        "bookingTimeSpan": {
+          "description": "The booking time span of the reservation, only applicable when time increments are being used.",
+          "$ref": "#/definitions/bookingTimeSpanType"
         },
         "reservationKeyInfo": {
           "description": "Holds the room key information provided by the Door Lock System.",
@@ -31042,14 +31632,16 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
+        },
+        "rateIncludesTax": {
+          "description": "Indicates if the calculated amount for the day is inclusive of tax.",
+          "type": "boolean"
         },
         "suppressRate": {
           "type": "boolean"
@@ -31198,7 +31790,11 @@
           "maxLength": 2000
         },
         "amountBeforeTax": {
-          "description": "The total amount not including any associated tax (e.g., sales tax, VAT, GST or any associated tax).",
+          "description": "The total amount does not include any associated tax (e.g., sales tax, VAT, GST or any associated tax), if the amount is Tax Exclusive. However, it does Include Taxes if it is marked as Tax Inclusive.",
+          "type": "number"
+        },
+        "amountBeforeAnyTax": {
+          "description": "The total amount per room does not include any associated tax (e.g., sales tax, VAT, GST or any associated tax), for both Tax Exclusive/Inclusive.",
           "type": "number"
         },
         "amountAfterTax": {
@@ -31234,6 +31830,14 @@
         "baseAmount": {
           "description": "The rate's base price. Amount excluding price for any add to rate combine line package attached to the rate.Also excludes any discounts",
           "type": "number"
+        },
+        "amountBeforeTaxPerRoom": {
+          "description": "The total amount per room not including any associated tax (e.g., sales tax, VAT, GST or any associated tax).",
+          "type": "number"
+        },
+        "amountAfterTaxPerRoom": {
+          "description": "The total amount per room including all associated taxes (e.g., sales tax, VAT, GST or any associated tax).",
+          "type": "number"
         }
       }
     },
@@ -31251,6 +31855,10 @@
         },
         "amount": {
           "description": "A monetary amount.",
+          "type": "number"
+        },
+        "totalTax": {
+          "description": "A sum of the taxes which are related to Rate Info.",
           "type": "number"
         },
         "currencyCode": {
@@ -31276,6 +31884,12 @@
         },
         "code": {
           "description": "Code identifying the fee (e.g.,agency fee, municipality fee).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "generateTransactionCode": {
+          "description": "Unique identifier for Generate Tax Transaction code.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
@@ -31351,14 +31965,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -31423,13 +32035,11 @@
         },
         "startDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "endDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "packageCode": {
           "type": "string"
@@ -31937,8 +32547,7 @@
         "birthDate": {
           "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "birthDateMasked": {
           "description": "Indicates the date of birth as masked.",
@@ -32114,8 +32723,7 @@
         "issuedDate": {
           "description": "Issued date of Identification.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "issuedPlace": {
           "description": "The place where Identification was issued.",
@@ -32126,8 +32734,7 @@
         "expirationDate": {
           "description": "Expiration date of Identification.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "registeredProperty": {
           "description": "Property where the identification belongs to.",
@@ -32490,8 +33097,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "id": {
           "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
@@ -32792,20 +33398,17 @@
         "signupDate": {
           "description": "Indicates when the member signed up for the loyalty program.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "effectiveDate": {
           "description": "Indicates the starting date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expireDate": {
           "description": "Indicates the ending date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expireDateExclusiveIndicator": {
           "description": "When true, indicates that the ExpireDate is the first day after the applicable period (e.g. when expire date is Oct 15 the last date of the period is Oct 14).",
@@ -33756,8 +34359,7 @@
         "value": {
           "description": "Value of user defined field.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "alternateName": {
           "description": "Label of user defined field used by vendors or customers.",
@@ -33797,8 +34399,7 @@
         "expiryDate": {
           "description": "Date of expiry.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "profileId": {
           "description": "NameId.",
@@ -33822,8 +34423,7 @@
         "issueDate": {
           "description": "Date when certificate was issued.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -33964,8 +34564,7 @@
         "date": {
           "description": "Date the certificate was consumed.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "userName": {
           "description": "Application user who created the consumption.",
@@ -34036,14 +34635,12 @@
         "startDate": {
           "description": "Start Date of the room ownership record.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "endDate": {
           "description": "End Date of the room ownership record.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "profileId": {
           "description": "Profile ID of the room ownership record.",
@@ -34234,8 +34831,7 @@
             "upsellDate": {
               "description": "The date on which reservation is upgraded.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             },
             "upsellUser": {
               "description": "User who upgraded the reservation.",
@@ -34304,6 +34900,10 @@
               "type": "string",
               "minLength": 0,
               "maxLength": 40
+            },
+            "attachDetachType": {
+              "description": "Attach and Detach information for accompanying guest profile.",
+              "$ref": "#/definitions/attachDetachType"
             }
           }
         },
@@ -34408,6 +35008,12 @@
           "minLength": 0,
           "maxLength": 20
         },
+        "otaTaxType": {
+          "description": "Open Travel Alliance(OTA) tax type for the given Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
         "hotelId": {
           "description": "Hotel context of the Transaction code.",
           "type": "string",
@@ -34494,13 +35100,11 @@
       "properties": {
         "visaIssueDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "visaExpiryDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "visaNumber": {
           "type": "string",
@@ -34521,8 +35125,7 @@
         "dateOfEntry": {
           "description": "Entry Date into the country. (Croatian Requirements).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "nextDestination": {
           "description": "Entry Date into the country. (Croatian Requirements).",
@@ -34539,7 +35142,7 @@
           "$ref": "#/definitions/guestLastStayInfoType"
         },
         "purposeOfStay": {
-          "description": "Purpose of stay.",
+          "description": "Purpose of stay. This is field is mandatory for putReservation/postReservation Request when the Advanced Daily Details functionality is not active. When Advanced Daily Details is active, if a value is sent in the roomRateType object then it will take precedence over this value.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
@@ -34605,8 +35208,7 @@
         },
         "followUpDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "description": {
           "type": "string",
@@ -34765,18 +35367,15 @@
         },
         "expiryDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "disabledUntil": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "passwordChangeDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "userInfo": {
           "$ref": "#/definitions/employeeInfoType"
@@ -34820,8 +35419,7 @@
         "birthDate": {
           "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "birthDateMasked": {
           "description": "Indicates the date of birth as masked.",
@@ -34834,13 +35432,11 @@
       "properties": {
         "businessDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "systemDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "terminal": {
           "type": "string"
@@ -35019,8 +35615,7 @@
         },
         "businessDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "logUserId": {
           "type": "integer"
@@ -35080,14 +35675,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -35195,8 +35788,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -35535,8 +36127,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "giftCard": {
           "description": "Indicates a gift card type.",
@@ -35587,14 +36178,12 @@
         "startDate": {
           "description": "Required value when changing a reservation package. If the original start date was null, then null is required.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "endDate": {
           "description": "Required value when changing a reservation package. If the original end date was null, then null is required.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "packageGroup": {
           "description": "Package group code. If this package is part of a package group, the group code is indicated here. This is a required element and is part of the key to fetch the correct package record .",
@@ -35666,14 +36255,12 @@
         "beginSellDate": {
           "description": "Indicates the begin sell date of the package.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "endSellDate": {
           "description": "Indicates the end sell date of the package.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -36009,8 +36596,7 @@
         "consumptionDate": {
           "description": "The date the package was used or can be used.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "unitPrice": {
           "description": "The price per unit of the package.",
@@ -36031,8 +36617,7 @@
         "reservationDate": {
           "description": "The date of the Reservation when this package is applicable. This can be different from the date the package will be consumed. Example are next day packages. Reservation date is when the package is applied to the guest and Consumption date is when the guest can consume the package.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "originalUnitPrice": {
           "description": "The original price per unit of the package if it has been changed.",
@@ -36049,7 +36634,7 @@
       "description": "Package Consumption Information. Includes information on quantity of the package used, allowance consumption etc.",
       "properties": {
         "defaultQuantity": {
-          "description": "The default quantity attached in the package.",
+          "description": "Quantity of packages to be attached i.e. the multiplier to be applied against the calculation rule to determine the total quantity of the packages.",
           "type": "integer"
         },
         "excludedQuantity": {
@@ -36057,7 +36642,7 @@
           "type": "integer"
         },
         "totalQuantity": {
-          "description": "The total quantity of the package, calculated based on the calculation rule as defined in the PackageHeaderType.",
+          "description": "The total quantity of the package, calculated based on the calculation rule as defined in the PackageHeaderType and defaultQuantity.",
           "type": "integer"
         },
         "allowanceConsumed": {
@@ -36452,20 +37037,17 @@
         "signupDate": {
           "description": "Indicates when the member signed up for the loyalty program.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "effectiveDate": {
           "description": "Indicates the starting date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expireDate": {
           "description": "Indicates the ending date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expireDateExclusiveIndicator": {
           "description": "When true, indicates that the ExpireDate is the first day after the applicable period (e.g. when expire date is Oct 15 the last date of the period is Oct 14).",
@@ -36500,8 +37082,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -36653,20 +37234,17 @@
         "signupDate": {
           "description": "Indicates when the member signed up for the loyalty program.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "effectiveDate": {
           "description": "Indicates the starting date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expireDate": {
           "description": "Indicates the ending date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "expireDateExclusiveIndicator": {
           "description": "When true, indicates that the ExpireDate is the first day after the applicable period (e.g. when expire date is Oct 15 the last date of the period is Oct 14).",
@@ -36701,8 +37279,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "linkMembership": {
           "type": "boolean"
@@ -37297,8 +37874,7 @@
         "transactionDate": {
           "description": "Transaction Date associated with the deposit policy",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "depositReqReversed": {
           "description": "Flag to indicate if deposit policy is reversed",
@@ -37481,6 +38057,16 @@
         "backToBackSequence": {
           "description": "This attribute represents Back To Back Sequence of Linked Reservations(e.g. '1 of 2' i.e, 1 indicates Sequence Position of total count 2). This is applicable when OPERA control Back to Back Handling for Linked Reservations is active.",
           "$ref": "#/definitions/backToBackResSequenceType"
+        },
+        "shared": {
+          "description": "This attribute indicates if the linked reservation is a shared reservation or not.",
+          "type": "boolean"
+        },
+        "backToBackGroupId": {
+          "description": "This attribute represents a common identifier for a subgroup of linked reservations marked as Back to Back in a group of linked reservations.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
         }
       }
     },
@@ -37694,8 +38280,7 @@
         "lastStayDate": {
           "description": "Last stay date at the property.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "totalStay": {
           "description": "Holds total number of days that the guest have stayed in the property.",
@@ -37724,8 +38309,7 @@
         "birthDate": {
           "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "birthDateMasked": {
           "description": "Indicates the date of birth as masked.",
@@ -37873,8 +38457,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -37908,8 +38491,7 @@
         "resolvedOn": {
           "description": "Date the trace was resolved",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "resolvedBy": {
           "description": "User that resolved the trace",
@@ -38216,14 +38798,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "frequency": {
           "description": "Frequency of a fixed charge.",
@@ -38238,8 +38818,7 @@
         "dateToExecute": {
           "description": "Date of when to execute yearly fixed charge. Applicable when frequency is Yearly.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -38486,8 +39065,7 @@
         "date": {
           "description": "The date when the override was done.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "type": {
           "description": "The type of override done. If done for Availability, then it will be AVAILABILITY.",
@@ -38764,8 +39342,7 @@
         "date": {
           "description": "Daily details Date about when the rules are posted or diverted.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -38808,8 +39385,7 @@
         "issueDate": {
           "description": "Tickets issue date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "price": {
           "description": "Tickets price.",
@@ -38818,8 +39394,7 @@
         "consumptionDate": {
           "description": "Tickets comsumption date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "rateCode": {
           "description": "The Rate Code to which tickets belong to.",
@@ -39075,8 +39650,7 @@
         "date": {
           "description": "Contains Custom Charge Exemption date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "quantity": {
           "description": "Contains number of Custom Charge Exemption for a day.",
@@ -39106,8 +39680,7 @@
         "date": {
           "description": "Contains exclusion date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reason": {
           "description": "Contains reason for exclusion.",
@@ -39198,7 +39771,8 @@
         "CustomNameValue",
         "CustomChargeExemptions",
         "FiscalInfo",
-        "ScheduledRoomMoves"
+        "ScheduledRoomMoves",
+        "DailySummary"
       ]
     },
     "reservationsInstructionsType": {
@@ -39358,14 +39932,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -40054,8 +40626,7 @@
             "date": {
               "description": "Date when reservation was last cancelled.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             }
           }
         },
@@ -40216,20 +40787,17 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "createBusinessDate": {
           "description": "Business Date when the reservation was created.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reinstateDate": {
           "description": "Business Date when the reservation was last reinstated.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "party": {
           "description": "Party/PartyCode when reservation is part of a party(a small group).",
@@ -40399,6 +40967,10 @@
         },
         "facilitySchedulerOption": {
           "$ref": "#/definitions/facilitySchedulerOptionType"
+        },
+        "applyUntilLastShareDepartureDate": {
+          "description": "Indicates whether the chosen changes will be made not only to overlapping dates of share reservations but also to non-overlapping dates after the departure date of the edited reservation. When false or omitted the chosen changes are applied only to overlapping dates of share reservations.",
+          "type": "boolean"
         }
       }
     },
@@ -40702,8 +41274,7 @@
         "lastPrivacyPromptDate": {
           "description": "Last Privacy Prompt Date",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "displayColor": {
           "description": "Color setting of the reservation.",
@@ -40804,8 +41375,7 @@
             "date": {
               "description": "Date when reservation was last cancelled.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             }
           }
         },
@@ -40857,8 +41427,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reservationStatus": {
           "description": "Indicates the status of the reservation.",
@@ -41156,8 +41725,7 @@
         },
         "cxlDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "userId": {
           "type": "number"
@@ -41237,14 +41805,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -41842,8 +42408,7 @@
         "deliveryDate": {
           "description": "Delivery Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "createDateTime": {
           "description": "Time stamp of the creation.",
@@ -41870,8 +42435,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -42013,8 +42577,7 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -42168,8 +42731,7 @@
         "createdOn": {
           "description": "This is the time when the record was locked.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "timeToLive": {
           "description": "This is the validity of the lock in seconds.",
@@ -42178,8 +42740,7 @@
         "expiresOn": {
           "description": "This is the estimated expiry time of the lock.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "internal": {
           "description": "Notification flag to specify if the lock is based on an Internal Opera9 lock versus an External lock.",
@@ -42223,8 +42784,7 @@
         "arrivalDate": {
           "description": "Arrival Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "membershipId": {
           "description": "Membership Card number.",
@@ -42443,8 +43003,7 @@
             "detailDate": {
               "description": "This field is only required when the criteria is meant for a detailed results. The date for the rate detail is needed.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             },
             "blockId": {
               "description": "Block Id for which the rate info has to be fetched.",
@@ -42615,14 +43174,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "hasSuppressedRate": {
           "description": "Whether suppressed rate is present or not.",
@@ -42636,8 +43193,7 @@
         "summaryDate": {
           "description": "Stay date for which revenue calculation is done.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "revenue": {
           "description": "Base Amount of rate.",
@@ -42668,8 +43224,7 @@
         "revenueSimulationDate": {
           "description": "Date revenue calculation is based on.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "currencyCode": {
           "description": "Currency revenue calculation is based on.",
@@ -43705,14 +44260,12 @@
         "startDate": {
           "description": "The date of the reservation stay.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "endDate": {
           "description": "The date of the reservation stay. If the same details need to be applied to a date range of the stay, then the Start Date and End Date would specify the range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "commissionCode": {
           "description": "The Commission Code used for the reservation.",
@@ -44431,8 +44984,7 @@
             "date": {
               "description": "Date when reservation was last cancelled.",
               "type": "string",
-              "format": "date",
-              "maxLength": 8
+              "format": "date"
             }
           }
         },
@@ -44593,20 +45145,17 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "createBusinessDate": {
           "description": "Business Date when the reservation was created.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reinstateDate": {
           "description": "Business Date when the reservation was last reinstated.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "party": {
           "description": "Party/PartyCode when reservation is part of a party(a small group).",
@@ -44933,14 +45482,12 @@
         "purgeDate": {
           "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "createBusinessDate": {
           "description": "Business Date when the reservation was created.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -45058,6 +45605,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "retainRateCodeAndAmount": {
+          "description": "If true, it indicates that rate codes and amounts for different days of the source reservation will be moved to target reservation. When false or null that means available rate codes from target property is used and will be part of REST request already.",
+          "type": "boolean"
         }
       }
     },
@@ -45543,14 +46094,12 @@
         "start": {
           "description": "The starting value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "end": {
           "description": "The ending value of the date range.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -46094,8 +46643,7 @@
         "date": {
           "description": "Reservation date",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "requiredAmount": {
           "description": "Amount / number of points required to upgrade",
@@ -46355,6 +46903,10 @@
           "description": "Room Move History for the reservation.",
           "$ref": "#/definitions/roomMoveDetailsType"
         },
+        "scheduledRoomMove": {
+          "description": "Information related to the room moves scheduled  for a reservation .",
+          "$ref": "#/definitions/scheduledRoomMoveDetailType"
+        },
         "reservationStatus": {
           "description": "Indicates the Actual status of the reservation.",
           "$ref": "#/definitions/pMS_ResStatusType"
@@ -46362,6 +46914,10 @@
         "hasLinkedReservations": {
           "description": "Indicates whether the reservation has any linked reservation.",
           "$ref": "#/definitions/linkedReservationType"
+        },
+        "backToBackReservation": {
+          "description": "This attribute indicates if the linked reservation is marked as Back to Back or not.",
+          "type": "boolean"
         },
         "assignedByAI": {
           "description": "Indicates whether the room was assigned by AI Room Assignment.",
@@ -46875,8 +47431,7 @@
         "accessDate": {
           "description": "The date the record was accessed.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         }
       }
     },
@@ -46979,8 +47534,7 @@
         },
         "businessDate": {
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "dailyPaceStats": {
           "description": "Contains the statistical data.",
@@ -47006,8 +47560,7 @@
         "consideredDate": {
           "description": "The day to which the information belongs.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "rooms": {
           "description": "Number of rooms reserved.",
@@ -47085,8 +47638,7 @@
         "fiscalDate": {
           "description": "Hotel fiscal date for statistics.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "reportCode": {
           "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
@@ -47163,8 +47715,7 @@
         "statisticDate": {
           "description": "Date of the statistic.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "weekendDate": {
           "description": "Determines whether statistic date is a weekend date.",
@@ -47377,8 +47928,7 @@
         "beginDate": {
           "description": "This is the Begin date for the configured SellMessage.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "url": {
           "description": "URL that identifies the location associated with the record identified by the UniqueID.",
@@ -47821,26 +48371,22 @@
         "arrivalDate": {
           "description": "Date of arrival.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "departureDate": {
           "description": "Date of departure.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "cancelledOn": {
           "description": "Date when reservation(s) was cancelled.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "folioClosedOn": {
           "description": "Date when folio was closed.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "createDateTime": {
           "description": "Date when reservation(s) was created.",
@@ -48284,6 +48830,14 @@
           "description": "Guest Last Name /Surname on reservation when room status is occupied.",
           "minLength": 0,
           "maxLength": 40
+        },
+        "roomStatus": {
+          "description": "Room status",
+          "$ref": "#/definitions/housekeepingRoomStatusType"
+        },
+        "reservationIdList": {
+          "description": "A list of Ids for reservation( ResvNameId and ConfirmationNumber).",
+          "$ref": "#/definitions/uniqueIDListType"
         }
       }
     },
@@ -48321,7 +48875,8 @@
         },
         "estimatedMoveTime": {
           "type": "string",
-          "description": "Estimated Move Time in 24Hour Format"
+          "description": "Estimated Move Time.",
+          "format": "date-time"
         },
         "moveOutRoomId": {
           "type": "string",
@@ -48334,6 +48889,10 @@
           "description": "Scheduled Move Out Room Type.",
           "minLength": 0,
           "maxLength": 20
+        },
+        "moveOutRoomStatus": {
+          "description": "Scheduled Move Out Room Status.",
+          "$ref": "#/definitions/housekeepingRoomStatusType"
         }
       }
     },
@@ -48394,14 +48953,12 @@
         "arrivalDate": {
           "description": "Arrival Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "departureDate": {
           "description": "Departure Date.",
           "type": "string",
-          "format": "date",
-          "maxLength": 8
+          "format": "date"
         },
         "creationDate": {
           "description": "Creation Date.",
@@ -48489,6 +49046,277 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "bookingTimeSpanType": {
+      "type": "object",
+      "description": "The booking time span of the reservation, only applicable when time increments are being used.",
+      "properties": {
+        "startDateTime": {
+          "type": "string",
+          "description": "The start time of the reservation booking",
+          "format": "date-time"
+        },
+        "endDateTime": {
+          "type": "string",
+          "description": "The end time of the reservation booking",
+          "format": "date-time"
+        }
+      }
+    },
+    "changePayeeSharerType": {
+      "description": "Request object to to mark or unmark the payee sharer information.",
+      "type": "object",
+      "properties": {
+        "shareReservation": {
+          "description": "Information of the Shared reservation to be updated.",
+          "$ref": "#/definitions/payeeSharerInfoType"
+        }
+      }
+    },
+    "payeeSharerInfoType": {
+      "description": "Holds the information to mark or unmark a shared reservation as a payee sharer.",
+      "type": "object",
+      "properties": {
+        "reservationId": {
+          "description": "Unique identifier of the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "hotelId": {
+          "description": "Property code of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "payeeSharer": {
+          "description": "This attribute indicates if the Shared reservation is marked as the Payee Sharer or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "addOnReservationPackageType": {
+      "type": "object",
+      "description": "AddOn ReservationPackageType class.",
+      "properties": {
+        "scheduleList": {
+          "description": "A HotelPackageSchedule type.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/reservationPackageScheduleType"
+          }
+        },
+        "consumptionDetails": {
+          "description": "Package consumption details. Includes information for quantity , allowance etc.",
+          "$ref": "#/definitions/packageConsumptionType"
+        },
+        "packageCode": {
+          "description": "Package code. This is the unique code used for the package and is a required element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "internalId": {
+          "description": "Reservation Package Opera Internal Unique Id. This is the unique Id used for this reservation package.",
+          "type": "number"
+        },
+        "startDate": {
+          "description": "Package begin date.",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "Package End Date.",
+          "type": "string",
+          "format": "date"
+        },
+        "packageGroup": {
+          "description": "Package group code. Package group code is used to link multiple packages that are members of a group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "source": {
+          "description": "Indicates if the source of the product is Rate header, Rate Detail or Reservation. For new development this field is to be used for passing the product scource",
+          "$ref": "#/definitions/productSourceType"
+        },
+        "awardCode": {
+          "description": "This is the Award code used to redeem the package if the package is a redemption package.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "points": {
+          "description": "Indicates the points used to redeem the redemption package.",
+          "type": "integer"
+        },
+        "calculationRule": {
+          "description": "The price calculation rule for this package.",
+          "$ref": "#/definitions/packageCalculationRuleType"
+        }
+      }
+    },
+    "reservationAddOnPackagesType": {
+      "type": "object",
+      "description": "A Service object represents a non-room product provided to guests. Service products may have associated inventory and charges.",
+      "properties": {
+        "reservationPackages": {
+          "description": "A Service object represents a package provided to guests. Service packages may have associated inventory and charges.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/addOnReservationPackageType"
+          }
+        },
+        "overridePackageConfiguration": {
+          "default": true,
+          "type": "boolean",
+          "description": "Indicates if scheduleList and calculationRule provided in this request should override package configuration. When overridePackageConfiguration is true the scheduleList is mandatory."
+        },
+        "overrideInventoryItemAvailabilty": {
+          "default": false,
+          "type": "boolean",
+          "description": "Indicates if Availablity should be overriden when an Inventory Item based on a package is not available."
+        }
+      }
+    },
+    "addOnReservationPackagesType": {
+      "type": "object",
+      "description": "A collection of Reservation packages.",
+      "properties": {
+        "reservationId": {
+          "description": "Unique identifier of the reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "hotelId": {
+          "description": "Property code of the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "reservationPackages": {
+          "description": "A Service object represents a package provided to guests. Service packages may have associated inventory and charges.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reservationPackageType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "reservationPreConfiguredRoutingInstructionsType": {
+      "type": "object",
+      "properties": {
+        "consumableInventory": {
+          "description": "List of default routing instructions.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/resPreConfiguredRoutingInstrType"
+          }
+        }
+      }
+    },
+    "scheduledRoomMoveResponseType": {
+      "description": "Scheduled Room Move information.",
+      "type": "object",
+      "properties": {
+        "moveComments": {
+          "type": "string",
+          "description": "Comments about scheduled move.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "moveInRoomOccupancyInfo": {
+          "description": "Scheduled Move In Room Occupancy Information.",
+          "$ref": "#/definitions/roomOccupancyType"
+        },
+        "estimatedMoveTime": {
+          "type": "string",
+          "description": "Estimated Move Time in 24Hour Format",
+          "format": "date-time"
+        }
+      }
+    },
+    "scheduledRoomMoveDetails": {
+      "description": "Details regarding a specific scheduled room move.",
+      "type": "object",
+      "properties": {
+        "moveComments": {
+          "type": "string",
+          "description": "Comments about scheduled move.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "scheduledMoveTime": {
+          "type": "string",
+          "description": "The scheduled time of room move.",
+          "format": "date-time"
+        }
+      }
+    },
+    "scheduledRoomMoveDetailType": {
+      "type": "object",
+      "description": "Scheduled room move information.",
+      "properties": {
+        "scheduledRoomMoveFrom": {
+          "description": "Indicates if the reservation is scheduled to be moved from a room",
+          "$ref": "#/definitions/scheduleRoomMoveType"
+        },
+        "scheduledRoomMoveTo": {
+          "description": "Indicates if the reservation is scheduled to be moved to a room",
+          "$ref": "#/definitions/scheduleRoomMoveType"
+        }
+      }
+    },
+    "scheduleRoomMoveType": {
+      "type": "object",
+      "description": "Type of room move scheduled either from or to information",
+      "properties": {
+        "scheduleRoomMoveStatus": {
+          "description": "Indicates if the reservation is scheduled to be moved from or to a room.",
+          "$ref": "#/definitions/scheduledRoomMoveStatusType"
+        },
+        "scheduleRoomMoveDate": {
+          "description": "Business date on which room is scheduled to be moved from or to another room.",
+          "type": "string",
+          "format": "date"
+        },
+        "scheduleMoveRoomNumber": {
+          "description": "Room to which guest is scheduled to be moved.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "scheduledMoveTime": {
+          "type": "string",
+          "description": "The scheduled time of room move.",
+          "format": "date-time"
+        }
+      }
+    },
+    "attachDetachType": {
+      "type": "object",
+      "description": "This type contains attach and detach information for accompanying guest profile.",
+      "properties": {
+        "attachDateTime": {
+          "description": "Time stamp the accompanying guest was last attached.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "detachDateTime": {
+          "description": "Time stamp the accompanying guest was last detached.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "detached": {
+          "description": "This attribute indicates if the accompanying guest is marked as detached or attached.",
+          "type": "boolean"
         }
       }
     }

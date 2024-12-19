@@ -1,0 +1,1600 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Distribution Channel Management",
+    "description": "The document enlists the following REST API in channel-mgmt which support the following functionality. <p><strong>1. Alternate Properties API's</strong> - Provides capabilities for users to link or unlink alternate properties to their hotels. These alternate properties will be sent to supporting channels in case the hotel does not have available rooms for a requested period.</p> <p><strong>2. Channel Provisioning API's</strong> - Provides capabilities to subscribe to channel connections and adjust hotel specific configuration expected by that channel.</p> <p><strong>3. Terms And Conditions Acceptance API's</strong> - Ensures that any channel provisioned directly by a user requires acceptance of Terms and condition linked to the channel setup so that accepting user and date time of acceptance is recorded.</p> <p><strong>4. Hotel Controls API's</strong> - Provides capabilities for users to Update and Fetch Hotel Controls.</p> <p><strong>5. Channel Rate Plans API's</strong> - Provides capabilities to Fetch, Update and Delete Channel Rate Plans for List of Rate plan Mappings and with mappingId.</p> <p><strong>6. Channel Room Types API's</strong> - Provides capabilities to Fetch, Update and Delete Channel Room Types for List of Room type Mappings and with mappingId.</p> <p><strong>7. Channel Offers Distribution API's</strong> - Provides capability to control the association of Channel Rate Plans and Channel Room Types for a specific channel and property. This also contains Availability View API's.</p> <p><strong>8. Channel Offers Distribution Availability View API's</strong> - This is Private Only.<b>[Deprecated]</b></p>  <p><strong>9. Hotel Channel Controls API's</strong> - Provides capabilities to configure Hotel Channel Controls. </p> <p><strong>10. Cluster Level Profile Channel Rate Access</strong> - Provides capabilities to process Cluster Level Profile Channel Rate Access </p> <p><strong>11. Channel Distribution Templates API's</strong> - Provides capabilities to create or update distribution templates in enterprise level. </p><br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.4",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "host": "private-50d91a-operaclouddistributionchannelmanagementapis.apiary-mock.com",
+  "basePath": "/channelMgmt/v1",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json; charset=utf-8"
+  ],
+  "paths": {
+    "/clusters/{clusterId}/channels/profileRatesAccess": {
+      "put": {
+        "summary": "Initiate profile rate access codes",
+        "description": "<p><strong>OperationId:</strong> updateProfileChannelRateAccessCodes</p> <p>Operation to Initiate profile rate access codes</p>",
+        "operationId": "updateProfileChannelRateAccessCodes",
+        "responses": {
+          "200": {
+            "description": "Response for Profile Channel Rate Access Codes",
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "items",
+            "in": "body",
+            "required": true,
+            "description": "Request for configuring profile rate access codes.",
+            "schema": {
+              "$ref": "#/definitions/profileRateAccessCodes"
+            }
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "ClusterId in URI path.",
+            "x-example": "CLUS1"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-tracing-key"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-hotel-id"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ClusterLevelProfileChannelRateAccess"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/channels/ratePlans": {
+      "get": {
+        "summary": "List Channel Rate Plans",
+        "description": "Returns List of Rate Plan Mappings for one or multiple channels",
+        "operationId": "getChannelRatePlansList",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique ID that identifies a single hotel property.",
+            "x-example": "hdp-hotel-id"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "supported query parameters are channelCode, channelRatePlanCode and ratePlanCode."
+          },
+          {
+            "name": "negotiatedOnly",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "x-example": true,
+            "description": "Display only Negotiated Rate Plans."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "x-example": 1
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "x-example": 1
+          },
+          {
+            "name": "totalResults",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "x-example": true
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "x-example": "en-US"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "A field name that specifies the order of items returned in the response payload.Supported fields are channelCode,channelRatePlanCode,ratePlanCode,roomTypeCode,startDate,endDate,active.",
+            "type": "string",
+            "x-example": "channelCode"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "description": "The sorting direction.Accepted values are asc,desc.",
+            "type": "string",
+            "x-example": "desc"
+          },
+          {
+            "$ref": "#/parameters/authKeys"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-tracing-key"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-hotel-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object to fetch Channel Rate Plans.",
+            "schema": {
+              "$ref": "#/definitions/channelRatePlansList"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "tags": [
+          "ChannelRatePlans"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/channels/ratesAccess": {
+      "get": {
+        "summary": "Get Channel Rates Access",
+        "description": "<p><strong>operationId:</strong> getChannelRatesAccess</p> <p>Get Channel Rates Access</p>",
+        "operationId": "getChannelRatesAccess",
+        "tags": [
+          "ChannelRatesAccess"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/hotelIdPath"
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique ID that identifies a single hotel property.",
+            "x-example": "hdp-hotel-id"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "minimum": 0,
+            "default": 20,
+            "description": "Maximum number of records to return.",
+            "x-example": "1"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "description": "Offset of records.",
+            "x-example": "1"
+          },
+          {
+            "name": "totalResults",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": true,
+            "description": "Total number of records.",
+            "x-example": true
+          },
+          {
+            "$ref": "#/parameters/language"
+          },
+          {
+            "$ref": "#/parameters/rateAccessOrderByParam"
+          },
+          {
+            "name": "q",
+            "type": "string",
+            "description": "Supported query parameters are channelCode(string, eq|in), accessCode(string, eq|in), channelRatePlanCode(string, eq|in), accountId(string, eq|in), accountName(string, eq|in|sw), active(boolean, eq)",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/Content-Type"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-custom-header"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-hotel-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Content-Type": {
+                "type": "string",
+                "x-example": "application/json; charset=utf-8"
+              },
+              "Content-Language": {
+                "type": "string",
+                "x-example": "en-US"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/getChannelRatesAccess"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        }
+      }
+    },
+    "/hotels/{hotelId}/channels/ratesAccess/{mappingId}": {
+      "delete": {
+        "summary": "Delete Channel Rates Access",
+        "description": "<p><strong>operationId:</strong> deleteChannelRatesAccess</p> <p>Delete Channel Rates Access</p>",
+        "operationId": "deleteChannelRatesAccess",
+        "tags": [
+          "ChannelRatesAccess"
+        ],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique ID that identifies a single hotel property.",
+            "x-example": "hdp-hotel-id"
+          },
+          {
+            "name": "mappingId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Mapping Id for the hotel in path.",
+            "x-example": "3454f"
+          },
+          {
+            "$ref": "#/parameters/Content-Type"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-custom-header"
+          },
+          {
+            "$ref": "#/parameters/x-hdp-hotel-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "headers": {
+              "Content-Type": {
+                "type": "string",
+                "x-example": "application/json; charset=utf-8"
+              },
+              "Content-Language": {
+                "type": "string",
+                "x-example": "en-US"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/baseException"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/baseException"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/baseException"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "channelRatePlan": {
+      "type": "object",
+      "required": [
+        "ratePlanCode",
+        "channelRatePlanCode",
+        "channelCode",
+        "startDate",
+        "active"
+      ],
+      "properties": {
+        "ratePlanCode": {
+          "type": "string",
+          "description": "Rate Plan Code (length of string must be less than or equal to 20)",
+          "example": "RACK",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "alternativeRatePlanCode": {
+          "type": "string",
+          "example": "RACK2"
+        },
+        "channelRatePlanCode": {
+          "type": "string",
+          "description": "Chennel Rate Plan Code (length of string must be less than or equal to 20)",
+          "example": "RACK1",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelRatePlanName": {
+          "type": "string",
+          "description": "Channel Rate Plan Name (length of string must be less than or equal to 2000)",
+          "example": "Standard rate"
+        },
+        "channelRatePlanType": {
+          "type": "string",
+          "description": "Code of the Channel Rate Plan Type",
+          "example": "10"
+        },
+        "channelRatePlanTypeValue": {
+          "type": "string",
+          "description": "Value of the Channel Rate Plan Type",
+          "example": "Negotiated"
+        },
+        "channelRatePlanLevel": {
+          "type": "string",
+          "description": "Channel Rate Plan Level (length of string must be less than or equal to 20)",
+          "example": "1"
+        },
+        "channelRatePlanModel": {
+          "type": "string",
+          "example": "free text"
+        },
+        "channelRatePlanCategory": {
+          "type": "string",
+          "description": "Code of the Channel Rate Plan Category",
+          "example": "1"
+        },
+        "channelRatePlanCategoryValue": {
+          "type": "string",
+          "description": "Value of the Channel Rate Plan Category",
+          "example": "Government"
+        },
+        "roomTypeCode": {
+          "type": "string",
+          "description": "Room Type Code (length of string must be less than or equal to 20)",
+          "example": "A1K",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "allowRestrictionUpdate": {
+          "type": "boolean",
+          "description": "default true",
+          "example": true
+        },
+        "allowRateUpdate": {
+          "type": "boolean",
+          "description": "default true",
+          "example": true
+        },
+        "channelRatePlanOrder": {
+          "type": "integer",
+          "description": "Channel Rate Plan Order",
+          "example": 3
+        },
+        "negotiated": {
+          "type": "boolean",
+          "example": true
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "Currency Code (length of string must be less than or equal to 20)",
+          "example": "USD",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "idRequired": {
+          "type": "boolean",
+          "description": "Indicates if an ID is required during the Check-In for this rate booking",
+          "default": false,
+          "example": true
+        },
+        "mealPlanDetails": {
+          "$ref": "#/definitions/mealPlanDetails"
+        },
+        "distributedRoomTypes": {
+          "$ref": "#/definitions/distributedRoomTypes"
+        },
+        "channelRatePlanGDSDescription": {
+          "$ref": "#/definitions/channelRatePlanGDSDescription"
+        },
+        "overriddenFields": {
+          "type": "array",
+          "description": "Overridden fields in Rate Mapping level",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mappingId": {
+          "type": "string",
+          "example": "3454f-45435d-3453522"
+        },
+        "channelCode": {
+          "type": "string",
+          "description": "Channel Code (length of string must be less than or equal to 20)",
+          "example": "EXPEDIA",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "startDate": {
+          "type": "string",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'",
+          "format": "date",
+          "example": "2020-01-01"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'",
+          "format": "date",
+          "example": "2020-01-01"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "default true",
+          "example": true
+        },
+        "hotelId": {
+          "type": "string",
+          "example": "hdp-hotel-id"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/channelMappingLinks"
+          }
+        }
+      }
+    },
+    "mealPlanDetails": {
+      "type": "object",
+      "properties": {
+        "mealPlanCode": {
+          "type": "string",
+          "description": "Indicates the default Meal Plan ( such as Half Board / Continental) associated with this Rate Plan.",
+          "example": "6"
+        },
+        "mealPlanDescription": {
+          "type": "string",
+          "description": "Indicates the dscription of default Meal Plan ( such as Half Board / Continental) associated with this Rate Plan.",
+          "minLength": 1,
+          "maxLength": 100,
+          "example": "Half Board Meal Plan"
+        },
+        "breakfastIncluded": {
+          "type": "boolean",
+          "description": "Specifies whether breakfast is included in the rate.",
+          "example": true
+        },
+        "lunchIncluded": {
+          "type": "boolean",
+          "description": "Specifies whether lunch is included in the rate.",
+          "example": true
+        },
+        "dinnerIncluded": {
+          "type": "boolean",
+          "description": "Specifies whether Dinner is included in the rate.",
+          "example": true
+        }
+      }
+    },
+    "distributedRoomTypes": {
+      "type": "object",
+      "properties": {
+        "roomTypeCodes": {
+          "type": "array",
+          "example": [
+            "A1K",
+            "B1K",
+            "C1K"
+          ],
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          }
+        }
+      }
+    },
+    "channelRatePlansList": {
+      "type": "object",
+      "description": "Response object for list Channel Rate Plans",
+      "required": [
+        "hasMore",
+        "totalResults",
+        "limit",
+        "count",
+        "offset"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/channelRatePlan"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/channelMappingLinks"
+          }
+        },
+        "hasMore": {
+          "type": "boolean",
+          "description": "Boolean value that is set to true if more resources are available on the server than the subset returned in current page.",
+          "example": true
+        },
+        "totalResults": {
+          "type": "integer",
+          "description": "Total count of the resource instances, including both the instances in the current range and the instances on the server that satisfy the request.",
+          "example": 100
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Actual paging size used by the server.",
+          "example": 100
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of resource instances returned in the current range.",
+          "example": 100
+        },
+        "offset": {
+          "type": "integer",
+          "description": "Offset value used in the current page.",
+          "example": 1
+        }
+      }
+    },
+    "channelRatePlanGDSDescription": {
+      "type": "object",
+      "properties": {
+        "line1": {
+          "description": "GDS Description Line 1 (length of string must be less than or equal to 63)",
+          "type": "string",
+          "example": "Description Line 1",
+          "maxLength": 63
+        },
+        "line2": {
+          "description": "GDS Description Line 2 (length of string must be less than or equal to 45)",
+          "type": "string",
+          "example": "Description Line 2",
+          "maxLength": 45
+        },
+        "line3": {
+          "description": "GDS Description Line 3 (length of string must be less than or equal to 45)",
+          "type": "string",
+          "example": "Description Line 3",
+          "maxLength": 45
+        },
+        "gdsDescriptionRPD": {
+          "description": "Rate Plan GDS Description-RPD (length of string must be less than or equal to 620)",
+          "type": "string",
+          "maxLength": 620
+        }
+      }
+    },
+    "httpMethods": {
+      "type": "string",
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH",
+        "OPTIONS",
+        "HEAD"
+      ]
+    },
+    "channelMappingLinks": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "method": {
+          "$ref": "#/definitions/httpMethods"
+        },
+        "operationId": {
+          "type": "string"
+        },
+        "templated": {
+          "type": "boolean"
+        },
+        "targetSchema": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "baseException": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "example": "OPERAWS-RSV00060: Reservation Id was not found"
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem.",
+          "example": "Reservation Id was not found"
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem. It may or may not provide additional information if dereferenced.",
+          "example": "/uri/to/failed/resource"
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "OPERA error code, which is different from HTTP error code.",
+          "example": "OPERAWS-RSV00060"
+        }
+      },
+      "required": [
+        "title",
+        "status",
+        "detail"
+      ]
+    },
+    "detailedException": {
+      "type": "object",
+      "properties": {
+        "o:errorDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/baseException"
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string",
+          "example": "https://the.link/"
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ],
+          "type": "string",
+          "example": "GET"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string",
+          "example": "theOperationId"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string",
+          "example": "_self"
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when de-referencing the target resource.",
+          "type": "string",
+          "example": "/link/to/resource/metadata"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false,
+          "example": false
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string",
+          "example": "Title for link"
+        }
+      }
+    },
+    "getChannelRatesAccess": {
+      "type": "object",
+      "properties": {
+        "hasMore": {
+          "description": "Boolean value that is set to true if more resources are available on the server than the subset returned in current page.",
+          "type": "boolean",
+          "example": true
+        },
+        "limit": {
+          "description": "Actual paging size used by the server.",
+          "type": "integer",
+          "default": 20,
+          "example": 100
+        },
+        "offset": {
+          "description": "Offset value used in the current page.",
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "example": 1
+        },
+        "totalResults": {
+          "description": "Total count of the resource instances, including both the instances in the current range and the instances on the server that satisfy the request.",
+          "type": "integer",
+          "example": 100
+        },
+        "count": {
+          "description": "Number of resource instances returned in the current range.",
+          "type": "integer",
+          "example": 100
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/getChannelRatesAccessItems"
+          }
+        }
+      }
+    },
+    "accountTypes": {
+      "type": "string",
+      "enum": [
+        "Source",
+        "TravelAgent",
+        "Company"
+      ]
+    },
+    "getChannelRatesAccessItems": {
+      "type": "object",
+      "properties": {
+        "mappingId": {
+          "type": "string",
+          "example": "3454f-45435d-3453522"
+        },
+        "channelCode": {
+          "type": "string",
+          "example": "EXPEDIA"
+        },
+        "ratePlanCode": {
+          "type": "string",
+          "example": "RTPLN"
+        },
+        "channelRatePlanCode": {
+          "type": "string",
+          "example": "RACK1"
+        },
+        "channelRatePlanOrder": {
+          "type": "integer",
+          "default": true,
+          "example": 3,
+          "description": "Channel Rate Plan Order"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2020-01-01",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2020-01-01",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'"
+        },
+        "rateAccessCode": {
+          "type": "string",
+          "example": "abc1"
+        },
+        "active": {
+          "type": "boolean",
+          "example": true
+        },
+        "accountId": {
+          "description": "Id of the profile account",
+          "type": "string",
+          "example": "123",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "[A-Z0-9]+"
+        },
+        "accountName": {
+          "description": "Name of the profile account",
+          "type": "string",
+          "minLength": 1,
+          "example": "Oracle"
+        },
+        "accountType": {
+          "$ref": "#/definitions/accountTypes"
+        }
+      },
+      "required": [
+        "mappingId",
+        "accountId",
+        "channelCode",
+        "channelRatePlanCode",
+        "startDate",
+        "endDate",
+        "rateAccessCode",
+        "active",
+        "accountName",
+        "accountType"
+      ]
+    },
+    "profileRateAccessCodes": {
+      "type": "object",
+      "description": "Request Object for Profile Rate Access Async Job",
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/profileRateAccessCode"
+          }
+        }
+      }
+    },
+    "profileRateAccessCode": {
+      "type": "object",
+      "required": [
+        "hotelId",
+        "channelCode",
+        "channelRatePlans"
+      ],
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Unique ID that identifies a single hotel property.",
+          "example": "USXXYY99",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelCode": {
+          "type": "string",
+          "description": "Unique ID that identifies a single Channel.",
+          "example": "CH1",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelRatePlans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/profileChannelRatePlan"
+          }
+        }
+      }
+    },
+    "profileChannelRatePlan": {
+      "type": "object",
+      "required": [
+        "ratePlanCode",
+        "channelRatePlanCode",
+        "startDate",
+        "channelRateAccessCodes"
+      ],
+      "properties": {
+        "ratePlanCode": {
+          "type": "string",
+          "description": "Rate Plan Code (length of string must be less than or equal to 20)",
+          "example": "RACK",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelRatePlanCode": {
+          "type": "string",
+          "description": "Chennel Rate Plan Code (length of string must be less than or equal to 20)",
+          "example": "RACK1",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "startDate": {
+          "type": "string",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'",
+          "format": "date",
+          "example": "2020-01-01"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'",
+          "format": "date",
+          "example": "2020-01-01"
+        },
+        "active": {
+          "type": "boolean",
+          "default": true,
+          "example": true
+        },
+        "channelRatePlanOrder": {
+          "type": "integer",
+          "default": true,
+          "example": 3,
+          "description": "Channel Rate Plan Order"
+        },
+        "channelRateAccessCodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/profileChannelRateAccessCode"
+          }
+        }
+      }
+    },
+    "profileChannelRateAccessCode": {
+      "type": "object",
+      "required": [
+        "rateAccessCode",
+        "startDate",
+        "endDate",
+        "active",
+        "accountId",
+        "accountName",
+        "accountType"
+      ],
+      "properties": {
+        "rateAccessCode": {
+          "type": "string",
+          "description": "Negotiated Rate Access Code.",
+          "example": "NEGRATE1"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Start Date of the Channel Rate Access Code.",
+          "format": "date",
+          "example": "2021-01-16"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "End Date of the Channel Rate Access Code.",
+          "format": "date",
+          "example": "2021-12-31"
+        },
+        "active": {
+          "type": "boolean",
+          "example": true
+        },
+        "accountId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "[A-Z0-9]+",
+          "description": "Account Id for which Channel Rate access code is applicable for."
+        },
+        "accountName": {
+          "type": "string",
+          "description": "Account name for which Channel Rate access Code is applicable for.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "accountType": {
+          "type": "string",
+          "description": "Type of the account for which channel rate access code is applicable for.",
+          "enum": [
+            "TravelAgent",
+            "Source",
+            "Company"
+          ]
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "description": "Response Body.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    }
+  },
+  "parameters": {
+    "authKeys": {
+      "name": "Authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "x-example": "Bearer ABCDEF",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "includeInactive": {
+      "name": "includeInactive",
+      "description": "Whether to include inactive records in search results.",
+      "type": "boolean",
+      "in": "query",
+      "required": false,
+      "default": false,
+      "x-example": true
+    },
+    "onlyActive": {
+      "name": "onlyActive",
+      "description": "Only return alternate properties which are active",
+      "type": "boolean",
+      "in": "query",
+      "required": false,
+      "default": true,
+      "x-example": true
+    },
+    "idcs_remote_user": {
+      "name": "idcs_remote_user",
+      "in": "header",
+      "description": "The idcs_remote_user value",
+      "required": true,
+      "type": "string"
+    },
+    "x-hdp-role-set": {
+      "name": "x-hdp-role-set",
+      "in": "header",
+      "description": "For internal-use only and not set by consumer. Contains user permissions against user roles",
+      "type": "string"
+    },
+    "x-hdp-hotel-id": {
+      "name": "x-hdp-hotel-id",
+      "in": "header",
+      "description": "Unique hotel ID e.g. 00efe5a7-fdf1-4315-aac0-9c0999f32854.",
+      "required": true,
+      "type": "string"
+    },
+    "mappingId": {
+      "name": "mappingId",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "description": "Mapping Id for the hotel in path",
+      "x-example": "3454f"
+    },
+    "Content-Type": {
+      "name": "Content-Type",
+      "type": "string",
+      "in": "header",
+      "required": true,
+      "x-example": "application/json"
+    },
+    "x-hdp-custom-header": {
+      "name": "x-hdp-custom-header",
+      "type": "string",
+      "in": "header",
+      "required": true,
+      "description": "A custom header expected by resource",
+      "x-example": "x-hdp-role-set"
+    },
+    "limitResultsNum": {
+      "name": "limit",
+      "description": "Maximum number of records to return.",
+      "type": "integer",
+      "in": "query",
+      "required": false,
+      "default": 20,
+      "x-example": 1,
+      "minimum": 0
+    },
+    "offsetResultsNum": {
+      "name": "offset",
+      "description": "Offset of records.",
+      "type": "integer",
+      "in": "query",
+      "required": false,
+      "default": 0,
+      "x-example": 1
+    },
+    "totalResultsNum": {
+      "name": "totalResults",
+      "description": "Total number of records.",
+      "type": "boolean",
+      "in": "query",
+      "required": false,
+      "default": true,
+      "x-example": true
+    },
+    "language": {
+      "name": "lang",
+      "description": "Language.",
+      "type": "string",
+      "in": "query",
+      "required": false,
+      "x-example": "en-GB"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    },
+    "x-hdp-tracing-key": {
+      "name": "x-hdp-tracing-key",
+      "in": "header",
+      "description": "Unique tracing key e.g. 4664ab3423434a45",
+      "required": true,
+      "type": "string"
+    },
+    "authKey": {
+      "name": "authorization",
+      "in": "header",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "required": true,
+      "type": "string"
+    },
+    "hotelIdPath": {
+      "name": "hotelId",
+      "description": "HotelId in URI path",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "maxLength": 50,
+      "x-example": "IXVGNN-1631026211426-0016949"
+    },
+    "idPath": {
+      "name": "id",
+      "description": "Internal Record Id in URI path",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "maxLength": 50,
+      "x-example": "8ba5c1c2-a1b2-4d81-86f2-3e6bbc596644"
+    },
+    "distanceParam": {
+      "name": "distance",
+      "in": "query",
+      "required": false,
+      "description": "Distance quantity",
+      "type": "number",
+      "format": "double",
+      "x-example": 15.5,
+      "minimum": 0.01
+    },
+    "distanceUnitParam": {
+      "name": "distanceUnit",
+      "in": "query",
+      "required": false,
+      "description": "Unit of measure for distance",
+      "type": "string",
+      "enum": [
+        "Kilometers",
+        "Miles"
+      ],
+      "x-example": "Kilometers"
+    },
+    "channelProvisioningIdPath": {
+      "name": "channelProvisioningId",
+      "description": "Unique channel provisioning id",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 50,
+      "x-example": "21FABE01-AE5E-4227-977C-28C20BD057AB"
+    },
+    "orderByParam": {
+      "name": "orderBy",
+      "in": "query",
+      "description": "Order by results",
+      "type": "string",
+      "enum": [
+        "ChannelCodeAsc",
+        "ChannelCodeDesc",
+        "ChannelNameAsc",
+        "ChannelNameDesc",
+        "ChannelTypeCodeAsc",
+        "ChannelTypeCodeDesc"
+      ],
+      "required": false,
+      "x-example": "ChannelCodeAsc",
+      "default": "ChannelCodeAsc"
+    },
+    "alternatePropertiesOrderByParam": {
+      "name": "orderBy",
+      "in": "query",
+      "description": "Order by the result set for Alternate Properties",
+      "type": "string",
+      "enum": [
+        "AlternatePropertyIdAsc",
+        "AlternatePropertyIdDesc",
+        "DistanceDesc",
+        "DistanceAsc"
+      ],
+      "required": false,
+      "x-example": "AlternatePropertyIdAsc",
+      "default": "DistanceAsc"
+    },
+    "rateAccessOrderByParam": {
+      "name": "orderBy",
+      "in": "query",
+      "description": "Can order by channelCode, accessCode, channelRatePlanCode, accountId, accountName, acocuntType, active. Can use asc or desc.",
+      "type": "string",
+      "enum": [
+        "active asc",
+        "accountId asc"
+      ],
+      "required": false,
+      "x-example": "active asc"
+    },
+    "clusterIdPath": {
+      "name": "clusterId",
+      "description": "ClusterId in URI path",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "maxLength": 50,
+      "x-example": "CLUS1"
+    }
+  },
+  "tags": [
+    {
+      "name": "ChannelRatePlans",
+      "description": "Provides capabilities to subscribe to channel rate plans and adjust hotel specific configuration expected by that channel."
+    },
+    {
+      "name": "ChannelRatesAccess",
+      "description": "The Channel Rates Access configuration."
+    },
+    {
+      "name": "ClusterLevelProfileChannelRateAccess",
+      "description": "Provides capabilities to process Cluster Level Profile Channel Rate Access."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}

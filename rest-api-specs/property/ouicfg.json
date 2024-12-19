@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Opera Cloud Inventory Asynchronous API",
-    "description": "APIs to cater for Inventory related asynchronous functionality in OPERA Cloud. This includes viewing inventory data along with its revenue and updating inventory&apos;s sell limits for date ranges. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "title": "OPERA Cloud User Interface API",
+    "description": "APIs catering to the managing Opera User Interface features.<br /><br />Compatible with OPERA Cloud release 24.4<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
     "version": "24.4",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
@@ -16,96 +16,35 @@
   "schemes": [
     "https"
   ],
-  "basePath": "/inv/async/v1",
+  "basePath": "/oui/config/v1",
   "produces": [
     "application/json"
   ],
   "paths": {
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/revenueInventoryStatistics": {
+    "/data/refresh/{hotelId}": {
       "post": {
-        "summary": "Start process to get hotel inventory revenue statistics",
-        "description": "Use this API to start the process to get a hotel inventory&apos;s revenue statistics for a given date range. Maximum limit of the date range is 94 days with a single request, but the recommendation is to use a date range proportionate to the size of the hotel. Returns a header parameter Location that can be used in the getRevenueInventoryStatisticsProcessStatus operation.  Use event driven APIs (see https://docs.oracle.com/cd/F29336_01/doc.201/f27480/c_business_events.htm#OHIPU-BusinessEvents-F0AC1F1C) to get real time inventory updates.<p><strong>OperationId:</strong>startRevenueInventoryStatisticsProcess</p>",
-        "operationId": "startRevenueInventoryStatisticsProcess",
-        "x-interaction": [
-          "async-polling"
-        ],
-        "responses": {
-          "202": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of process status resource"
-              }
-            },
-            "description": "Location of process status resource"
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
+        "summary": "Trigger Property Refresh",
+        "description": "Trigger Property Refresh of a property in Non Production Environment. <p><strong>OperationId:</strong>Trigger Property Refresh</p>",
+        "operationId": "refreshProperty",
         "parameters": [
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
           {
             "name": "hotelId",
             "in": "path",
             "required": true,
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
+            "description": "Hotel Code"
           },
           {
-            "name": "criteria",
+            "name": "Trigger Property Refresh",
             "in": "body",
             "required": true,
-            "description": "Request object for fetching revenue inventory statistics asynchronously.",
+            "description": "Request to refresh Property.",
             "schema": {
-              "$ref": "#/definitions/revenueInventoryStatisticsSearchType"
+              "allOf": [
+                {
+                  "$ref": "#/definitions/refreshProperty"
+                }
+              ]
             }
           },
           {
@@ -118,50 +57,13 @@
             "$ref": "#/parameters/x-hotelid"
           },
           {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
             "$ref": "#/parameters/Accept-Language"
           }
         ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "InventoryAsync"
-        ]
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/revenueInventoryStatistics/{requestId}": {
-      "head": {
-        "summary": "Check status of Inventory Revenue Statistic process",
-        "description": "Use this API to check whether the process to collate inventory revenue statistics is complete. You can get value of summaryId from the Location header returned by the startRevenueInventoryStatisticsProcess operation.<p><strong>OperationId:</strong>getRevenueInventoryStatisticsProcessStatus</p>",
-        "operationId": "getRevenueInventoryStatisticsProcessStatus",
         "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Status": {
-                "type": "string",
-                "description": "Status of the requested process.",
-                "enum": [
-                  "Processing",
-                  "Invalid"
-                ]
-              },
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again.",
-                "x-example": "max-age=10"
-              }
-            },
-            "description": "Response for status of scheduled asynchronous process."
-          },
           "201": {
             "headers": {
               "Content-Language": {
@@ -170,122 +72,14 @@
                 "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
                 "x-example": "en-GB"
               },
-              "Status": {
-                "type": "string",
-                "description": "Status of the requested process.",
-                "enum": [
-                  "Completed"
-                ]
-              },
               "Location": {
                 "type": "string",
-                "description": "Location of newly created resource once the status of process run is Complete."
+                "description": "Location of newly created resource"
               }
             },
-            "description": "Response for status of scheduled asynchronous process."
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "InventoryAsync"
-        ]
-      },
-      "get": {
-        "summary": "Get results of a revenue inventory statistics process",
-        "description": "This API returns inventory revenue&apos;s statistics for a hotel within dates given in the startRevenueInventoryStatisticsProcess API request. You can get the value of the summaryId from the Location header returned by the getRevenueInventoryStatisticsProcessStatus operation after the process is completed.<p><strong>OperationId:</strong>getRevenueInventoryStatistics</p>",
-        "operationId": "getRevenueInventoryStatistics",
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
-            "description": "Response for fetched revenue inventory statistics.",
+            "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
-              "$ref": "#/definitions/revenueInventoryStatisticsDetails"
+              "$ref": "#/definitions/status"
             }
           },
           "400": {
@@ -325,44 +119,6 @@
             "$ref": "#/responses/503"
           }
         },
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -370,95 +126,65 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "InventoryAsync"
+          "UIInternal"
         ]
       }
     },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/sellLimits": {
-      "post": {
-        "summary": "Create sell limit by date.",
-        "description": "You can use this API to create sell limits in OPERA by date. <p><strong>OperationId:</strong>postSellLimitsProcess</p>",
-        "operationId": "postSellLimitsProcess",
-        "x-interaction": [
-          "async-polling"
-        ],
-        "responses": {
-          "202": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of process status resource"
-              }
-            },
-            "description": "Location of process status resource"
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
+    "/data/refresh/{hotelId}/history": {
+      "get": {
+        "summary": "Fetch Refresh Property History",
+        "description": "Fetch Refresh Property History Logs. <p><strong>OperationId:</strong>getRefreshPropertyHistory</p>",
+        "operationId": "getRefreshPropertyHistory",
         "parameters": [
           {
             "name": "hotelId",
             "in": "path",
             "required": true,
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
+            "description": "Hotel Code"
           },
           {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
+            "name": "appUserId",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "description": "Used to Filter the results using the given appUserId"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
+            "description": "Used to Filter the results using the given startDate",
+            "format": "date"
           },
           {
-            "name": "sellLimitsByDate",
-            "in": "body",
-            "required": true,
-            "description": "Request for setting sell limits for house, room type, room class.",
-            "schema": {
-              "$ref": "#/definitions/sellLimitsByDate"
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Used to Filter the results using the given endDate",
+            "format": "date"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxItems": 4000,
+              "enum": [
+                "IN_PROGRESS",
+                "COMPLETE",
+                "FAILED",
+                "START"
+              ]
             }
           },
           {
@@ -471,161 +197,12 @@
             "$ref": "#/parameters/x-hotelid"
           },
           {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "InventoryAsync"
-        ]
-      }
-    },
-    "/externalSystems/{extSystemCode}/hotels/{hotelId}/sellLimits/{requestId}": {
-      "head": {
-        "summary": "Get the status for sell limits asynchronous process",
-        "description": "Use this API to check whether the sell limit data creation is completed yet. You can get the value of the summaryId with the postSellLimitsProcess API response (under header location). <p><strong>OperationId:</strong>getSellLimitsProcessStatus</p>",
-        "operationId": "getSellLimitsProcessStatus",
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Status": {
-                "type": "string",
-                "description": "Status of the requested process.",
-                "enum": [
-                  "Processing",
-                  "Invalid"
-                ]
-              },
-              "Cache-Control": {
-                "type": "string",
-                "description": "number of seconds to wait before polling again.",
-                "x-example": "max-age=10"
-              }
-            },
-            "description": "Response for status of scheduled asynchronous process."
-          },
-          "201": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Status": {
-                "type": "string",
-                "description": "Status of the requested process.",
-                "enum": [
-                  "Completed"
-                ]
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource once the status of process run is Complete."
-              }
-            },
-            "description": "Response for status of scheduled asynchronous process."
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "extSystemCode",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
+            "$ref": "#/parameters/x-externalsystem"
           },
           {
             "$ref": "#/parameters/Accept-Language"
           }
         ],
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "InventoryAsync"
-        ]
-      },
-      "get": {
-        "summary": "Get status for sell limits for a property.",
-        "description": "This API returns the status log if any of sell limit data creation is failed. You can get the value of summaryId with the getSellLimitsProcessStatus API response (under header location). <p><strong>OperationId:</strong>getSellLimits</p>",
-        "operationId": "getSellLimits",
         "responses": {
           "200": {
             "headers": {
@@ -636,13 +213,13 @@
                 "x-example": "en-GB"
               }
             },
-            "description": "This asynchronous callback base type is used as a base for an extension for Opera Web Services Callback Requests to provide uniform implementation.",
+            "description": "Response object return to fetch refresh property logs request.",
             "schema": {
-              "$ref": "#/definitions/sellLimitByDateStatus"
+              "$ref": "#/definitions/refreshPropertyHistoryDetails"
             }
           },
           "204": {
-            "description": "SetSellLimitByDate not found."
+            "description": "RebuildTableIndexes not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -681,30 +258,36 @@
             "$ref": "#/responses/503"
           }
         },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      }
+    },
+    "/data/refresh/{hotelId}/{jobName}/errorLog": {
+      "get": {
+        "summary": "Download Refresh Property Error Log",
+        "description": "This API will Download Refresh Property Error Log. <p><strong>OperationId:</strong>getRefreshPropertyErrorLog</p>",
+        "operationId": "getRefreshPropertyErrorLog",
         "parameters": [
-          {
-            "name": "requestId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
           {
             "name": "hotelId",
             "in": "path",
             "required": true,
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
+            "description": "Used for codes in the OPERA Code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X."
           },
           {
-            "name": "extSystemCode",
+            "name": "jobName",
             "in": "path",
             "required": true,
             "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
+            "description": "Refresh Property Job Name for which the error log needs to be downloaded"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -716,9 +299,67 @@
             "$ref": "#/parameters/x-hotelid"
           },
           {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
             "$ref": "#/parameters/Accept-Language"
           }
         ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response to download refresh property error log",
+            "schema": {
+              "$ref": "#/definitions/refreshPropertyErrorLog"
+            }
+          },
+          "204": {
+            "description": "refresh property error log not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
         "consumes": [
           "application/json;charset=UTF-8"
         ],
@@ -726,7 +367,289 @@
           "application/json;charset=UTF-8"
         ],
         "tags": [
-          "InventoryAsync"
+          "UIInternal"
+        ]
+      }
+    },
+    "/queueData/{queueName}": {
+      "delete": {
+        "summary": "Purge Queue Data",
+        "description": "Operation to purge the queue data <p><strong>OperationId:</strong>purgeQueueData</p>",
+        "operationId": "purgeQueueData",
+        "parameters": [
+          {
+            "name": "queueName",
+            "in": "path",
+            "required": true,
+            "description": "The name of the queue.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "The result element containing the requested statistics of the queue data.",
+            "schema": {
+              "$ref": "#/definitions/purgeQueueData"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      }
+    },
+    "/synchronizeOperaParameters": {
+      "post": {
+        "summary": "Synchronize OPERA Parameters",
+        "description": "Synchronize OPERA Parameters <p><strong>OperationId:</strong>synchronizeOperaParameters</p>",
+        "operationId": "synchronizeOperaParameters",
+        "parameters": [
+          {
+            "name": "synchronizeOperaParameters",
+            "in": "body",
+            "required": true,
+            "description": "Existing Operations requests will eventually be modified to be extended from this type.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/syncOperaParameter"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
+        ]
+      },
+      "get": {
+        "summary": "Operation to fetch job details of Synchronize OPERA Parameters.",
+        "description": "<p><strong>Operation to fetch job details of Synchronize OPERA Parameters</p>",
+        "operationId": "getSynchronizeOperaParametersJobDetails",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object of FetchSynchronizeOperaParametersJobDetails.",
+            "schema": {
+              "$ref": "#/definitions/syncOperaParameterJob"
+            }
+          },
+          "204": {
+            "description": "Synchronization job details not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "UIInternal"
         ]
       }
     }
@@ -754,10 +677,24 @@
       "in": "header",
       "required": true
     },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
     "Accept-Language": {
       "name": "Accept-Language",
       "type": "string",
       "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
       "in": "header"
     }
   },
@@ -852,7 +789,11 @@
         "links": {
           "$ref": "#/definitions/links"
         }
-      }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
     },
     "errorInstance": {
       "title": "Error Instance Details",
@@ -887,7 +828,11 @@
           "type": "string",
           "description": "Path to the problem at the resource or property level."
         }
-      }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
     },
     "instanceLink": {
       "type": "object",
@@ -937,156 +882,6 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/instanceLink"
-      }
-    },
-    "revenueInventoryStatisticsSearchType": {
-      "type": "object",
-      "description": "Fetch criteria type for fetching revenue inventory statistics.",
-      "properties": {
-        "dateRangeStart": {
-          "description": "The starting value of the date range.",
-          "type": "string",
-          "format": "date"
-        },
-        "dateRangeEnd": {
-          "description": "The ending value of the date range.",
-          "type": "string",
-          "format": "date"
-        },
-        "roomTypes": {
-          "description": "The optional room types by which revenue and inventory statistics will be grouped.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 20
-          }
-        },
-        "marketCodes": {
-          "description": "The market codes for which revenue and inventory statistics will be gathered.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 20
-          }
-        },
-        "guaranteeCodes": {
-          "description": "The reservation guarantee codes for which revenue and inventory statistics will be gathered.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 20
-          }
-        },
-        "groupBy": {
-          "description": "Group by instructions for revenue inventory statistics that can be used in request operation. Response data will be grouped according to the values provided in this array. MarketCode and RoomType grouping is used for past and future revenue and inventory statistics while GuaranteeType is used only for future revenue and inventory statistics.",
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "enum": [
-              "MarketCode",
-              "RoomType",
-              "GuaranteeType"
-            ]
-          }
-        }
-      }
-    },
-    "revenueInventoryStatisticsDetails": {
-      "type": "object",
-      "description": "Revenue Inventory Statistics for the current occupancy date which might include data grouped by room type, market and reservation guarantee code.",
-      "properties": {
-        "revInvStats": {
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/revenueInventoryStatisticsType"
-          }
-        }
-      }
-    },
-    "revenueInventoryStatisticsType": {
-      "type": "object",
-      "description": "Revenue and statistics for an occupancy date and hotel code.",
-      "properties": {
-        "property": {
-          "description": "The property for which revenue inventory statistics are fetched",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "occupancyDate": {
-          "description": "The occupancy date for which the revenue inventory statistics are fetched.",
-          "type": "string",
-          "format": "date"
-        },
-        "resType": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "marketCode": {
-          "description": "The market code for which the revenue inventory statistics are fetched.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "roomType": {
-          "description": "The room type for which the revenue inventory statistics are fetched.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
-        },
-        "physicalRooms": {
-          "description": "The statistical figure for physical rooms.",
-          "type": "string"
-        },
-        "ooRooms": {
-          "description": "The statistical figure for out of order rooms.",
-          "type": "string"
-        },
-        "osRooms": {
-          "description": "The statistical figure for out of service rooms.",
-          "type": "string"
-        },
-        "roomsSold": {
-          "description": "The statistical figure for rooms sold.",
-          "type": "string"
-        },
-        "roomRevenue": {
-          "description": "The statistical figure for room revenue.",
-          "type": "string"
-        },
-        "roomArrivals": {
-          "description": "The statistical figure for arrival rooms.",
-          "type": "string"
-        },
-        "roomDepartures": {
-          "description": "The statistical figure of departure rooms.",
-          "type": "string"
-        },
-        "foodRevenue": {
-          "description": "The statistical figure for food revenue.",
-          "type": "string"
-        },
-        "totalRevenue": {
-          "description": "The statistical figure for total revenue.",
-          "type": "string"
-        },
-        "cancelledRooms": {
-          "description": "The statistical figure for canceled rooms.",
-          "type": "string"
-        },
-        "noShowRooms": {
-          "description": "The statistical figure of no show rooms.",
-          "type": "string"
-        }
       }
     },
     "warningsType": {
@@ -1144,7 +939,8 @@
         },
         "language": {
           "description": "Language identification.",
-          "type": "string"
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
         },
         "rph": {
           "description": "Reference Place Holder used as an index for this warning.",
@@ -1154,12 +950,11 @@
         }
       }
     },
-    "sellLimitByDateStatus": {
+    "status": {
       "type": "object",
-      "description": "Response for sell limits status ",
+      "description": "Response Body.",
       "properties": {
         "warnings": {
-          "description": "List of warnings that occurred.",
           "$ref": "#/definitions/warningsType"
         },
         "links": {
@@ -1167,119 +962,363 @@
         }
       }
     },
-    "sellLimitsByDate": {
-      "type": "array",
-      "description": "Request for setting sell limits for house, room type, room class.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/sellLimitByDateType"
-      }
-    },
-    "sellLimitByDateType": {
+    "batchProcessDetailType": {
       "type": "object",
-      "description": "This type is used by sell limit request.",
+      "description": "Detail of batch process.",
       "properties": {
-        "houseSellLimits": {
-          "description": "Collection of House level sell limit by the date.",
+        "messages": {
+          "description": "Status Messages of batch process.",
           "type": "array",
           "maxItems": 4000,
           "items": {
-            "$ref": "#/definitions/houseSellLimitType"
+            "$ref": "#/definitions/batchProcessMessageType"
           }
         },
-        "roomTypeSellLimits": {
-          "description": "Collection of Room type level sell limit by the date.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/roomTypeSellLimitType"
+        "flexFields": {
+          "description": "Flex fields for batch process.",
+          "type": "object",
+          "properties": {
+            "field": {
+              "description": "Flex fields for batch process.",
+              "type": "array",
+              "maxItems": 4000,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of flex field.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  },
+                  "value": {
+                    "description": "Value for flex field.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                  }
+                }
+              }
+            },
+            "entity": {
+              "description": "Entity for flex field.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            }
           }
         },
-        "roomClassSellLimits": {
-          "description": "Collection of Room Class level sell limit by the date.",
+        "details": {
           "type": "array",
           "maxItems": 4000,
           "items": {
-            "$ref": "#/definitions/roomClassSellLimitType"
+            "$ref": "#/definitions/batchProcessDetailType"
           }
+        },
+        "status": {
+          "description": "Status of the batch process details.",
+          "$ref": "#/definitions/statusType"
         }
       }
     },
-    "houseSellLimitType": {
+    "statusType": {
+      "type": "string",
+      "description": "Status of the batch process.",
+      "enum": [
+        "Success",
+        "Error",
+        "Running",
+        "Stopped",
+        "Warning",
+        "Failed",
+        "Started",
+        "CompletedWithLogs"
+      ]
+    },
+    "batchProcessMessageType": {
       "type": "object",
+      "description": "Status of batch process .",
       "properties": {
-        "date": {
+        "message": {
           "type": "string",
-          "format": "date"
+          "minLength": 0,
+          "maxLength": 2000
         },
-        "amount": {
-          "type": "number"
+        "detailSeq": {
+          "description": "Sequence number of message.",
+          "type": "integer"
         },
-        "flatOrPercentage": {
+        "logTime": {
+          "description": "Log time details of message.",
           "type": "string",
-          "description": "Indicates if sell limit is flat or percentage.",
-          "enum": [
-            "Flat",
-            "Percentage"
-          ]
+          "format": "date",
+          "maxLength": 8
         }
       }
     },
-    "roomClassSellLimitType": {
+    "applicationSettingLevelType": {
+      "type": "string",
+      "enum": [
+        "Global",
+        "Hotel",
+        "Cro"
+      ]
+    },
+    "applicationSettingSimpleType": {
       "type": "object",
+      "description": "Internal settings that is mainly used to get a quick information on the type.",
       "properties": {
-        "date": {
+        "configurations": {
+          "description": "This element is used for additional items (Key-Value-Pair) that has relevance to the operation.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/applicationSettingSimpleType"
+          }
+        },
+        "name": {
           "type": "string",
-          "format": "date"
+          "minLength": 0,
+          "maxLength": 80
         },
-        "amount": {
-          "type": "number"
+        "levelType": {
+          "$ref": "#/definitions/applicationSettingLevelType"
         },
-        "flatOrPercentage": {
-          "type": "string",
-          "description": "Indicates if sell limit is flat or percentage.",
-          "enum": [
-            "Flat",
-            "Percentage"
-          ]
-        },
-        "roomClass": {
+        "levelCode": {
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "value": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         }
       }
     },
-    "roomTypeSellLimitType": {
+    "performanceTimeMetricType": {
       "type": "object",
+      "description": "Time metrics information related to stage",
       "properties": {
-        "date": {
+        "stage": {
+          "description": "Name of the stage",
+          "type": "string"
+        },
+        "startTime": {
+          "description": "Stage start time in ISO 8601 time format (Time will be in UTC time zone)",
+          "type": "string"
+        },
+        "endTime": {
+          "description": "Stage end time in ISO 8601 time format (Time will be in UTC time zone)",
+          "type": "string"
+        },
+        "childStages": {
+          "description": "Time metrics related to child stage",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/performanceTimeMetricType"
+          }
+        }
+      }
+    },
+    "refreshPropertyJobStatus": {
+      "type": "string",
+      "description": "Status of the Refresh Property Job",
+      "enum": [
+        "IN_PROGRESS",
+        "COMPLETE",
+        "FAILED",
+        "START"
+      ]
+    },
+    "refreshPropertyJobDetailedStatus": {
+      "type": "string",
+      "description": "Detailed Status of the Refresh Property Job",
+      "enum": [
+        "PROPERTY_REFRESH_COMPLETE",
+        "PROPERTY_LICENSE_FAILED",
+        "PROPERTY_REFRESH_FAILED",
+        "DELETE_PROPERTY_FAILED",
+        "PROPERTY_REFRESH",
+        "DELETE_PROPERTY"
+      ]
+    },
+    "refreshPropertyHistoryLog": {
+      "type": "object",
+      "description": "Record of Refresh Property History Log",
+      "properties": {
+        "jobName": {
           "type": "string",
-          "format": "date"
+          "description": "Job Name of the refresh property job"
         },
-        "amount": {
-          "type": "number"
-        },
-        "flatOrPercentage": {
+        "appUserName": {
           "type": "string",
-          "description": "Indicates if sell limit is flat or percentage.",
-          "enum": [
-            "Flat",
-            "Percentage"
-          ]
+          "description": "Name of user who initiated the property refresh"
         },
-        "roomType": {
+        "hotelId": {
+          "description": "The hotel code.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "status": {
+          "description": "Status of refresh property job",
+          "$ref": "#/definitions/refreshPropertyJobStatus"
+        },
+        "detailedStatus": {
+          "description": "Detailed Status of refresh property job",
+          "$ref": "#/definitions/refreshPropertyJobDetailedStatus"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date at which job was started"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when job ended"
+        },
+        "errorLogAvailable": {
+          "type": "boolean",
+          "description": "indicates if error log is available"
+        }
+      }
+    },
+    "refreshPropertyHistoryDetails": {
+      "type": "object",
+      "description": "Response object return to fetch refresh property logs.",
+      "properties": {
+        "refreshPropertyHistoryLogs": {
+          "description": "Array of Refresh Property History Logs.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/refreshPropertyHistoryLog"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "refreshPropertyErrorLog": {
+      "type": "object",
+      "description": "Response to download refresh Property Error Log",
+      "properties": {
+        "errorLog": {
+          "description": "Refresh Property Error Log",
+          "type": "string",
+          "format": "byte"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "refreshProperty": {
+      "type": "object",
+      "description": "Request to refresh Property with specified shell.",
+      "properties": {
+        "shellName": {
+          "description": "Name of Shell to use, if empty standard shell will be used",
+          "type": "string"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "purgeQueueData": {
+      "type": "object",
+      "description": "The result element containing the result of the purging of the queue data.",
+      "properties": {
+        "purgeQueueData": {
+          "description": "Contain response of the purged queue.",
+          "$ref": "#/definitions/purgeQueueDataType"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "purgeQueueDataType": {
+      "type": "object",
+      "description": "The response of the purged queue.",
+      "properties": {
+        "jobNameId": {
+          "description": "The job name id of the purge job.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "syncOperaParameter": {
+      "type": "object",
+      "description": "Response Body.",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "syncOperaParameterJob": {
+      "type": "object",
+      "description": "Response Body.",
+      "properties": {
+        "syncOperaParameterjobDetails": {
+          "description": "Array of Sync OPERA Parameter job details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/syncOperaParameterJobDetails"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "syncOperaParameterJobDetails": {
+      "type": "object",
+      "description": "Record of OPERA Parameters sync job",
+      "properties": {
+        "syncUser": {
+          "type": "string",
+          "description": "User who trigger synchronization"
+        },
+        "jobDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Job start date and time"
         }
       }
     }
   },
   "tags": [
     {
-      "name": "InventoryAsync",
-      "description": "The Inventory Asynchronous module provides capability for an external system to retrieve inventory related data using an asynchronous approach."
+      "name": "UIInternal",
+      "description": "The UI Internal Service contains operations used internally by Opera."
     }
   ],
   "externalDocs": {

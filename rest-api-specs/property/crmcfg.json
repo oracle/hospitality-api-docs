@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud CRM Configuration API",
-    "description": "APIs for Customer Relationship Management (profile) configuration, such as creating preferences, or address types.  It also includes Membership Configuration, where you can retrieve membership levels that are configured for a property, or create new membership enrollment codes.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.2",
+    "description": "APIs for Customer Relationship Management (profile) configuration, such as creating preferences, or address types.  It also includes Membership Configuration, where you can retrieve membership levels that are configured for a property, or create new membership enrollment codes.<br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.4",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -13082,7 +13082,7 @@
     "/membershipAwards": {
       "get": {
         "summary": "Get Membership Awards",
-        "description": "You can use this API to get Membership Awards. <p><strong>OperationId:</strong>getMembershipAwards</p>",
+        "description": "You can use this API to get Membership Awards. <p><strong>OperationId:</strong>getMembershipAwards</p> <p>The maximum allowable limit for this API is <strong>200</strong>.</p>",
         "operationId": "getMembershipAwards",
         "parameters": [
           {
@@ -13543,7 +13543,7 @@
     "/membershipBenefitPrograms": {
       "get": {
         "summary": "Retrieve a Membership Benefit Program",
-        "description": "This API allows you to fetch Membership Benefit Programs of Membership Type. A Benefit Program is configurable for a Membership Type when OCIS or ORS license is active and Membership Type meets following criteria - primary central setup, not externally controlled and point calculation method is Manual Batch. <p><strong>OperationId:</strong>getMembershipBenefitPrograms</p>",
+        "description": "This API allows you to fetch Membership Benefit Programs of Membership Type. A Benefit Program is configurable for a Membership Type when OCIS or ORS license is active and Membership Type meets following criteria - primary central setup, not externally controlled and point calculation method is Manual Batch. <p><strong>OperationId:</strong>getMembershipBenefitPrograms</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getMembershipBenefitPrograms",
         "parameters": [
           {
@@ -15705,7 +15705,7 @@
     "/membershipEnrollmentGroups": {
       "get": {
         "summary": "Get Membership enrollment groups",
-        "description": "Retrieve a list of membership Enrollment Groups that are configured. <p><strong>OperationId:</strong>getMembershipEnrollmentGroups</p>",
+        "description": "Retrieve a list of membership Enrollment Groups that are configured. <p><strong>OperationId:</strong>getMembershipEnrollmentGroups</p> <p>The maximum allowable limit for this API is <strong>200</strong>.</p>",
         "operationId": "getMembershipEnrollmentGroups",
         "parameters": [
           {
@@ -17107,6 +17107,420 @@
         ]
       }
     },
+    "/membershipOriginGroups": {
+      "get": {
+        "summary": "Get Membership origin groups",
+        "description": "You can use this API to get Membership origin groups. <p><strong>OperationId:</strong>getMembershipOriginGroups</p>",
+        "operationId": "getMembershipOriginGroups",
+        "parameters": [
+          {
+            "name": "codes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Membership Origin Groups configurations.",
+            "schema": {
+              "$ref": "#/definitions/membershipOriginGroupsDetails"
+            }
+          },
+          "204": {
+            "description": "MembershipOriginGroups not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create a Membership origin group",
+        "description": "You can use this API to create Membership origin group.<p><strong>OperationId:</strong>postMembershipOriginGroup</p>",
+        "operationId": "postMembershipOriginGroup",
+        "parameters": [
+          {
+            "name": "membershipOriginGroup",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating new Membership origin Group Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipOriginGroupDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resource",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/membershipOriginGroups/{membershipOriginGroupId}": {
+      "put": {
+        "summary": "Change Membership origin group",
+        "description": "You can use this API to change Membership origin group.<p><strong>OperationId:</strong>putMembershipOriginGroup</p>",
+        "operationId": "putMembershipOriginGroup",
+        "parameters": [
+          {
+            "name": "membershipOriginGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Membership origin group code which will be changed."
+          },
+          {
+            "name": "membershipOriginGroup",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing existing Membership Origin Group Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipOriginGroupDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Membership origin group",
+        "description": "You can use this API to delete Membership origin group.<p><strong>OperationId:</strong>deleteMembershipOriginGroup</p>",
+        "operationId": "deleteMembershipOriginGroup",
+        "parameters": [
+          {
+            "name": "membershipOriginGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Delete delete Membership Origin Group based on given membershipOriginGroupId"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
     "/membershipPropertyGroups": {
       "get": {
         "summary": "Get Membership property groups",
@@ -18335,6 +18749,420 @@
               "type": "string"
             },
             "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/membershipSourceGroups": {
+      "get": {
+        "summary": "Get Membership source groups",
+        "description": "You can use this API to get Membership source groups. <p><strong>OperationId:</strong>getMembershipSourceGroups</p>",
+        "operationId": "getMembershipSourceGroups",
+        "parameters": [
+          {
+            "name": "codes",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string",
+              "maxItems": 4000
+            },
+            "required": false
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the code.",
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Membership Source Groups configurations.",
+            "schema": {
+              "$ref": "#/definitions/membershipSourceGroupsDetails"
+            }
+          },
+          "204": {
+            "description": "MembershipSourceGroups not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      },
+      "post": {
+        "summary": "Create a Membership source group",
+        "description": "You can use this API to create Membership source group.<p><strong>OperationId:</strong>postMembershipSourceGroup</p>",
+        "operationId": "postMembershipSourceGroup",
+        "parameters": [
+          {
+            "name": "membershipSourceGroup",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creating new Membership source Group Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipSourceGroupDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resource",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/membershipSourceGroups/{membershipSourceGroupId}": {
+      "put": {
+        "summary": "Change Membership source group",
+        "description": "You can use this API to change Membership source group.<p><strong>OperationId:</strong>putMembershipSourceGroup</p>",
+        "operationId": "putMembershipSourceGroup",
+        "parameters": [
+          {
+            "name": "membershipSourceGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Membership source group code which will be changed."
+          },
+          {
+            "name": "membershipSourceGroup",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing existing Membership Source Group Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipSourceGroupDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Membership Source group",
+        "description": "You can use this API to delete Membership Source group.<p><strong>OperationId:</strong>deleteMembershipSourceGroup</p>",
+        "operationId": "deleteMembershipSourceGroup",
+        "parameters": [
+          {
+            "name": "membershipSourceGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Delete delete Membership Source Group based on given membershipSourceGroupId"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -24419,6 +25247,358 @@
         ]
       }
     },
+    "/services/chainConfig/status": {
+      "get": {
+        "summary": " ping",
+        "description": "Ping Chain Configuration Service <p><strong>OperationId:</strong>pingChainConfigServices</p>",
+        "operationId": "pingChainConfigServices",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/operaVersion"
+            }
+          },
+          "204": {
+            "description": "pingChainConfigServices not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ChainConfig"
+        ]
+      }
+    },
+    "/services/hotelConfig/status": {
+      "get": {
+        "summary": " ping",
+        "description": "Ping Hotel Configuration Service <p><strong>OperationId:</strong>pingHotelConfigServices</p>",
+        "operationId": "pingHotelConfigServices",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/operaVersion"
+            }
+          },
+          "204": {
+            "description": "pingHotelConfigServices not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
+    },
+    "/services/membershipConfig/status": {
+      "get": {
+        "summary": " ping",
+        "description": "Ping Membership Configuration Service <p><strong>OperationId:</strong>pingMembershipConfigService</p>",
+        "operationId": "pingMembershipConfigService",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/operaVersion"
+            }
+          },
+          "204": {
+            "description": "pingMembershipConfigService not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/services/profile/status": {
+      "get": {
+        "summary": " ping",
+        "description": "Ping Profile Configuration Service <p><strong>OperationId:</strong>pingProfileConfigService</p>",
+        "operationId": "pingProfileConfigService",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/operaVersion"
+            }
+          },
+          "204": {
+            "description": "pingProfileConfigService not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileConfiguration"
+        ]
+      }
+    },
     "/sources": {
       "get": {
         "summary": "Get Sources",
@@ -27103,6 +28283,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -27233,6 +28416,9 @@
         "inactive": {
           "description": "Indicates the account type is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -27331,6 +28517,9 @@
         "canDelete": {
           "description": "Determines whether this address format can be deleted.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -27375,6 +28564,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -27701,6 +28893,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28117,6 +29312,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28197,6 +29395,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28277,6 +29478,9 @@
         "inactive": {
           "description": "Determines whether this credit rating is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28321,6 +29525,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28397,6 +29604,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28592,6 +29802,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28672,6 +29885,9 @@
         "protected": {
           "description": "Determines whether this code is protected from deleting and making inactive",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28748,6 +29964,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28872,6 +30091,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -28948,6 +30170,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29104,6 +30329,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29239,6 +30467,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29319,6 +30550,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29399,6 +30633,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29479,6 +30716,9 @@
         "masterSubKeyword": {
           "description": "Indicates if the KEYWORD TYPE is to be copied from a Company Master to a Company Subsidiary.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29559,6 +30799,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -29632,7 +30875,7 @@
           "description": "Membership Award Code.",
           "type": "string",
           "minLength": 0,
-          "maxLength": 40
+          "maxLength": 20
         },
         "shortDescription": {
           "description": "Short description of Award.",
@@ -30164,6 +31407,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -30240,6 +31486,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -30326,6 +31575,9 @@
         "frequentFlyer": {
           "description": "This flag indicates whether the membership class is eligible for frequent flyer or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -30386,6 +31638,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -30492,6 +31747,9 @@
         "enrollmentCodes": {
           "description": "Collection of code and description of enrollment codes that are associated to the membership enrollment group.",
           "$ref": "#/definitions/membershipEnrollmentCodesInfoType"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -31024,6 +32282,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -31327,11 +32588,14 @@
     },
     "pointsRoundingFlagType": {
       "type": "string",
-      "description": "This flag tells if the total amount computed will be rounded, rounded up or rounded down.",
+      "description": "This flag tells if the total points computed will be rounded based on the rounding option selected.",
       "enum": [
         "Round",
         "Ceil",
-        "Floor"
+        "Floor",
+        "Roundupnd",
+        "Rounddownnd",
+        "Universalroundnd"
       ]
     },
     "membershipTypeRuleConditionsType": {
@@ -31365,7 +32629,7 @@
       "description": "Membership Type Rules general Conditions.",
       "properties": {
         "reservationChannel": {
-          "description": "Reservation Channel for which the rule is applied.",
+          "description": "Reservation Channel for which the rule is applied. This attribute is deprecated would not be used further.",
           "type": "string",
           "minLength": 0,
           "maxLength": 20
@@ -31405,6 +32669,22 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "originCode": {
+          "description": "Origin Code for which the rule is applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "originGroup": {
+          "description": "Origin group for which the rule is applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "excludeOriginGroup": {
+          "description": "To specify the exclusion of origin group while applying rule.",
+          "type": "boolean"
         }
       }
     },
@@ -31516,6 +32796,22 @@
         },
         "excludeMarketGroup": {
           "description": "To specify the exclusion of market group while applying rule.",
+          "type": "boolean"
+        },
+        "sourceCode": {
+          "description": "Source Code for which the rule is applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "sourceGroup": {
+          "description": "Source group for which the rule is applied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "excludeSourceGroup": {
+          "description": "To specify the exclusion of source group while applying rule.",
           "type": "boolean"
         }
       }
@@ -31683,6 +32979,10 @@
           "description": "Membership auto card number generation details.",
           "$ref": "#/definitions/autoGenerateCardNumberType"
         },
+        "cardNumberAutoGenerateDetailsForOWS": {
+          "description": "Membership auto card number generation details for OWS.",
+          "$ref": "#/definitions/autoGenerateCardNumberType"
+        },
         "currency": {
           "description": "The currency in which user would like to calculate the membership points.",
           "type": "string",
@@ -31846,6 +33146,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -32043,7 +33346,7 @@
           "$ref": "#/definitions/calendarPeriodType"
         },
         "expiryPeriod": {
-          "description": "Membership card expiration period.",
+          "description": "Membership card expiration period. If no value is provided it will be defaulted to 1 year.",
           "$ref": "#/definitions/numberOfYearsType"
         },
         "expiryMonth": {
@@ -32517,6 +33820,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -32593,6 +33899,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -32673,6 +33982,9 @@
         "inactive": {
           "description": "To configure the different pay days.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -32767,6 +34079,9 @@
         "allowSubTypes": {
           "description": "This is a placeholder element for future use. Functionality may not be available for the current implementation.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -32833,6 +34148,9 @@
         "global": {
           "description": "Specifies whether the preference is to be available for selection at all properties .",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -32929,6 +34247,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33090,6 +34411,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33263,6 +34587,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33351,6 +34678,9 @@
         "stateID": {
           "description": "Unique identifier of the state.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33415,6 +34745,9 @@
         "inactive": {
           "description": "Determines whether this code is inactive or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33491,6 +34824,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33575,6 +34911,9 @@
         "ranking": {
           "description": "AI priority order of this code.",
           "type": "integer"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33775,6 +35114,9 @@
         "displayOrder": {
           "description": "Common Master record sequence number.",
           "type": "number"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -33817,6 +35159,170 @@
         "identificationCountries": {
           "description": "Identification Countriesto be changed.",
           "$ref": "#/definitions/identificationCountriesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "managedByOptions": {
+      "description": "Describes of the Configuration is Managed by Enterprise or Property.",
+      "type": "string",
+      "enum": [
+        "EnterpriseManaged",
+        "PropertyManaged",
+        "EnterpriseEnforced",
+        "PropertyOverridden"
+      ]
+    },
+    "membershipOriginGroupsDetails": {
+      "type": "object",
+      "description": "Response object for fetching Membership Origin Groups configurations.",
+      "properties": {
+        "membershipOriginGroups": {
+          "type": "array",
+          "maxItems": 4000,
+          "description": "Collection of Membership Origin Groups configurations.",
+          "items": {
+            "$ref": "#/definitions/membershipOriginGroupType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipOriginGroupDetails": {
+      "type": "object",
+      "description": "Request object for adding/changing existing Membership Origin Group Configurations.",
+      "properties": {
+        "membershipOriginGroup": {
+          "description": "Membership Origin Groups Configurations to be changed.",
+          "$ref": "#/definitions/membershipOriginGroupType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipOriginGroupType": {
+      "type": "object",
+      "description": "Details for Membership Origin Group along with associated Origin codes.",
+      "properties": {
+        "code": {
+          "description": "Code is used to identify a Membership Origin Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the Membership Origin Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "displaySequence": {
+          "description": "Membership Origin Groups display sequence Number",
+          "type": "number"
+        },
+        "originCodes": {
+          "type": "array",
+          "description": "Membership Origin code and Description.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/codeDescriptionType"
+          }
+        }
+      }
+    },
+    "membershipSourceGroupsDetails": {
+      "type": "object",
+      "description": "Response object for fetching Membership Source Groups configurations.",
+      "properties": {
+        "membershipSourceGroups": {
+          "type": "array",
+          "maxItems": 4000,
+          "description": "Collection of Membership Source Groups configurations.",
+          "items": {
+            "$ref": "#/definitions/membershipSourceGroupType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipSourceGroupDetails": {
+      "type": "object",
+      "description": "Request object for adding/changing existing Membership Source Group Configurations.",
+      "properties": {
+        "membershipSourceGroup": {
+          "description": "Membership Source Groups Configurations to be changed.",
+          "$ref": "#/definitions/membershipSourceGroupType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipSourceGroupType": {
+      "type": "object",
+      "description": "Details for Membership Source Group along with associated Source codes.",
+      "properties": {
+        "code": {
+          "description": "Code is used to identify a Membership Source Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the Membership Source Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "displaySequence": {
+          "description": "Membership Source Groups display sequence Number",
+          "type": "number"
+        },
+        "sourceCodes": {
+          "type": "array",
+          "description": "Membership Source code and Description.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/codeDescriptionType"
+          }
+        }
+      }
+    },
+    "operaVersionNumberType": {
+      "type": "string",
+      "description": "Current Opera Version Number",
+      "minLength": 0,
+      "maxLength": 40
+    },
+    "operaVersion": {
+      "type": "object",
+      "description": "Response for Ping operation.",
+      "properties": {
+        "operaVersion": {
+          "description": "Opera version number.",
+          "$ref": "#/definitions/operaVersionNumberType"
         },
         "links": {
           "$ref": "#/definitions/links"

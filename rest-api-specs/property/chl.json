@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Channel Configuration API",
-    "description": "APIs to cater for Channel Management functionality in OPERA Cloud. <br /><br /> Channel Management allows a property to configure and administer channels such as OTAs, and web channels, covering functionality such as channel configuration, availability, inventory and restrictions.<br /><br /> Compatible with OPERA Cloud release 24.2.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.2",
+    "description": "APIs to cater for Channel Management functionality in OPERA Cloud. <br /><br /> Channel Management allows a property to configure and administer channels such as OTAs, and web channels, covering functionality such as channel configuration, availability, inventory and restrictions.<br /><br />Compatible with OPERA Cloud release 24.4<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
+    "version": "24.4",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -13138,6 +13138,507 @@
         ]
       }
     },
+    "/clusters/{clusterId}/channels/negotiatedRates": {
+      "get": {
+        "summary": "Gets channel negotiate rate",
+        "description": "Use this API to update channel's negotiated rate code mapping including negotiated profile, negotiate rate access code, start date, end date, and sequence. <p><strong>OperationId:</strong>getChannelNegotiatedRates</p>",
+        "operationId": "getChannelNegotiatedRates",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/clusterIdPath"
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "channelCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "channelRateCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ratePlanCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "accessCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "internalChannelsOnly",
+            "in": "query",
+            "required": false,
+            "description": "If true then it would fetch only the internal channels. If false then it expects channelCode as well to establish if its an inernal or external channel.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "uniqueId",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "uniqueIdType",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Negotiated channel rates.",
+            "schema": {
+              "$ref": "#/definitions/profileNegotiatedRateDetails"
+            }
+          },
+          "204": {
+            "description": "ChannelNegotiatedRate not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Channel"
+        ]
+      }
+    },
+    "/clusters/{clusterId}/channels/profileRatesAccess": {
+      "put": {
+        "summary": "Initiate profile rate access codes",
+        "description": "<p><strong>OperationId:</strong> putProfileNegRateAccessCodes</p> <p>Operation to Initiate profile rate access codes</p>",
+        "operationId": "putProfileNegRateAccessCodes",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "items",
+            "in": "body",
+            "required": true,
+            "description": "Request for configuring profile rate access codes.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/profileRateAccessCodes"
+                }
+              ]
+            }
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "ClusterId in URI path."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Channel"
+        ]
+      }
+    },
+    "/clusters/{clusterId}/channels/profileRatesAccessDeletes": {
+      "post": {
+        "summary": "Delete Channel Rates Access for cluster level",
+        "operationId": "deleteProfileNegRateAccessCodes",
+        "description": "<p><strong>operationId:</strong>deleteProfileNegRateAccessCodes</p> <p> Delete Channel Rates Access for cluster level</p>",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "deleteNegotiatedRates",
+            "in": "body",
+            "required": true,
+            "description": "Request body",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/deleteNegotiatedRates"
+                }
+              ]
+            }
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "ClusterId in URI path."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Channel"
+        ]
+      }
+    },
+    "/clusters/{clusterId}/channels/syncProfileRatesAccess": {
+      "put": {
+        "summary": "Sync profile rate access codes",
+        "description": "<p><strong>OperationId:</strong> syncProfileNegRateAccessCodes</p> <p>Operation to Initiate profile rate access codes</p>",
+        "operationId": "syncProfileNegRateAccessCodes",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "items",
+            "in": "body",
+            "required": true,
+            "description": "Request for configuring profile rate access codes.",
+            "schema": {
+              "$ref": "#/definitions/syncProfileRatesAccessCodes"
+            }
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "ClusterId in URI path."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Channel"
+        ]
+      }
+    },
     "/hotels/totalPricing": {
       "post": {
         "summary": "Adds total pricing tax and fee types",
@@ -17394,6 +17895,14 @@
       "type": "string",
       "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
       "in": "header"
+    },
+    "clusterIdPath": {
+      "name": "clusterId",
+      "description": "ClusterId in URI path",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "maxLength": 50
     }
   },
   "responses": {
@@ -25193,6 +25702,407 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        }
+      }
+    },
+    "profileNegotiatedRateDetails": {
+      "type": "object",
+      "description": "Response object for fetching Negotiated channel rates.",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/getChannelRatesAccessItems"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "getChannelRatesAccessItems": {
+      "type": "object",
+      "description": "Response object for fetching Negotiated channel rates.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Id.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channelCode": {
+          "description": "Channel Room Type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": "Channel Room Type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channelRatePlanCode": {
+          "description": "Channel Room Type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channelRatePlanOrder": {
+          "description": "Channel Room Type.",
+          "type": "integer",
+          "default": true
+        },
+        "rateAccessCode": {
+          "type": "string",
+          "description": "Negotiated Rate Access Code."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Start Date of the Channel Rate Access Code.",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "End Date of the Channel Rate Access Code.",
+          "format": "date"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "[A-Z0-9]+",
+          "description": "Profile Id for which Channel Rate access code is applicable for."
+        },
+        "accountId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "[A-Z0-9]+",
+          "description": "Account Id for which Channel Rate access code is applicable for."
+        },
+        "accountName": {
+          "type": "string",
+          "description": "Account name for which Channel Rate access Code is applicable for.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "profileAccountType": {
+          "$ref": "#/definitions/accountTypeEnum"
+        }
+      }
+    },
+    "profileRateAccessCodes": {
+      "type": "object",
+      "description": "Request Object for Profile Rate Access Async Job",
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/profileRateAccessCode"
+          }
+        }
+      }
+    },
+    "profileRateAccessCode": {
+      "type": "object",
+      "required": [
+        "hotelId",
+        "channelCode",
+        "channelRatePlans"
+      ],
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Unique ID that identifies a single hotel property.",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelCode": {
+          "type": "string",
+          "description": "Unique ID that identifies a single Channel.",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelRatePlans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/profileChannelRatePlan"
+          }
+        }
+      }
+    },
+    "profileChannelRatePlan": {
+      "type": "object",
+      "required": [
+        "ratePlanCode",
+        "channelRatePlanCode",
+        "channelRateAccessCodes"
+      ],
+      "properties": {
+        "ratePlanCode": {
+          "type": "string",
+          "description": "Rate Plan Code (length of string must be less than or equal to 20)",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelRatePlanCode": {
+          "type": "string",
+          "description": "Chennel Rate Plan Code (length of string must be less than or equal to 20)",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "startDate": {
+          "type": "string",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'",
+          "format": "date"
+        },
+        "active": {
+          "type": "boolean",
+          "default": true
+        },
+        "channelRatePlanOrder": {
+          "type": "integer",
+          "default": true,
+          "description": "Channel Rate Plan Order"
+        },
+        "channelRateAccessCodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/profileChannelRateAccessCode"
+          }
+        }
+      }
+    },
+    "profileChannelRateAccessCode": {
+      "type": "object",
+      "required": [
+        "rateAccessCode",
+        "active",
+        "accountId",
+        "accountName",
+        "accountType"
+      ],
+      "properties": {
+        "rateAccessCode": {
+          "type": "string",
+          "description": "Negotiated Rate Access Code."
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Start Date of the Channel Rate Access Code.",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "End Date of the Channel Rate Access Code.",
+          "format": "date"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "accountId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "[A-Z0-9]+",
+          "description": "Account Id for which Channel Rate access code is applicable for."
+        },
+        "accountName": {
+          "type": "string",
+          "description": "Account name for which Channel Rate access Code is applicable for.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "profileAccountType": {
+          "$ref": "#/definitions/accountTypeEnum"
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "Profile Id for which Channel Rate access code is applicable for."
+        },
+        "oldRateAccessCode": {
+          "type": "string",
+          "description": "Negotiated Rate Access Code."
+        },
+        "oldStartDate": {
+          "type": "string",
+          "description": "Start Date of the Channel Rate Access Code.",
+          "format": "date"
+        },
+        "oldEndDate": {
+          "type": "string",
+          "description": "End Date of the Channel Rate Access Code.",
+          "format": "date"
+        }
+      }
+    },
+    "syncProfileRatesAccessCodes": {
+      "type": "object",
+      "properties": {
+        "targetHotels": {
+          "type": "array",
+          "maxItems": 50,
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "oldChannelRatesAccess": {
+          "$ref": "#/definitions/channelRatesAccessMain"
+        },
+        "newChannelRatesAccess": {
+          "$ref": "#/definitions/channelRatesAccessMain"
+        }
+      }
+    },
+    "channelRatesAccessMain": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Unique ID that identifies a single hotel property.",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "channelCode": {
+          "type": "string"
+        },
+        "channelRatePlanCode": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date Format 'YYYY-MM-DD'"
+        },
+        "rateAccessCode": {
+          "type": "string"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "accountId": {
+          "description": "Id of the profile account",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "pattern": "[A-Z0-9]+"
+        },
+        "accountName": {
+          "description": "Name of the profile account",
+          "type": "string",
+          "minLength": 1
+        },
+        "profileAccountType": {
+          "$ref": "#/definitions/accountTypeEnum"
+        },
+        "profileId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "description": "Profile Id for which Channel Rate access code is applicable for."
+        }
+      }
+    },
+    "accountTypeEnum": {
+      "description": "Type of the profile account",
+      "type": "string",
+      "enum": [
+        "Source",
+        "TravelAgent",
+        "Company"
+      ]
+    },
+    "deleteNegotiatedRates": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/hotelIdChannelRatesAccess"
+          }
+        }
+      }
+    },
+    "hotelIdChannelRatesAccess": {
+      "description": "HotelId with mappingIds",
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "profileId": {
+          "description": "Profile ID.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "accountId": {
+          "description": "Account ID.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channelcode": {
+          "description": "channel Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "channelRateCode": {
+          "description": "channel Rate Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": " Rate Plan Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "accessCode": {
+          "description": "Access Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
         }
       }
     }
