@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Distribution Book",
-    "description": "OPERA Cloud Distribution Reservations API allows authorized channel partners to create and update reservations for any active property in Oracle Hospitality Distribution (regardless if the property is using OPERA Cloud / OPERA V5 / on-premise PMS Versions).<br /><br /> Compatible with OPERA Cloud release 24.3.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.3.0",
+    "description": "OPERA Cloud Distribution Reservations API allows authorized channel partners to create and update reservations for any active property in Oracle Hospitality Distribution (regardless if the property is using OPERA Cloud,  OPERA V5 / Suite8 / on-premise PMS Versions).<br/> Regardless of how the reservation is created, either directly in Oracle Hospitality Distribution API (reservation request operations) or already created and committed in another external system (reservation notification operations) the same API can be used.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.1.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -45,7 +45,7 @@
             "$ref": "#/parameters/hotelCodePath"
           },
           {
-            "$ref": "#/parameters/x-tracing-key"
+            "$ref": "#/parameters/x-request-id"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -141,7 +141,7 @@
             "$ref": "#/parameters/confirmationNumberPath"
           },
           {
-            "$ref": "#/parameters/x-tracing-key"
+            "$ref": "#/parameters/x-request-id"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -224,7 +224,7 @@
             "$ref": "#/parameters/hotelCodePath"
           },
           {
-            "$ref": "#/parameters/x-tracing-key"
+            "$ref": "#/parameters/x-request-id"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -326,7 +326,7 @@
             "$ref": "#/parameters/confirmationNumberPath"
           },
           {
-            "$ref": "#/parameters/x-tracing-key"
+            "$ref": "#/parameters/x-request-id"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -422,7 +422,7 @@
             "$ref": "#/parameters/confirmationNumberPath"
           },
           {
-            "$ref": "#/parameters/x-tracing-key"
+            "$ref": "#/parameters/x-request-id"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -787,7 +787,7 @@
           "$ref": "#/definitions/ReservationPoliciesResponse"
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         },
@@ -882,7 +882,7 @@
           "example": "2023-11-17T12:21:00Z"
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         },
@@ -975,7 +975,7 @@
           "example": "Committed"
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         }
@@ -1242,15 +1242,16 @@
               ],
               "reservationPaymentMethods": [
                 {
-                  "paymentMethod": "1",
+                  "paymentMethod": "5",
                   "folioView": "1",
                   "paymentCard": {
                     "cardType": "MC",
-                    "cardNumber": "5105 1051 0510 5100 ",
+                    "cardNumber": "4562967335452516",
                     "expirationDate": "06/21",
                     "cardHolderName": "Mary Smith",
                     "cardNumberMasked": "XXXXXXXXXXXX0005",
-                    "cardOrToken": "Token"
+                    "cardOrToken": "Token",
+                    "citId": "358908FDHD53"
                   }
                 }
               ],
@@ -1513,7 +1514,7 @@
           }
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         },
@@ -1744,7 +1745,7 @@
           }
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         },
@@ -1810,7 +1811,7 @@
           "example": "2023-11-17T12:21:00Z"
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         },
@@ -1854,7 +1855,7 @@
           "example": "Commit"
         },
         "hotelCode": {
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "type": "string",
           "example": "XUSXXYY99"
         },
@@ -2142,6 +2143,7 @@
       "properties": {
         "tax": {
           "type": "array",
+          "description": "List of taxes applicable for this reservation",
           "minItems": 1,
           "items": {
             "$ref": "#/definitions/Tax"
@@ -2154,22 +2156,19 @@
         },
         "currencyCode": {
           "type": "string",
-          "description": "The Tax currency code. This should be ISO currency code.",
+          "description": "ISO currency code of the tax.",
           "example": "EUR"
         }
       }
     },
     "Total": {
       "type": "object",
-      "description": "Reservation Total Rate Information\n* If the rate plan is configured as tax Inclusive, Amount After Tax is expected in reservation requests.\n* If the rate Plan is configured as Tax exclusive, Amount Before Tax is expected in reservation requests.\n",
+      "description": "Reservation Total Rate Information\n* If the rate plan is configured as Tax Inclusive, Amount After Tax is returned.\n* If the rate Plan is configured as Tax Exclusive, Amount Before Tax is returned.\n",
       "properties": {
         "taxes": {
           "type": "object",
+          "description": "Total Tax details applicable for this reservation",
           "$ref": "#/definitions/Taxes"
-        },
-        "description": {
-          "type": "string",
-          "example": "string"
         },
         "currencySymbol": {
           "type": "string",
@@ -2180,10 +2179,6 @@
           "type": "number",
           "description": "Rate Amount decimal Places.",
           "example": 1
-        },
-        "code": {
-          "type": "string",
-          "example": "string"
         },
         "rateOverride": {
           "type": "boolean",
@@ -2210,11 +2205,12 @@
       "properties": {
         "description": {
           "type": "string",
-          "description": "Description of the tax.",
-          "example": "Value added Tax"
+          "description": "OTA Standard Fee Tax Type description",
+          "example": "VAT (Value Added Tax)"
         },
         "type": {
           "type": "string",
+          "description": "Indicates if this tax is included or excluded in rate.",
           "enum": [
             "Inclusive",
             "Exclusive"
@@ -2223,17 +2219,17 @@
         },
         "code": {
           "type": "string",
-          "description": "Code of the Tax.",
-          "example": "VAT10"
+          "description": "OTA Standard Fee Tax Type",
+          "example": "36"
         },
         "amount": {
           "type": "number",
-          "description": "Tax Amount.",
+          "description": "Total tax amount of given Fee Tax type.",
           "example": 10
         },
         "currencyCode": {
           "type": "string",
-          "description": "The Tax currency code. This should be ISO currency code.",
+          "description": "ISO currency code of the tax.",
           "example": "EUR"
         }
       }
@@ -3280,6 +3276,13 @@
             "CardNumber",
             "Token"
           ]
+        },
+        "citId": {
+          "type": "string",
+          "description": "Customer Initiated Transaction(CIT) Id for Credit Cards. This is only used when PAYMENT SERVICES DIRECTIVE (PSD2) Opera Control is active.",
+          "minLength": 0,
+          "maxLength": 16,
+          "example": "654321ABC1234578"
         }
       },
       "required": [
@@ -3342,7 +3345,7 @@
         },
         "hotelCode": {
           "type": "string",
-          "description": "The unique identifier of the Property for which the reservation is created.",
+          "description": "The unique identifier of the Property in Channel system.",
           "example": "XUSXXYY99"
         },
         "hotelName": {
@@ -3754,11 +3757,11 @@
       "required": false,
       "x-example": "en-GB"
     },
-    "x-tracing-key": {
-      "name": "x-hdp-tracing-key",
+    "x-request-id": {
+      "name": "x-request-id",
       "in": "header",
       "description": "Unique tracing key e.g. 4664ab3423434a45",
-      "required": true,
+      "required": false,
       "type": "string",
       "x-example": "4664ab3423434a45"
     },
@@ -3795,7 +3798,7 @@
     },
     "hotelCodePath": {
       "name": "hotelCode",
-      "description": "The unique identifier of the Property for which the reservation is created.",
+      "description": "The unique identifier of the Property in Channel system.",
       "type": "string",
       "in": "path",
       "required": true,
@@ -3819,6 +3822,16 @@
       "required": false,
       "minLength": 1,
       "x-example": "1"
+    },
+    "externalReferenceIdsQueryParam": {
+      "name": "externalReferenceId",
+      "description": "Reservation Reference Id in Channel",
+      "type": "string",
+      "in": "query",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 20,
+      "x-example": "LZDI6496738895"
     }
   },
   "responses": {

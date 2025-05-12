@@ -1,0 +1,360 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Distribution Content Notification",
+    "version": "25.1.0.0",
+    "description": "Oracle Hospitality Distribution Content notification message specification for distribution partners to receive in real time property content, channel room and rate updates. Partner receives this message will respond with success or error/warning so that property/CRS user can see the status of message delivery in OPERA. A channel code identifier is required in Oracle Hospitality Distribution to receive those messages.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    },
+    "termsOfService": "https://www.oracle.com/legal/terms.html"
+  },
+  "basePath": "/notification/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/content": {
+      "post": {
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Response for publishing content"
+          },
+          "400": {
+            "description": "Request data provided is invalid",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "405": {
+            "description": "Not Allowed",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "414": {
+            "description": "URI Too Long",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "schema": {
+              "$ref": "#/definitions/ExceptionDetail"
+            }
+          }
+        },
+        "summary": "Content Notification",
+        "operationId": "postContent",
+        "description": "This message will provide channel property content  <p><strong>OperationId:</strong>postContent</p>",
+        "tags": [
+          "Content Notification"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Bearer token that needs to be passed which is generated post user authentication",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChannelContent"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "UniqueId": {
+      "type": "string",
+      "description": "The unique identifier element allows the trading partners to uniquely identify each request of the same message, (i.e.  the entire message) for transaction traceability",
+      "example": "234512-3432-234234234"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "DATE_TIME",
+      "description": "Indicates the creation date and time of the message in UTC using the following format specified by ISO 8601; YYYY-MM-DDThh:mm:ss.zzzZ with time values using the 24 hour clock (e.g. 20 November 2003, 1:59:38 pm UTC becomes 2003-11-20T13:59:38.000Z).",
+      "example": "2021-11-20T13:59:38.000Z"
+    },
+    "ExceptionObj": {
+      "type": "object",
+      "properties": {
+        "logId": {
+          "type": "integer",
+          "example": 884366976
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "o.errorCode": {
+          "type": "string",
+          "description": "HDP error code, which is different from HTTP error code.",
+          "example": "DARI00001"
+        },
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
+        },
+        "timestamp": {
+          "type": "string",
+          "example": "2021-09-17T08:17:18.321Z",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "logId",
+        "title",
+        "status"
+      ]
+    },
+    "ExceptionDetail": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExceptionObj"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "o.errorDetails": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ExceptionObj"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ChannelContent": {
+      "description": "The object provides the channel content detail.",
+      "type": "object",
+      "properties": {
+        "moduleName": {
+          "type": "string",
+          "example": "ChannelContent"
+        },
+        "actionType": {
+          "type": "string",
+          "description": "The action type for the event",
+          "example": "UPDATE CHANNEL ROOM TYPE"
+        },
+        "uniqueId": {
+          "$ref": "#/definitions/UniqueId"
+        },
+        "timeStamp": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "enterpriseId": {
+          "type": "string",
+          "description": "The Enterprise ID of the property it belongs to",
+          "example": "ENTERPRISEID"
+        },
+        "hotelCode": {
+          "type": "string",
+          "description": "A unique identifier value for the property/hotel associated with channel",
+          "minLength": 1,
+          "maxLength": 50,
+          "example": "HOTELCODE"
+        },
+        "channelCode": {
+          "type": "string",
+          "description": "Code for the channel which is receiving published data.",
+          "minLength": 1,
+          "maxLength": 50,
+          "example": "CHANNELCODE"
+        },
+        "transactionKey": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionKeyDetail"
+          }
+        }
+      }
+    },
+    "TransactionKeyDetail": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "roomType"
+        },
+        "value": {
+          "type": "string",
+          "example": "ROOMTYPECODE"
+        }
+      }
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Request data provided is invalid",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "401": {
+      "description": "Unauthorized",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "403": {
+      "description": "Forbidden",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "404": {
+      "description": "Not Found",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "405": {
+      "description": "Not Allowed",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "406": {
+      "description": "Not Acceptable",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "413": {
+      "description": "Payload Too Large",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "414": {
+      "description": "URI Too Long",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "415": {
+      "description": "Unsupported Media Type",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "500": {
+      "description": "Internal Server Error",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    },
+    "503": {
+      "description": "Service Unavailable",
+      "schema": {
+        "$ref": "#/definitions/ExceptionDetail"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Content Notification",
+      "description": " The Content Notification service provides ability to send distribution partners with hotel property inventory level, room rates, and restrictions."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
