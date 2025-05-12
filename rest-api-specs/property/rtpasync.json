@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "Opera Cloud Rate Plan Asynchronous Service API",
-    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.4",
+    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.1.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -110,6 +110,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -250,6 +253,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -355,6 +361,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -467,6 +476,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -607,6 +619,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -712,6 +727,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -825,6 +843,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -968,6 +989,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -1076,6 +1100,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -1193,6 +1220,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -1336,6 +1366,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -1446,6 +1479,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -1465,9 +1501,256 @@
           "RatePlanAsync"
         ]
       }
+    },
+    "/hotels/{hotelId}/ratePlans/roomTypes": {
+      "post": {
+        "summary": "Add or remove the Room Types to or from rate codes.",
+        "description": "This API is to add or remove the Room Types to or from rate codes.<p><strong>OperationId:</strong>startRatePlanRoomTypesModifyProcess</p>",
+        "operationId": "startRatePlanRoomTypesModifyProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "description": "Unique ID of a Hotel",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "modifyRatePlanRoomTypesType",
+            "in": "body",
+            "required": true,
+            "description": "Request object for submitting add or remove the Room Types.",
+            "schema": {
+              "$ref": "#/definitions/modifyRatePlanRoomTypesType"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/roomTypes/{requestId}": {
+      "head": {
+        "summary": "Check status of add/remove Room Types process.",
+        "description": "Use this to check whether add/remove Room Types process has been completed. You can get the value of requestId from the process API response (under header location). <p><strong>OperationId:</strong>headRatePlanRoomTypesModifyProcessStatus</p>",
+        "operationId": "headRatePlanRoomTypesModifyProcessStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "description": "Unique ID of add/remove Room Types process",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "description": "Unique ID of a Hotel",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      },
+      "get": {
+        "summary": "Get results of add/remove Room Types process.",
+        "description": "This API returns a summary of the add/remove Room Types process. You can get the value of requestId from the process API response (under header location). <p><strong>OperationId:</strong>getRatePlanRoomTypesModifyProcessSummary</p>",
+        "operationId": "getRatePlanRoomTypesModifyProcessSummary",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "description": "Unique ID of add/remove Room Types process",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "description": "Unique ID of a Hotel",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Request object for add/remove Room Types process summary",
+            "schema": {
+              "$ref": "#/definitions/modifyRatePlanRoomTypesSummaryType"
+            },
+            "examples": {
+              "application/json": {}
+            }
+          },
+          "204": {
+            "description": "Add/remove Room Types Process Summary not found."
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RatePlanAsync"
+        ]
+      }
     }
   },
   "parameters": {
+    "externalData": {
+      "name": "externalData",
+      "type": "string",
+      "description": "Pass this header as true, if payload needs DVM",
+      "in": "header"
+    },
     "authKey": {
       "name": "authorization",
       "description": "Bearer token that needs to be passed which is generated post user authentication",
@@ -2365,6 +2648,140 @@
         "type": "string",
         "minLength": 0,
         "maxLength": 20
+      }
+    },
+    "modifyRatePlanRoomTypesType": {
+      "type": "object",
+      "description": "Add or remove the Room Type criteria.",
+      "properties": {
+        "action": {
+          "description": "Action to add or remove the room type.",
+          "$ref": "#/definitions/ratePlanModifyActionType"
+        },
+        "roomTypes": {
+          "type": "array",
+          "description": "Room Types to be added or removed.",
+          "maxItems": 500,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "rateCodes": {
+          "type": "array",
+          "description": "Rate Codes.",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "rateCategory": {
+          "description": "Rate Category for the rate plan.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "updateSchedules": {
+          "description": "Indicates to update the room type to the pricing schedule.",
+          "type": "boolean",
+          "default": false
+        },
+        "referenceRoomType": {
+          "description": "If updateSchedules is true, then rom type should be added to the pricing schedules based on the referenceRoomType.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "hotelId",
+        "action",
+        "roomTypes"
+      ]
+    },
+    "ratePlanModifyActionType": {
+      "description": "Action to add or remove the room type.",
+      "type": "string",
+      "enum": [
+        "ADD",
+        "REMOVE"
+      ]
+    },
+    "modifyRatePlanRoomTypesSummaryType": {
+      "type": "object",
+      "description": "Response object for add or remove Room Types process summary.",
+      "properties": {
+        "modifyRatePlanRoomTypesOutcomes": {
+          "$ref": "#/definitions/modifyRatePlanRoomTypesOutcomesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "modifyRatePlanRoomTypesOutcomesType": {
+      "type": "array",
+      "description": "Collection of outcome of add/remove Room Types.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/modifyRatePlanRoomTypesOutcomeType"
+      }
+    },
+    "modifyRatePlanRoomTypesOutcomeType": {
+      "type": "object",
+      "description": "Response object for outcome of add/remove Room Types.",
+      "properties": {
+        "rateCode": {
+          "description": "Rate Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "Room Type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "modifyStatus": {
+          "type": "string",
+          "description": "Modify Rate Plan Room Types Status.",
+          "enum": [
+            "Success",
+            "Fail"
+          ]
+        },
+        "outcomeMessages": {
+          "description": "Status of the update",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/outcomeMessageType"
+          }
+        }
+      }
+    },
+    "outcomeMessageType": {
+      "type": "object",
+      "description": "Object for update messages.",
+      "properties": {
+        "messageCode": {
+          "type": "string",
+          "description": "Update Message Code.",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "messageText": {
+          "description": "Update Message Text",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        }
       }
     }
   },

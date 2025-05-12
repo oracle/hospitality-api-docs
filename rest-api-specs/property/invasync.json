@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "Opera Cloud Inventory Asynchronous API",
-    "description": "APIs to cater for Inventory related asynchronous functionality in OPERA Cloud. This includes viewing inventory data along with its revenue and updating inventory&apos;s sell limits for date ranges. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.4",
+    "description": "APIs to cater for Inventory related asynchronous functionality in OPERA Cloud. This includes viewing inventory data along with its revenue and updating inventory&apos;s sell limits for date ranges. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.1.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -110,6 +110,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -250,6 +253,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -352,6 +358,263 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "InventoryAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/inventoryStatistics": {
+      "post": {
+        "summary": "Start process to get hotel inventory statistics",
+        "description": "Use this API to start the process to get a hotel's inventory statistics for a given date range. The maximum limit of the date range is 365 days with a single request, but the recommendation is to use a date range proportionate to the size of the hotel. Returns a header parameter Location that can be used in the getInventoryStatisticsProcessStatus operation.<p><strong>OperationId:</strong>startInventoryStatisticsProcess</p>",
+        "operationId": "startInventoryStatisticsProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          {
+            "name": "inventoryCriteria",
+            "in": "body",
+            "required": true,
+            "description": "Request object for fetching inventory statistics asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/inventoryCriteriaType"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "InventoryAsync"
+        ]
+      }
+    },
+    "/externalSystems/{extSystemCode}/hotels/{hotelId}/inventoryStatistics/{requestId}": {
+      "head": {
+        "summary": "Check status of hotel inventory statistics process",
+        "description": "Use this API to check whether the statistics of the hotel's inventory statistics is ready yet. You can get value of summaryId with startInventoryStatisticsProcess API response (under header location). <p><strong>OperationId:</strong>getInventoryStatisticsProcessStatus</p>",
+        "operationId": "getInventoryStatisticsProcessStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "InventoryAsync"
+        ]
+      },
+      "get": {
+        "summary": "Get results of a inventory statistics process",
+        "description": "This API returns inventory statistics for a hotel by given dates in the startInventoryStatisticsProcess API request. You can get the value of the summaryId with the getInventoryStatisticsProcessStatus API response (under header location). <p><strong>OperationId:</strong>getInventoryStatisticsAsync</p>",
+        "operationId": "getInventoryStatisticsAsync",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetched inventory statistics.",
+            "schema": {
+              "$ref": "#/definitions/inventoryStatisticsDetails"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "extSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -463,6 +726,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -603,6 +869,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -710,6 +979,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -732,6 +1004,12 @@
     }
   },
   "parameters": {
+    "externalData": {
+      "name": "externalData",
+      "type": "string",
+      "description": "Pass this header as true, if payload needs DVM",
+      "in": "header"
+    },
     "authKey": {
       "name": "authorization",
       "description": "Bearer token that needs to be passed which is generated post user authentication",
@@ -1151,6 +1429,330 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 8
+        }
+      }
+    },
+    "inventoryCriteriaType": {
+      "type": "object",
+      "description": "Fetch criteria type for fetching revenue inventory statistics.",
+      "properties": {
+        "dateRangeStart": {
+          "description": "The starting value of the date range.",
+          "type": "string",
+          "format": "date"
+        },
+        "dateRangeEnd": {
+          "description": "The ending value of the date range.",
+          "type": "string",
+          "format": "date"
+        },
+        "reportCode": {
+          "enum": [
+            "RoomsAvailabilitySummary"
+          ],
+          "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
+          "type": "string"
+        },
+        "paramList": {
+          "description": "List of supported parameter names and its parameter values.",
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/paramListType"
+          }
+        },
+        "filterList": {
+          "description": "List of supported filter names and its filter values.",
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/definitions/filterListType"
+          }
+        },
+        "groupBy": {
+          "description": "Group by instructions for inventory statistics that can be used in request operation.",
+          "type": "string",
+          "enum": [
+            "RoomType",
+            "RoomClass"
+          ]
+        },
+        "channel": {
+          "description": "Channel Code.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "dateRangeStart",
+        "dateRangeEnd",
+        "reportCode"
+      ]
+    },
+    "paramListType": {
+      "type": "object",
+      "description": "Parameter name and its Parameter value as a pair.",
+      "properties": {
+        "paramName": {
+          "description": "Property Name.",
+          "type": "string",
+          "enum": [
+            "CancelledYN",
+            "DeductRoomsYN",
+            "HouseArrPersonsYN",
+            "HouseArrRoomsYN",
+            "HouseAvailPercYN",
+            "HouseAvailRoomsExcludingOverbookingYN",
+            "HouseAvailRoomsYN",
+            "HouseAvailTenPercYN",
+            "HouseBlkDeductNpuYN",
+            "HouseBlkDeductPuYN",
+            "HouseBlkTentNpuYN",
+            "HouseBlkTentPuYN",
+            "HouseDayUsePersonYN",
+            "HouseDayUseRoomYN",
+            "HouseDepPersonsYN",
+            "HouseDepRoomsYN",
+            "HouseInventoryRoomsYN",
+            "HouseMaxAvailabilityExcludingOverbookingYN",
+            "HouseMaxAvailabilityYN",
+            "HouseMaxOccupancyYN",
+            "HouseMinAvailabilityExcludingOverbookingYN",
+            "HouseMinAvailabilityYN",
+            "HouseOccPercYN",
+            "HouseOccTenPercYN",
+            "HouseOccupancyYN",
+            "HouseOOOYN",
+            "HouseOOSRoomsYN",
+            "HouseOverBookingYN",
+            "HousePeopleInHouseYN",
+            "HousePhysicalRoomsYN",
+            "HouseRoomsSoldYN",
+            "HouseSellLimitYN",
+            "HouseTentRoomsExcludingOverbookingYN",
+            "HouseTentRoomsSoldYN",
+            "HouseTentRoomsYN",
+            "NonOwnerExclusiveYN",
+            "OutOfOrderRoomsYN",
+            "OwnerExclusiveYN",
+            "RestrictionsYN",
+            "RoomArrPersonsYN",
+            "RoomArrRoomsYN",
+            "RoomAvailRoomsExcludingOverbookingYN",
+            "RoomAvailRoomsYN",
+            "RoomBlkDeductNpuYN",
+            "RoomBlkDeductPuYN",
+            "RoomBlkTentNpuYN",
+            "RoomBlkTentPuYN",
+            "RoomCancelledYN",
+            "RoomDayUsePersonYN",
+            "RoomDayUseRoomYN",
+            "RoomDepPersonsYN",
+            "RoomDepRoomsYN",
+            "RoomInventoryRoomsYN",
+            "RoomMaxAvailabilityExcludingOverbookingYN",
+            "RoomMaxAvailabilityYN",
+            "RoomMaxOccupancyYN",
+            "RoomMinAvailabilityExcludingOverbookingYN",
+            "RoomMinAvailabilityYN",
+            "RoomOccupancyYN",
+            "RoomOOOYN",
+            "RoomOOSRoomsYN",
+            "RoomOverBookingYN",
+            "RoomPeopleInHouseYN",
+            "RoomPhysicalRoomsYN",
+            "RoomRestrictionsYN",
+            "RoomRoomsSoldYN",
+            "RoomSellLimitYN",
+            "RoomTentRoomsExcludingOverbookingYN",
+            "RoomTentRoomsYN",
+            "RoomTentYN"
+          ]
+        },
+        "paramValue": {
+          "description": "Property Value.",
+          "type": "string",
+          "enum": [
+            "Y",
+            "N"
+          ]
+        }
+      },
+      "required": [
+        "paramName",
+        "paramValue"
+      ]
+    },
+    "filterListType": {
+      "type": "object",
+      "description": "Filter name with its value.",
+      "properties": {
+        "filterName": {
+          "description": "Filter Name.",
+          "type": "string",
+          "enum": [
+            "RoomClassList",
+            "RoomTypeWildCardList"
+          ]
+        },
+        "filterValue": {
+          "description": "Filter Value. Mulitple values can be passed as comma separated values. example : if filterName is say 'RoomClassList' then its corresponding filterValue would mean room class which can be comma separated like 'DAILY,RACK'",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "filterName",
+        "filterValue"
+      ]
+    },
+    "inventoryStatisticsDetails": {
+      "type": "array",
+      "description": "List of inventory statistics that is grouped by statistic date.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/statisticType"
+      }
+    },
+    "statisticType": {
+      "type": "object",
+      "description": "Defines all details needed to create a statistical report.",
+      "properties": {
+        "statistics": {
+          "description": "Statistic Codes.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticCodeType"
+          }
+        },
+        "hotelName": {
+          "description": "A text field used to communicate the proper name of the hotel.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "reportCode": {
+          "description": "Identifies the type of statistics collected. Each ReportCode corresponds to a set of category summaries based upon a predetermined agreement.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "description": {
+          "description": "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "statisticCodeType": {
+      "type": "object",
+      "description": "Defines the codes and corresponding categories for which the data in the other elements has been gathered.",
+      "properties": {
+        "statisticDate": {
+          "description": "Collection of statistic summary data.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticSetType"
+          }
+        },
+        "statCode": {
+          "description": "Actual code used by the system to collect the statistics (e.g. CORP, RACK if category is Market Segment).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "statCategoryCode": {
+          "description": "Category Code category of StatCode attribute (e.g. Market Segment).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "statCodeClass": {
+          "description": "Class grouping of StatCode attribute.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Statistic code description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "statisticSetType": {
+      "type": "object",
+      "description": "An instance of a statistic, which is a set containing revenue category and number category summaries.",
+      "properties": {
+        "revenue": {
+          "description": "Collection of RevenueCategorySummary elements. Used if revenue values reported.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/revenueCategorySummaryType"
+          }
+        },
+        "inventory": {
+          "description": "Collection of CountCategorySummary elements. Used if count values reported.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/numericCategorySummaryType"
+          }
+        },
+        "statisticDate": {
+          "description": "Date of the statistic.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "weekendDate": {
+          "description": "Determines whether statistic date is a weekend date.",
+          "type": "boolean"
+        }
+      }
+    },
+    "numericCategorySummaryType": {
+      "type": "object",
+      "description": "This element has count data for each count category such as number of guests, rooms occupied, etc.",
+      "properties": {
+        "value": {
+          "description": "The total count for the category in NumericCategoryCode.",
+          "type": "number"
+        },
+        "code": {
+          "description": "The representation of a numeric category such as Guests : Number of guests, RoomsOcc : Rooms occupied.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "revenueCategorySummaryType": {
+      "type": "object",
+      "description": "This element has revenue amount data for its revenue category such as Room Revenue, Food and Beverage Revenue.",
+      "properties": {
+        "code": {
+          "description": "The representation of a revenue category.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
         }
       }
     },
