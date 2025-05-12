@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block Reservation Asynchronous API",
-    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 24.4.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2024 Oracle and/or its affiliates.</p>",
-    "version": "24.4",
+    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.1.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -113,6 +113,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -253,6 +256,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -360,6 +366,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -421,6 +430,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -532,6 +544,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -671,6 +686,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -789,6 +807,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -898,6 +919,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -1037,6 +1061,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -1155,6 +1182,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -1264,6 +1294,9 @@
           },
           {
             "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
           },
           {
             "$ref": "#/parameters/x-app-key"
@@ -1403,6 +1436,9 @@
             "$ref": "#/parameters/authKey"
           },
           {
+            "$ref": "#/parameters/externalData"
+          },
+          {
             "$ref": "#/parameters/x-app-key"
           },
           {
@@ -1477,9 +1513,283 @@
           "BlockAsync"
         ]
       }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/recalculateRoomForecast": {
+      "post": {
+        "summary": "This API facilitates setting recalculation for forecast room rates in a business block.",
+        "description": "Use this API to recalculate room forecast rates",
+        "operationId": "startRecalculateRoomForecastProcess",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Hotel code where the Block resides."
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "blockId",
+            "in": "body",
+            "required": false,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/blockId"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/links"
+            }
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/recalculateRoomForecast/{requestId}": {
+      "head": {
+        "summary": "This API returns the status of asynchronous process scheduled for given id.",
+        "description": " <p><strong>OperationId:</strong>getRecalculateRoomForecastProcessStatus</p>",
+        "operationId": "getRecalculateRoomForecastProcessStatus",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      },
+      "get": {
+        "summary": "This API returns information about the recalculate room forecast rates process.",
+        "description": "This API will fetch recalculate room forecast warnings and errors to be returned as part of the response.<p><strong>OperationId:</strong>getRecalculateRoomForecastProcessInfo</p>",
+        "operationId": "getRecalculateRoomForecastProcessInfo",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+          },
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Callback request object for fetched recalculate room forecast process information.",
+            "schema": {
+              "$ref": "#/definitions/processDetails"
+            }
+          },
+          "204": {
+            "description": "Information related to recalculateRoomForecast request not found."
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "BlockAsync"
+        ]
+      }
     }
   },
   "parameters": {
+    "externalData": {
+      "name": "externalData",
+      "type": "string",
+      "description": "Pass this header as true, if payload needs DVM",
+      "in": "header"
+    },
     "authKey": {
       "name": "authorization",
       "description": "Bearer token that needs to be passed which is generated post user authentication",

@@ -1,0 +1,2019 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Cashiering Asynchronous API",
+    "description": "APIs to cater for Cashiering related asynchronous functionality in OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.1.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/csh/async/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/hotels/{hotelId}/financialPostingsNetVat": {
+      "post": {
+        "summary": "Get Financial Postings with Net and Vat breakdown.",
+        "description": "You can use this API to get Financial postings with Net and Vat breakdown. <p><strong>OperationId:</strong>startFinancialPostingsAsync</p> <p>This API allows a time span of <strong>15</strong> days.</p>",
+        "operationId": "startFinancialPostingsAsync",
+        "x-interaction": [
+          "async-polling"
+        ],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "name": "netvatcriteriatype",
+            "in": "body",
+            "required": true,
+            "description": "Request object for fetching financial postings with net vat asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/netvatcriteriatype"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CashieringAsync"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/financialPostingsNetVat/{statusId}": {
+      "head": {
+        "summary": "Check status of financial postings process",
+        "description": "Use this to check whether the response is ready yet. You can get  the value of statusId with startFinancialPostingsAsync API response (under header location). <p><strong>OperationId:</strong>getFinancialPostingsProcessStatusAsync</p>",
+        "operationId": "getFinancialPostingsProcessStatusAsync",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [
+          {
+            "name": "statusId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CashieringAsync"
+        ]
+      },
+      "get": {
+        "summary": "Get results of Financial Postings with Net and Vat breakdown.",
+        "description": "This API returns response for the process initiated with startFinancialPostingsAsync. You can get the value of statusId with getFinancialPostingsProcessStatusAsync API response (under header location). <p><strong>OperationId:</strong>getFinancialPostingsAsync</p>",
+        "operationId": "getFinancialPostingsAsync",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "name": "statusId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetching the Posting Journal.",
+            "schema": {
+              "$ref": "#/definitions/financialPostingsNetVat"
+            }
+          },
+          "204": {
+            "description": "FinancialPostings not found."
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Cashiering"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "externalData": {
+      "name": "externalData",
+      "type": "string",
+      "description": "Pass this header as true, if payload needs DVM",
+      "in": "header"
+    },
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 80,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    },
+    "x-hubid": {
+      "name": "x-hubid",
+      "type": "string",
+      "description": "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "netvatcriteriatype": {
+      "type": "object",
+      "description": "Request object for fetching financial postings with net vat asynchronously.",
+      "properties": {
+        "netvatcriteriatype": {
+          "$ref": "#/definitions/fetchFinancialPostingsNetVatSearchType"
+        }
+      }
+    },
+    "fetchFinancialPostingsNetVatSearchType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "The Hotel Code for which financial postings net vat search will be performed.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "folioWindowNo": {
+          "description": "The Folio Window number of this posting.",
+          "type": "array",
+          "collectionFormat": "multi",
+          "items": {
+            "type": "integer"
+          },
+          "required": false
+        },
+        "includePseudoRooms": {
+          "required": false,
+          "type": "string"
+        },
+        "reservationId": {
+          "required": true,
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "description": "Unique ID of the reservation"
+        },
+        "timeSpan": {
+          "description": "The start date and time span for the search to be performed.",
+          "$ref": "#/definitions/timeSpanType"
+        }
+      }
+    },
+    "timeSpanType": {
+      "type": "object",
+      "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, whild Duration provides a measure of time to add to the StartDate to yield end date.",
+      "properties": {
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "financialPostingsNetVat": {
+      "type": "object",
+      "description": "Response for fetching the Posting Journal with Net and Vat breakdown.",
+      "properties": {
+        "financialPostings": {
+          "description": "Journal entries of the response.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/financialPostingsNetVatType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "financialPostingsNetVatType": {
+      "type": "object",
+      "description": "Financial Postings with their Net and Vat breakup",
+      "properties": {
+        "posting": {
+          "description": "Details of the primary posting.",
+          "$ref": "#/definitions/detailPostingType"
+        },
+        "postingBreakdown": {
+          "description": "Details of posting's breakdown.",
+          "$ref": "#/definitions/postingBreakdownType"
+        }
+      }
+    },
+    "detailPostingType": {
+      "type": "object",
+      "description": "Posting information of the transaction.",
+      "properties": {
+        "referenceTransactionNo": {
+          "description": "Generate transaction number for the Posting.",
+          "type": "number"
+        },
+        "referencePackageTransactionNo": {
+          "description": "Package transaction number for the Posting.",
+          "type": "number"
+        },
+        "remark": {
+          "description": "Posting remarks.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "reference": {
+          "description": "User-defined posting reference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "checkNo": {
+          "description": "Check number for the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "checkCount": {
+          "description": "Check number count for the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "postedAmount": {
+          "description": "Actual currency amount posted.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "price": {
+          "description": "Indicates the unit price of the consumption.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "quantity": {
+          "description": "Indicates Quantity.",
+          "type": "number"
+        },
+        "transactionType": {
+          "description": "This is the transaction type which says whether it is a Consumption(C), Payment (FC) or Package (PK) and it is inherited from transaction code.",
+          "$ref": "#/definitions/cashieringTransactionTypeType"
+        },
+        "creditAmount": {
+          "description": "The amount posted as credit to the ledger.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "debitAmount": {
+          "description": "The amount posted as debit to the ledger.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "articleCode": {
+          "description": "Information regarding the Article(Using Articles Functionality) of this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "cashierInfo": {
+          "$ref": "#/definitions/cashierInfoType"
+        },
+        "paidOut": {
+          "description": "Indicates if this transaction is a paid out transaction.",
+          "type": "boolean"
+        },
+        "arrangementCode": {
+          "description": "Corrected arrangement code from the package associated to this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "groupTypeInfo": {
+          "description": "Information related to transaction grouping.",
+          "$ref": "#/definitions/postingGroupType"
+        },
+        "rateCode": {
+          "description": "Rate code associated to this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "compRedemptionCode": {
+          "description": "Comp redemption code assiciated to the transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "updateInfo": {
+          "description": "Update info associated to this transaction.",
+          "type": "object",
+          "properties": {
+            "updateDate": {
+              "type": "string",
+              "format": "date",
+              "maxLength": 8
+            },
+            "updateBy": {
+              "type": "string"
+            }
+          }
+        },
+        "fbaCertificate": {
+          "description": "Flag indicates that the posting is Flexible Benefits Awards Certificate",
+          "type": "boolean"
+        },
+        "taxInvoiceNo": {
+          "description": "Tax invoice number generated by payment tax.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "serviceRecovery": {
+          "description": "Flag to indicates service recovery",
+          "type": "boolean"
+        },
+        "compPostingsInfo": {
+          "description": "Comp Postings information for the folio.",
+          "$ref": "#/definitions/compPostingsType"
+        },
+        "financialTransactionIdList": {
+          "description": "Collection of unique identifiers of the financial transactions.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "exchange": {
+          "description": "Available when the Fetch Folio Search Type requests the amounts to be converted to a currency different from the Resort currency.",
+          "$ref": "#/definitions/exchangeAmounts"
+        },
+        "approvalCode": {
+          "description": "Approval code of the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "approvalStatus": {
+          "description": "Approval status of the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "stampDuty": {
+          "description": "Flag to identify a Stamp Duty Transaction.",
+          "type": "boolean"
+        },
+        "customCharge": {
+          "description": "Flag to identify a Custom Charge.",
+          "type": "boolean"
+        },
+        "transactionNo": {
+          "description": "Unique Transaction Identifier.",
+          "type": "number"
+        },
+        "transactionDate": {
+          "description": "Transaction Date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "transactionCode": {
+          "description": "Billing Transaction Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "transactionDescription": {
+          "description": "Billing Transaction Description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionAmount": {
+          "description": "The amount of the transaction.",
+          "type": "number"
+        },
+        "postingDate": {
+          "description": "Date and time of posting.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "revenueDate": {
+          "description": "The date on which the transaction has its revenue effect.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "receiptNo": {
+          "description": "The receipt number of the transaction, if there is a receipt generated.",
+          "type": "number"
+        },
+        "roundingDifferenceTrx": {
+          "description": "Indicator to determine if the posting was a posting for the Rounding Difference.",
+          "type": "boolean"
+        },
+        "commissionable": {
+          "description": "Indicator to determine if the transaction is commissionable.",
+          "type": "boolean"
+        },
+        "reversePaymentTransactionNo": {
+          "description": "Reverse payment transaction unique identifier.",
+          "type": "number"
+        },
+        "canAdjustInvoice": {
+          "description": "Indicator to determine if the transaction can be adjusted.",
+          "type": "boolean"
+        },
+        "depositTransactionId": {
+          "description": "Tax Service Accounting Codes used.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "hotelId": {
+          "description": "Property code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "targetHotel": {
+          "description": "Cross property posting hotel code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "subPostings": {
+          "description": "SubPostings for the posting.",
+          "$ref": "#/definitions/summaryPostingsType"
+        },
+        "guestInfo": {
+          "description": "Details of the Guest information where this transaction was posted to.",
+          "type": "object",
+          "properties": {
+            "profileId": {
+              "description": "Profile Id corresponding to the guest name. It is sometimes possible to have a guest name but the profile id is null.",
+              "$ref": "#/definitions/profileId"
+            },
+            "reservationId": {
+              "description": "Reservation Id corresponding to the guest name. It is sometimes possible to have a room number but the reservation id is null.",
+              "$ref": "#/definitions/reservationId"
+            },
+            "guestName": {
+              "description": "Guest name associated with the transaction.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 2000
+            },
+            "roomId": {
+              "description": "Room number associated with the transaction.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 20
+            },
+            "confirmationNo": {
+              "description": "Confirmation number associated with the transaction.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 50
+            }
+          }
+        },
+        "aRInfo": {
+          "description": "Details of the AR account if the posting was part of an AR invoice.",
+          "$ref": "#/definitions/transactionARInfoType"
+        },
+        "currencyExchangeInfo": {
+          "description": "Currency exchange information if the posting was made using a currency different from the default currency.",
+          "$ref": "#/definitions/transactionCurrencyExchangeInfoType"
+        },
+        "adjustmentInfo": {
+          "description": "Details regarding the adjustment made if the current transaction was created as a result of an adjustment.",
+          "$ref": "#/definitions/transactionAdjustmentInfoType"
+        },
+        "paymentMethod": {
+          "description": "Defined method of payment for this transaction.",
+          "$ref": "#/definitions/reservationPaymentMethodType"
+        },
+        "payeeInfo": {
+          "description": "Payee information for the folio.",
+          "$ref": "#/definitions/payeeInfoType"
+        },
+        "miscellaneousInfo": {
+          "type": "object",
+          "properties": {
+            "createDateTime": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "covers": {
+              "description": "POS covers",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 10
+            }
+          }
+        },
+        "exchangeInformation": {
+          "description": "Exchange Information - text presentation of the exchange operation including formula, buy rate, etc.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "folioWindowNo": {
+          "type": "integer"
+        },
+        "folioNo": {
+          "description": "The Folio number of this posting, if there was a Folio already generated.",
+          "type": "number"
+        },
+        "folioNoWithPrefix": {
+          "description": "The folio number with prefix value.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "internalFolioWindowID": {
+          "description": "Internal Unique id for the Folio Window.",
+          "type": "string"
+        },
+        "revisionNo": {
+          "type": "number"
+        },
+        "folioTypeName": {
+          "description": "The name of the Folio Type used for the Folio Number sequence.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "fiscalBillNo": {
+          "description": "The Fiscal Bill number of this posting",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "deferredTax": {
+          "description": "Flag to indicate if the Posting is a deferred tax record. Set to true only when the posting is a deferred tax record. Set to false only when the posting is not a deferred tax record.",
+          "type": "boolean"
+        }
+      }
+    },
+    "payeeInfoType": {
+      "type": "object",
+      "description": "Payee information.",
+      "properties": {
+        "payeeId": {
+          "description": "Opera name id of the payee.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "payeeName": {
+          "description": "Name of the payee.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "payeeAddress": {
+          "description": "Address of the payee.",
+          "$ref": "#/definitions/addressInfoType"
+        },
+        "payeeAddressCount": {
+          "description": "Payee multiple address count.",
+          "type": "integer"
+        },
+        "payeeReferenceCurrency": {
+          "description": "Reference currency of the payee.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "payeeAccountInfo": {
+          "description": "AR account short info of the payee.",
+          "$ref": "#/definitions/aRAccountShortInfoType"
+        },
+        "payeeTaxNumber": {
+          "description": "The tax number of the payee.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "payeeInternalFolio": {
+          "description": "Flag considered during folio settlement, to select the corresponding Folio Type when the value is true. Only used in Poland country mode.",
+          "type": "boolean"
+        }
+      }
+    },
+    "reservationPaymentMethodType": {
+      "type": "object",
+      "properties": {
+        "paymentCard": {
+          "$ref": "#/definitions/resPaymentCardType"
+        },
+        "balance": {
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "authorizationRule": {
+          "$ref": "#/definitions/authorizationRuleType"
+        },
+        "emailFolioInfo": {
+          "description": "Information on an email for the customer.",
+          "type": "object",
+          "properties": {
+            "email": {
+              "description": "eMail deatils for the profile.",
+              "$ref": "#/definitions/emailType"
+            },
+            "emailFolio": {
+              "type": "boolean"
+            },
+            "id": {
+              "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 80
+            },
+            "type": {
+              "description": "A reference to the type of object defined by the UniqueID element.",
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 40
+            }
+          }
+        },
+        "paymentMethod": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "folioView": {
+          "type": "integer"
+        }
+      }
+    },
+    "transactionAdjustmentInfoType": {
+      "type": "object",
+      "description": "Adjustment details of the transaction, if the transaction was created as part of an adjustment.",
+      "properties": {
+        "reason": {
+          "description": "Reason for the adjustment.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "departmentCode": {
+          "description": "Department code for service recovery",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "code": {
+          "description": "Adjustment code used.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "transactionCurrencyExchangeInfoType": {
+      "type": "object",
+      "description": "Details of the Exchange Information for this transaction, if the posting was made in a currency different from the default currency.",
+      "properties": {
+        "description": {
+          "description": "Description or reference for this exchange.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "exchangeRate": {
+          "description": "The Buying rate used for this transaction.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "currencyAmount": {
+          "description": "The foreign currency amount posted for this transaction.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "amount": {
+          "description": "The converted default currency amount",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "commissionPercent": {
+          "description": "Percentage for commission used for the currency conversion.",
+          "type": "number"
+        },
+        "code": {
+          "description": "Foreign Currency Code of the currency which was used to post this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "exchangeDate": {
+          "description": "The date when this exchange rate was set.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "transactionARInfoType": {
+      "type": "object",
+      "description": "Details of the AR account where this transaction was posted to.",
+      "properties": {
+        "accountNumber": {
+          "description": "AR Account number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "accountName": {
+          "description": "The Account name where this invoice is sent.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1000
+        },
+        "invoiceNo": {
+          "description": "The invoice number which includes this transaction.",
+          "type": "number"
+        }
+      }
+    },
+    "profileId": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element. Refer to OpenTravel Code List Unique ID Type (UIT).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
+          "type": "integer"
+        }
+      }
+    },
+    "reservationId": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "url": {
+          "description": "URL that identifies the location associated with the record identified by the UniqueID.",
+          "type": "string"
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element. Refer to OpenTravel Code List Unique ID Type (UIT).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "instance": {
+          "description": "The identification of a record as it exists at a point in time. An instance is used in update messages where the sender must assure the server that the update sent refers to the most recent modification level of the object being updated.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idContext": {
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
+          "type": "integer"
+        }
+      }
+    },
+    "emailType": {
+      "type": "object",
+      "description": "Information on an email for the customer.",
+      "properties": {
+        "emailAddress": {
+          "description": "Defines the e-mail address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "Defines the purpose of the e-mail address (e.g. personal, business, listserve).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "typeDescription": {
+          "description": "Describes the Type code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "emailFormat": {
+          "description": "Supported Email format.",
+          "type": "string",
+          "enum": [
+            "Html",
+            "Text"
+          ]
+        },
+        "primaryInd": {
+          "description": "When true, indicates a primary information.",
+          "type": "boolean"
+        },
+        "orderSequence": {
+          "description": "Display Order sequence.",
+          "type": "number"
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "purgeDate": {
+          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "authorizationRuleType": {
+      "type": "object",
+      "description": "Configured rule for computing the amount to authorize.",
+      "properties": {
+        "code": {
+          "description": "The authorization rule code.",
+          "type": "integer",
+          "pattern": "[0-9]{1,9}"
+        },
+        "amount": {
+          "description": "The amount applicable to the authorization rule.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "percent": {
+          "description": "A percentage value if the authorization rule is percentage based.",
+          "type": "number"
+        }
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "addressInfoType": {
+      "type": "object",
+      "description": "Provides address information.",
+      "properties": {
+        "address": {
+          "description": "Address details for the profile.",
+          "$ref": "#/definitions/addressType"
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "addressType": {
+      "type": "object",
+      "description": "Provides address information.",
+      "properties": {
+        "isValidated": {
+          "description": "Indicator to define if the Address is validated by the Address Validation System.",
+          "type": "boolean"
+        },
+        "addressLine": {
+          "description": "When the address is unformatted (FormattedInd=\"false\") these lines will contain free form address details. When the address is formatted and street number and street name must be sent independently, the street number will be sent using StreetNmbr, and the street name will be sent in the first AddressLine occurrence.",
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 80
+          }
+        },
+        "cityName": {
+          "description": "City (e.g., Dublin), town, or postal station (i.e., a postal service territory, often used in a military address).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "postalCode": {
+          "description": "Post Office Code number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 15
+        },
+        "cityExtension": {
+          "description": "Post Office City Extension Code number. City Extension mainly used for UK addresses.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "county": {
+          "description": "County or District Name (e.g., Fairfax). This is read only.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "state": {
+          "description": "State or Province name (e.g., Texas).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "country": {
+          "description": "Country name (e.g., Ireland).",
+          "$ref": "#/definitions/countryNameType"
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "type": {
+          "description": "Defines the type of address (e.g. home, business, other).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "typeDescription": {
+          "description": "Describes the type code",
+          "type": "string"
+        },
+        "primaryInd": {
+          "description": "When true, indicates a primary information.",
+          "type": "boolean"
+        },
+        "updateReservations": {
+          "description": "Indicates whether to update the reservations or not. If true and the address is primary, then all associated active reservations will be updated with the new primary address.",
+          "type": "boolean"
+        },
+        "barCode": {
+          "description": "The postal barcode for the address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "createDateTime": {
+          "description": "Time stamp of the creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creatorId": {
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "lastModifyDateTime": {
+          "description": "Time stamp of last modification.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifierId": {
+          "description": "Identifies the last software system or person to modify a record.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "purgeDate": {
+          "description": "Date an item will be purged from a database (e.g., from a live database to an archive).",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "countryNameType": {
+      "type": "object",
+      "description": "Code for a country or a nationality.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Used for Character Strings, length 0 to 200.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "code": {
+          "description": "Code for a country or a nationality.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "aRAccountShortInfoType": {
+      "type": "object",
+      "description": "Accounts Receivabales Account details type charged for batched posting.",
+      "properties": {
+        "accountName": {
+          "description": "Name of the AR Account.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "accountId": {
+          "description": "The unique ID for the Account.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "accountNo": {
+          "description": "The Account Number for the Account.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "status": {
+          "description": "The status of the account.",
+          "$ref": "#/definitions/aRAccountStatusType"
+        }
+      }
+    },
+    "aRAccountStatusType": {
+      "type": "object",
+      "description": "Type for the Account Status. Status can be restricted and a message/description added to the Account.",
+      "properties": {
+        "restriction": {
+          "description": "The Restriction Code added on the Account. This is available when the functionality for adding restriction codes is ON.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "User defined status message on the Account.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "restricted": {
+          "description": "Flag to indicate if the Account is restricted.",
+          "type": "boolean"
+        }
+      }
+    },
+    "resPaymentCardType": {
+      "type": "object",
+      "description": "Information on a credit card for the customer.",
+      "properties": {
+        "cardId": {
+          "description": "credit card id",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "currentAuthorizedAmount": {
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "approvalAmountNeeded": {
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "approvalCode": {
+          "description": "Approval code sent by the credit card company on a successful authorization.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "cardType": {
+          "description": "Indicates the type of credit card from a defined list",
+          "$ref": "#/definitions/cardTypeType"
+        },
+        "userDefinedCardType": {
+          "description": "Indicates the user defined credit card type if credit card type from a defined list is not provided",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2
+        },
+        "cardNumber": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "cardNumberMasked": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "cardNumberLast4Digits": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "expirationDate": {
+          "description": "Expiration date of the credit card",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "expirationDateMasked": {
+          "description": "Masked Expiration date of the credit card",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "expirationDateExpired": {
+          "type": "boolean"
+        },
+        "cardHolderName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "attachCreditCardToProfile": {
+          "description": "Attach the credit card to profile.",
+          "type": "boolean"
+        },
+        "processing": {
+          "description": "This contains information on whether EFT is enabled. A value of 'C' indicates EFT is enabled and 'M' indicates manual authorization is available for this payment card type.",
+          "$ref": "#/definitions/cardProcessingType"
+        },
+        "swiped": {
+          "type": "boolean"
+        },
+        "cardPresent": {
+          "description": "Flag to determine if the credit card was swiped/manually entered , This element is only used when PAYMENT SERVICE DIRECTIVE(PSD) Opera Control is active.",
+          "type": "boolean"
+        },
+        "cardOrToken": {
+          "description": "This contains information on whether credit card is tokenized (token enabled). A value of 'Token' indicates credit card is token enabled and 'CardNumber' indicates non token environment for this payment card type.",
+          "$ref": "#/definitions/cardNumberTypeType"
+        },
+        "citId": {
+          "description": "Customer Initiated Transaction(CIT) Id for Credit Cards. This is only used when PAYMENT SERVICES DIRECTIVE (PSD2) Opera Control is active.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 30
+        },
+        "storeToCreditCardWallet": {
+          "description": "Indicate whether the credit card will be stored to the credit card wallet or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "cardTypeType": {
+      "type": "string",
+      "description": "This is required for Credit Card Payment Methods. This indicates the type of Credit Card associated with this payment method.",
+      "enum": [
+        "Ab",
+        "Am",
+        "Ax",
+        "Cb",
+        "Dc",
+        "Ds",
+        "Dt",
+        "Ec",
+        "Er",
+        "Jc",
+        "Jl",
+        "Mc",
+        "Nb",
+        "So",
+        "St",
+        "Sw",
+        "Va",
+        "Xy",
+        "Zz",
+        "Cp",
+        "Cu"
+      ]
+    },
+    "cardProcessingType": {
+      "type": "string",
+      "enum": [
+        "Eft",
+        "Manual"
+      ]
+    },
+    "cardNumberTypeType": {
+      "type": "string",
+      "description": "Simple type for indicating if credit card number is tokenized.",
+      "enum": [
+        "CardNumber",
+        "Token"
+      ]
+    },
+    "summaryPostingType": {
+      "type": "object",
+      "description": "Posting details.",
+      "properties": {
+        "referenceTransactionNo": {
+          "description": "Generate transaction number for the Posting.",
+          "type": "number"
+        },
+        "remark": {
+          "description": "Posting remarks.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "reference": {
+          "description": "User-defined posting reference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "checkNo": {
+          "description": "Check number for the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "checkCount": {
+          "description": "Check number count for the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "postedAmount": {
+          "description": "Actual currency amount posted.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "price": {
+          "description": "Indicates the unit price of the consumption.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "quantity": {
+          "description": "Indicates Quantity.",
+          "type": "number"
+        },
+        "transactionType": {
+          "description": "This is the transaction type which says whether it is a Consumption(C), Payment (FC) or Package (PK) and it is inherited from transaction code.",
+          "$ref": "#/definitions/cashieringTransactionTypeType"
+        },
+        "creditAmount": {
+          "description": "The amount posted as credit to the ledger.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "debitAmount": {
+          "description": "The amount posted as debit to the ledger.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "articleCode": {
+          "description": "Information regarding the Article(Using Articles Functionality) of this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "cashierInfo": {
+          "$ref": "#/definitions/cashierInfoType"
+        },
+        "paidOut": {
+          "description": "Indicates if this transaction is a paid out transaction.",
+          "type": "boolean"
+        },
+        "arrangementCode": {
+          "description": "Corrected arrangement code from the package associated to this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "groupTypeInfo": {
+          "description": "Information related to transaction grouping.",
+          "$ref": "#/definitions/postingGroupType"
+        },
+        "rateCode": {
+          "description": "Rate code associated to this transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "compRedemptionCode": {
+          "description": "Comp redemption code assiciated to the transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "updateInfo": {
+          "description": "Update info associated to this transaction.",
+          "type": "object",
+          "properties": {
+            "updateDate": {
+              "type": "string",
+              "format": "date",
+              "maxLength": 8
+            },
+            "updateBy": {
+              "type": "string"
+            }
+          }
+        },
+        "fbaCertificate": {
+          "description": "Flag indicates that the posting is Flexible Benefits Awards Certificate",
+          "type": "boolean"
+        },
+        "taxInvoiceNo": {
+          "description": "Tax invoice number generated by payment tax.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "serviceRecovery": {
+          "description": "Flag to indicates service recovery",
+          "type": "boolean"
+        },
+        "compPostingsInfo": {
+          "description": "Comp Postings information for the folio.",
+          "$ref": "#/definitions/compPostingsType"
+        },
+        "financialTransactionIdList": {
+          "description": "Collection of unique identifiers of the financial transactions.",
+          "$ref": "#/definitions/uniqueIDListType"
+        },
+        "exchange": {
+          "description": "Available when the Fetch Folio Search Type requests the amounts to be converted to a currency different from the Resort currency.",
+          "$ref": "#/definitions/exchangeAmounts"
+        },
+        "approvalCode": {
+          "description": "Approval code of the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "approvalStatus": {
+          "description": "Approval status of the posting.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "stampDuty": {
+          "description": "Flag to identify a Stamp Duty Transaction.",
+          "type": "boolean"
+        },
+        "customCharge": {
+          "description": "Flag to identify a Custom Charge.",
+          "type": "boolean"
+        },
+        "transactionNo": {
+          "description": "Unique Transaction Identifier.",
+          "type": "number"
+        },
+        "transactionDate": {
+          "description": "Transaction Date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "transactionCode": {
+          "description": "Billing Transaction Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "transactionDescription": {
+          "description": "Billing Transaction Description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionAmount": {
+          "description": "The amount of the transaction.",
+          "type": "number"
+        },
+        "postingDate": {
+          "description": "Date and time of posting.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "postingTime": {
+          "description": "Time of posting.",
+          "$ref": "#/definitions/postingTimeType"
+        },
+        "revenueDate": {
+          "description": "The date on which the transaction has its revenue effect.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "receiptNo": {
+          "description": "The receipt number of the transaction, if there is a receipt generated.",
+          "type": "number"
+        },
+        "officialBIRReceiptExists": {
+          "description": "Flag to indicate if an Official Receipt is generated for the folio window. Applicable only in the Philippines.",
+          "type": "boolean"
+        },
+        "roundingDifferenceTrx": {
+          "description": "Indicator to determine if the posting was a posting for the Rounding Difference.",
+          "type": "boolean"
+        },
+        "commissionable": {
+          "description": "Indicator to determine if the transaction is commissionable.",
+          "type": "boolean"
+        },
+        "reversePaymentTransactionNo": {
+          "description": "Reverse payment transaction unique identifier.",
+          "type": "number"
+        },
+        "canAdjustInvoice": {
+          "description": "Indicator to determine if the transaction can be adjusted.",
+          "type": "boolean"
+        },
+        "depositTransactionId": {
+          "description": "Tax Service Accounting Codes used.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "groupByCount": {
+          "description": "When some SummaryPostingsGroupBy element is send as request ,then this element will represent how many transactions rolled up into this Summary Posting Type.",
+          "type": "number"
+        },
+        "folioWindowNo": {
+          "description": "The Folio Window number of this posting.",
+          "type": "integer"
+        },
+        "deferredTax": {
+          "description": "Flag to indicate if the Posting is a deferred tax record. Set to true only when the posting is a deferred tax record. Set to false only when the posting is not a deferred tax record.",
+          "type": "boolean"
+        },
+        "awardTransaction": {
+          "description": "Indicator to determine if the posting's transaction code is related to a payment award.",
+          "type": "boolean"
+        },
+        "covers": {
+          "description": "POS covers",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 10
+        },
+        "proformaFlag": {
+          "description": "This flag indicates if it is a proforma posted transaction.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "currencyAmountType": {
+      "type": "object",
+      "description": "A monetary value expressed with a currency code.",
+      "properties": {
+        "amount": {
+          "description": "A monetary amount.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "Provides a currency code to reflect the currency in which an amount may be expressed.",
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 20
+        }
+      }
+    },
+    "postingTimeType": {
+      "type": "object",
+      "description": "Time of posting.",
+      "properties": {
+        "time": {
+          "description": "Time of posting.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "timezone": {
+          "description": "Timezone associated with posting time.",
+          "type": "string"
+        }
+      }
+    },
+    "summaryPostingsType": {
+      "type": "array",
+      "description": "List of postings.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/summaryPostingType"
+      }
+    },
+    "exchangeAmounts": {
+      "type": "object",
+      "description": "Converted values for the Exchange Currency requested.",
+      "properties": {
+        "debitAmount": {
+          "description": "The converted Guest Ledger Debit Amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "creditAmount": {
+          "description": "The converted Guest Ledger Credit Amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        }
+      }
+    },
+    "compPostingsType": {
+      "type": "object",
+      "description": "Collection of comp postings.",
+      "properties": {
+        "authorizer": {
+          "description": "Authorizer name of the Comp Account.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "approvalStatus": {
+          "description": "Approval status of the comp account.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "uniqueIDListType": {
+      "type": "array",
+      "description": "Unique Id that references an object uniquely in the system.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/uniqueID_Type"
+      }
+    },
+    "postingGroupType": {
+      "type": "object",
+      "description": "Transaction group information. Ever posting could represent a. Regular transaction b. Group header - has Group Id, Count, Descripton and Includes Group Memebers elements c. Group transaction - has SubGroupId element pointing to Group Header Id",
+      "properties": {
+        "groupId": {
+          "description": "Group Id.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "groupCount": {
+          "description": "Number of transactions in group.",
+          "type": "integer"
+        },
+        "groupDescription": {
+          "description": "Group Description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "subGroupId": {
+          "description": "Indicates to which group transaction belongs.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "cashieringTransactionTypeType": {
+      "type": "string",
+      "description": "Wrapper Transaction Type.",
+      "enum": [
+        "Revenue",
+        "Payment",
+        "Wrapper"
+      ]
+    },
+    "cashierInfoType": {
+      "type": "object",
+      "description": "Cashier information. Contains Id and Name details of the cashier.",
+      "properties": {
+        "cashierId": {
+          "description": "Cashier Id of the Cashier.",
+          "type": "number"
+        },
+        "cashierName": {
+          "description": "Cashier Name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "generatePostingType": {
+      "type": "object",
+      "description": "Financial posting with their breakup",
+      "properties": {
+        "amount": {
+          "description": "Gross amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "transactionNo": {
+          "description": "Transaction Number for which request is being submitted.",
+          "type": "number"
+        },
+        "referenceTransactionNo": {
+          "description": "Generate transaction number for the Posting.",
+          "type": "number"
+        },
+        "transactionCode": {
+          "description": "Unique identifier for the Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "transactionDate": {
+          "description": "Transaction Date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        }
+      }
+    },
+    "postingBreakdownType": {
+      "type": "object",
+      "description": "Details of a financial posting's breakdown.",
+      "properties": {
+        "grossAmount": {
+          "description": "Gross amount of posting.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "netAmount": {
+          "description": "Net amount of posting.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "taxes": {
+          "type": "array",
+          "description": "Taxes breakout associated to postings",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/generatePostingType"
+          }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
