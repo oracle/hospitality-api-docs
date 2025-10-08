@@ -1,11 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ef882897-a02c-431c-8942-7827cbbc5023",
+		"_postman_id": "8610de20-dee0-4057-af83-78de074d0531",
 		"name": "4. Nor1 Upgrade REST APIs",
 		"description": "APIs to cater for Nor1 eXpress Upgrades\n\nOracle’s Nor1 eXpress Upgrade allows hotels and resorts to present confirmed room upsell offers to guests before arrival, allowing the hotel to monetize inventory and avoid oversold conversations at check-in. Nor1 eXpress Upgrade offers allows instant fulfillment of the offer and updates the reservation in OPERA Cloud in real time.\n\nFor further detailed information on Nor1 eXpress, please refer to the eXpress User Guide located [here](https://docs.oracle.com/en/industries/hospitality/nor1-cloud/norug/ch_express_upgrades.htm#EXpressUpgrades-95A131F1).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15729853",
-		"_collection_link": "https://hospitalityapis.postman.co/workspace/Team-Workspace~f6e529a2-8cdb-43d1-8526-1aa5d61f48e4/collection/15729853-ef882897-a02c-431c-8942-7827cbbc5023?action=share&source=collection_link&creator=15729853"
+		"_exporter_id": "44991951"
 	},
 	"item": [
 		{
@@ -63,14 +62,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
 							},
 							{
 								"key": "x-app-key",
-								"type": "text",
-								"value": "{{AppKey}}"
+								"value": "{{AppKey}}",
+								"type": "text"
 							},
 							{
 								"key": "enterpriseId",
@@ -129,9 +127,20 @@
 									"var uuid = require('uuid');\r",
 									"var myUUID = uuid.v4();\r",
 									"pm.environment.set(\"MyGUID\", myUUID);\r",
-									"pm.environment.set(\"HashedAppKey\", CryptoJS.SHA256(pm.environment.get(\"AppKey\")).toString());"
+									"(async () => {\r",
+									"    const encoder = new TextEncoder();\r",
+									"    const data = encoder.encode(pm.environment.get(\"AppKey\"));\r",
+									"    \r",
+									"    const hashBuffer = await crypto.subtle.digest(\"SHA-256\", data);\r",
+									"    const hashArray = Array.from(new Uint8Array(hashBuffer));\r",
+									"    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');\r",
+									"    \r",
+									"    pm.environment.set(\"HashedAppKey\", hashHex);\r",
+									"})();\r",
+									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -139,6 +148,16 @@
 						"auth": {
 							"type": "basic",
 							"basic": [
+								{
+									"key": "password",
+									"value": "{{CLIENT_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CLIENT_ID}}",
+									"type": "string"
+								},
 								{
 									"key": "undefined",
 									"type": "any"
@@ -149,32 +168,36 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
 							},
 							{
 								"key": "x-app-key",
-								"type": "text",
-								"value": "{{AppKey}}"
+								"value": "{{AppKey}}",
+								"type": "text"
+							},
+							{
+								"key": "enterpriseId",
+								"value": "{{EnterpriseId}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Request-Id",
+								"value": "{{$guid}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "username",
-									"value": "{{Username}}",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "{{Password}}",
-									"type": "text"
-								},
-								{
 									"key": "grant_type",
-									"value": "password",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "urn:opc:hgbu:ws:__myscopes__",
 									"type": "text"
 								}
 							]
@@ -190,7 +213,7 @@
 								"tokens"
 							]
 						},
-						"description": "Use this API to request an oAuth token when the environment is a Client Credentials environment. You can see which oAuth flow an environment supports by looking at the Environment page in the OHIP Developer Portal. For more information see (Authenticating to Oracle Hospitality Property APIs)\\[[https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80](https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80)\\] under the heading \"Client Credentials-Based Authentication\".\n\nTo call this API you will need:\n\n1. To know the environment is a Client Credentials environment - see above\n2. A valid ClientId and ClientSecret\n3. A valid EnterpriseId\n    \n4. A valid application key\n    \n\nBecause of this, oAuth tokens may only be used when calling the given environment.\n\noAuth tokens expire after 60 minutes. We recommend obtaining a new oAuth token every 50 minutes, but not more frequently."
+						"description": "Use this API to request an oAuth token when the environment is a Client Credentials environment. You can see which oAuth flow an environment supports by looking at the Environment page in the OHIP Developer Portal. For more information see (Authenticating to Oracle Hospitality Property APIs)\\[[https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80](https://docs.oracle.com/en/industries/hospitality/integration-platform/ohipu/c_oracle_hospitality_property_apis.htm#AuthenticatingToOracleHospitalityPr-1BD54F80)\\] under the heading \"Client Credentials-Based Authentication\".\n\nTo call this API you will need:\n\n1. To know the environment is a Client Credentials environment - see above\n2. A valid ClientId and ClientSecret\n3. A valid EnterpriseId\n4. A valid application key\n    \n\nBecause of this, oAuth tokens may only be used when calling the given environment.\n\noAuth tokens expire after 60 minutes. We recommend obtaining a new oAuth token every 50 minutes, but not more frequently."
 					},
 					"response": []
 				}
