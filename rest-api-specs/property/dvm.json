@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud DataValueMapping Service API",
-    "description": "APIs which offer external systems to config and use values different than what are configured in opera<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
-    "version": "25.1.0.0",
+    "description": "APIs which offer external systems to config and use values different than what are configured in opera<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.4.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -60,6 +60,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -333,6 +339,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -352,7 +364,7 @@
                 "x-example": "en-GB"
               }
             },
-            "description": "Reponse for all the converted values.",
+            "description": "Response for all the converted values.",
             "schema": {
               "$ref": "#/definitions/convertedValues"
             }
@@ -442,6 +454,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -461,13 +479,642 @@
                 "x-example": "en-GB"
               }
             },
-            "description": "Reponse for all the converted values.",
+            "description": "Response for all the converted values.",
             "schema": {
               "$ref": "#/definitions/defaultValues"
             }
           },
           "204": {
             "description": "DefaultValues not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "DataValueMapping"
+        ]
+      }
+    },
+    "/externalSystems/{externalSystem}/conversionCodes": {
+      "get": {
+        "summary": "Fetch Data Value Mapping Conversion Codes",
+        "description": "API to fetch Data Value Mapping Conversion Codes for a given external system. Filters include optional hotelId and group (XML Type).<p><strong>OperationId:</strong>getDvmConversionCodes</p>",
+        "operationId": "getDvmConversionCodes",
+        "parameters": [
+          {
+            "name": "externalSystem",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Identifier of the external system."
+          },
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA internal ID used to identify a Hotel in OPERA."
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "List of XML Types (groups) to filter conversion codes."
+          },
+          {
+            "name": "conversionCode",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "List of specific conversion codes to filter."
+          },
+          {
+            "name": "configuredOnly",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "N",
+            "description": "If 'Y', returns only configured conversion codes for the interface. Otherwise, returns all conversion codes."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response to fetch Data Value Mapping Conversion Codes.",
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/fetchDvmConversionCodes"
+            }
+          },
+          "204": {
+            "description": "No conversion codes found for the given filters."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "DataValueMapping"
+        ]
+      }
+    },
+    "/externalSystems/{externalSystem}/conversionCodes/{conversionCode}/dataValueMappings": {
+      "get": {
+        "summary": "Fetch Data Value Mappings for specific conversion code.",
+        "description": "Retrieve mappings for a specific conversion code configured for external system, hotelId and Global mappings.<p><strong>OperationId:</strong>getDataValueMappings</p>",
+        "operationId": "getDataValueMappings",
+        "parameters": [
+          {
+            "name": "externalSystem",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Identifier of the external system."
+          },
+          {
+            "name": "conversionCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Type of Conversion Code configured in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA hotel Id used to identify a Hotel in OPERA."
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "All",
+            "description": "Fetch data based on scope: Filtered by All(default), Global, hotelId."
+          },
+          {
+            "name": "mappingIds",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "List of mapping Id's to filter."
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Search string to filter by OPERA value, external value, or description."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve Data Value Mapping response",
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/fetchDvmMappings"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "DataValueMapping"
+        ]
+      },
+      "post": {
+        "summary": "Create Conversion Code Mappings",
+        "description": "API to create Data Value Mapping (DVM) Conversion Codes by External System and Conversion Code. <p><strong>OperationId:</strong>postDataValueMappings</p>",
+        "operationId": "postDataValueMappings",
+        "parameters": [
+          {
+            "name": "externalSystem",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Unique ID used to identify an external system."
+          },
+          {
+            "name": "conversionCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Type of conversion code configured in the system."
+          },
+          {
+            "name": "conversionCodeMappingsToBeCreated",
+            "in": "body",
+            "required": true,
+            "description": "Request Object to Create Conversion Code Mappings.",
+            "schema": {
+              "$ref": "#/definitions/dvmConversionCodeMappingsToBeCreated"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Object for creating Conversion Code Mappings.",
+            "schema": {
+              "$ref": "#/definitions/createdDvmConversionCodeMappings"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "DataValueMapping"
+        ]
+      },
+      "put": {
+        "summary": "Update Conversion Code Mappings",
+        "description": "API to update existing Data Value Mapping (DVM) Conversion Code records for a given External System and Conversion Code. <p><strong>OperationId:</strong>putDataValueMappings</p>",
+        "operationId": "putDataValueMappings",
+        "parameters": [
+          {
+            "name": "externalSystem",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Unique Id used to identify an external system."
+          },
+          {
+            "name": "conversionCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Conversion Code configured in OPERA."
+          },
+          {
+            "name": "conversionCodeMappingsToBeUpdated",
+            "in": "body",
+            "required": true,
+            "description": "Request to update existing Conversion Code Mappings.",
+            "schema": {
+              "$ref": "#/definitions/dvmConversionCodeMappingsToBeUpdated"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for updating Conversion Code Mappings.",
+            "schema": {
+              "$ref": "#/definitions/updatedDvmConversionCodeMappings"
+            },
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "DataValueMapping"
+        ]
+      },
+      "delete": {
+        "summary": "Remove Conversion Codes Mappings",
+        "description": "API to Delete Interface Mapping Conversion Codes by providing one or more Mapping IDs as query parameter. <p><strong>OperationId:</strong>deleteDataValueMappings</p>",
+        "operationId": "deleteDataValueMappings",
+        "parameters": [
+          {
+            "name": "externalSystem",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "External System code"
+          },
+          {
+            "name": "conversionCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Conversion Code"
+          },
+          {
+            "name": "mappingIds",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "integer"
+            },
+            "description": "List of Mapping IDs to delete"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Id's deleted and any failures with reasons.",
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/deleteDvmMappingResponse"
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -531,6 +1178,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -623,6 +1276,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -723,6 +1382,19 @@
       "in": "header",
       "required": true
     },
+    "x-request-id": {
+      "name": "x-request-id",
+      "type": "string",
+      "pattern": "~*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+      "description": "Request Id of an incoming request",
+      "in": "header"
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
+    },
     "x-hotelid": {
       "name": "x-hotelid",
       "type": "string",
@@ -733,7 +1405,7 @@
     "x-externalsystem": {
       "name": "x-externalsystem",
       "type": "string",
-      "maxLength": 80,
+      "maxLength": 40,
       "description": "External system code.",
       "in": "header",
       "x-example": "EXTERNALSYSTEMCODE"
@@ -1365,6 +2037,297 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "fetchDvmConversionCodes": {
+      "type": "object",
+      "properties": {
+        "conversionCodes": {
+          "type": "array",
+          "description": "List of conversion codes for the given filters.",
+          "items": {
+            "$ref": "#/definitions/dvmConversionCodeType"
+          },
+          "maxItems": 4000
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "dvmConversionCodeType": {
+      "type": "object",
+      "properties": {
+        "conversionCode": {
+          "type": "string",
+          "description": "Type of conversion code.",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "label": {
+          "type": "string",
+          "description": "Label of the conversion code.",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the conversion code.",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "group": {
+          "type": "string",
+          "description": "Group or XML Type the conversion code belongs to.",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "hotelId": {
+          "type": "string",
+          "description": "Associated hotel Id if applicable.",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "fetchDvmMappings": {
+      "type": "object",
+      "properties": {
+        "conversionCodeMappings": {
+          "type": "array",
+          "description": "List of value mappings.",
+          "items": {
+            "$ref": "#/definitions/dvmMappingType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "dvmMappingType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique ID of the conversion code in  OPERA."
+        },
+        "operaValue": {
+          "type": "string",
+          "description": "Indicates OPERA value."
+        },
+        "externalValue": {
+          "type": "string",
+          "description": "External system's mapped value."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the external value mapping."
+        },
+        "hotelId": {
+          "type": "string",
+          "description": "Hotel code if the mappings are property-specific."
+        },
+        "isGlobal": {
+          "type": "boolean",
+          "description": "Flag to indicate whether the mapping is global."
+        },
+        "operaToExternalDefault": {
+          "type": "boolean",
+          "description": "Flag indicating this mapping is default from OPERA to external system."
+        },
+        "externalToOperaDefault": {
+          "type": "boolean",
+          "description": "Flag indicating this mapping is default from external system to OPERA."
+        }
+      }
+    },
+    "dvmConversionCodeMappingsToBeCreated": {
+      "type": "object",
+      "properties": {
+        "conversionCodeMappings": {
+          "type": "array",
+          "description": "Conversion Code Mapping details that should be created.",
+          "items": {
+            "$ref": "#/definitions/dvmConversionCodeMappingType"
+          },
+          "maxItems": 4000
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "dvmConversionCodeMappingType": {
+      "type": "object",
+      "description": "A type containing DVM Conversion Code Mapping information.",
+      "properties": {
+        "id": {
+          "description": "Mapping identifier for tracking.",
+          "type": "string"
+        },
+        "operaValue": {
+          "description": "Internal OPERA value to be mapped.",
+          "type": "string"
+        },
+        "externalValue": {
+          "description": "External system value to be mapped.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description for the external value.",
+          "type": "string"
+        },
+        "operaToExternalDefault": {
+          "description": "Flag indicating if the mapping is default from OPERA to External.",
+          "type": "boolean"
+        },
+        "externalToOperaDefault": {
+          "description": "Flag indicating if the mapping is default from External to OPERA.",
+          "type": "boolean"
+        },
+        "isGlobal": {
+          "description": "Flag to indicate whether the mapping is global.",
+          "type": "boolean"
+        },
+        "hotelId": {
+          "description": "Hotel Id for which this mapping applies.",
+          "type": "string"
+        },
+        "overrideExternalDefault": {
+          "description": "A flag to indicate whether the current External Value should be considered as default, when there is already a default External Value mapped for the same OPERA Value.",
+          "type": "boolean"
+        },
+        "overrideOperaDefault": {
+          "description": "A flag to indicate whether the current OPERA Value should be considered as default, when there is already a default OPERA Value mapped for the same External Value.",
+          "type": "boolean"
+        }
+      }
+    },
+    "createdDvmConversionCodeMappings": {
+      "type": "object",
+      "properties": {
+        "conversionCodesCreated": {
+          "type": "array",
+          "description": "List of successfully created Conversion Codes with the request Id and OPERA Id.",
+          "items": {
+            "$ref": "#/definitions/ConversionCodeCreatedType"
+          },
+          "maxItems": 4000
+        },
+        "conversionCodesFailed": {
+          "type": "array",
+          "description": "List of Conversion Codes failed to create in OPERA System.",
+          "items": {
+            "$ref": "#/definitions/ConversionCodeFailedType"
+          }
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "dvmConversionCodeMappingsToBeUpdated": {
+      "type": "object",
+      "description": "Request object for updating DVM Conversion Code Mappings.",
+      "properties": {
+        "conversionCodeMappings": {
+          "type": "array",
+          "description": "DVM Conversion Code Mapping details that should be updated.",
+          "items": {
+            "$ref": "#/definitions/dvmConversionCodeMappingType"
+          },
+          "maxItems": 4000
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "updatedDvmConversionCodeMappings": {
+      "type": "object",
+      "properties": {
+        "conversionCodesUpdated": {
+          "type": "array",
+          "description": "List of successfully updated Conversion Codes Mapping Id's.",
+          "items": {
+            "type": "integer",
+            "description": "List of updated ID's for Conversion Code Mapping"
+          },
+          "maxItems": 4000
+        },
+        "conversionCodeFailed": {
+          "type": "array",
+          "description": "List of Conversion Code Mappings that failed to update with reasons.",
+          "items": {
+            "$ref": "#/definitions/ConversionCodeFailedType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "deleteDvmMappingResponse": {
+      "type": "object",
+      "description": "Response for delete operation on DVM mappings.",
+      "properties": {
+        "conversionCodesDeleted": {
+          "type": "array",
+          "description": "List of successfully deleted mapping Id's",
+          "items": {
+            "type": "integer",
+            "example": 123456
+          }
+        },
+        "conversionCodesDeleteFailed": {
+          "type": "array",
+          "description": "List of failed deletions with reasons",
+          "items": {
+            "$ref": "#/definitions/ConversionCodeFailedType"
+          }
+        }
+      }
+    },
+    "ConversionCodeCreatedType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Id value sent in Request object."
+        },
+        "operaId": {
+          "type": "integer",
+          "description": "Conversion Code Id in OPERA System."
+        }
+      }
+    },
+    "ConversionCodeFailedType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Id of the failed Conversion Code Mapping from the request"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for the Conversion Code Mapping failure."
         }
       }
     }

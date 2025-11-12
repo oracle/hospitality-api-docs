@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Distribution Content",
-    "description": "Oracle Hospitality Distribution Content is for distribution partners to retrieve property Channel content information.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
-    "version": "25.1.0.0",
+    "description": "Oracle Hospitality Distribution Content is for distribution partners to retrieve property Channel content information.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.4.0.0",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
     },
@@ -59,6 +59,9 @@
           },
           {
             "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -174,6 +177,9 @@
           },
           {
             "$ref": "#/parameters/HotelCode"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -301,6 +307,9 @@
           },
           {
             "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -424,10 +433,16 @@
             "$ref": "#/parameters/ratePlanCode"
           },
           {
+            "$ref": "#/parameters/fetchInstructionsRatePlans"
+          },
+          {
             "$ref": "#/parameters/limit"
           },
           {
             "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -558,6 +573,9 @@
           },
           {
             "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -652,13 +670,6 @@
     }
   },
   "parameters": {
-    "authorization": {
-      "name": "authorization",
-      "description": "Bearer token that needs to be passed which is generated post user\n  authentication",
-      "type": "string",
-      "in": "header",
-      "required": true
-    },
     "x-channelCode": {
       "name": "x-channelCode",
       "in": "header",
@@ -669,110 +680,22 @@
       "required": true,
       "x-example": "CH1"
     },
-    "x-app-key": {
-      "name": "x-app-key",
-      "description": "Client or Partner's Application Key",
-      "type": "string",
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-      "in": "header",
-      "required": false
-    },
-    "x-request-id": {
-      "name": "x-request-id",
-      "in": "header",
-      "description": "Unique tracing key e.g. 4664ab3423434a45",
-      "type": "string",
-      "required": false,
-      "x-example": "4664ab3423434a45"
-    },
-    "HotelCode": {
-      "name": "hotelCode",
-      "in": "path",
-      "description": "Hotel Code",
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 50,
-      "required": true,
-      "x-example": "XUSXXYY99"
-    },
-    "includeRoomAmenities": {
-      "name": "includeRoomAmenities",
-      "in": "query",
-      "description": "If true include room amenities along with each room type. Default is False",
-      "type": "boolean",
-      "required": false,
-      "default": false,
-      "x-example": false
-    },
-    "connectionStatusLastChangedFrom": {
-      "name": "connectionStatusLastChangedFrom",
-      "in": "query",
-      "description": "Channel connection status last changed after this time",
-      "type": "string",
-      "format": "date-time",
-      "required": false,
-      "x-example": "2022-01-02T11:30:22.234Z"
-    },
-    "connectionStatusLastChangedTo": {
-      "name": "connectionStatusLastChangedTo",
-      "in": "query",
-      "description": "Channel connection status last changed before this time",
-      "type": "string",
-      "format": "date-time",
-      "required": false,
-      "x-example": "2022-01-02T11:30:22.234Z"
-    },
-    "connectionStatus": {
-      "name": "connectionStatus",
-      "in": "query",
-      "type": "string",
-      "description": "Channel connection status",
-      "required": false,
-      "enum": [
-        "TEST",
-        "ACTIVE",
-        "MAINTENANCE"
-      ]
-    },
-    "fetchInstructions": {
+    "fetchInstructionsRatePlans": {
       "name": "fetchInstructions",
       "in": "query",
       "type": "string",
-      "description": "The optional summary sections to be included in the response",
+      "description": "The optional additional information to be included in the response",
       "required": false,
       "enum": [
-        "ConnectionInformation"
+        "Policy"
       ]
     },
-    "limit": {
-      "name": "limit",
-      "description": "Integer, the maximal number of item entities to be returned",
-      "type": "integer",
-      "in": "query",
-      "required": false,
-      "x-example": 40,
-      "minimum": 1,
-      "maximum": 100,
-      "default": 20
-    },
-    "offset": {
-      "name": "offset",
-      "description": "Non-negative integer values that specifies the index of the first item to be returned. The offset index begins at 0. By default, the offset is 0, which returns all items starting from the first item in the collection",
-      "type": "integer",
-      "in": "query",
-      "required": false,
-      "minimum": 0,
-      "x-example": 1,
-      "default": 0
-    },
-    "includeInactive": {
-      "name": "includeInactive",
-      "in": "query",
-      "description": "If true include inactive rateRooms. Default is False",
-      "type": "boolean",
-      "required": false,
-      "default": false,
-      "x-example": false
+    "x-request-id": {
+      "name": "x-request-id",
+      "type": "string",
+      "description": "Unique tracing key e.g. 4664ab3423434a45",
+      "in": "header",
+      "x-example": "4664ab3423434a45"
     },
     "roomType": {
       "name": "roomType",
@@ -794,6 +717,54 @@
       "required": false,
       "x-example": "XDAILY"
     },
+    "includeInactive": {
+      "name": "includeInactive",
+      "in": "query",
+      "description": "If true include inactive rateRooms. Default is False",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "x-example": false
+    },
+    "connectionStatus": {
+      "name": "connectionStatus",
+      "in": "query",
+      "type": "string",
+      "description": "Channel connection status",
+      "required": false,
+      "enum": [
+        "TEST",
+        "ACTIVE",
+        "MAINTENANCE"
+      ]
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": false
+    },
+    "connectionStatusLastChangedTo": {
+      "name": "connectionStatusLastChangedTo",
+      "in": "query",
+      "description": "Channel connection status last changed before this time",
+      "type": "string",
+      "format": "date-time",
+      "required": false,
+      "x-example": "2022-01-02T11:30:22.234Z"
+    },
+    "HotelCode": {
+      "name": "hotelCode",
+      "in": "path",
+      "description": "Hotel Code",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "required": true,
+      "x-example": "XUSXXYY99"
+    },
     "includeNegotiatedRates": {
       "name": "includeNegotiatedRates",
       "in": "query",
@@ -802,115 +773,208 @@
       "required": false,
       "default": false,
       "x-example": false
+    },
+    "fetchInstructions": {
+      "name": "fetchInstructions",
+      "in": "query",
+      "type": "string",
+      "description": "The optional summary sections to be included in the response",
+      "required": false,
+      "enum": [
+        "ConnectionInformation"
+      ]
+    },
+    "includeRoomAmenities": {
+      "name": "includeRoomAmenities",
+      "in": "query",
+      "description": "If true include room amenities along with each room type. Default is False",
+      "type": "boolean",
+      "required": false,
+      "default": false,
+      "x-example": false
+    },
+    "offset": {
+      "name": "offset",
+      "description": "Non-negative integer values that specifies the index of the first item to be returned. The offset index begins at 0. By default, the offset is 0, which returns all items starting from the first item in the collection",
+      "type": "integer",
+      "in": "query",
+      "required": false,
+      "minimum": 0,
+      "x-example": 1,
+      "default": 0
+    },
+    "limit": {
+      "name": "limit",
+      "description": "Integer, the maximal number of item entities to be returned",
+      "type": "integer",
+      "in": "query",
+      "required": false,
+      "x-example": 40,
+      "minimum": 1,
+      "maximum": 100,
+      "default": 20
+    },
+    "connectionStatusLastChangedFrom": {
+      "name": "connectionStatusLastChangedFrom",
+      "in": "query",
+      "description": "Channel connection status last changed after this time",
+      "type": "string",
+      "format": "date-time",
+      "required": false,
+      "x-example": "2022-01-02T11:30:22.234Z"
+    },
+    "authorization": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user\n  authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
     }
   },
   "definitions": {
-    "Address": {
+    "RateRoomsResponse": {
+      "description": "Rate Rooms Response",
       "type": "object",
       "properties": {
-        "addressLine": {
-          "description": "The property's street address",
+        "rateRooms": {
+          "description": "Collection of the returned RateRooms for given channel",
           "type": "array",
           "items": {
-            "type": "string"
-          },
-          "minItems": 1,
-          "maxItems": 2,
-          "example": [
-            "Street 123",
-            "Box 1"
-          ]
-        },
-        "countryCode": {
-          "description": "The property's two letter ISO country code",
-          "type": "string",
-          "example": "US"
-        },
-        "cityName": {
-          "description": "The city where the property is located",
-          "type": "string",
-          "example": "Miami"
-        },
-        "stateProv": {
-          "description": "The state where the property is located",
-          "type": "string",
-          "example": "Florida"
-        },
-        "postalCode": {
-          "description": "The property's postal (ZIP) code",
-          "type": "string",
-          "example": "90210"
-        }
-      }
-    },
-    "AlternatePropertyDistance": {
-      "type": "object",
-      "properties": {
-        "distance": {
-          "type": "number",
-          "format": "double",
-          "description": "Distance from hotel to alternate property",
-          "example": 12,
-          "minimum": 0.01
-        },
-        "distanceUnit": {
-          "type": "string",
-          "description": "Measured Distance Unit from hotel to alternate property",
-          "$ref": "#/definitions/DistanceUnit"
-        },
-        "compassDirection": {
-          "type": "string",
-          "description": "Relative direction from hotel to alternate property",
-          "$ref": "#/definitions/CompassDirection"
-        },
-        "comments": {
-          "type": "string",
-          "description": "Free text comment provided by the user for the alternate property",
-          "example": "Resort3 is the next pereferred hotel after Resort1."
-        }
-      }
-    },
-    "Communications": {
-      "description": "The contact information for the property",
-      "type": "object",
-      "properties": {
-        "phones": {
-          "description": "List of phone numbers for the property",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Phone"
-          },
-          "minItems": 1
-        },
-        "emails": {
-          "description": "List of emails addresses for the property",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Email"
+            "$ref": "#/definitions/ContentRateRoom"
           }
         },
-        "urls": {
-          "description": "List of urls for the property",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Url"
-          }
+        "count": {
+          "type": "integer",
+          "example": 50
+        },
+        "hasMore": {
+          "type": "boolean",
+          "example": true
+        },
+        "limit": {
+          "type": "integer",
+          "example": 100
+        },
+        "offset": {
+          "type": "integer",
+          "example": 25
+        },
+        "totalResults": {
+          "type": "integer",
+          "example": 500
         }
       }
     },
-    "CompassDirection": {
-      "type": "string",
-      "enum": [
-        "N",
-        "NE",
-        "E",
-        "SE",
-        "S",
-        "SW",
-        "W",
-        "NW"
-      ],
-      "description": "Relative direction from hotel to alternate property"
+    "ContentRateRoom": {
+      "type": "object",
+      "properties": {
+        "ratePlanCode": {
+          "type": "string",
+          "example": "XDAILY",
+          "description": "A code for a rate plan for a requested channel."
+        },
+        "hotelRatePlanCode": {
+          "type": "string",
+          "example": "DAILY",
+          "description": "A rate plan code for a hotel."
+        },
+        "roomType": {
+          "type": "string",
+          "example": "XA1K",
+          "description": "A code for a room type for a requested channel."
+        },
+        "hotelRoomType": {
+          "type": "string",
+          "example": "A1K",
+          "description": "A room type code for a hotel."
+        },
+        "active": {
+          "type": "boolean",
+          "example": true,
+          "description": "It represent if the rate room is active or inactive. Default value is true."
+        },
+        "occupancy": {
+          "type": "object",
+          "description": "It holds list of elements that defines room type occupancy information.",
+          "$ref": "#/definitions/Occupancy"
+        }
+      }
+    },
+    "Occupancy": {
+      "type": "object",
+      "properties": {
+        "minOccupancy": {
+          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "exclusiveMinimum": false,
+          "example": 2
+        },
+        "maxOccupancy": {
+          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "exclusiveMinimum": false,
+          "example": 8
+        },
+        "maxAdultOccupancy": {
+          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "exclusiveMinimum": false,
+          "example": 4
+        },
+        "maxChildOccupancy": {
+          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "exclusiveMinimum": false,
+          "example": 3
+        }
+      }
+    },
+    "RatePlansResponse": {
+      "description": "Rate Plans Response",
+      "type": "object",
+      "properties": {
+        "ratePlans": {
+          "description": "Collection of the returned Rate Plans for a given channel",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContentRatePlan"
+          }
+        },
+        "count": {
+          "type": "integer",
+          "example": 50
+        },
+        "hasMore": {
+          "type": "boolean",
+          "example": true
+        },
+        "limit": {
+          "type": "integer",
+          "example": 100
+        },
+        "offset": {
+          "type": "integer",
+          "example": 25
+        },
+        "totalResults": {
+          "type": "integer",
+          "example": 500
+        }
+      }
     },
     "ContentRatePlan": {
       "type": "object",
@@ -974,6 +1038,11 @@
           "description": "Type of meal plan the rate plan includes",
           "type": "object",
           "$ref": "#/definitions/OfferMealPlan"
+        },
+        "cancellationPolicies": {
+          "description": "Cancellation policy schedule(s) and detail(s)",
+          "type": "object",
+          "$ref": "#/definitions/CancellationPolicies"
         }
       }
     },
@@ -994,196 +1063,299 @@
         }
       }
     },
-    "Direction": {
+    "CancellationPolicies": {
+      "description": "The list of cancellation policies attached to a rate plan",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CancellationPoliciesItem"
+      }
+    },
+    "CancellationPoliciesItem": {
+      "description": "The cancellation policy containing its schedules and policy details",
       "type": "object",
       "properties": {
-        "propertyDirection": {
-          "type": "string",
-          "maxLength": 1024,
-          "example": "SE ABC hills"
+        "policy": {
+          "type": "object",
+          "$ref": "#/definitions/CancellationPolicy"
+        },
+        "scheduleDetail": {
+          "type": "object",
+          "$ref": "#/definitions/CancellationPolicyScheduleDetail"
         }
       }
     },
-    "DistanceUnit": {
+    "CancellationPolicyScheduleDetail": {
+      "description": "The cancellation policy schedule detail",
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "description": "The start date the cancellation policy schedule is effective",
+          "format": "date",
+          "example": "2025-11-01"
+        },
+        "end": {
+          "type": "string",
+          "description": "The end date the cancellation policy is no longer effective",
+          "format": "date",
+          "example": "2025-11-07"
+        }
+      }
+    },
+    "CancellationPolicy": {
+      "description": "The cancellation policy details",
+      "type": "object",
+      "properties": {
+        "policyCode": {
+          "type": "string",
+          "description": "The cancellation policy code",
+          "maxLength": 20,
+          "example": "1 DAY"
+        },
+        "description": {
+          "type": "string",
+          "description": "The cancellation policy description",
+          "example": "1 Day prior to arrival, forfeit 1 night"
+        },
+        "deadline": {
+          "description": "Cancellation policy deadline",
+          "$ref": "#/definitions/CancellationPolicyDeadline",
+          "example": {
+            "offsetFromArrival": 5,
+            "offsetDropTime": "2000-01-01T22:00:00.000Z",
+            "offsetFromBookingDate": 3
+          }
+        },
+        "amountPercent": {
+          "description": "Cancellation fee expressed as a fixed amount, or percentage of/or room nights.",
+          "$ref": "#/definitions/CancellationPolicyAmountPercentType",
+          "example": {
+            "basisType": "FlatAmount",
+            "amount": 100
+          }
+        },
+        "override": {
+          "type": "boolean",
+          "description": "Does this cancellation policy override another cancellation policy",
+          "example": true
+        }
+      }
+    },
+    "CancellationPolicyDeadline": {
+      "description": "The cancellation policy deadline",
+      "type": "object",
+      "properties": {
+        "offsetFromArrival": {
+          "description": "The number of days before arrival that allows cancellation without penalties.",
+          "type": "integer",
+          "example": 5
+        },
+        "offsetDropTime": {
+          "description": "Time on offset day the cancellation penalties applies. 24-hour format, hh:mm",
+          "type": "string",
+          "example": "22:00"
+        }
+      }
+    },
+    "CancellationPolicyAmountPercentType": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CancellationPolicyBasicAmountPercentType"
+        }
+      ],
+      "properties": {
+        "basisType": {
+          "description": "Cancellation policy basis type",
+          "$ref": "#/definitions/CancellationPolicyBasisType",
+          "example": "NightPercentage"
+        }
+      }
+    },
+    "CancellationPolicyBasicAmountPercentType": {
+      "type": "object",
+      "properties": {
+        "nights": {
+          "description": "Number of nights of the hotel stay used to calculate the fee amount when basisType=Nights.",
+          "type": "integer",
+          "example": 2
+        },
+        "percent": {
+          "description": "Percentage used to calculate the amount when basisType=Percentage",
+          "type": "number",
+          "format": "double",
+          "example": 50
+        },
+        "nightPercent": {
+          "description": "Percentage used to calculate the amount when basisType=NightPercentage.",
+          "type": "number",
+          "format": "double",
+          "example": 66.6
+        },
+        "amount": {
+          "description": "Monetary amount when basisType=FlatAmount.",
+          "type": "number",
+          "format": "double",
+          "example": 540
+        }
+      }
+    },
+    "CancellationPolicyBasisType": {
+      "type": "string",
+      "description": "The method to be used to compute the penalty. Nights - The penalty amount is determined by the guest's room rate plus any packages, and generates associated with the rate for this number of nights. For example, assume the guest is planning to stay 3 nights. If the Penalty Amount is 1, and the nightly room rate is $150, the cancellation charge would be $150 ($150 x 1 nights). Percentage - The penalty amount is the percentage of the entire stay's room rate, plus any packages and generates associated with the rate, that will be taken for a cancellation charge. For example, if the Penalty Amount is 50, the guest will pay a charge of 50% of the total stay room rate. If the room rate is $300 a night for 3 nights, the guest pays$450 (0.50 x $900). NightPercentage - The penalty amount is based on the percentage of the first night's room rate. Schedule the time period when this rule is effective. FlatAmount - The penalty amount is the exact amount of the cancellation charge in the property currency. NonCancelable - The reservation can't be canceled. It will be resulted in penalty of the total cost of stay.",
+      "enum": [
+        "Nights",
+        "Percentage",
+        "NightPercentage",
+        "FlatAmount",
+        "NonCancelable"
+      ]
+    },
+    "OfferMealPlan": {
+      "type": "object",
+      "properties": {
+        "mealPlanCode": {
+          "description": "The meal plan code",
+          "type": "string",
+          "example": "1"
+        },
+        "mealPlanDescription": {
+          "description": "The meal plan description",
+          "type": "string",
+          "example": "All inclusive meal plan"
+        },
+        "mealsIncluded": {
+          "description": "Type of meal plan",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OfferRatePlanMealType"
+          }
+        }
+      }
+    },
+    "OfferRatePlanMealType": {
       "type": "string",
       "enum": [
-        "Kilometers",
-        "Miles"
+        "Breakfast",
+        "Lunch",
+        "Dinner"
       ],
-      "description": "Distance unit of measure"
+      "description": "Type of meal the rate plan includes"
     },
-    "Email": {
+    "RoomTypesResponse": {
+      "description": "Room Types Response",
       "type": "object",
       "properties": {
-        "emailType": {
-          "description": "The email type",
-          "type": "string"
-        },
-        "email": {
-          "description": "The email address for the specific emailType",
-          "type": "string"
-        }
-      }
-    },
-    "ExceptionDetail": {
-      "description": "Common Error Response format",
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "example": "Error in Application"
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "example": 400
-        },
-        "o:errorCode": {
-          "type": "string",
-          "description": "Business specific Error code, which is different from HTTP error code.",
-          "example": "RSV-34534534"
-        },
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type. When dereferenced, it SHOULD provide a human-readable summary of the problem.",
-          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The UTC Date and Time of the Error happened.",
-          "example": "2022-01-02T11:30:22.234Z"
-        },
-        "o:errorDetails": {
-          "description": "Details of the error message, consisting of a hierarchical tree structure",
+        "roomTypes": {
+          "description": "Collection of the returned Room Types for given channel",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ExceptionDetail"
+            "$ref": "#/definitions/ContentRoomType"
           }
         },
-        "logId": {
+        "count": {
           "type": "integer",
-          "description": "An ID for support reasons to be able identify errors better.",
-          "example": "334543532224"
+          "example": 50
+        },
+        "hasMore": {
+          "type": "boolean",
+          "example": true
+        },
+        "limit": {
+          "type": "integer",
+          "example": 100
+        },
+        "offset": {
+          "type": "integer",
+          "example": 25
+        },
+        "totalResults": {
+          "type": "integer",
+          "example": 500
         }
       }
     },
-    "GeneralInformation": {
+    "ContentRoomType": {
       "type": "object",
+      "description": "Room Type information",
       "properties": {
-        "checkInTime": {
+        "hotelRoomType": {
           "type": "string",
-          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
-          "example": "04:30"
+          "example": "A1K",
+          "description": "A room type code for a hotel."
         },
-        "checkOutTime": {
+        "roomType": {
           "type": "string",
-          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
-          "example": "14:30"
-        }
-      }
-    },
-    "Location": {
-      "type": "object",
-      "properties": {
-        "propertyLocation": {
-          "type": "string",
-          "maxLength": 1024,
-          "example": "ABC hills"
-        }
-      }
-    },
-    "OfferDetailsPropertyInfoSummary": {
-      "description": "Property information",
-      "type": "object",
-      "properties": {
-        "hotelId": {
-          "type": "string",
-          "description": "Unique ID that identifies a single hotel property",
-          "example": "Hotel1"
+          "example": "XA1K",
+          "description": "A code for a room type for a requested channel."
         },
-        "hotelCode": {
-          "type": "string",
-          "description": "The external Hotel/property Id for a channel",
-          "example": "XUSXXYY99"
-        },
-        "hotelName": {
-          "type": "string",
-          "description": "The descriptive name of a property",
-          "example": "The Palmyra Resort"
-        },
-        "chainCode": {
-          "type": "string",
-          "description": "Channel chain code for a property",
-          "example": "CHAIN1"
-        },
-        "brandCode": {
-          "type": "string",
-          "description": "Channel's hotel/property brand code",
-          "example": "BRAND1"
-        },
-        "startDate": {
-          "type": "string",
-          "description": "The date this property will be active for the channel",
-          "format": "date",
-          "example": "2023-08-03"
-        },
-        "endDate": {
-          "type": "string",
-          "description": "The date this property will be deactivate for the channel",
-          "format": "date",
-          "example": "2024-09-04"
-        },
-        "address": {
-          "description": "Address Details such as city, state, country, postal code etc for a hotel property",
-          "$ref": "#/definitions/Address"
-        },
-        "communications": {
-          "description": "The contact information for the property",
-          "$ref": "#/definitions/Communications"
-        },
-        "connectionInformation": {
-          "description": "The connection information for the channel",
-          "$ref": "#/definitions/ConnectionInformation"
-        }
-      }
-    },
-    "ConnectionInformation": {
-      "description": "Channel Connection Information for the hotel property",
-      "type": "object",
-      "properties": {
-        "connectionStatus": {
-          "type": "string",
-          "description": "Channel connection status",
-          "enum": [
-            "TEST",
-            "ACTIVE",
-            "MAINTENANCE"
-          ]
-        },
-        "connectionStatusLastChangedOn": {
-          "description": "Channel connection status last changed on this date time",
-          "type": "string",
-          "format": "date-time",
-          "example": "2022-01-02T11:30:22.234Z"
-        },
-        "defaultARIMessageFormat": {
-          "type": "string",
-          "description": "ARI message format",
-          "enum": [
-            "Oracle_v1",
-            "AdsRateUpdate",
-            "AdsRateAmount"
-          ],
-          "example": "Oracle_v1"
-        },
-        "channelRoutes": {
-          "description": "The web service location (URL) of the distribution partners where Oracle Hospitality Distribution ARI service will post messages such as the property inventory, restrictions/availability, rate schedules updates, etc.",
+        "description": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ChannelRouteType"
+            "type": "string",
+            "example": "Deluxe King Room on my Channel"
           }
+        },
+        "roomName": {
+          "type": "string",
+          "example": 102
+        },
+        "roomCategory": {
+          "type": "string",
+          "example": "SUITE"
+        },
+        "roomAmenities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContentRoomAmenity"
+          }
+        },
+        "roomViewType": {
+          "type": "string"
+        },
+        "roomPrimaryBedType": {
+          "type": "string"
+        },
+        "nonSmokingInd": {
+          "type": "boolean",
+          "example": true
+        },
+        "occupancy": {
+          "type": "object",
+          "$ref": "#/definitions/Occupancy"
+        },
+        "numberOfUnits": {
+          "type": "integer",
+          "description": "number of rooms requested",
+          "example": 1
+        }
+      }
+    },
+    "ContentRoomAmenity": {
+      "type": "object",
+      "properties": {
+        "roomAmenity": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer"
+        },
+        "includeInRate": {
+          "type": "boolean"
+        },
+        "confirmable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PropertyInfoResponse": {
+      "type": "object",
+      "properties": {
+        "propertyInfo": {
+          "$ref": "#/definitions/ContentPropertyInfo"
         }
       }
     },
@@ -1318,25 +1490,165 @@
         }
       }
     },
-    "OfferMealPlan": {
+    "GeneralInformation": {
       "type": "object",
       "properties": {
-        "mealPlanCode": {
-          "description": "The meal plan code",
+        "checkInTime": {
           "type": "string",
-          "example": "1"
+          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+          "example": "04:30"
         },
-        "mealPlanDescription": {
-          "description": "The meal plan description",
+        "checkOutTime": {
           "type": "string",
-          "example": "All inclusive meal plan"
+          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+          "example": "14:30"
+        }
+      }
+    },
+    "HotelChildPolicy": {
+      "type": "object",
+      "properties": {
+        "kidsStayFreeInd": {
+          "type": "boolean"
         },
-        "mealsIncluded": {
-          "description": "Type of meal plan",
+        "usualStayFreeCutoffAge": {
+          "type": "integer",
+          "example": 5
+        },
+        "maxChildAge": {
+          "type": "integer",
+          "example": 18
+        }
+      }
+    },
+    "TimeZone": {
+      "type": "object",
+      "properties": {
+        "timeZoneName": {
+          "type": "string",
+          "description": "Zone Name of the region",
+          "minLength": 1,
+          "maxLength": 50,
+          "example": "Asia/Calcutta"
+        },
+        "offset": {
+          "type": "string",
+          "description": "Provides the current offset from UTC for the specified time zone, considering DST",
+          "minLength": 1,
+          "maxLength": 50,
+          "example": "UTC+05:30"
+        }
+      }
+    },
+    "Direction": {
+      "type": "object",
+      "properties": {
+        "propertyDirection": {
+          "type": "string",
+          "maxLength": 4000,
+          "example": "SE ABC hills"
+        }
+      }
+    },
+    "Transportation": {
+      "type": "object",
+      "properties": {
+        "transportationCode": {
+          "type": "string",
+          "description": "Transportation type ex: Bus, Taxi. Enum values from globalCodes TRP - Transportation Code",
+          "example": "Metro"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1024,
+          "example": "Description for a Transportation"
+        },
+        "includeInRate": {
+          "type": "boolean",
+          "description": "Indicates whether charge rate is included or excluded",
+          "example": false
+        },
+        "reservationRequired": {
+          "type": "boolean",
+          "description": "Indicates whether reservation is required for this Transportation",
+          "example": true
+        }
+      }
+    },
+    "Communications": {
+      "description": "The contact information for the property",
+      "type": "object",
+      "properties": {
+        "phones": {
+          "description": "List of phone numbers for the property",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/OfferRatePlanMealType"
+            "$ref": "#/definitions/Phone"
+          },
+          "minItems": 1
+        },
+        "emails": {
+          "description": "List of emails addresses for the property",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Email"
           }
+        },
+        "urls": {
+          "description": "List of urls for the property",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Url"
+          }
+        }
+      }
+    },
+    "Email": {
+      "type": "object",
+      "properties": {
+        "emailType": {
+          "description": "The email type",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address for the specific emailType",
+          "type": "string"
+        }
+      }
+    },
+    "Url": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "The url or internet web address",
+          "type": "string"
+        }
+      }
+    },
+    "Phone": {
+      "type": "object",
+      "properties": {
+        "phoneTechType": {
+          "description": "The type of technology associated with the telephone number",
+          "type": "string"
+        },
+        "phoneLocationType": {
+          "description": "Describes the location of the phone",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "The phone number assigned to a specific location",
+          "type": "string"
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "properties": {
+        "propertyLocation": {
+          "type": "string",
+          "maxLength": 4000,
+          "example": "ABC hills"
         }
       }
     },
@@ -1416,49 +1728,117 @@
         }
       }
     },
-    "OfferRatePlanMealType": {
-      "type": "string",
-      "enum": [
-        "Breakfast",
-        "Lunch",
-        "Dinner"
-      ],
-      "description": "Type of meal the rate plan includes"
-    },
-    "Phone": {
+    "PropertyOffersHotelAmenity": {
       "type": "object",
       "properties": {
-        "phoneTechType": {
-          "description": "The type of technology associated with the telephone number",
-          "type": "string"
+        "hotelAmenity": {
+          "type": "string",
+          "description": "Feature available at a hotel",
+          "example": "12"
         },
-        "phoneLocationType": {
-          "description": "Describes the location of the phone",
-          "type": "string"
+        "description": {
+          "type": "string",
+          "description": "Description of a hotel amenity",
+          "example": "Swimming Pool"
         },
-        "phoneNumber": {
-          "description": "The phone number assigned to a specific location",
-          "type": "string"
+        "quantity": {
+          "type": "integer",
+          "description": "Quantity of a hotel amenity",
+          "example": 1
+        },
+        "includeInRate": {
+          "type": "boolean",
+          "description": "Indicates if an amenity is included in a room rate",
+          "example": true
+        },
+        "confirmable": {
+          "type": "boolean",
+          "description": "If a hotel amenity is confirmed to be available",
+          "example": false
         }
       }
     },
-    "PostingRhythmType": {
-      "type": "string",
-      "description": "Frequency type for posting types. <p> EveryNight - Charge posted every night of the stay </p> <p>  ArrivalNight - Charge posted only on arrival night </p> <p>  EveryXNightsStartingNightY - Charge posted every X nights, beginning the Y night of stay </p> <p>  CertainNightsOfTheWeek - Charge posted on certain night of the stay determined by the property </p> <p>  LastNight - Charge posted only on the last night of the stay </p> <p>  EveryNightExceptArrivalNight - Charge posted on all nights of the stay except the arrival night </p> <p>  EveryNightExceptLast - Charge posted on all nights of the stay except the last night </p> <p>  EveryNightExceptFirstAndLast - Charge posted on all nights of the stay except the first and last nights of the stay</p> <p>  CustomStaySchedule - Charge posted on stays determined by the property </p> <p>  CustomNightSchedule - Charge posted on nights of the stay determined by the property </p> <p>  FloatingAllowancePerStay - Allows for the package allowance to be consumed at anytime during the stay </p> <p>  TicketPosting - Charge posted immediately when a successful response is received back from the ticketing vendor (requires interface with a vendor)",
-      "enum": [
-        "EveryNight",
-        "ArrivalNight",
-        "EveryXNightsStartingNightY",
-        "CertainNightsOfTheWeek",
-        "LastNight",
-        "EveryNightExceptArrivalNight",
-        "EveryNightExceptLast",
-        "EveryNightExceptFirstAndLast",
-        "CustomStaySchedule",
-        "CustomNightSchedule",
-        "FloatingAllowancePerStay",
-        "TicketPosting"
-      ]
+    "Address": {
+      "type": "object",
+      "properties": {
+        "addressLine": {
+          "description": "The property's street address",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "example": [
+            "Street 123",
+            "Box 1"
+          ]
+        },
+        "countryCode": {
+          "description": "The property's two letter ISO country code",
+          "type": "string",
+          "example": "US"
+        },
+        "cityName": {
+          "description": "The city where the property is located",
+          "type": "string",
+          "example": "Miami"
+        },
+        "stateProv": {
+          "description": "The state where the property is located",
+          "type": "string",
+          "example": "Florida"
+        },
+        "postalCode": {
+          "description": "The property's postal (ZIP) code",
+          "type": "string",
+          "example": "90210"
+        }
+      }
+    },
+    "ExceptionDetail": {
+      "description": "Common Error Response format",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "example": "Error in Application"
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Business specific Error code, which is different from HTTP error code.",
+          "example": "RSV-34534534"
+        },
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type. When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The UTC Date and Time of the Error happened.",
+          "example": "2022-01-02T11:30:22.234Z"
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExceptionDetail"
+          }
+        },
+        "logId": {
+          "type": "integer",
+          "description": "An ID for support reasons to be able identify errors better.",
+          "example": "334543532224"
+        }
+      }
     },
     "PropertyInfoSummaryResponse": {
       "type": "object",
@@ -1496,319 +1876,96 @@
         }
       }
     },
-    "PropertyInfoResponse": {
-      "type": "object",
-      "properties": {
-        "propertyInfo": {
-          "$ref": "#/definitions/ContentPropertyInfo"
-        }
-      }
-    },
-    "PropertyOffersPropertyInfo": {
-      "description": "Property information",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/PropertySearchPropertyInfo"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "address": {
-              "type": "object",
-              "$ref": "#/definitions/Address"
-            },
-            "distance": {
-              "type": "object",
-              "$ref": "#/definitions/AlternatePropertyDistance"
-            },
-            "propertyAmenities": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PropertyOffersHotelAmenity"
-              }
-            },
-            "pointOfInterest": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OfferPointOfInterest"
-              }
-            },
-            "marketingMessage": {
-              "type": "string",
-              "description": "Property level marketing message.",
-              "example": "Thank you for choosing our property."
-            }
-          }
-        }
-      ]
-    },
-    "PropertyOffersHotelAmenity": {
-      "type": "object",
-      "properties": {
-        "hotelAmenity": {
-          "type": "string",
-          "description": "Feature available at a hotel",
-          "example": "12"
-        },
-        "description": {
-          "type": "string",
-          "description": "Description of a hotel amenity",
-          "example": "Swimming Pool"
-        },
-        "quantity": {
-          "type": "integer",
-          "description": "Quantity of a hotel amenity",
-          "example": 1
-        },
-        "includeInRate": {
-          "type": "boolean",
-          "description": "Indicates if an amenity is included in a room rate",
-          "example": true
-        },
-        "confirmable": {
-          "type": "boolean",
-          "description": "If a hotel amenity is confirmed to be available",
-          "example": false
-        }
-      }
-    },
-    "PropertySearchPropertyInfo": {
+    "OfferDetailsPropertyInfoSummary": {
       "description": "Property information",
       "type": "object",
       "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Unique ID that identifies a single hotel property",
+          "example": "Hotel1"
+        },
         "hotelCode": {
           "type": "string",
-          "description": "A channel hotel code",
+          "description": "The external Hotel/property Id for a channel",
           "example": "XUSXXYY99"
         },
         "hotelName": {
           "type": "string",
-          "description": "A full name of a hotel",
-          "example": "Resort1"
+          "description": "The descriptive name of a property",
+          "example": "The Palmyra Resort"
         },
         "chainCode": {
           "type": "string",
           "description": "Channel chain code for a property",
           "example": "CHAIN1"
         },
-        "isAlternate": {
-          "type": "boolean",
-          "example": true,
-          "description": "The code logic to support this element is not implemented and this element is deprecated."
+        "brandCode": {
+          "type": "string",
+          "description": "Channel's hotel/property brand code",
+          "example": "BRAND1"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "The date this property will be active for the channel",
+          "format": "date",
+          "example": "2023-08-03"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "The date this property will be deactivate for the channel",
+          "format": "date",
+          "example": "2024-09-04"
+        },
+        "address": {
+          "description": "Address Details such as city, state, country, postal code etc for a hotel property",
+          "$ref": "#/definitions/Address"
+        },
+        "communications": {
+          "description": "The contact information for the property",
+          "$ref": "#/definitions/Communications"
+        },
+        "connectionInformation": {
+          "description": "The connection information for the channel",
+          "$ref": "#/definitions/ConnectionInformation"
         }
       }
     },
-    "RatePlansResponse": {
-      "description": "Rate Plans Response",
+    "ConnectionInformation": {
+      "description": "Channel Connection Information for the hotel property",
       "type": "object",
       "properties": {
-        "ratePlans": {
-          "description": "Collection of the returned Rate Plans for a given channel",
+        "connectionStatus": {
+          "type": "string",
+          "description": "Channel connection status",
+          "enum": [
+            "TEST",
+            "ACTIVE",
+            "MAINTENANCE"
+          ]
+        },
+        "connectionStatusLastChangedOn": {
+          "description": "Channel connection status last changed on this date time",
+          "type": "string",
+          "format": "date-time",
+          "example": "2022-01-02T11:30:22.234Z"
+        },
+        "defaultARIMessageFormat": {
+          "type": "string",
+          "description": "ARI message format",
+          "enum": [
+            "Oracle_v1",
+            "AdsRateUpdate",
+            "AdsRateAmount"
+          ],
+          "example": "Oracle_v1"
+        },
+        "channelRoutes": {
+          "description": "The web service location (URL) of the distribution partners where Oracle Hospitality Distribution ARI service will post messages such as the property inventory, restrictions/availability, rate schedules updates, etc.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ContentRatePlan"
+            "$ref": "#/definitions/ChannelRouteType"
           }
-        },
-        "count": {
-          "type": "integer",
-          "example": 50
-        },
-        "hasMore": {
-          "type": "boolean",
-          "example": true
-        },
-        "limit": {
-          "type": "integer",
-          "example": 100
-        },
-        "offset": {
-          "type": "integer",
-          "example": 25
-        },
-        "totalResults": {
-          "type": "integer",
-          "example": 500
-        }
-      }
-    },
-    "Transportation": {
-      "type": "object",
-      "properties": {
-        "transportationCode": {
-          "type": "string",
-          "description": "Transportation type ex: Bus, Taxi. Enum values from globalCodes TRP - Transportation Code",
-          "example": "Metro"
-        },
-        "description": {
-          "type": "string",
-          "maxLength": 1024,
-          "example": "Description for a Transportation"
-        },
-        "includeInRate": {
-          "type": "boolean",
-          "description": "Indicates whether charge rate is included or excluded",
-          "example": false
-        },
-        "reservationRequired": {
-          "type": "boolean",
-          "description": "Indicates whether reservation is required for this Transportation",
-          "example": true
-        }
-      }
-    },
-    "Url": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "description": "The url or internet web address",
-          "type": "string"
-        }
-      }
-    },
-    "RoomTypesResponse": {
-      "description": "Room Types Response",
-      "type": "object",
-      "properties": {
-        "roomTypes": {
-          "description": "Collection of the returned Room Types for given channel",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContentRoomType"
-          }
-        },
-        "count": {
-          "type": "integer",
-          "example": 50
-        },
-        "hasMore": {
-          "type": "boolean",
-          "example": true
-        },
-        "limit": {
-          "type": "integer",
-          "example": 100
-        },
-        "offset": {
-          "type": "integer",
-          "example": 25
-        },
-        "totalResults": {
-          "type": "integer",
-          "example": 500
-        }
-      }
-    },
-    "ContentRoomType": {
-      "type": "object",
-      "description": "Room Type information",
-      "properties": {
-        "hotelRoomType": {
-          "type": "string",
-          "example": "A1K",
-          "description": "A room type code for a hotel."
-        },
-        "roomType": {
-          "type": "string",
-          "example": "XA1K",
-          "description": "A code for a room type for a requested channel."
-        },
-        "description": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "example": "Deluxe King Room on my Channel"
-          }
-        },
-        "roomName": {
-          "type": "string",
-          "example": 102
-        },
-        "roomCategory": {
-          "type": "string",
-          "example": "SUITE"
-        },
-        "roomAmenities": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContentRoomAmenity"
-          }
-        },
-        "roomViewType": {
-          "type": "string"
-        },
-        "roomPrimaryBedType": {
-          "type": "string"
-        },
-        "nonSmokingInd": {
-          "type": "boolean",
-          "example": true
-        },
-        "occupancy": {
-          "type": "object",
-          "$ref": "#/definitions/Occupancy"
-        },
-        "numberOfUnits": {
-          "type": "integer",
-          "description": "number of rooms requested",
-          "example": 1
-        }
-      }
-    },
-    "Occupancy": {
-      "type": "object",
-      "properties": {
-        "minOccupancy": {
-          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "exclusiveMinimum": false,
-          "example": 2
-        },
-        "maxOccupancy": {
-          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "exclusiveMinimum": false,
-          "example": 8
-        },
-        "maxAdultOccupancy": {
-          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "exclusiveMinimum": false,
-          "example": 4
-        },
-        "maxChildOccupancy": {
-          "description": "Assigned Type: ota2-0500:NonNegativeInteger",
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0,
-          "exclusiveMinimum": false,
-          "example": 3
-        }
-      }
-    },
-    "ContentRoomAmenity": {
-      "type": "object",
-      "properties": {
-        "roomAmenity": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "quantity": {
-          "type": "integer"
-        },
-        "includeInRate": {
-          "type": "boolean"
-        },
-        "confirmable": {
-          "type": "boolean"
         }
       }
     },
@@ -1827,20 +1984,6 @@
         }
       ]
     },
-    "ModifiableChannelRouteType": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "$ref": "#/definitions/MessageUrl"
-        }
-      }
-    },
-    "MessageUrl": {
-      "description": "Message URL",
-      "type": "string",
-      "pattern": "^(http[s]?|ftp[s]?|sftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-      "example": "https://pms-certification.profit.net/opera-cloud"
-    },
     "MessageType": {
       "description": "Message type that is enabled. <p>AvailNotif -  Indicates enable for hotel restrictions update </p> <p>RatePlanNotif - Indicates enable for hotel rate and room pricing update </p> <p>InvCountNotif - Indicates enable for hotel inventory counts update </p> <p>GetRooms - Indicates enable to fetch rooms from the distribution partner system </p> <p>GetRatePlans - Indicates enable to fetch rates from the distribution partner system </p>",
       "type": "string",
@@ -1857,108 +2000,19 @@
         "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
       }
     },
-    "RateRoomsResponse": {
-      "description": "Rate Rooms Response",
+    "ModifiableChannelRouteType": {
       "type": "object",
       "properties": {
-        "rateRooms": {
-          "description": "Collection of the returned RateRooms for given channel",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContentRateRoom"
-          }
-        },
-        "count": {
-          "type": "integer",
-          "example": 50
-        },
-        "hasMore": {
-          "type": "boolean",
-          "example": true
-        },
-        "limit": {
-          "type": "integer",
-          "example": 100
-        },
-        "offset": {
-          "type": "integer",
-          "example": 25
-        },
-        "totalResults": {
-          "type": "integer",
-          "example": 500
+        "url": {
+          "$ref": "#/definitions/MessageUrl"
         }
       }
     },
-    "ContentRateRoom": {
-      "type": "object",
-      "properties": {
-        "ratePlanCode": {
-          "type": "string",
-          "example": "XDAILY",
-          "description": "A code for a rate plan for a requested channel."
-        },
-        "hotelRatePlanCode": {
-          "type": "string",
-          "example": "DAILY",
-          "description": "A rate plan code for a hotel."
-        },
-        "roomType": {
-          "type": "string",
-          "example": "XA1K",
-          "description": "A code for a room type for a requested channel."
-        },
-        "hotelRoomType": {
-          "type": "string",
-          "example": "A1K",
-          "description": "A room type code for a hotel."
-        },
-        "active": {
-          "type": "boolean",
-          "example": true,
-          "description": "It represent if the rate room is active or inactive. Default value is true."
-        },
-        "occupancy": {
-          "type": "object",
-          "description": "It holds list of elements that defines room type occupancy information.",
-          "$ref": "#/definitions/Occupancy"
-        }
-      }
-    },
-    "HotelChildPolicy": {
-      "type": "object",
-      "properties": {
-        "kidsStayFreeInd": {
-          "type": "boolean"
-        },
-        "usualStayFreeCutoffAge": {
-          "type": "integer",
-          "example": 5
-        },
-        "maxChildAge": {
-          "type": "integer",
-          "example": 18
-        }
-      }
-    },
-    "TimeZone": {
-      "type": "object",
-      "properties": {
-        "timeZoneName": {
-          "type": "string",
-          "description": "Zone Name of the region",
-          "minLength": 1,
-          "maxLength": 50,
-          "example": "Asia/Calcutta"
-        },
-        "offset": {
-          "type": "string",
-          "description": "Provides the current offset from UTC for the specified time zone, considering DST",
-          "minLength": 1,
-          "maxLength": 50,
-          "example": "UTC+05:30"
-        }
-      }
+    "MessageUrl": {
+      "description": "Message URL",
+      "type": "string",
+      "pattern": "^(http[s]?|ftp[s]?|sftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+      "example": "https://pms-certification.profit.net/opera-cloud"
     }
   },
   "externalDocs": {

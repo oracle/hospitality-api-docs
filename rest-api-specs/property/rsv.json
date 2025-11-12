@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation API",
-    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest&apos;s arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest&apos;s experience.  All reservations in OPERA Cloud require a guest profile.<br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in the Customer Relationship Management module) and attach it to the reservation during the reservation booking process using the profileId.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
-    "version": "25.1.0.0",
+    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.4.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -62,6 +62,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -141,8 +147,8 @@
     },
     "/calls": {
       "post": {
-        "summary": "Register calls",
-        "description": "Use this API to request a new call or make updates to an existing call.<p><strong>OperationId:</strong>postCall</p>",
+        "summary": "Register Call",
+        "description": "Register call on a reservation. <p><strong>OperationId:</strong>postCall</p>",
         "operationId": "postCall",
         "parameters": [
           {
@@ -166,6 +172,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -276,10 +288,10 @@
             "name": "appUserName",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -291,6 +303,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -417,6 +435,18 @@
             "type": "integer"
           },
           {
+            "name": "resvExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for reservations. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
             "name": "searchType",
             "in": "query",
             "required": false,
@@ -460,11 +490,11 @@
             "name": "hotelIds",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "List of Hotels to support searches with multiple resorts for which traces are to be fetched.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -638,10 +668,10 @@
             "name": "membershipLevels",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -649,10 +679,10 @@
             "name": "membershipTypes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -714,10 +744,10 @@
             "name": "user",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -732,11 +762,11 @@
             "name": "cancelledByList",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Fetches reservations cancelled by list of users.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -752,10 +782,10 @@
             "name": "ratePlanCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -763,10 +793,10 @@
             "name": "sourceCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -774,10 +804,10 @@
             "name": "marketCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -966,10 +996,10 @@
             "name": "roomClasses",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -989,7 +1019,21 @@
             "name": "communication",
             "in": "query",
             "required": false,
-            "description": "Filter by the last digits of a reservation's phone number.",
+            "description": "Any communication attached to the reservation from the primary guest's profile such as phone, fax or email address.",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "required": false,
+            "description": "The phone number attached to the reservation from the primary guest's profile.",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "description": "The email address attached to the reservation from the primary guest's profile.",
             "type": "string"
           },
           {
@@ -1333,11 +1377,11 @@
             "name": "transportationCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Codes to be searched.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -1384,6 +1428,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1573,6 +1623,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -1678,6 +1734,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1955,6 +2017,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -2067,6 +2135,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -2271,10 +2345,10 @@
             "name": "membershipLevelCode",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -2282,10 +2356,10 @@
             "name": "membershipTypeCode",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -2347,6 +2421,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -2458,6 +2538,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -2572,6 +2658,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -2706,6 +2798,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -2823,6 +2921,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -2901,8 +3005,8 @@
     },
     "/hotels/{hotelId}/externalSystems/{externalSystemCode}/reservations/{reservationExternalId}": {
       "get": {
-        "summary": "Get reservation by external ID",
-        "description": "Use this API to get a reservation using the external reference ID associated with the reservation such as a Central Reservation System confirmation number or booking engine confirmation number.<p><strong>OperationId:</strong>getReservationByExtId</p>",
+        "summary": "Get Reservation by external ID",
+        "description": "Retrieve a reservation using the external ID. <p><strong>OperationId:</strong>getReservationByExtId</p>",
         "operationId": "getReservationByExtId",
         "parameters": [
           {
@@ -2931,6 +3035,18 @@
             "minLength": 1,
             "maxLength": 2000,
             "description": "Unique ID of the hotel where reservation is searched based on external reservation Id."
+          },
+          {
+            "name": "profileExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for associated profiles for the reservation. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
           },
           {
             "name": "fetchInstructions",
@@ -2980,7 +3096,8 @@
                 "ECertificates",
                 "UpsellInfo",
                 "RoomAssignedByAI",
-                "DailySummary"
+                "DailySummary",
+                "OffshoreRates"
               ]
             },
             "required": false
@@ -3021,6 +3138,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -3150,6 +3273,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -3291,6 +3420,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -3423,6 +3558,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -3551,6 +3692,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -3685,6 +3832,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -3815,6 +3968,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -3839,6 +3998,165 @@
               }
             },
             "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/externalSystems/{externalSystemCode}/reservations/{reservationExternalId}/separatedShare": {
+      "put": {
+        "summary": "Separate Share Reservation with the given external reservation id and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis.",
+        "description": "This API can be used to separate the share reservation with the given external reservation id and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis. <p><strong>OperationId:</strong>putSeparateShareReservationByExtId</p>",
+        "operationId": "putSeparateShareReservationByExtId",
+        "parameters": [
+          {
+            "name": "reservationExternalId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "External reservation ID."
+          },
+          {
+            "name": "externalSystemCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Code to identify the external system from which the request is coming. This is the ExternalSystem ID used to exchange information between OPERA and the external system."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "overrideInventoryCheck",
+            "in": "query",
+            "required": false,
+            "description": "Indicate to Override the Room Inventory Check if applicable.",
+            "type": "boolean"
+          },
+          {
+            "name": "overrideMaxOccupancyCheck",
+            "in": "query",
+            "required": false,
+            "description": "Indicate to Override the check on Maximum Room Occupancy if applicable.",
+            "type": "boolean"
+          },
+          {
+            "name": "overrideRateAvailabilityCheck",
+            "in": "query",
+            "required": false,
+            "description": "Indicate to Override the check on Maximum Room Occupancy if applicable.",
+            "type": "boolean"
+          },
+          {
+            "name": "separateShareReservation",
+            "in": "body",
+            "required": true,
+            "description": "Request to separate Share Reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/separateShareReservation"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
               "$ref": "#/definitions/status"
             }
@@ -3932,6 +4250,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -4061,6 +4385,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -4208,6 +4538,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -4321,6 +4657,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -4569,6 +4911,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -4676,6 +5024,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -4797,6 +5151,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -4930,6 +5290,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -5030,11 +5396,11 @@
             "name": "promotionCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Promotion Code for ComplimentaryRouting",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -5201,6 +5567,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -5339,10 +5711,10 @@
             "name": "membershipLevel",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -5350,10 +5722,10 @@
             "name": "membershipType",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -5441,6 +5813,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -5556,6 +5934,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -5634,8 +6018,8 @@
     },
     "/hotels/{hotelId}/reservations": {
       "get": {
-        "summary": "Get and search for reservations in a hotel",
-        "description": "Use this API to search reservations in a hotel, filtering by whether they are Day Use, Due In, Checked In, Due Out, Checked Out, Cancelled, No Show and Complimentary or any other of the large selection of search criteria. It also serves as an entry way for changing existing reservation information, canceling reservations, checking in guests, canceling check ins, etc. You can use further query parameters to narrow your results. This API is not designed to support sync between two systems or initial upload of data.<p><strong>OperationId:</strong>getHotelReservations</p>",
+        "summary": "Get Reservations for a hotel",
+        "description": "This API will allow a user to retrieve a list of reservations based on the search criteria specified in the request body. For example you can search for reservations using query parameters like first name, last name, arrival/departure date, external confirmation number. <p><strong>OperationId:</strong>getHotelReservations</p>",
         "operationId": "getHotelReservations",
         "parameters": [
           {
@@ -6043,10 +6427,10 @@
             "name": "membershipLevels",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6054,10 +6438,10 @@
             "name": "membershipTypes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6140,10 +6524,10 @@
             "name": "user",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6158,11 +6542,11 @@
             "name": "cancelledByList",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Fetches reservations cancelled by list of users.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6178,10 +6562,10 @@
             "name": "ratePlanCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6189,10 +6573,10 @@
             "name": "sourceCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6200,10 +6584,10 @@
             "name": "marketCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6401,10 +6785,10 @@
             "name": "roomClasses",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6424,8 +6808,46 @@
             "name": "communication",
             "in": "query",
             "required": false,
-            "description": "Filter by the last digits of a reservation's phone number.",
+            "description": "Any communication attached to the reservation from the primary guest's profile such as phone, fax or email address.",
             "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "required": false,
+            "description": "The phone number attached to the reservation from the primary guest's profile.",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "description": "The email address attached to the reservation from the primary guest's profile.",
+            "type": "string"
+          },
+          {
+            "name": "profileExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for associated profiles for the reservation. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "resvExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for reservations. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
           },
           {
             "name": "fetchInstructions",
@@ -6453,7 +6875,9 @@
                 "ReservationPreferences",
                 "FiscalInfo",
                 "CommissionsInfo",
-                "DepartureReservationInfo"
+                "DepartureReservationInfo",
+                "MultipleMemberships",
+                "FetchChildAges"
               ]
             },
             "required": false
@@ -6858,11 +7282,11 @@
             "name": "transportationCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Codes to be searched.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -6945,13 +7369,13 @@
             "name": "contactNames",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Name of Contact Profile associated with Reservation.",
             "items": {
               "type": "string",
               "minLength": 0,
-              "maxLength": 82,
-              "maxItems": 4000
+              "maxLength": 82
             },
             "required": false
           },
@@ -6959,11 +7383,11 @@
             "name": "taRecordLocatorList",
             "in": "query",
             "type": "array",
+            "maxItems": 30,
             "collectionFormat": "multi",
             "description": "Travel Agent Record Locators List.",
             "items": {
-              "type": "string",
-              "maxItems": 30
+              "type": "string"
             },
             "required": false
           },
@@ -7121,6 +7545,21 @@
             }
           },
           {
+            "name": "pkgCategoryToFetch",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Provide a package category code to return details for packages belonging to the specified category."
+          },
+          {
+            "name": "pkgForecastedConsumptionDateToFetch",
+            "in": "query",
+            "type": "string",
+            "format": "date",
+            "required": false,
+            "description": "Forecasted package consumption date for which package details are to be returned. When used,  the details of packages with a forecasted consumption date equal to the specified date will be returned for each reservation. Required if pkgCategoryToFetch is used."
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -7128,6 +7567,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -7434,6 +7879,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -7512,8 +7963,8 @@
     },
     "/hotels/{hotelId}/reservations/activityLog": {
       "get": {
-        "summary": "Fetch reservation activity log",
-        "description": "Use this API to get the activity log data of reservations being created and managed.<p><strong>OperationId:</strong>getReservationActivityLog</p>",
+        "summary": "Fetch Reservation Activity Log",
+        "description": "Get the activity log for a reservation. <p><strong>OperationId:</strong>getReservationActivityLog</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getReservationActivityLog",
         "parameters": [
           {
@@ -7601,10 +8052,10 @@
             "name": "userByIdsUserId",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "integer",
-              "maxItems": 4000
+              "type": "integer"
             },
             "required": false
           },
@@ -7612,10 +8063,10 @@
             "name": "userForIdsUserId",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "integer",
-              "maxItems": 4000
+              "type": "integer"
             },
             "required": false
           },
@@ -7627,6 +8078,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -7742,6 +8199,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -7854,6 +8317,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -7997,6 +8466,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -8103,6 +8578,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -8222,6 +8703,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -8298,6 +8785,137 @@
         ]
       }
     },
+    "/hotels/{hotelId}/reservations/packageCategoryReservations": {
+      "get": {
+        "summary": "Get Reservations by pacakge and consumption date",
+        "description": "Use this API to get reservations with package consumption for a specific date. <p><strong>OperationId:</strong>getReservationsByPackage</p>",
+        "operationId": "getReservationsByPackage",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "packageCategory",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Package Category of the package attached to the reservation. Reserved for future development.",
+            "items": {
+              "type": "string",
+              "maxItems": 20
+            }
+          },
+          {
+            "name": "packageCode",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Package code of the package attached to the reservation",
+            "items": {
+              "type": "string",
+              "maxItems": 20
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date",
+            "description": "Forecasted package consumption date"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicated maximum number of reservations to be sent in the response",
+            "type": "integer",
+            "default": 30
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object to the Fetch Reservations by package request operation. Based on the criteria, reservation information is returned.",
+            "schema": {
+              "$ref": "#/definitions/packageCategoryReservations"
+            }
+          },
+          "204": {
+            "description": "HotelReservations not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation",
+          "PackageCategory"
+        ]
+      }
+    },
     "/hotels/{hotelId}/reservations/policies": {
       "put": {
         "summary": "Get Deposit and Cancellation Policies that are applicable to the specified criteria.",
@@ -8330,6 +8948,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -8496,7 +9120,7 @@
     "/hotels/{hotelId}/reservations/rateInfo": {
       "get": {
         "summary": "Get rate information",
-        "description": "Use this API to retrieve rate plan information including a breakdown of packages and taxes.<p><strong>OperationId:</strong>getRateInfo</p>",
+        "description": "Retrieve the rate plan information for a reservation. <p><strong>OperationId:</strong>getRateInfo</p> <p>This API allows a time span of <strong>21</strong> days.</p>",
         "operationId": "getRateInfo",
         "parameters": [
           {
@@ -8694,6 +9318,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -8807,6 +9437,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -8912,11 +9548,11 @@
             "in": "query",
             "required": false,
             "type": "array",
+            "maxItems": 100,
             "collectionFormat": "multi",
             "uniqueItems": true,
             "items": {
-              "type": "string",
-              "maxItems": 100
+              "type": "string"
             },
             "description": "This is the ChannelCode of Hotel Code in the Reservations"
           },
@@ -8962,6 +9598,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -9222,6 +9864,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -9420,6 +10068,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -9559,10 +10213,10 @@
             "name": "membershipLevel",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -9570,10 +10224,10 @@
             "name": "membershipType",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -9649,11 +10303,11 @@
             "name": "taRecordLocatorList",
             "in": "query",
             "type": "array",
+            "maxItems": 30,
             "collectionFormat": "multi",
             "description": "Travel Agent Record Locators List.",
             "items": {
-              "type": "string",
-              "maxItems": 30
+              "type": "string"
             },
             "required": false
           },
@@ -9754,6 +10408,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -9831,8 +10491,8 @@
     },
     "/hotels/{hotelId}/reservations/{reservationId}": {
       "get": {
-        "summary": "Get reservation by ID",
-        "description": "Use this API to retrieve a reservation&apos;s detail such as guest&apos;s stay, arrival and departure dates, transportation, room and rate information, preferences, packages, and more using OPERA&apos;s reservationId.<p><strong>OperationId:</strong>getReservation</p>",
+        "summary": "Get Reservation by ID",
+        "description": "Retrieve a reservation using the internal ID. <p><strong>OperationId:</strong>getReservation</p>",
         "operationId": "getReservation",
         "parameters": [
           {
@@ -9852,6 +10512,18 @@
             "minLength": 1,
             "maxLength": 2000,
             "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "profileExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for associated profiles for the reservation. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
           },
           {
             "name": "fetchInstructions",
@@ -9910,7 +10582,9 @@
                 "Voucher",
                 "ScheduledRoomMoves",
                 "DailySummary",
-                "RateInfoDetails"
+                "RateInfoDetails",
+                "OffshoreRates",
+                "FetchChildAges"
               ]
             },
             "required": false
@@ -9940,7 +10614,8 @@
                 "EnrollToPrimaryMembership",
                 "EnrollInProgress",
                 "MemberAwardAttached",
-                "UpgradeAwardAttached"
+                "UpgradeAwardAttached",
+                "DiscountAwardAttached"
               ]
             },
             "required": false
@@ -9967,6 +10642,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -10353,6 +11034,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -10457,6 +11144,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -10578,6 +11271,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -10709,6 +11408,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -10845,6 +11550,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -10961,6 +11672,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -11086,6 +11803,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -11194,6 +11917,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -11459,6 +12188,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -11579,6 +12314,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -11702,6 +12443,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -11815,6 +12562,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -11938,6 +12691,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -12089,6 +12848,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -12212,6 +12977,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -12318,6 +13089,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -12443,6 +13220,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -12469,6 +13252,132 @@
             "description": "Response for the Combine Share Validation request. This returns all validation messages which may be required for the combine share operation.",
             "schema": {
               "$ref": "#/definitions/combineShareValidationsDetails"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/consumedPackageQuantity": {
+      "put": {
+        "summary": "Update consumed package quantity for package codes.",
+        "description": "Use this API to update the consumed package quantity for package codes. <p><strong>OperationId:</strong>putConsumedPackageQuantity</p>",
+        "operationId": "putConsumedPackageQuantity",
+        "parameters": [
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "changePackageQuantity",
+            "in": "body",
+            "required": true,
+            "description": "Request object to update package quantity.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changePackageQuantityType"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
             }
           },
           "400": {
@@ -12564,6 +13473,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -12689,6 +13604,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -12812,6 +13733,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -12933,6 +13860,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -13046,6 +13979,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -13173,6 +14112,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -13291,6 +14236,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -13414,6 +14365,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -13529,6 +14486,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -13556,129 +14519,6 @@
             "schema": {
               "$ref": "#/definitions/status"
             }
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "Reservation"
-        ]
-      }
-    },
-    "/hotels/{hotelId}/reservations/{reservationId}/excludedPreferences": {
-      "get": {
-        "summary": "Fetch Reservation excluded preferences",
-        "description": "Get the Reservation excluded preferences. <p><strong>OperationId:</strong>getReservationExcludedPreferences</p>",
-        "operationId": "getReservationExcludedPreferences",
-        "parameters": [
-          {
-            "name": "reservationId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
-          },
-          {
-            "name": "preferenceType",
-            "in": "query",
-            "required": false,
-            "description": "The preference type for which the excluded preference search will be performed.",
-            "type": "string"
-          },
-          {
-            "name": "preferenceCode",
-            "in": "query",
-            "required": false,
-            "description": "The preference code for which the excluded preference search will be performed.",
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/externalData"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/x-externalsystem"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              }
-            },
-            "description": "Response for the excluded preferences request.",
-            "schema": {
-              "$ref": "#/definitions/reservationExcludedPreferences"
-            }
-          },
-          "204": {
-            "description": "ReservationExcludedPreferences not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -13769,6 +14609,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -13881,8 +14727,13 @@
           {
             "name": "flexFieldCode",
             "in": "query",
-            "type": "string",
+            "type": "array",
+            "collectionFormat": "multi",
             "description": "Flex field code",
+            "items": {
+              "type": "string",
+              "maxItems": 50
+            },
             "required": false
           },
           {
@@ -13917,6 +14768,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -14037,6 +14894,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -14160,6 +15023,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -14268,6 +15137,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -14388,6 +15263,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -14522,6 +15403,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -14637,6 +15524,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -14762,6 +15655,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -14881,6 +15780,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -15015,6 +15920,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -15130,6 +16041,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -15255,6 +16172,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -15363,6 +16286,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -15483,6 +16412,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -15606,6 +16541,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -15712,6 +16653,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -15901,6 +16848,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -16019,6 +16972,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -16151,6 +17110,29 @@
             "type": "boolean"
           },
           {
+            "name": "excludeCancelledReservations",
+            "in": "query",
+            "required": false,
+            "description": "When true indicates that linked reservations with Cancelled status should not be included in search results.",
+            "type": "boolean"
+          },
+          {
+            "name": "excludeNoShowReservations",
+            "in": "query",
+            "required": false,
+            "description": "When true indicates that linked reservations with NoShow status should not be included in search results.",
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "minimum": 0,
+            "default": 200,
+            "description": "Indicates maximum number of records this Web Service should return. Minimum is 0. Default is 200.",
+            "type": "integer"
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -16158,6 +17140,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -16280,6 +17268,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -16405,6 +17399,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -16528,6 +17528,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -16649,6 +17655,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -16757,235 +17769,10 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
-            "$ref": "#/parameters/x-hotelid"
+            "$ref": "#/parameters/x-request-id"
           },
           {
-            "$ref": "#/parameters/x-externalsystem"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "responses": {
-          "200": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
-              }
-            },
-            "description": "HATEOAS links which help the consumer to navigate to resources",
-            "schema": {
-              "$ref": "#/definitions/status"
-            }
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "Reservation"
-        ]
-      }
-    },
-    "/hotels/{hotelId}/reservations/{reservationId}/memberships": {
-      "post": {
-        "summary": "Create a Reservation membership",
-        "description": "Add a membership to an existing reservation. <p><strong>OperationId:</strong>postReservationMembership</p>",
-        "operationId": "postReservationMembership",
-        "parameters": [
-          {
-            "name": "reservationId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
-          },
-          {
-            "name": "reservationMembership",
-            "in": "body",
-            "required": true,
-            "description": "Method to create a reservation membership on an existing reservation.",
-            "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/reservationMembership"
-                }
-              ]
-            }
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/externalData"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
-          },
-          {
-            "$ref": "#/parameters/x-hotelid"
-          },
-          {
-            "$ref": "#/parameters/x-externalsystem"
-          },
-          {
-            "$ref": "#/parameters/Accept-Language"
-          }
-        ],
-        "responses": {
-          "201": {
-            "headers": {
-              "Content-Language": {
-                "type": "string",
-                "description": "Audience language",
-                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
-                "x-example": "en-GB"
-              },
-              "Location": {
-                "type": "string",
-                "description": "Location of newly created resource"
-              }
-            },
-            "description": "HATEOAS links which help the consumer to navigate to resources",
-            "schema": {
-              "$ref": "#/definitions/status"
-            }
-          },
-          "400": {
-            "$ref": "#/responses/400"
-          },
-          "401": {
-            "$ref": "#/responses/401"
-          },
-          "403": {
-            "$ref": "#/responses/403"
-          },
-          "404": {
-            "$ref": "#/responses/404"
-          },
-          "405": {
-            "$ref": "#/responses/405"
-          },
-          "406": {
-            "$ref": "#/responses/406"
-          },
-          "413": {
-            "$ref": "#/responses/413"
-          },
-          "414": {
-            "$ref": "#/responses/414"
-          },
-          "415": {
-            "$ref": "#/responses/415"
-          },
-          "500": {
-            "$ref": "#/responses/500"
-          },
-          "502": {
-            "$ref": "#/responses/502"
-          },
-          "503": {
-            "$ref": "#/responses/503"
-          }
-        },
-        "consumes": [
-          "application/json;charset=UTF-8"
-        ],
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "tags": [
-          "Reservation"
-        ]
-      },
-      "delete": {
-        "summary": "Delete a Reservation membership",
-        "description": "Delete a membership from an existing reservation. <p><strong>OperationId:</strong>deleteReservationMembership</p>",
-        "operationId": "deleteReservationMembership",
-        "parameters": [
-          {
-            "name": "reservationId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
-          },
-          {
-            "name": "hotelId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000,
-            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
-          },
-          {
-            "$ref": "#/parameters/authKey"
-          },
-          {
-            "$ref": "#/parameters/externalData"
-          },
-          {
-            "$ref": "#/parameters/x-app-key"
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -17111,6 +17898,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -17232,6 +18025,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -17435,6 +18234,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -17553,6 +18358,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -17676,6 +18487,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -17782,6 +18599,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -17907,6 +18730,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -18030,6 +18859,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -18145,6 +18980,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -18250,6 +19091,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -18373,6 +19220,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -18451,8 +19304,8 @@
     },
     "/hotels/{hotelId}/reservations/{reservationId}/policies": {
       "get": {
-        "summary": "Get reservation cancel and deposit policies",
-        "description": "Use this API to get cancelation and deposit policies for a given reservation.<p><strong>OperationId:</strong>getReservationPolicies</p>",
+        "summary": "Get Reservation Policies",
+        "description": "This API will retrieve the reservation policies for a specified reservation. <p><strong>OperationId:</strong>getReservationPolicies</p>",
         "operationId": "getReservationPolicies",
         "parameters": [
           {
@@ -18495,6 +19348,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -18627,6 +19486,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -19056,7 +19921,7 @@
             "name": "emailFolioCreatorID",
             "in": "query",
             "required": false,
-            "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+            "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
             "type": "string"
           },
           {
@@ -19182,6 +20047,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -19286,10 +20157,10 @@
             "name": "preferenceTypeCode",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -19301,6 +20172,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -19421,6 +20298,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -19555,6 +20438,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -19672,6 +20561,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -19753,6 +20648,7 @@
         "summary": "Reverse a deposit policy",
         "description": "You can use this API to reverse a deposit policy on a specified reservation. <p><strong>OperationId:</strong>postReverseDepositPolicy</p>",
         "operationId": "postReverseDepositPolicy",
+        "deprecated": true,
         "parameters": [
           {
             "name": "policyId",
@@ -19802,6 +20698,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -19950,6 +20852,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -20070,6 +20978,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -20177,6 +21091,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -20298,6 +21218,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -20431,6 +21357,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -20457,6 +21389,156 @@
             "description": "Response Body.",
             "schema": {
               "$ref": "#/definitions/scheduledRoomMoveDetails"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Reservation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/separatedShare": {
+      "put": {
+        "summary": "Separate Share Reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis.",
+        "description": "This API can be used to separate the share reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis. <p><strong>OperationId:</strong>putSeparateShareReservation</p>",
+        "operationId": "putSeparateShareReservation",
+        "parameters": [
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of the hotel where reservation is searched based on reservation ID."
+          },
+          {
+            "name": "overrideInventoryCheck",
+            "in": "query",
+            "required": false,
+            "description": "Indicate to Override the Room Inventory Check if applicable.",
+            "type": "boolean"
+          },
+          {
+            "name": "overrideMaxOccupancyCheck",
+            "in": "query",
+            "required": false,
+            "description": "Indicate to Override the check on Maximum Room Occupancy if applicable.",
+            "type": "boolean"
+          },
+          {
+            "name": "overrideRateAvailabilityCheck",
+            "in": "query",
+            "required": false,
+            "description": "Indicate to Override the check on Maximum Room Occupancy if applicable.",
+            "type": "boolean"
+          },
+          {
+            "name": "separateShareReservation",
+            "in": "body",
+            "required": true,
+            "description": "Request to separate Share Reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/separateShareReservation"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
             }
           },
           "400": {
@@ -20552,6 +21634,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -20677,6 +21765,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -20785,6 +21879,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -20905,6 +22005,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -21043,6 +22149,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -21164,6 +22276,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -21297,6 +22415,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -21415,6 +22539,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -21538,6 +22668,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -21644,6 +22780,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -21855,6 +22997,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -21977,6 +23125,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -22085,6 +23239,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -22296,6 +23456,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -22405,6 +23571,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -22508,10 +23680,10 @@
             "name": "transactionDiversionCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -22530,6 +23702,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -22650,6 +23828,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -22773,6 +23957,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -22879,6 +24069,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -23002,6 +24198,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -23174,6 +24376,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -23280,6 +24488,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -23397,6 +24611,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -23476,7 +24696,7 @@
     "/hotels/{hotelId}/roomCalendar": {
       "get": {
         "summary": "Get the room calendar",
-        "description": "Use this API to get the room calendar for a hotel. It fetches inventory detail per rooms, the reservations assigned for a selected date range in the past or future, scheduled Out of Order or Out of Service status, room description, room attributes, room features, connecting room, etc.<p><strong>OperationId:</strong>getRoomCalendar</p>",
+        "description": "Use this API to get the room calendar for your Hotel. <p><strong>OperationId:</strong>getRoomCalendar</p> <p>This API allows a time span of <strong>366</strong> days.</p>",
         "operationId": "getRoomCalendar",
         "parameters": [
           {
@@ -23641,11 +24861,11 @@
             "name": "roomId",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room search filter.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -23653,11 +24873,11 @@
             "name": "roomType",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room Type search filter.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -23665,11 +24885,11 @@
             "name": "roomClass",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room Class search filter.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -23677,11 +24897,11 @@
             "name": "floor",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Floor search filter.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -23720,11 +24940,11 @@
             "name": "smokingPreference",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Smoking Preference filter.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -23732,10 +24952,10 @@
             "name": "bedType",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -23754,6 +24974,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -23863,6 +25089,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -24001,6 +25233,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -24117,11 +25355,11 @@
             "name": "roomType",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room Type.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -24129,11 +25367,11 @@
             "name": "ratePlanCode",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Rate Plan code.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -24196,6 +25434,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -24307,6 +25551,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -24421,6 +25671,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -24518,6 +25774,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -24634,6 +25896,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -24748,6 +26016,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -24849,6 +26123,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -24938,6 +26218,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -25088,11 +26374,11 @@
             "name": "hotelIds",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "List of Hotels to support searches with multiple resorts for which traces are to be fetched.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25353,10 +26639,10 @@
             "name": "membershipLevels",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25364,10 +26650,10 @@
             "name": "membershipTypes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25436,10 +26722,10 @@
             "name": "user",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25454,11 +26740,11 @@
             "name": "cancelledByList",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Fetches reservations cancelled by list of users.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25474,10 +26760,10 @@
             "name": "ratePlanCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25485,10 +26771,10 @@
             "name": "sourceCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25496,10 +26782,10 @@
             "name": "marketCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25552,6 +26838,30 @@
             "required": false,
             "description": "GDS Record Locator for reservation.",
             "type": "string"
+          },
+          {
+            "name": "profileExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for associated profiles for the reservation. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "resvExternalReferencesToFetch",
+            "in": "query",
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "description": "Define the external system(s) to return external reference ids for reservations. A maximum of 10 different external systems can be be provided for this parameter.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
           },
           {
             "name": "orderBy",
@@ -25688,10 +26998,10 @@
             "name": "roomClasses",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -25711,7 +27021,21 @@
             "name": "communication",
             "in": "query",
             "required": false,
-            "description": "Filter by the last digits of a reservation's phone number.",
+            "description": "Any communication attached to the reservation from the primary guest's profile such as phone, fax or email address.",
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "required": false,
+            "description": "The phone number attached to the reservation from the primary guest's profile.",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "description": "The email address attached to the reservation from the primary guest's profile.",
             "type": "string"
           },
           {
@@ -25735,7 +27059,8 @@
                 "BlockReservations",
                 "TaxType",
                 "GuestDeviceNotification",
-                "RoomAssignedByAI"
+                "RoomAssignedByAI",
+                "FetchChildAges"
               ]
             },
             "required": false
@@ -26084,11 +27409,11 @@
             "name": "transportationCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Codes to be searched.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -26147,13 +27472,13 @@
             "name": "contactNames",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Name of Contact Profile associated with Reservation.",
             "items": {
               "type": "string",
               "minLength": 0,
-              "maxLength": 82,
-              "maxItems": 4000
+              "maxLength": 82
             },
             "required": false
           },
@@ -26161,11 +27486,11 @@
             "name": "taRecordLocatorList",
             "in": "query",
             "type": "array",
+            "maxItems": 30,
             "collectionFormat": "multi",
             "description": "Travel Agent Record Locators List.",
             "items": {
-              "type": "string",
-              "maxItems": 30
+              "type": "string"
             },
             "required": false
           },
@@ -26295,6 +27620,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -26865,11 +28196,11 @@
             "name": "reservationId",
             "in": "query",
             "type": "array",
+            "maxItems": 100,
             "collectionFormat": "multi",
             "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
             "items": {
-              "type": "string",
-              "maxItems": 100
+              "type": "string"
             },
             "required": false
           },
@@ -26877,12 +28208,12 @@
             "name": "hotelId",
             "in": "query",
             "type": "array",
+            "maxItems": 100,
             "collectionFormat": "multi",
             "description": "Hotel code of each reservation ID. If more than one reservation id is requested from multiple hotels, this is needed to identify per reservation id. Example reservationId=123&hotelId=PROP1&reservationId=456&hotelId=PROP2",
             "uniqueItems": true,
             "items": {
-              "type": "string",
-              "maxItems": 100
+              "type": "string"
             },
             "required": false
           },
@@ -26910,6 +28241,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -27025,6 +28362,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -27122,6 +28465,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -27245,6 +28594,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -27322,8 +28677,8 @@
     },
     "/reservations/statistics": {
       "get": {
-        "summary": "Get reservation statistics",
-        "description": "Use this API to get a statistical breakdown of reservations such as inventory and revenue data.<p><strong>OperationId:</strong>getReservationStatistics</p>",
+        "summary": "Get Reservation Statistics",
+        "description": "Use this API to get Reservation Statistics. <p><strong>OperationId:</strong>getReservationStatistics</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getReservationStatistics",
         "parameters": [
           {
@@ -27464,6 +28819,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -27563,6 +28924,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -27677,6 +29044,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -27885,6 +29258,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -27992,11 +29371,11 @@
             "name": "roomType",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room Type.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -28004,11 +29383,11 @@
             "name": "ratePlanCode",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Rate Plan code.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -28052,11 +29431,11 @@
             "name": "hotelIds",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Hotel code.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -28090,6 +29469,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -28192,6 +29577,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -28297,6 +29688,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -28398,6 +29795,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -28488,6 +29891,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -28581,6 +29990,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -28670,6 +30085,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -28770,6 +30191,19 @@
       "in": "header",
       "required": true
     },
+    "x-request-id": {
+      "name": "x-request-id",
+      "type": "string",
+      "pattern": "~*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+      "description": "Request Id of an incoming request",
+      "in": "header"
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
+    },
     "x-hotelid": {
       "name": "x-hotelid",
       "type": "string",
@@ -28780,7 +30214,7 @@
     "x-externalsystem": {
       "name": "x-externalsystem",
       "type": "string",
-      "maxLength": 80,
+      "maxLength": 40,
       "description": "External system code.",
       "in": "header",
       "x-example": "EXTERNALSYSTEMCODE"
@@ -29511,6 +30945,14 @@
           "description": "Collection of guests associated with the reservation.",
           "$ref": "#/definitions/resGuestInfoType"
         },
+        "reservationMemberships": {
+          "description": "List of reservation memberships which are attached from profile.",
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/definitions/reservationMembershipType"
+          }
+        },
         "sharedGuests": {
           "description": "Collection of guests who share this reservation.",
           "$ref": "#/definitions/resSharedGuestListType"
@@ -29661,7 +31103,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -29757,6 +31199,14 @@
         "userDefinedFields": {
           "description": "Collections of user defined fields.",
           "$ref": "#/definitions/userDefinedFieldsType"
+        },
+        "pkgConsumptionInfo": {
+          "description": "Package consumption information linked to the reservation, including package code, description, category, and consumption details.",
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/definitions/packageInfoType"
+          }
         }
       }
     },
@@ -29821,6 +31271,14 @@
         "childCount": {
           "description": "A collection of Child Counts associated with Room Stay.",
           "type": "integer"
+        },
+        "childAges": {
+          "description": "Defines Children's Ages. Number of children ages mentioned may mot match with children counts.",
+          "$ref": "#/definitions/childAgesType"
+        },
+        "childBuckets": {
+          "description": "Defines children counts with Age Qualifying Group(Child Bucket#1) classification.",
+          "$ref": "#/definitions/childBucketsType"
         },
         "roomClass": {
           "description": "Room class code",
@@ -30107,7 +31565,8 @@
       "enum": [
         "DoNotDisturb",
         "MakeUpRoom",
-        "NoStatusSelected"
+        "NoStatusSelected",
+        "ServiceDeclined"
       ]
     },
     "resGuestInfoType": {
@@ -30147,6 +31606,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        },
+        "alternateFullName": {
+          "description": "Alternate full name",
+          "type": "string"
         },
         "nameTitle": {
           "description": "Degree or honors (e.g., Ph.D., M.D.)",
@@ -30232,6 +31695,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        },
+        "externalReferences": {
+          "description": "External References information for this Profile. Will be returned in getReservations and getHotelReservations when the 'profileExternalReferencesToFetch' query parameter is sent.",
+          "$ref": "#/definitions/externalReferencesType"
         }
       }
     },
@@ -30440,6 +31907,18 @@
           "description": "String representation of the full name",
           "type": "string"
         },
+        "alternateFirstName": {
+          "description": "Alternate first name",
+          "type": "string"
+        },
+        "alternateLastName": {
+          "description": "Alternate last name.",
+          "type": "string"
+        },
+        "alternateFullName": {
+          "description": "Alternate full name",
+          "type": "string"
+        },
         "registrationCardNo": {
           "description": "Unique identifier of the police registration card number.",
           "type": "string",
@@ -30449,6 +31928,10 @@
         "profileIdList": {
           "description": "Unique identifiers for the Profile for both internal and external systems. In case of Travel Agent the IATA code and in case of Company can be any form of identifier as id.",
           "$ref": "#/definitions/profileIdList"
+        },
+        "externalReferences": {
+          "description": "External References information for this Profile. Will be returned in getReservations and getHotelReservations when the 'profileExternalReferencesToFetch' query parameter is sent.",
+          "$ref": "#/definitions/externalReferencesType"
         }
       }
     },
@@ -30514,6 +31997,9 @@
         "profileId": {
           "$ref": "#/definitions/profileId"
         },
+        "reservationId": {
+          "$ref": "#/definitions/reservationId"
+        },
         "firstName": {
           "description": "Given name, first name or names",
           "type": "string"
@@ -30570,6 +32056,10 @@
         },
         "reservationProfileType": {
           "$ref": "#/definitions/resProfileTypeType"
+        },
+        "externalReferences": {
+          "description": "External References information for this Profile. Will be returned in getReservations and getHotelReservations when the 'profileExternalReferencesToFetch' query parameter is sent.",
+          "$ref": "#/definitions/externalReferencesType"
         }
       }
     },
@@ -30635,6 +32125,10 @@
         },
         "folioView": {
           "type": "integer"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "Flag indicating a billing window (2-8) as confidential. Applied only when Confidential Billing Window Opera Control is active."
         }
       }
     },
@@ -30834,7 +32328,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -31502,7 +32996,8 @@
         "EnrollToPrimaryMembership",
         "EnrollInProgress",
         "MemberAwardAttached",
-        "UpgradeAwardAttached"
+        "UpgradeAwardAttached",
+        "DiscountAwardAttached"
       ]
     },
     "resMobileNotificationsType": {
@@ -31672,7 +33167,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -32141,7 +33636,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -32254,6 +33749,14 @@
           "type": "boolean",
           "default": false
         },
+        "externalDailyRates": {
+          "type": "array",
+          "description": "Collection of room rate information provided by an external application on a daily basis to be applied to share reservation based on the share rate distribution method. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/externalDailyRateType"
+          }
+        },
         "links": {
           "$ref": "#/definitions/links"
         },
@@ -32297,7 +33800,7 @@
           "$ref": "#/definitions/reservationIdList"
         },
         "externalReferences": {
-          "description": "External Reference information for Reservation.",
+          "description": "External Reference information for Reservation. Please note, for id and idContext elements within externalReferences for the reservation the following maximum character limits are applicable: 50 maximum characters for id and 20 maximum characters for idContext.",
           "$ref": "#/definitions/externalReferencesType"
         },
         "sourceOfSale": {
@@ -32635,7 +34138,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -33023,6 +34526,9 @@
         "rates": {
           "$ref": "#/definitions/ratesType"
         },
+        "offshoreRateInformation": {
+          "$ref": "#/definitions/offshoreRateType"
+        },
         "packages": {
           "type": "array",
           "maxItems": 4000,
@@ -33087,6 +34593,14 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "ownerUseRateCode": {
+          "description": "Indicates if the rate code is restricted for use by Owner Reservations.",
+          "type": "boolean"
+        },
+        "ownerReferralRateCode": {
+          "description": "Indicates if the rate code is restricted for use by Owner Referral Reservations",
+          "type": "boolean"
         },
         "promotionCode": {
           "type": "string",
@@ -33237,6 +34751,17 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "roomNumberLocked": {
+          "description": "This attribute is to verify if the move in room number is locked. When true the move in room number cannot be changed. Locking a room number is available when the Do Not Move OPERA Control is active.",
+          "type": "boolean"
+        },
+        "scheduledMoveStatus": {
+          "description": "Scheduled room move status for the room segment of the reservation. Scheduled Room Move functionality is available when the Advance Daily Detail OPERA Control is active.",
+          "$ref": "#/definitions/scheduledRoomMoveStatusType"
+        },
+        "rateSummary": {
+          "$ref": "#/definitions/reservationRateSummaryType"
         }
       }
     },
@@ -33550,6 +35075,10 @@
         },
         "reservationProfileType": {
           "$ref": "#/definitions/resProfileTypeType"
+        },
+        "externalReferences": {
+          "description": "External References information for this Profile. Will be returned in getReservation and getReservationByExtId calls when the 'profileExternalReferencesToFetch' query parameter is sent.",
+          "$ref": "#/definitions/externalReferencesType"
         }
       }
     },
@@ -33921,7 +35450,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -34446,6 +35975,10 @@
           "description": "When true, indicates a primary information.",
           "type": "boolean"
         },
+        "updateReservations": {
+          "description": "Indicates whether all future reservations for this profile should be updated with the primary address. When set to true, and the address is being updated to primary, any active reservations where this profile is the primary profile will automatically update to use the new primary address.",
+          "type": "boolean"
+        },
         "barCode": {
           "description": "The postal barcode for the address.",
           "type": "string",
@@ -34458,7 +35991,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -34542,7 +36075,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -34633,7 +36166,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -34888,7 +36421,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -35028,7 +36561,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -36348,7 +37881,7 @@
               "$ref": "#/definitions/profileIdList"
             },
             "externalReference": {
-              "description": "External Reference information for Profile.",
+              "description": "External Reference information for Profile. Please note, for id and idContext elements within externalReferences for the reservationGuest the following maximum character limits are applicable: 80 maximum characters for id and 20 maximum characters for idContext. The idContext must match an existing external database.",
               "$ref": "#/definitions/externalReferenceType"
             },
             "profile": {
@@ -36368,6 +37901,10 @@
             "attachDetachType": {
               "description": "Attach and Detach information for accompanying guest profile.",
               "$ref": "#/definitions/attachDetachType"
+            },
+            "externalReferences": {
+              "description": "External References information for this Profile. Will be returned in getReservation and getReservationByExtId calls when the 'profileExternalReferencesToFetch' query parameter is sent.",
+              "$ref": "#/definitions/externalReferencesType"
             }
           }
         },
@@ -37233,7 +38770,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -37363,7 +38900,7 @@
           "$ref": "#/definitions/addressType"
         },
         "activities": {
-          "description": "The specific acitvity information to be used for filtering the Look-up.",
+          "description": "The specific activity information to be used for filtering the Look-up.",
           "$ref": "#/definitions/activityList"
         },
         "hotelId": {
@@ -37572,7 +39109,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -38094,6 +39631,51 @@
         "originalUnitAllowance": {
           "description": "The original allowance per unit of the package if it has been changed.",
           "type": "number"
+        },
+        "ageBucket2OriginalUnitPrice": {
+          "description": "The original price per unit for Child Bucket 2 / Guest Age Category 2 of the package. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child",
+          "type": "number"
+        },
+        "ageBucket2OriginalUnitAllowance": {
+          "description": "The original allowance per unit for Child Bucket 2 / Guest Age Category 2 of the package. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child",
+          "type": "number"
+        },
+        "ageBucket2UnitPrice": {
+          "description": "Unit Price for Child Bucket 2 /Guest Age Category 2. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child.",
+          "type": "number"
+        },
+        "ageBucket2UnitAllowance": {
+          "description": "Unit Allowance for Child Bucket 2 /Guest Age Category 2. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child.",
+          "type": "number"
+        },
+        "ageBucket3OriginalUnitPrice": {
+          "description": "The original price per unit for Child Bucket 3 / Guest Age Category 3 of the package. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child",
+          "type": "number"
+        },
+        "ageBucket3OriginalUnitAllowance": {
+          "description": "The original allowance per unit for Child Bucket 3 / Guest Age Category 3 of the package. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child",
+          "type": "number"
+        },
+        "ageBucket3UnitPrice": {
+          "description": "Unit Price for Child Bucket 3 /Guest Age Category 3. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child",
+          "type": "number"
+        },
+        "ageBucket3UnitAllowance": {
+          "description": "Unit Price for Child Bucket 3 /Guest Age Category 3. Applicable when Child Bucket or Guest Age Categories functionality is active and package's price calculation rule is Per Child",
+          "type": "number"
+        },
+        "calculatedQuantity": {
+          "description": "The calculated number of units available to be consumed.",
+          "type": "integer"
+        },
+        "consumedQuantity": {
+          "description": "The number of units consumed.",
+          "type": "integer"
+        },
+        "forecastConsumptionDate": {
+          "description": "The forecasted consumption date of the package.",
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -38531,7 +40113,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -38728,7 +40310,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -39694,7 +41276,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -39906,7 +41488,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -40059,6 +41641,12 @@
         },
         "recipientType": {
           "$ref": "#/definitions/profileTypeType"
+        },
+        "optionalEmail": {
+          "description": "Email address to which the confirmation letter will be sent. This field is mutually exclusive with emailInfo; providing both will result in an error. Use either emailInfo or optionalEmail, but not both.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         }
       }
     },
@@ -40398,7 +41986,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -40445,7 +42033,7 @@
           "description": "User who created the Message",
           "type": "string",
           "minLength": 0,
-          "maxLength": 40
+          "maxLength": 256
         }
       }
     },
@@ -41240,7 +42828,8 @@
         "CustomChargeExemptions",
         "FiscalInfo",
         "ScheduledRoomMoves",
-        "DailySummary"
+        "DailySummary",
+        "RateSummary"
       ]
     },
     "reservationsInstructionsType": {
@@ -41254,6 +42843,10 @@
         "shareReservations": {
           "description": "Instruction to assign rate on each share reservation. This can be FULL: Full Rate for each Sharer. SPLIT: Split the Rate amount between Sharer Reservations. ENTIRE: This Sharer provided as ShareToReservationID will get the total amount of the rate code for all the Sharer Reservations.",
           "$ref": "#/definitions/shareReservationInstructionType"
+        },
+        "blockAssignInstruction": {
+          "description": "Instructions to apply block rate based on the Room Rate grid when assigning a block to a reservation. ",
+          "$ref": "#/definitions/assignBlockRateInstructionsType"
         }
       }
     },
@@ -41643,7 +43236,7 @@
     },
     "responseInstructionsType": {
       "type": "string",
-      "description": "Enumaration of the different return modes of a response.",
+      "description": "Enumeration of the different return modes of a response.",
       "enum": [
         "Id",
         "FullInfo",
@@ -42236,7 +43829,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -42391,6 +43984,14 @@
         "routeAllTransactionsToShare": {
           "description": "Indicates if this joining reservation should route all transactions to the 'Share To' reservation when including Share Reservations Instructions.",
           "type": "boolean"
+        },
+        "externalDailyRates": {
+          "type": "array",
+          "description": "Collection of room rate information provided by an external application on a daily basis to be applied to share reservation based on the share rate distribution method. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/externalDailyRateType"
+          }
         }
       }
     },
@@ -42880,7 +44481,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -43611,6 +45212,14 @@
           "description": "Criteria required to combine the reservations.",
           "$ref": "#/definitions/combineShareReservationsType"
         },
+        "externalDailyRates": {
+          "type": "array",
+          "description": "Collection of room rate information provided by an external application on a daily basis to be applied to share reservation based on the share rate distribution method. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/externalDailyRateType"
+          }
+        },
         "links": {
           "$ref": "#/definitions/links"
         },
@@ -43888,7 +45497,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -44030,7 +45639,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -44082,7 +45691,7 @@
           "description": "User who created the Message",
           "type": "string",
           "minLength": 0,
-          "maxLength": 40
+          "maxLength": 256
         },
         "reservationId": {
           "description": "Unique identifier of the reservation.",
@@ -44586,6 +46195,18 @@
             "rateSuppressed": {
               "description": "Indicates if the rate is to be hidden.",
               "type": "boolean"
+            },
+            "totalPackageAmount": {
+              "description": "A sum of the Package Prices for the specified reservation and date",
+              "type": "number"
+            },
+            "totalRateAmount": {
+              "description": "Effective Rate for the specified reservation and date",
+              "type": "number"
+            },
+            "totalTaxAmount": {
+              "description": "A sum of the Taxes for the specified reservation and date",
+              "type": "number"
             }
           }
         },
@@ -44971,6 +46592,10 @@
             "copyOperation": {
               "description": "Whether the current operation is copy reservation or not.",
               "type": "boolean"
+            },
+            "blockAssignInstruction": {
+              "description": "Instructions for rate handling when assigning a block to a reservation. Default value used is 'ExistingRate' .",
+              "$ref": "#/definitions/assignBlockRateInstructionsType"
             }
           }
         },
@@ -45219,6 +46844,14 @@
             "estimatedAmount": {
               "description": "Message.",
               "type": "number"
+            },
+            "tieredCancelPenalties": {
+              "type": "array",
+              "description": "Collection of tiered cancellation penalties that are configured and attached to a tiered policy schedule. To be used when OPERA Control parameter 'Tiered Cancellation Schedules' is active.",
+              "maxItems": 4000,
+              "items": {
+                "$ref": "#/definitions/tieredCancelPenalty"
+              }
             }
           }
         },
@@ -45255,6 +46888,14 @@
             "estimatedAmount": {
               "description": "Message.",
               "type": "number"
+            },
+            "tieredDepositRules": {
+              "type": "array",
+              "description": "Collection of tiered deposit rule policies that are configured and attached to a tiered policy schedule. To be used when OPERA Control parameter 'Tiered Deposit Schedules' is active.",
+              "maxItems": 4000,
+              "items": {
+                "$ref": "#/definitions/tieredDepositRule"
+              }
             }
           }
         },
@@ -45665,6 +47306,10 @@
             },
             "includeCompRouting": {
               "type": "boolean"
+            },
+            "unavailableItemInstruction": {
+              "description": "Indicates how unavailable Items should be handled.",
+              "$ref": "#/definitions/unavailableItemInstructionType"
             }
           }
         }
@@ -45913,48 +47558,6 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "reservationExcludedPreferences": {
-      "type": "object",
-      "description": "Response for the excluded preferences request.",
-      "properties": {
-        "reservationExcludedPreferences": {
-          "description": "The collection of preferences that have been excluded for a specific preference attached to a reservation.",
-          "$ref": "#/definitions/excludedPreferencesType"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
-        }
-      }
-    },
-    "excludedPreferencesType": {
-      "type": "array",
-      "description": "Collection of excluded preferences for a particular preference of a reservation.",
-      "maxItems": 4000,
-      "items": {
-        "$ref": "#/definitions/excludedPreferenceType"
-      }
-    },
-    "excludedPreferenceType": {
-      "type": "object",
-      "description": "List of excluded preferences for a particular preference.",
-      "properties": {
-        "priority": {
-          "description": "Priority of the source system.",
-          "type": "integer"
-        },
-        "preference": {
-          "description": "Preference code and its description.",
-          "$ref": "#/definitions/codeDescriptionType"
-        },
-        "source": {
-          "description": "Source name of the preference.",
-          "type": "string"
         }
       }
     },
@@ -46615,7 +48218,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -46952,7 +48555,7 @@
           "format": "date-time"
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -46977,33 +48580,6 @@
           "description": "Business Date when the reservation was created.",
           "type": "string",
           "format": "date"
-        }
-      }
-    },
-    "reservationMembership": {
-      "type": "object",
-      "description": "Method to create a reservation membership on an existing reservation.",
-      "properties": {
-        "hotelId": {
-          "description": "Property code of the Reservation.",
-          "$ref": "#/definitions/codeType"
-        },
-        "reservationId": {
-          "description": "Reservation Id for which the membership information has to be created.",
-          "$ref": "#/definitions/reservationId"
-        },
-        "reservationMemberships": {
-          "description": "Membership information for the membership card which has to be attached to the reservation.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/reservationMembershipType"
-          }
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
         }
       }
     },
@@ -47420,6 +48996,14 @@
         "criteria": {
           "description": "Criteria for the Change Share Amount request.",
           "$ref": "#/definitions/changeShareRateAmountType"
+        },
+        "externalDailyRates": {
+          "type": "array",
+          "description": "Collection of room rate information provided by an external application on a daily basis to be applied to share reservation based on the share rate distribution method. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/externalDailyRateType"
+          }
         },
         "links": {
           "$ref": "#/definitions/links"
@@ -48408,6 +49992,10 @@
           "description": "This attribute indicates if the linked reservation is marked as Back to Back or not.",
           "type": "boolean"
         },
+        "scheduledRoomMoveRoomPending": {
+          "description": "This attribute indicates if there is a  Scheduled Move Room pending.",
+          "type": "boolean"
+        },
         "assignedByAI": {
           "description": "Indicates whether the room was assigned by AI Room Assignment.",
           "type": "boolean"
@@ -48822,22 +50410,6 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
-        }
-      }
-    },
-    "upgradeEligibilityReservations": {
-      "type": "object",
-      "description": "Response object to the Fetch UpgradeEligibilityReservations Request operation. Based on the criteria, reservation information is returned.",
-      "properties": {
-        "reservationIdList": {
-          "description": "Collection of unique identifiers of the reservations to be linked with another reservation.",
-          "$ref": "#/definitions/reservationIdList"
-        },
-        "links": {
-          "$ref": "#/definitions/links"
-        },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
         }
       }
     },
@@ -50332,6 +51904,10 @@
         "reservationIdList": {
           "description": "A list of Ids for reservation( ResvNameId and ConfirmationNumber).",
           "$ref": "#/definitions/uniqueIDListType"
+        },
+        "roomNumberLocked": {
+          "description": "This attribute is to verify if room number is locked for the reservation. When true the room number cannot be changed. This is supported when OPERA Control Do Not Move is active.",
+          "type": "boolean"
         }
       }
     },
@@ -50411,6 +51987,10 @@
         "roomAssignmentSegmentNo": {
           "type": "integer",
           "description": "Room Assignment Segment Number."
+        },
+        "roomNumberLocked": {
+          "description": "This attribute is to verify if room number is locked for the reservation. When true the room number cannot be changed. This is supported when OPERA Control Do Not Move is active.",
+          "type": "boolean"
         }
       }
     },
@@ -50504,7 +52084,7 @@
           "maxLength": 20
         },
         "creatorId": {
-          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee resposible for the creation.",
+          "description": "ID of creator. The creator could be a software system identifier or an identifier of an employee responsible for the creation.",
           "type": "string",
           "minLength": 0,
           "maxLength": 200
@@ -51025,6 +52605,410 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "offshoreRateType": {
+      "type": "object",
+      "description": "Defines Offshore rate information.",
+      "properties": {
+        "offshoreRateCode": {
+          "description": "Offshore Rate Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "offshoreRateAmount": {
+          "description": "Offshore Rate Amount",
+          "type": "number"
+        },
+        "offshoreRateCurrency": {
+          "description": "Offshore Rate Currency specifying the monetary unit for the Offshore Rate. Use ISO 4217, three alpha code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "externalDailyRateType": {
+      "type": "object",
+      "description": "Room rate information provided by an external CRS application on a daily basis for this reservation.",
+      "properties": {
+        "startDate": {
+          "description": "Start date of the reservation stay.",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "End date of the reservation stay. If the same rate amounts need to be applied to a date range of the reservation stay, then the Start Date and End Date would specify the range.",
+          "type": "string",
+          "format": "date"
+        },
+        "rateAmount": {
+          "description": "The rate amount per room or per share on the specific reservation stay date.",
+          "type": "number"
+        },
+        "currencyCode": {
+          "description": "The code specifying a monetary unit. Use ISO 4217, three alpha code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "assignBlockRateInstructionsType": {
+      "type": "string",
+      "description": "Instructions for rate handling when assigning a block to a reservation.",
+      "enum": [
+        "DoNotApplyBlockRate",
+        "Prompt",
+        "ApplyBlockRate"
+      ]
+    },
+    "changePackageQuantityType": {
+      "description": "Request object to update package quantity for package codes.",
+      "type": "object",
+      "properties": {
+        "packageQuantityInfo": {
+          "description": "Information of the package codes and their consumed quantity.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/packageQuantityInfoType"
+          }
+        }
+      }
+    },
+    "packageQuantityInfoType": {
+      "type": "object",
+      "description": "Information regarding a single package quantity",
+      "properties": {
+        "packageCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "consumptionDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "consumedQuantity": {
+          "type": "integer"
+        }
+      }
+    },
+    "packageInfoType": {
+      "type": "object",
+      "description": "Package information related to a reservation",
+      "properties": {
+        "packageCode": {
+          "type": "string",
+          "description": "The unique code identifying the package."
+        },
+        "packageDescription": {
+          "type": "string",
+          "description": "A description of the package."
+        },
+        "packageCategoryInfo": {
+          "description": "Information about the category of the package.",
+          "$ref": "#/definitions/packageCategoryInfoType"
+        },
+        "consumptionDate": {
+          "type": "string",
+          "format": "date",
+          "description": "The consumption date of the package."
+        },
+        "reservationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "The reservation date of the package."
+        },
+        "consumedQuantity": {
+          "type": "integer",
+          "description": "The quantity of the package that has been consumed"
+        },
+        "calculatedQuantity": {
+          "type": "integer",
+          "description": "The quantity of the package calculated to be consumed based on the package's quantity and the calculation rule"
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "Quantity of packages to be attached i.e. the multiplier to be applied against the calculation rule to determine the calculated quantity of the packages"
+        },
+        "calculationRule": {
+          "type": "string",
+          "description": "The price calculation rule for this package"
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The price per unit of the package"
+        },
+        "forecastConsumptionDate": {
+          "description": "The forecasted consumption date of the package.",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "packageCategoryInfoType": {
+      "type": "object",
+      "description": "Information about the package category",
+      "properties": {
+        "packageCategory": {
+          "type": "string",
+          "description": "The category of the package"
+        },
+        "packageCategoryDescription": {
+          "type": "string",
+          "description": "A description of the package category."
+        }
+      }
+    },
+    "unavailableItemInstructionType": {
+      "type": "string",
+      "enum": [
+        "OverrideAvailability",
+        "ReturnWarning",
+        "RemoveItem"
+      ]
+    },
+    "separateShareReservation": {
+      "type": "object",
+      "description": "Request to separate Share Reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application on a daily basis.",
+      "properties": {
+        "criteria": {
+          "description": "Criteria to separate Share Reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active and OPERA Control parameter 'Share Rate Amount from External System Definition' is set to 'Share' or 'Room'.",
+          "$ref": "#/definitions/separateShareReservationType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "separateShareReservationType": {
+      "type": "object",
+      "description": "Type to separate Share Reservation and apply rate amounts to separated and remaining share reservations from room rates provided by an external application.",
+      "properties": {
+        "dailyRateDistributionCriteria": {
+          "description": "Criteria to distribute room rates provided by an external application to separated and remaining share reservations on a daily basis.",
+          "$ref": "#/definitions/dailyRateDistributionCriteria"
+        }
+      }
+    },
+    "dailyRateDistributionCriteria": {
+      "type": "object",
+      "description": "Criteria to distribute and apply rate amounts to separated and remaining share reservations from room rates provided by an external application.",
+      "properties": {
+        "externalDailyRatesForSeparatedShare": {
+          "type": "array",
+          "description": "Collection of room rate information provided by an external application on a daily basis to be applied to share reservation based on the share rate distribution method. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active and OPERA Control parameter 'Share Rate Amount from External System Definition' is set to 'Room'.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/externalDailyRateType"
+          }
+        },
+        "externalDailyRatesForRemainingShares": {
+          "type": "array",
+          "description": "Collection of room rate information provided by an external application on a daily basis to be applied to share reservation based on the share rate distribution method. To be used when OPERA Control parameter 'External Availability, Rates and Inventory' is active and OPERA Control parameter 'Share Rate Amount from External System Definition' is set to 'Room'.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/externalDailyRateType"
+          }
+        }
+      }
+    },
+    "packageCategoryReservationType": {
+      "type": "object",
+      "description": "Information regarding each reservation being returned in the response",
+      "properties": {
+        "reservationIdList": {
+          "description": "Unique identifiers for the reservation for both internal and external systems",
+          "$ref": "#/definitions/reservationIdList"
+        },
+        "roomStay": {
+          "description": "Collection of room stays.",
+          "$ref": "#/definitions/stayInfoType"
+        },
+        "reservationGuest": {
+          "description": "Collection of guests associated with the reservation.",
+          "$ref": "#/definitions/resGuestInfoType"
+        },
+        "reservationMemberships": {
+          "description": "List of reservation memberships which are attached from profile.",
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/definitions/reservationMembershipType"
+          }
+        },
+        "sharedGuests": {
+          "description": "Collection of guests who share this reservation.",
+          "$ref": "#/definitions/resSharedGuestListType"
+        },
+        "reservationPaymentMethod": {
+          "description": "Payment method used for this reservation",
+          "$ref": "#/definitions/reservationPaymentMethodType"
+        },
+        "advanceCheckIn": {
+          "description": "Information relating to Reservation's Advance Checked In state and Expected Time of Return",
+          "$ref": "#/definitions/advanceCheckInType"
+        },
+        "reservationStatus": {
+          "description": "Indicates the status of the reservation.",
+          "$ref": "#/definitions/pMS_ResStatusType"
+        },
+        "reservationPackages": {
+          "description": "A Service object represents a non-room product provided to guests. Service products may have associated inventory and charges.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/reservationPackageType"
+          }
+        },
+        "paymentMethod": {
+          "description": "Payment Method.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "openFolio": {
+          "description": "Returns true when reservation has an open folio.",
+          "type": "boolean"
+        },
+        "preRegistered": {
+          "description": "Defines if the reservation is pre-registered or not.",
+          "type": "boolean"
+        },
+        "shareReservation": {
+          "description": "Defines if the reservation is shared with another reservation or not",
+          "type": "boolean"
+        },
+        "noPost": {
+          "description": "Defines if the no post flag is set on the reservation or not",
+          "type": "boolean"
+        }
+      }
+    },
+    "packageCategoryReservations": {
+      "type": "object",
+      "description": "Response object to the Fetch Reservations by package request operation. Based on the criteria, reservation information is returned.",
+      "properties": {
+        "reservations": {
+          "description": "Collection of Reservations and their information.",
+          "type": "object",
+          "properties": {
+            "reservationInfo": {
+              "description": "Contains details of the reservations.",
+              "type": "array",
+              "maxItems": 4000,
+              "items": {
+                "$ref": "#/definitions/packageCategoryReservationType"
+              }
+            },
+            "totalPages": {
+              "description": "Evaluated total page count based on the requested max fetch count.",
+              "type": "integer"
+            },
+            "offset": {
+              "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+              "type": "integer"
+            },
+            "limit": {
+              "description": "Indicates maximum number of records a Web Service should return.",
+              "type": "integer"
+            },
+            "hasMore": {
+              "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+              "type": "boolean"
+            },
+            "totalResults": {
+              "description": "Total number of rows queried",
+              "type": "integer"
+            },
+            "count": {
+              "description": "Total number of rows returned",
+              "type": "integer"
+            }
+          }
+        },
+        "masterInfoList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/masterInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "tieredDepositRule": {
+      "type": "object",
+      "description": "Type for a tiered deposit rule policy that is configured and attached to a tiered deposit rule schedule.",
+      "properties": {
+        "depositRuleCodeDescription": {
+          "description": "",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "depositRuleId": {
+          "description": "Internal deposit rule identifier that is used to attach the tiered deposit rule to a tiered deposit rule schedule.",
+          "type": "number"
+        },
+        "amountPercent": {
+          "description": "Payment expressed as a fixed amount, or a percentage of/or room nights.",
+          "$ref": "#/definitions/policyAmountPercentType"
+        },
+        "deadline": {
+          "description": "Payment deadline, absolute or relative.",
+          "$ref": "#/definitions/policyDeadlineType"
+        },
+        "formattedRule": {
+          "description": "Formatted Text Rule of the Cancellation Penalty.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "estimatedAmount": {
+          "description": "Estimated amount for this rule",
+          "type": "number"
+        }
+      }
+    },
+    "tieredCancelPenalty": {
+      "type": "object",
+      "description": "Type for a tiered cancellation penalty that is configured and attached to a tiered cancel penalty schedule.",
+      "properties": {
+        "cancelPenaltyCodeDescription": {
+          "description": "",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "cancelPenaltyId": {
+          "description": "Internal cancel penalty identifier that is used to attach the tiered cancel penalty to a tiered cancel penalty schedule.",
+          "type": "number"
+        },
+        "amountPercent": {
+          "description": "Cancellation fee expressed as a fixed amount, or percentage of/or room nights.",
+          "$ref": "#/definitions/policyAmountPercentType"
+        },
+        "deadline": {
+          "description": "Cancellation deadline, absolute or relative.",
+          "$ref": "#/definitions/policyDeadlineType"
+        },
+        "formattedRule": {
+          "description": "Formatted Text Rule of the Cancellation Penalty.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "estimatedAmount": {
+          "description": "Estimated amount for this rule",
+          "type": "number"
         }
       }
     }
