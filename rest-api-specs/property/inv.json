@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Inventory API",
-    "description": "APIs to cater for Inventory functionality in OPERA Cloud. This includes sell limits for date ranges, viewing and updating the property&apos;s inventory, as well as item inventory (such as rollaways, microwaves etc.).<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
-    "version": "25.1.0.0",
+    "description": "APIs to cater for Inventory functionality in OPERA Cloud.  This includes sell limits for date ranges, viewing and updating the properties inventory, as well as item inventory (such as rollaways, microwaves etc.).<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.4.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -31,12 +31,12 @@
             "name": "hotelIds",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
+            "minItems": 1,
             "collectionFormat": "multi",
             "description": "Hotel code.",
             "items": {
-              "type": "string",
-              "minItems": 1,
-              "maxItems": 4000
+              "type": "string"
             },
             "required": true
           },
@@ -103,11 +103,11 @@
             "name": "blockStatusCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Collection of configured Block Status Codes.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -115,11 +115,11 @@
             "name": "originCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Collection of Origin Codes.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -127,11 +127,11 @@
             "name": "roomOwnerCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Collection of Room Owners.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -139,11 +139,11 @@
             "name": "blockOwners",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Collection of block owners.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -244,6 +244,19 @@
             "required": false
           },
           {
+            "name": "roomSummaryBy",
+            "in": "query",
+            "enum": [
+              "AvailableRooms",
+              "AvailableRoomsWithNonDeduct",
+              "AvailableRoomsExclSellLimits",
+              "AvailableRoomsWithNonDeductExclSellLimits"
+            ],
+            "type": "string",
+            "description": "Summarize the rooms based on selected criteria. If not selected, by default AvailableRooms are displayed. Applicable only when RoomSummary is a fetchInstruction. ",
+            "required": false
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -251,6 +264,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -331,7 +350,7 @@
     "/hotels/{hotelId}/blockInventoryStatistics": {
       "get": {
         "summary": "Get block inventory statistics",
-        "description": "Use this API to get block statistics on a per-day basis across a specified date range. The result includes a summary section of rooms booked by status by date, details on deduct and non-deduct rooms booked per day, and Sales Allowance and House Availability figures per day. The details section of the results include block details such as name, block, code, start and end date, owner, and more. It also shows a breakdown of blocked picked-up and available rooms per day per block. The result set is used to feed the GRC (Group Rooms Control) page in the OPERA UI. <p><strong>OperationId:</strong>getBlockInventoryStatistics</p>",
+        "description": "You can use this API to retrieve Block inventory for a specified hotel. Narrow down your results using the query parameters available. <p><strong>OperationId:</strong>getBlockInventoryStatistics</p> <p>The maximum allowable limit for this API is <strong>100</strong>.</p> <p>This API allows a time span of <strong>90</strong> days.</p>",
         "operationId": "getBlockInventoryStatistics",
         "parameters": [
           {
@@ -406,10 +425,10 @@
             "name": "blockStatusCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -417,10 +436,10 @@
             "name": "originCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -428,10 +447,10 @@
             "name": "roomOwnerCodes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -439,10 +458,10 @@
             "name": "blockOwners",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -540,6 +559,19 @@
             "required": false
           },
           {
+            "name": "roomSummaryBy",
+            "in": "query",
+            "enum": [
+              "AvailableRooms",
+              "AvailableRoomsWithNonDeduct",
+              "AvailableRoomsExclSellLimits",
+              "AvailableRoomsWithNonDeductExclSellLimits"
+            ],
+            "type": "string",
+            "description": "Summarize the rooms based on selected criteria. If not selected, by default AvailableRooms are displayed. Applicable only when RoomSummary is a fetchInstruction. ",
+            "required": false
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -547,6 +579,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -685,11 +723,11 @@
             "name": "roomTypes",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room Type Code.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -697,13 +735,21 @@
             "name": "roomClasses",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "Room Class Code.",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
+          },
+          {
+            "name": "includeOverbooking",
+            "in": "query",
+            "required": false,
+            "description": "This flag indicates that include or exclude overbooking count. The default value is true.",
+            "type": "boolean",
+            "default": true
           },
           {
             "$ref": "#/parameters/authKey"
@@ -713,6 +759,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -792,8 +844,8 @@
     },
     "/hotels/{hotelId}/inventoryStatistics": {
       "get": {
-        "summary": "Get hotel inventory",
-        "description": "Use this API to retrieve the inventory data for a specified hotel. Narrow down your results using the query parameters such as a date range, room type, room class, and/or tentative inventory included. Maximum days limit with a single request is 30 days.<p><strong>OperationId:</strong>getInventoryStatistics</p>",
+        "summary": "Get a hotels Inventory Statistics",
+        "description": "This will fetch a hotel's inventory statistics for a specified date range that you provided in the request. <p><strong>OperationId:</strong> getInventoryStatistics</p> <p>This API allows a time span of <strong>62</strong> days.</p>",
         "operationId": "getInventoryStatistics",
         "parameters": [
           {
@@ -860,6 +912,7 @@
                 "HouseBlkDeductPuYN",
                 "HouseBlkTentNpuYN",
                 "HouseBlkTentPuYN",
+                "HouseCompRoomsYN",
                 "HouseDayUsePersonYN",
                 "HouseDayUseRoomYN",
                 "HouseDepPersonsYN",
@@ -879,10 +932,12 @@
                 "HousePeopleInHouseYN",
                 "HousePhysicalRoomsYN",
                 "HouseRoomsSoldYN",
+                "HouseHouseUseRoomsYN",
                 "HouseSellLimitYN",
                 "HouseTentRoomsExcludingOverbookingYN",
                 "HouseTentRoomsSoldYN",
                 "HouseTentRoomsYN",
+                "HouseWaitlistRoomsYN",
                 "NonOwnerExclusiveYN",
                 "OutOfOrderRoomsYN",
                 "OwnerExclusiveYN",
@@ -897,10 +952,12 @@
                 "RoomBlkTentPuYN",
                 "RoomCancelledYN",
                 "RoomClassList",
+                "RoomCompRoomsYN",
                 "RoomDayUsePersonYN",
                 "RoomDayUseRoomYN",
                 "RoomDepPersonsYN",
                 "RoomDepRoomsYN",
+                "RoomHouseUseRoomsYN",
                 "RoomInventoryRoomsYN",
                 "RoomMaxAvailabilityExcludingOverbookingYN",
                 "RoomMaxAvailabilityYN",
@@ -919,7 +976,28 @@
                 "RoomTentRoomsExcludingOverbookingYN",
                 "RoomTentRoomsYN",
                 "RoomTentYN",
-                "RoomTypeWildCardList"
+                "RoomTypeWildCardList",
+                "RoomWaitlistRoomsYN",
+                "HouseAdultsInHouseYN",
+                "HouseChildrenInHouseYN",
+                "HouseChildren1InHouseYN",
+                "HouseChildren2InHouseYN",
+                "HouseChildren3InHouseYN",
+                "HouseArrAdultsYN",
+                "HouseArrChildrenYN",
+                "HouseArr1ChildrenYN",
+                "HouseArr2ChildrenYN",
+                "HouseArr3ChildrenYN",
+                "RoomAdultsInHouseYN",
+                "RoomChildrenInHouseYN",
+                "RoomChildren1InHouseYN",
+                "RoomChildren2InHouseYN",
+                "RoomChildren3InHouseYN",
+                "RoomArrAdultsYN",
+                "RoomArrChildrenYN",
+                "RoomArr1ChildrenYN",
+                "RoomArr2ChildrenYN",
+                "RoomArr3ChildrenYN"
               ]
             },
             "required": false
@@ -943,6 +1021,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1148,10 +1232,10 @@
             "name": "itemPool",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "items": {
-              "type": "string",
-              "maxItems": 4000
+              "type": "string"
             },
             "required": false
           },
@@ -1229,6 +1313,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1309,7 +1399,7 @@
     "/hotels/{hotelId}/itemInventoryHold": {
       "post": {
         "summary": "Hold item inventory",
-        "description": "Use this API to hold Item Inventory. <p><strong>OperationId:</strong>postHoldItemInventory</p>",
+        "description": "Use this API to hold Item Inventory. The 'itemHoldId' is automatically generated by the system and is not accepted as input in the request payload. After a successful call, the response includes HATEOAS links. To retrieve or modify the created resource, extract the 'itemHoldId' from the 'rel' field of the link where 'operationId' is 'getHoldItemsInventory'. <p><strong>OperationId:</strong>postHoldItemInventory</p>",
         "operationId": "postHoldItemInventory",
         "parameters": [
           {
@@ -1325,7 +1415,7 @@
             "name": "holdItemInventory",
             "in": "body",
             "required": true,
-            "description": "Request object for holding an items inventory/availability.",
+            "description": "Request object for holding an items inventory/availability. Do not provide the 'itemHoldId' field as it is generated by the system.",
             "schema": {
               "allOf": [
                 {
@@ -1342,6 +1432,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1367,7 +1463,7 @@
                 "description": "Location of newly created resource"
               }
             },
-            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "description": "Successful creation of item inventory hold. The response includes HATEOAS links for follow-up operations. The generated 'itemHoldId' can be extracted from the 'rel' field of the link where operationId is 'getHoldItemsInventory'.",
             "schema": {
               "$ref": "#/definitions/status"
             }
@@ -1437,11 +1533,11 @@
             "name": "itemHoldId",
             "in": "query",
             "type": "array",
+            "maxItems": 4000,
             "collectionFormat": "multi",
             "description": "ID of an Hold Item",
             "items": {
-              "type": "number",
-              "maxItems": 4000
+              "type": "number"
             },
             "required": false
           },
@@ -1453,6 +1549,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1564,6 +1666,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -1680,6 +1788,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -1794,6 +1908,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -1899,6 +2019,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -1991,6 +2117,12 @@
             "$ref": "#/parameters/x-app-key"
           },
           {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
             "$ref": "#/parameters/x-hotelid"
           },
           {
@@ -2080,6 +2212,12 @@
           },
           {
             "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           },
           {
             "$ref": "#/parameters/x-hotelid"
@@ -2180,6 +2318,19 @@
       "in": "header",
       "required": true
     },
+    "x-request-id": {
+      "name": "x-request-id",
+      "type": "string",
+      "pattern": "~*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+      "description": "Request Id of an incoming request",
+      "in": "header"
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
+    },
     "x-hotelid": {
       "name": "x-hotelid",
       "type": "string",
@@ -2190,7 +2341,7 @@
     "x-externalsystem": {
       "name": "x-externalsystem",
       "type": "string",
-      "maxLength": 80,
+      "maxLength": 40,
       "description": "External system code.",
       "in": "header",
       "x-example": "EXTERNALSYSTEMCODE"
@@ -3572,7 +3723,7 @@
           "$ref": "#/definitions/heldByType"
         },
         "itemHoldId": {
-          "description": "Unique ID of the one requesting for the item hold.",
+          "description": "Unique ID of the item hold. This ID is auto-generated by the system and returned in the response. It should not be provided in the POST request payload.",
           "type": "number"
         },
         "holdItemInfoList": {

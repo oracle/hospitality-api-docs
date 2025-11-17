@@ -4,7 +4,7 @@ This folder contains:
 
 - [Postman collections](https://www.postman.com/collection/) with many different API call samples on how to perform different functional workflows (e.g. digital check-in and checkout)
 - [Postman Environment](https://learning.postman.com/docs/sending-requests/managing-environments) defining the main environment variables required to use the postman collections against our Hospitality APIs.
-- [Workflows](WORKFLOWS.md) document describing the different workflows supported in the  postman collections.
+- [Workflows](property/WORKFLOWS.md) document describing the different workflows supported in the  postman collections.
 
 To understand these Postman collections register to watch this free on demand  [Understanding Apiary Documentation & Postman Collections](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po) is available to watch on demand.
 

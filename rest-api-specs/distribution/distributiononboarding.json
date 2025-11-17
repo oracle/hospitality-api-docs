@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Distribution Onboarding",
-    "description": "Oracle Hospitality Distribution Onboarding specification for distribution partners to retrieve property status with its attributes and update property status.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
-    "version": "25.1.0.0",
+    "description": "Oracle Hospitality Distribution Onboarding specification for distribution partners to retrieve property status with its attributes and update property status.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.4.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -55,6 +55,12 @@
           },
           {
             "$ref": "#/parameters/Accept-Language"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -164,6 +170,12 @@
           },
           {
             "$ref": "#/parameters/Accept-Language"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -264,12 +276,11 @@
       "minLength": 1,
       "x-example": "XUSXXYY99"
     },
-    "authKey": {
-      "name": "authorization",
+    "Accept-Language": {
+      "name": "Accept-Language",
       "in": "header",
-      "description": "Bearer token that needs to be passed which is generated post user authentication",
-      "required": true,
-      "type": "string"
+      "type": "string",
+      "description": "Language code"
     },
     "x-app-key": {
       "name": "x-app-key",
@@ -279,14 +290,109 @@
       "type": "string",
       "required": false
     },
-    "Accept-Language": {
-      "name": "Accept-Language",
+    "authKey": {
+      "name": "authorization",
       "in": "header",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "required": true,
+      "type": "string"
+    },
+    "x-request-id": {
+      "name": "x-request-id",
       "type": "string",
-      "description": "Language code"
+      "description": "Unique tracing key e.g. 4664ab3423434a45",
+      "in": "header",
+      "x-example": "4664ab3423434a45"
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
     }
   },
   "definitions": {
+    "ChannelPropertyStatus": {
+      "type": "object",
+      "properties": {
+        "hotelCode": {
+          "type": "string",
+          "description": "The unique identifier of the Property in Channel system.",
+          "example": "XUSXXYY99"
+        },
+        "channelCode": {
+          "type": "string",
+          "description": "Unique ID that identifies a single Channel.",
+          "example": "CH1",
+          "maxLength": 20,
+          "minLength": 1
+        },
+        "connectionInformation": {
+          "$ref": "#/definitions/ConnectionInformation"
+        }
+      }
+    },
+    "ConnectionInformation": {
+      "type": "object",
+      "description": "Channel Connection Information",
+      "properties": {
+        "connectionStatus": {
+          "$ref": "#/definitions/ConnectionStatus"
+        },
+        "connectionNotes": {
+          "type": "string",
+          "description": "Connection Notes for the latest connection Status change.",
+          "maxLength": 300,
+          "example": "Property onboarded successfully"
+        },
+        "connectionStatusLastChangedOn": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date on which Channel connection status was updated last time.",
+          "example": "2021-09-17T08:17:18.321Z"
+        }
+      }
+    },
+    "ConnectionStatus": {
+      "type": "string",
+      "description": "The connection status to the property.",
+      "enum": [
+        "NEW",
+        "TEST",
+        "MAINTENANCE",
+        "ACTIVE",
+        "INACTIVE"
+      ],
+      "example": "ACTIVE"
+    },
+    "UpdateConnectionInformationData": {
+      "type": "object",
+      "description": "Channel Connection Information",
+      "properties": {
+        "connectionStatus": {
+          "$ref": "#/definitions/UpdateConnectionStatus"
+        },
+        "connectionNotes": {
+          "type": "string",
+          "description": "Connection Notes for the latest connection Status change.",
+          "maxLength": 300,
+          "example": "Property onboarded successfully"
+        }
+      },
+      "required": [
+        "connectionStatus",
+        "connectionNotes"
+      ]
+    },
+    "UpdateConnectionStatus": {
+      "type": "string",
+      "description": "The connection status to be updated for the given channel and property.  The connection status can be changed to TEST / MAINTENANCE if the existing connection Status is NEW.  If the existing connection status is TEST, it can be changed to MAINTENANCE.",
+      "enum": [
+        "TEST",
+        "MAINTENANCE"
+      ],
+      "example": "TEST"
+    },
     "ExceptionDetail": {
       "type": "object",
       "allOf": [
@@ -383,87 +489,6 @@
           "description": "Date on which Channel connection status was updated last time."
         }
       }
-    },
-    "UpdateConnectionInformationData": {
-      "type": "object",
-      "description": "Channel Connection Information",
-      "properties": {
-        "connectionStatus": {
-          "$ref": "#/definitions/UpdateConnectionStatus"
-        },
-        "connectionNotes": {
-          "type": "string",
-          "description": "Connection Notes for the latest connection Status change.",
-          "maxLength": 300,
-          "example": "Property onboarded successfully"
-        }
-      },
-      "required": [
-        "connectionStatus",
-        "connectionNotes"
-      ]
-    },
-    "ConnectionInformation": {
-      "type": "object",
-      "description": "Channel Connection Information",
-      "properties": {
-        "connectionStatus": {
-          "$ref": "#/definitions/ConnectionStatus"
-        },
-        "connectionNotes": {
-          "type": "string",
-          "description": "Connection Notes for the latest connection Status change.",
-          "maxLength": 300,
-          "example": "Property onboarded successfully"
-        },
-        "connectionStatusLastChangedOn": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Date on which Channel connection status was updated last time.",
-          "example": "2021-09-17T08:17:18.321Z"
-        }
-      }
-    },
-    "UpdateConnectionStatus": {
-      "type": "string",
-      "description": "The connection status to be updated for the given channel and property.  The connection status can be changed to TEST / MAINTENANCE if the existing connection Status is NEW.  If the existing connection status is TEST, it can be changed to MAINTENANCE.",
-      "enum": [
-        "TEST",
-        "MAINTENANCE"
-      ],
-      "example": "TEST"
-    },
-    "ChannelPropertyStatus": {
-      "type": "object",
-      "properties": {
-        "hotelCode": {
-          "type": "string",
-          "description": "The unique identifier of the Property in Channel system.",
-          "example": "XUSXXYY99"
-        },
-        "channelCode": {
-          "type": "string",
-          "description": "Unique ID that identifies a single Channel.",
-          "example": "CH1",
-          "maxLength": 20,
-          "minLength": 1
-        },
-        "connectionInformation": {
-          "$ref": "#/definitions/ConnectionInformation"
-        }
-      }
-    },
-    "ConnectionStatus": {
-      "type": "string",
-      "description": "The connection status to the property.",
-      "enum": [
-        "NEW",
-        "TEST",
-        "MAINTENANCE",
-        "ACTIVE",
-        "INACTIVE"
-      ],
-      "example": "ACTIVE"
     }
   },
   "tags": [

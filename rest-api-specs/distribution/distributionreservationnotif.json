@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Distribution Reservation Notification",
-    "description": "OPERA Cloud Distribution Reservation Notifications API allows authorized channel partners to create and update reservations for any active property in Oracle Hospitality Distribution (regardless if the property is using OPERA Cloud / OPERA V5 / on-premise PMS Versions). This API is meant to transmit reservations already created and committed in the channel external system and does not perform any Pricing and Availability validation.<br /><br /> Compatible with OPERA Cloud release 25.1.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
-    "version": "25.1.0.0",
+    "description": "OPERA Cloud Distribution Reservation Notifications API allows authorized channel partners to create and update reservations for any active property in Oracle Hospitality Distribution (regardless if the property is using OPERA Cloud / OPERA V5 / on-premise PMS Versions). This API is meant to transmit reservations already created and committed in the channel external system and does not perform any Pricing and Availability validation.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.</p>",
+    "version": "25.4.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -27,7 +27,7 @@
         "operationId": "postReservationNotif",
         "description": "<p>Deliver a new reservation from an external system.</p> <p><strong>OperationId:</strong>postReservationNotif</p>",
         "tags": [
-          "ReservationNotification"
+          "Reservation Notification"
         ],
         "consumes": [
           "application/json; charset=utf-8"
@@ -45,7 +45,7 @@
             "$ref": "#/parameters/hotelCodePath"
           },
           {
-            "$ref": "#/parameters/x-request-id"
+            "$ref": "#/parameters/x-tracing-key"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -55,6 +55,12 @@
           },
           {
             "$ref": "#/parameters/appKey"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -117,7 +123,7 @@
         "operationId": "getReservationNotif",
         "description": "<p>Get a reservation</p> <p><strong>OperationId:</strong>getReservationNotif</p>",
         "tags": [
-          "ReservationNotification"
+          "Reservation Notification"
         ],
         "produces": [
           "application/json; charset=utf-8"
@@ -130,7 +136,7 @@
             "$ref": "#/parameters/confirmationNumberPath"
           },
           {
-            "$ref": "#/parameters/x-request-id"
+            "$ref": "#/parameters/x-tracing-key"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -140,6 +146,12 @@
           },
           {
             "$ref": "#/parameters/appKey"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -200,7 +212,7 @@
         "operationId": "putReservationNotif",
         "description": "<p>Deliver a modification of reservation from an external system.</p> <p><strong>OperationId:</strong>putReservationNotif</p>",
         "tags": [
-          "ReservationNotification"
+          "Reservation Notification"
         ],
         "consumes": [
           "application/json; charset=utf-8"
@@ -221,7 +233,7 @@
             "$ref": "#/parameters/confirmationNumberPath"
           },
           {
-            "$ref": "#/parameters/x-request-id"
+            "$ref": "#/parameters/x-tracing-key"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -231,6 +243,12 @@
           },
           {
             "$ref": "#/parameters/appKey"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -293,7 +311,7 @@
         "operationId": "postCancelReservationNotif",
         "description": "<p>Deliver a cancellation of reservation from an external system.</p> <p><strong>OperationId:</strong>postCancelReservationNotif</p>",
         "tags": [
-          "ReservationNotification"
+          "Reservation Notification"
         ],
         "consumes": [
           "application/json; charset=utf-8"
@@ -314,7 +332,7 @@
             "$ref": "#/parameters/confirmationNumberPath"
           },
           {
-            "$ref": "#/parameters/x-request-id"
+            "$ref": "#/parameters/x-tracing-key"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -324,6 +342,12 @@
           },
           {
             "$ref": "#/parameters/appKey"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
           }
         ],
         "responses": {
@@ -382,104 +406,6 @@
     }
   },
   "definitions": {
-    "ExceptionObj": {
-      "type": "object",
-      "properties": {
-        "logId": {
-          "type": "integer",
-          "example": 884366973
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "example": "Error Occurred During Reservation Processing"
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "example": 400
-        },
-        "o.errorCode": {
-          "type": "string",
-          "description": "HDP error code, which is different from HTTP error code.",
-          "example": "DRSC10000"
-        },
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
-          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
-        },
-        "timestamp": {
-          "type": "string",
-          "example": "2023-09-17T08:17:18.321Z",
-          "format": "date-time"
-        },
-        "o.errorDetails": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ErrorDetailsObj"
-          }
-        }
-      },
-      "required": [
-        "logId",
-        "title",
-        "status"
-      ]
-    },
-    "ErrorDetailsObj": {
-      "type": "object",
-      "properties": {
-        "logId": {
-          "type": "integer",
-          "example": 443265783
-        },
-        "title": {
-          "type": "string",
-          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
-          "example": "Reservation Id was not found"
-        },
-        "status": {
-          "type": "integer",
-          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
-          "example": 400
-        },
-        "o.errorCode": {
-          "type": "string",
-          "description": "HDP error code, which is different from HTTP error code.",
-          "example": "DRSV30007"
-        },
-        "type": {
-          "type": "string",
-          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
-          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
-        },
-        "timestamp": {
-          "type": "string",
-          "example": "2023-09-17T08:17:18.321Z",
-          "format": "date-time"
-        }
-      }
-    },
-    "ExceptionDetail": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExceptionObj"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "o.errorDetails": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ExceptionObj"
-              }
-            }
-          }
-        }
-      ]
-    },
     "GetResponse": {
       "type": "array",
       "items": {
@@ -558,6 +484,7 @@
                         "surname": "Smith",
                         "givenName": "Mary",
                         "nameTitle": "Mr and Mrs",
+                        "middleName": "Angel",
                         "nameType": "Primary",
                         "email": "customer@example.com",
                         "phoneNumber": "415.555.0100",
@@ -757,6 +684,14 @@
           "type": "boolean",
           "description": "Defines if guest agreed to receive correspondence from the property via email, phone, letter, etc. Possible values are 'true' or 'false'.",
           "example": false
+        },
+        "travelPurpose": {
+          "description": "Indicates the purpose of Guest Stay",
+          "type": "string",
+          "enum": [
+            "Leisure",
+            "Business"
+          ]
         }
       },
       "required": [
@@ -764,6 +699,472 @@
         "reservationGuests",
         "reservationPaymentMethods"
       ]
+    },
+    "ReservationMembership": {
+      "type": "object",
+      "description": "Details of the membership added to the reservation.",
+      "properties": {
+        "membershipLevel": {
+          "type": "string",
+          "example": "ENTRY",
+          "description": "Code that designates this membership level."
+        },
+        "membershipId": {
+          "type": "string",
+          "example": "O12345F",
+          "description": "The guest's membership ID number"
+        },
+        "membershipType": {
+          "type": "string",
+          "example": "MF",
+          "description": "The membership type belonging to the program the guest is enrolled with"
+        }
+      },
+      "required": [
+        "membershipId"
+      ]
+    },
+    "ReservationPackages": {
+      "type": "object",
+      "properties": {
+        "scheduleList": {
+          "description": "A HotelPackageSchedule type.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/ScheduleList"
+          }
+        },
+        "packageCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "example": "SUMPKG1",
+          "description": "Package code. This is the unique code used for the package and is a required element."
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8,
+          "example": "2023-06-12",
+          "description": "Required value when changing a reservation package. If the original start date was null, then null is required."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "maxLength": 8,
+          "example": "2023-06-14",
+          "description": "Required value when changing a reservation package. If the original end date was null, then null is required."
+        },
+        "source": {
+          "type": "string",
+          "example": "Reservation",
+          "description": "Sources of Products."
+        }
+      }
+    },
+    "ScheduleList": {
+      "type": "object",
+      "properties": {
+        "consumptionDate": {
+          "description": "The date the package was used or can be used.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8,
+          "example": "2023-12-17"
+        },
+        "unitPrice": {
+          "description": "The price per unit of the package.",
+          "type": "number",
+          "example": 50
+        },
+        "totalQuantity": {
+          "description": "The total quantity of the package for this date, calculated based on the calculation rule as defined in the PackageHeaderType",
+          "type": "integer",
+          "format": "int32",
+          "example": 1
+        },
+        "reservationDate": {
+          "description": "The date of the Reservation when this package is applicable. This can be different from the date the package will be consumed. Example are next day packages. Reservation date is when the package is applied to the guest and Consumption date is when the guest can consume the package.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8,
+          "example": "2023-12-17"
+        }
+      }
+    },
+    "ReservationGuestResponse": {
+      "type": "object",
+      "description": "Reservation Guest Information",
+      "properties": {
+        "profileInfo": {
+          "type": "object",
+          "properties": {
+            "profileIdList": {
+              "$ref": "#/definitions/ProfileIdListResponse"
+            },
+            "profile": {
+              "$ref": "#/definitions/Profile"
+            }
+          },
+          "required": [
+            "profile"
+          ]
+        },
+        "primary": {
+          "type": "boolean",
+          "example": true,
+          "description": "Indicates if the profile is primary if multiple profiles of the same type are being sent. Should be true by default if only one profile of same type is sent"
+        },
+        "arrivalTransport": {
+          "description": "Arrival Transport details of the Guest",
+          "$ref": "#/definitions/ReservationTransport"
+        },
+        "departureTransport": {
+          "description": "Departure Transport details of the Guest",
+          "$ref": "#/definitions/ReservationTransport"
+        }
+      },
+      "required": [
+        "profileInfo"
+      ]
+    },
+    "Profile": {
+      "type": "object",
+      "properties": {
+        "customer": {
+          "type": "object",
+          "properties": {
+            "personName": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/PersonName"
+              }
+            },
+            "language": {
+              "type": "string",
+              "description": "Reservation Language Code",
+              "example": "en-us"
+            }
+          },
+          "required": [
+            "personName"
+          ]
+        },
+        "profileType": {
+          "$ref": "#/definitions/ProfileType"
+        },
+        "companyInfo": {
+          "type": "object",
+          "properties": {
+            "companyName": {
+              "type": "string",
+              "description": "Name of the associated Company, Source or Travel Agent"
+            },
+            "email": {
+              "type": "string",
+              "description": "Email of Guest",
+              "example": "customer@example.com"
+            },
+            "phoneNumber": {
+              "type": "string",
+              "description": "Phone number of Guest",
+              "example": "415.555.0100"
+            },
+            "address": {
+              "$ref": "#/definitions/Address"
+            }
+          }
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "addressLine": {
+          "description": "Guest Address Details",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "Street 7031 Columbia Gateway Dr."
+          ]
+        },
+        "cityName": {
+          "description": "Name of the City",
+          "type": "string",
+          "example": "Columbia"
+        },
+        "postalCode": {
+          "description": "Postal Code of the Guest Address",
+          "type": "string",
+          "example": "Z23457A9"
+        },
+        "country": {
+          "$ref": "#/definitions/Country"
+        },
+        "state": {
+          "description": "State Code.",
+          "type": "string",
+          "example": "MD"
+        }
+      }
+    },
+    "Country": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Supported codes for countries are ISO 3166-1 Alpha-2 values only, ie. US, not USA.",
+          "example": "US"
+        }
+      }
+    },
+    "ProfileType": {
+      "type": "string",
+      "enum": [
+        "Guest",
+        "TravelAgent",
+        "Source",
+        "Company"
+      ],
+      "example": "Guest",
+      "description": "The type of profile being sent"
+    },
+    "PersonName": {
+      "type": "object",
+      "properties": {
+        "givenName": {
+          "type": "string",
+          "description": "Given Name of Guest",
+          "example": "Mary"
+        },
+        "surname": {
+          "type": "string",
+          "description": "Last Name of Guest",
+          "minLength": 2,
+          "example": "Smith"
+        },
+        "middleName": {
+          "type": "string",
+          "description": "Indicates the Middle Name of the Guest",
+          "example": "Mathew"
+        },
+        "nameTitle": {
+          "type": "string",
+          "description": "Title of Guest",
+          "example": "Mr and Mrs"
+        },
+        "nameType": {
+          "type": "string",
+          "description": "Name Type. Valid value 'Primary'",
+          "example": "Primary"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email of Guest",
+          "example": "customer@example.com"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Phone number of Guest",
+          "example": "415.555.0100"
+        },
+        "address": {
+          "$ref": "#/definitions/Address"
+        }
+      },
+      "required": [
+        "surname"
+      ]
+    },
+    "ReservationTransport": {
+      "type": "object",
+      "properties": {
+        "comments": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000,
+          "description": "Any additional info regarding the travel can be sent here"
+        },
+        "type": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Method of conveyance of the guest. For Ex : Air, Rail, Bus, Private Auto, Boat, Other"
+        },
+        "transportCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Enter the transportation Code such as the airline flight number/city of origin applicable to the guest mode of transportation upon arrival. For example Flight 1660"
+        },
+        "carrierCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Enter the code associated with the air, rail, bus or car rental transport company being used by this guest at arrival; for example, Delta, Amtrak, Greyhound, Avis."
+        },
+        "stationCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Enter the code for the airport, bus station or other location of the guest arrival; for example, JFK International, Penn Station, Port Authority Bus Terminal."
+        },
+        "dateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Enter the expected time here"
+        },
+        "transportationReqd": {
+          "type": "boolean",
+          "description": "Indicates if transportation is required or not"
+        }
+      }
+    },
+    "ProfileIdListResponse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique ID associated with that profile"
+          },
+          "idContext": {
+            "type": "string",
+            "example": "Central",
+            "description": "The Context of the ID sent above. Possible Values : Central"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of profile being sent Possible Values : Guest, TravelAgent, Source, Company and Profile"
+          }
+        }
+      }
+    },
+    "PaymentMethod": {
+      "type": "object",
+      "properties": {
+        "paymentMethod": {
+          "type": "string",
+          "description": "Indicates how the payment would be done.  Possible Values : 5 (Credit Card), 1 (Cash), 2 ( Direct Bill), 3 (Voucher).",
+          "example": "1"
+        },
+        "folioView": {
+          "type": "string",
+          "description": "folio number for payment method (example: use 1 for guest guarantee, 2 for company/travel agent guarantee)",
+          "example": "1"
+        },
+        "paymentCard": {
+          "$ref": "#/definitions/PaymentCard"
+        }
+      },
+      "required": [
+        "paymentMethod"
+      ]
+    },
+    "PaymentCard": {
+      "type": "object",
+      "properties": {
+        "cardType": {
+          "description": "Type of the Credit Card",
+          "type": "string",
+          "example": "MC"
+        },
+        "cardNumber": {
+          "description": "Full Card Number or the Card Token",
+          "type": "string",
+          "example": "5105105105105100"
+        },
+        "expirationDate": {
+          "description": "Expiration date in format MM/YY",
+          "type": "string",
+          "pattern": "^((?:0[1-9]|1[0-2])\\/([0-9][0-9])|(?:\\d{4})-(?:0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$",
+          "example": "06/23"
+        },
+        "cardHolderName": {
+          "description": "Credit card holder name",
+          "type": "string",
+          "example": "Mary Smith"
+        },
+        "cardNumberMasked": {
+          "description": "Masked card number.",
+          "example": "XXXXXXXXXXXX0005",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "cardOrToken": {
+          "description": "This contains information on whether credit card is tokenized (token enabled). A value of 'Token' indicates cardNumber holds token value and 'CardNumber' indicates cardNumber holds credit card number.",
+          "type": "string",
+          "enum": [
+            "CardNumber",
+            "Token"
+          ]
+        },
+        "citId": {
+          "type": "string",
+          "description": "Customer Initiated Transaction(CIT) Id for Credit Cards. This is only used when PAYMENT SERVICES DIRECTIVE (PSD2) Opera Control is active.",
+          "minLength": 0,
+          "maxLength": 16,
+          "example": "654321ABC1234578"
+        }
+      },
+      "required": [
+        "cardType",
+        "cardNumber",
+        "expirationDate",
+        "cardHolderName"
+      ]
+    },
+    "ReservationSpecialRequestsResponse": {
+      "type": "object",
+      "properties": {
+        "requestCodes": {
+          "description": "Collection of special requests such as Preferences for a reservation guest",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestCodesResponse"
+          }
+        },
+        "requestCodeType": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "example": "SPECIALS",
+          "description": "Group code of special request such as specials, feature, bed feature, etc."
+        },
+        "requestCodeTypeContext": {
+          "type": "string",
+          "description": "It represents request code and request type are OHD configured values.",
+          "enum": [
+            "Central"
+          ]
+        }
+      }
+    },
+    "RequestCodesResponse": {
+      "type": "object",
+      "properties": {
+        "requestCodeValue": {
+          "description": "Special request code from OHD configuration",
+          "example": "PILLOW",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "requestCodeDescription": {
+          "description": "Special request's description or name.",
+          "example": "Additional Pillows",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
     },
     "RoomStayResponseGet": {
       "type": "object",
@@ -878,7 +1279,7 @@
             "guaranteeType": {
               "type": "string",
               "example": "5",
-              "description": "Accepts OTA Standard Guarantee Type.\nPossible Values : (5, 8, 19, 22, 38) where 5 = Credit Card, 8 = Deposit, 19 = Travel agency IATA number, 22 = Frequent guest, 38 = None.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeType and no guaranteeCode is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
+              "description": "Accepts OTA Standard Guarantee Type.\nPossible Values : (5, 8, 19, 22, 38) where 5 = Credit Card, 8 = Deposit, 19 = Travel agency IATA number, 22 = Frequent guest, 30 = Corporate ID/CD Number, 38 = None.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeType and no guaranteeCode is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
             },
             "onHold": {
               "type": "boolean",
@@ -892,9 +1293,16 @@
           "description": "Defines if the rate is printed on various correspondence. Possible values are 'true' or 'false'.",
           "example": false
         },
+        "expectedTimes": {
+          "description": "Expected Arrival and Departure Time information.",
+          "$ref": "#/definitions/ExpectedTimesType"
+        },
         "bookingMedium": {
+          "description": "Indicates the Origin of the reservation",
           "type": "string",
-          "example": "CRS"
+          "minLength": 1,
+          "maxLength": 20,
+          "example": "OTA"
         }
       },
       "required": [
@@ -902,60 +1310,6 @@
         "departureDate",
         "roomRates"
       ]
-    },
-    "Taxes": {
-      "type": "object",
-      "description": "Tax details.",
-      "properties": {
-        "tax": {
-          "type": "array",
-          "description": "List of taxes applicable for this reservation",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/Tax"
-          }
-        },
-        "amount": {
-          "type": "number",
-          "description": "Total Tax amount applicable for the reservation.",
-          "example": 20.3
-        },
-        "currencyCode": {
-          "$ref": "#/definitions/CurrencyCode"
-        }
-      }
-    },
-    "Tax": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string",
-          "description": "OTA Standard Fee Tax Type description",
-          "example": "VAT (Value Added Tax)"
-        },
-        "type": {
-          "type": "string",
-          "description": "Indicates if this tax is included or excluded in rate.",
-          "enum": [
-            "Inclusive",
-            "Exclusive"
-          ],
-          "example": "Exclusive"
-        },
-        "code": {
-          "type": "string",
-          "description": "OTA Standard Fee Tax Type",
-          "example": "36"
-        },
-        "amount": {
-          "type": "number",
-          "description": "Total tax amount of given Fee Tax type.",
-          "example": 10
-        },
-        "currencyCode": {
-          "$ref": "#/definitions/CurrencyCode"
-        }
-      }
     },
     "RoomRateResponseGet": {
       "type": "object",
@@ -1006,6 +1360,228 @@
         }
       ]
     },
+    "GdsDescription": {
+      "type": "object",
+      "description": "Multi line description of the rate plan.",
+      "properties": {
+        "line1": {
+          "description": "First line of rate plan description.",
+          "type": "string",
+          "example": "Room Only Rate with free wifi"
+        },
+        "line2": {
+          "description": "Second line of rate plan description.",
+          "type": "string",
+          "example": "Continental Breakfast for additional fee"
+        },
+        "line3": {
+          "description": "Third line of rate plan description.",
+          "type": "string",
+          "example": "Cancel anytime"
+        },
+        "detailedDescription": {
+          "description": "Detailed information about the rate plan.",
+          "type": "string",
+          "example": "An outdoor pool is also available for guests staying at the lodge during the summertime."
+        }
+      }
+    },
+    "InfoRoomRateResponse": {
+      "type": "object",
+      "properties": {
+        "rates": {
+          "type": "object",
+          "properties": {
+            "rate": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/RoomRate"
+              }
+            }
+          },
+          "required": [
+            "rate"
+          ]
+        },
+        "guestCounts": {
+          "$ref": "#/definitions/GuestCount"
+        },
+        "reservationBlock": {
+          "type": "object",
+          "description": "Block related information",
+          "properties": {
+            "blockIdList": {
+              "description": "List of Block Ids",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlockIdList"
+              }
+            },
+            "blockName": {
+              "description": "Name of the Block",
+              "type": "string",
+              "maxLength": 2000,
+              "example": "ABC Annual Meet"
+            }
+          }
+        },
+        "roomType": {
+          "type": "string",
+          "description": "Room Type Code for which the reservation is requested for.",
+          "example": "XA1K"
+        },
+        "ratePlanCode": {
+          "type": "string",
+          "description": "* Rate Plan Code for which the reservation is requested.\n* Rate plan code is mandatory for Transient ( non Block) reservation requests.\n* Rate Plan Code is optional if the reservation is for a Business Block.\n",
+          "example": "XDAILY"
+        },
+        "roomId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Room Number to be assigned to the reservation.",
+          "example": "301"
+        },
+        "suppressRate": {
+          "type": "boolean",
+          "description": "Used to suppress the display of the room rate in various correspondence. Possible values are 'true' or 'false'.",
+          "example": true
+        },
+        "numberOfUnits": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of rooms to be booked for this reservation",
+          "example": 1
+        },
+        "marketCode": {
+          "type": "string",
+          "description": "The code that relates to the market being sold to (e.g., the corporate market, packages).",
+          "example": "BR"
+        },
+        "sourceCode": {
+          "type": "string",
+          "description": "To specify where the business came from e.g.radio, newspaper ad, etc.",
+          "example": "OTA"
+        },
+        "start": {
+          "description": "Effective Start Date of the room rate.\n* Value must be of format 'date'\n",
+          "type": "string",
+          "format": "date",
+          "example": "2024-05-16"
+        },
+        "end": {
+          "description": "Effective End Date of the room rate.\n* Value must be of format 'date'\n",
+          "type": "string",
+          "format": "date",
+          "example": "2024-05-16"
+        }
+      },
+      "required": [
+        "rates",
+        "guestCounts",
+        "roomType",
+        "start",
+        "end"
+      ]
+    },
+    "GuestCount": {
+      "type": "object",
+      "description": "Reservation Guest Count details in room Stay level",
+      "properties": {
+        "childAges": {
+          "description": "Ages of children",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "example": [
+            4,
+            9,
+            17
+          ]
+        },
+        "adults": {
+          "description": "Number of adults",
+          "type": "integer",
+          "format": "int32",
+          "example": 2
+        },
+        "children": {
+          "description": "Number of children",
+          "type": "integer",
+          "format": "int32",
+          "example": 3
+        }
+      },
+      "required": [
+        "adults"
+      ]
+    },
+    "RoomRate": {
+      "type": "object",
+      "properties": {
+        "base": {
+          "type": "object",
+          "description": "Base Rate Details\n* If the rate plan is configured as Tax Inclusive, Amount After Tax is expected in reservation requests.\n* If the rate Plan is configured as Tax exclusive, Amount Before Tax is expected in reservation requests.\n",
+          "properties": {
+            "amountAfterTax": {
+              "type": "number",
+              "example": 214.5,
+              "description": "Room Rate including all known taxes, fees and surcharges."
+            },
+            "amountBeforeTax": {
+              "type": "number",
+              "description": "Room Rate excluding all known taxes, fees and surcharges.",
+              "example": 200
+            },
+            "currencyCode": {
+              "$ref": "#/definitions/CurrencyCode"
+            }
+          }
+        },
+        "start": {
+          "description": "Effective Start Date of the room rate.\n* Value must be of format 'date'\n",
+          "type": "string",
+          "format": "date",
+          "example": "2024-05-16"
+        },
+        "end": {
+          "description": "Effective End Date of the room rate.\n* Value must be of format 'date'\n",
+          "type": "string",
+          "format": "date",
+          "example": "2024-05-16"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ]
+    },
+    "CurrencyCode": {
+      "type": "string",
+      "description": "The rate currency code. This should be ISO currency code.\n  *  Matches regex pattern: [A-Z]{3}\n  *  Length of string must be less than, or equal to 3\n  *  Length of string must be greater than, or equal to 3\n",
+      "example": "USD"
+    },
+    "BlockIdList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique OPERA Block ID which is a primary identification of a Block in OPERA.",
+          "type": "string",
+          "maxLength": 40,
+          "example": "ABCEVENT0523"
+        },
+        "type": {
+          "description": "Type of the Block Id. Valid value 'BlockCode'",
+          "type": "string",
+          "enum": [
+            "BlockCode"
+          ]
+        }
+      }
+    },
     "MealPlan": {
       "type": "object",
       "properties": {
@@ -1048,29 +1624,164 @@
       ],
       "description": "Type of meal plan the rate plan includes"
     },
-    "GdsDescription": {
+    "ExpectedTimesType": {
       "type": "object",
-      "description": "Multi line description of the rate plan.",
+      "description": "Expected Arrival and Departure Time information.",
       "properties": {
-        "line1": {
-          "description": "First line of rate plan description.",
+        "reservationExpectedArrivalTime": {
+          "description": "Indicates the expected Arrival Time of the reservation guest.",
           "type": "string",
-          "example": "Room Only Rate with free wifi"
+          "format": "date-time",
+          "example": "2025-11-17T12:21:00.000Z"
         },
-        "line2": {
-          "description": "Second line of rate plan description.",
+        "reservationExpectedDepartureTime": {
+          "description": "Indicates the expected Departure Time of the reservation guest.",
           "type": "string",
-          "example": "Continental Breakfast for additional fee"
+          "format": "date-time",
+          "example": "2025-11-20T12:21:00.000Z"
+        }
+      }
+    },
+    "Promotion": {
+      "type": "object",
+      "description": "Details of Promotion attached to the reservation.",
+      "properties": {
+        "promotionCode": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Promotion code associated with the promotional offers.",
+          "example": "CASINO"
         },
-        "line3": {
-          "description": "Third line of rate plan description.",
+        "promotionName": {
           "type": "string",
-          "example": "Cancel anytime"
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Descriptive name of promotion code.",
+          "example": "Casino Promotion"
+        }
+      }
+    },
+    "Taxes": {
+      "type": "object",
+      "description": "Tax details.",
+      "properties": {
+        "tax": {
+          "type": "array",
+          "description": "List of taxes applicable for this reservation",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Tax"
+          }
         },
-        "detailedDescription": {
-          "description": "Detailed information about the rate plan.",
+        "amount": {
+          "type": "number",
+          "description": "Total Tax amount applicable for the reservation.",
+          "example": 20.3
+        },
+        "currencyCode": {
+          "$ref": "#/definitions/CurrencyCode"
+        },
+        "hotelTaxFeeDescriptions": {
+          "type": "array",
+          "description": "Hotel Tax / Fee Descriptions",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "example": "9% City Occupancy Tax"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Tax": {
+      "type": "object",
+      "properties": {
+        "description": {
           "type": "string",
-          "example": "An outdoor pool is also available for guests staying at the lodge during the summertime."
+          "description": "OTA Standard Fee Tax Type description",
+          "example": "VAT (Value Added Tax)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Indicates if this tax is included or excluded in rate.",
+          "enum": [
+            "Inclusive",
+            "Exclusive"
+          ],
+          "example": "Exclusive"
+        },
+        "code": {
+          "type": "string",
+          "description": "OTA Standard Fee Tax Type",
+          "example": "36"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Total tax amount of given Fee Tax type.",
+          "example": 10
+        },
+        "currencyCode": {
+          "$ref": "#/definitions/CurrencyCode"
+        }
+      }
+    },
+    "CommentType": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "object",
+          "description": "Comment Free Text",
+          "properties": {
+            "value": {
+              "type": "string",
+              "example": "Room away from the elevator."
+            }
+          }
+        },
+        "commentTitle": {
+          "description": "Title of the Comment",
+          "type": "string",
+          "example": "Notes from Channel"
+        },
+        "internal": {
+          "description": "When true, the comment may not be shown to the consumer. When false, the comment may be shown to the consumer. Possible values are 'true' or 'false'. Default value is false",
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "CancelReservationIdResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Global reservation number from external channel. Maximum length is 50 alphanumeric characters without spaces.",
+          "example": "5030863"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of id",
+          "enum": [
+            "Others",
+            "Confirmation",
+            "Reservation",
+            "Cancellation"
+          ],
+          "example": "Others"
+        },
+        "idContext": {
+          "type": "string",
+          "description": "Context of the Id.",
+          "example": "CH1"
+        },
+        "idExtension": {
+          "type": "string",
+          "description": "This is the index number for multi leg reservations. Numeric values only.",
+          "example": "1"
         }
       }
     },
@@ -1118,82 +1829,6 @@
         "reservationPayload"
       ]
     },
-    "CancelResponse": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/CancelResponseItem"
-      }
-    },
-    "CancelResponseItem": {
-      "type": "object",
-      "properties": {
-        "reservationIds": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CancelReservationIdResponse"
-          },
-          "example": [
-            {
-              "id": "5030863",
-              "type": "Others",
-              "idContext": "CH1",
-              "idExtension": "1"
-            },
-            {
-              "id": "LZDI6496738895",
-              "type": "Confirmation",
-              "idContext": "Central",
-              "idExtension": "1"
-            },
-            {
-              "id": "2342342",
-              "type": "Reservation",
-              "idContext": "Central",
-              "idExtension": "1"
-            },
-            {
-              "id": "YMWSGD-1631707751742-8812771",
-              "type": "Cancellation",
-              "idContext": "Central",
-              "idExtension": "1"
-            }
-          ]
-        },
-        "reservationPayload": {
-          "type": "object",
-          "properties": {
-            "lastModifyDateTime": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Date and time when this reservation was last updated, including time zone information. Timestamp as defined in ISO 8601 format and always be in the following format: YYYY-MM-DDThh:mm:ssZ (time is UTC).",
-              "example": "2023-11-17T12:21:00Z"
-            },
-            "hotelCode": {
-              "description": "The unique identifier of the Property in Channel system.",
-              "type": "string",
-              "example": "XUSXXYY99"
-            },
-            "reservationStatus": {
-              "type": "string",
-              "enum": [
-                "Reserved",
-                "ReservedChanged",
-                "Cancelled",
-                "OnHold"
-              ],
-              "example": "Cancelled"
-            }
-          },
-          "required": [
-            "reservationStatus"
-          ]
-        }
-      },
-      "required": [
-        "reservationIds",
-        "reservationPayload"
-      ]
-    },
     "ReservationPayload": {
       "type": "object",
       "properties": {
@@ -1221,6 +1856,7 @@
                       {
                         "surname": "Smith",
                         "givenName": "Mary",
+                        "middleName": "Angel",
                         "nameTitle": "Mr and Mrs",
                         "nameType": "Primary",
                         "email": "customer@example.com",
@@ -1421,12 +2057,165 @@
           "type": "boolean",
           "description": "Defines if guest agreed to receive correspondence from the property via email, phone, letter, etc. Possible values are 'true' or 'false'.",
           "example": false
+        },
+        "travelPurpose": {
+          "description": "Indicates the purpose of Guest Stay",
+          "type": "string",
+          "enum": [
+            "Leisure",
+            "Business"
+          ]
         }
       },
       "required": [
         "roomStay",
         "reservationGuests",
         "reservationPaymentMethods"
+      ]
+    },
+    "RoomStayResponse": {
+      "type": "object",
+      "description": "List of room stay information including Room Rates, Promotion, Guest Counts and Guarantee",
+      "properties": {
+        "arrivalDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Arrival Date of the Reservation. Value must be of format YYYY-MM-DD",
+          "example": "2024-05-16"
+        },
+        "departureDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Departure Date of the Reservation. Value must be of format YYYY-MM-DD",
+          "example": "2024-05-17"
+        },
+        "roomRates": {
+          "type": "array",
+          "description": "Room Rate Information",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/InfoRoomRateResponse"
+          }
+        },
+        "promotion": {
+          "$ref": "#/definitions/Promotion"
+        },
+        "guestCounts": {
+          "type": "object",
+          "description": "Guest Counts details of the reservation.",
+          "properties": {
+            "adults": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Adults count",
+              "example": 2
+            },
+            "children": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Children count",
+              "example": 3
+            },
+            "childAges": {
+              "description": "Ages of children",
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "example": [
+                4,
+                9,
+                17
+              ]
+            }
+          },
+          "required": [
+            "adults"
+          ]
+        },
+        "total": {
+          "type": "object",
+          "description": "Reservation Total Rate Information\n* If the rate plan is configured as Tax Inclusive, Amount After Tax is returned.\n* If the rate Plan is configured as Tax Exclusive, Amount Before Tax is returned.\n",
+          "properties": {
+            "taxes": {
+              "type": "object",
+              "description": "Total Tax details applicable for this reservation",
+              "$ref": "#/definitions/Taxes"
+            },
+            "currencySymbol": {
+              "type": "string",
+              "description": "Symbol of Rate Currency.",
+              "example": "$"
+            },
+            "decimalPlaces": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Rate Amount decimal Places.",
+              "example": 1
+            },
+            "rateOverride": {
+              "type": "boolean",
+              "description": "Indicated if the rate is overridden or not.",
+              "example": true
+            },
+            "amountAfterTax": {
+              "type": "number",
+              "example": 214.5,
+              "description": "Reservation Total Rate including all known taxes, fees and surcharges."
+            },
+            "amountBeforeTax": {
+              "type": "number",
+              "description": "Reservation Total Rate excluding all known taxes, fees and surcharges.",
+              "example": 200
+            },
+            "currencyCode": {
+              "$ref": "#/definitions/CurrencyCode"
+            }
+          }
+        },
+        "guarantee": {
+          "type": "object",
+          "description": "Reservation guarantee details.",
+          "properties": {
+            "guaranteeCode": {
+              "type": "string",
+              "example": "CC",
+              "description": "Accepts Property Guarantee Code.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeCode and no guaranteeType is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
+            },
+            "guaranteeType": {
+              "type": "string",
+              "example": "5",
+              "description": "Accepts OTA Standard Guarantee Type.\nPossible Values : (5, 8, 19, 22, 38) where 5 = Credit Card, 8 = Deposit, 19 = Travel agency IATA number, 22 = Frequent guest, 30 = Corporate ID/CD Number, 38 = None.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeType and no guaranteeCode is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
+            },
+            "onHold": {
+              "type": "boolean",
+              "example": false,
+              "description": "If true indicates this Guarantee Code is used only to hold the inventory during reservation process."
+            }
+          }
+        },
+        "printRate": {
+          "type": "boolean",
+          "description": "Defines if the rate is printed on various correspondence. Possible values are 'true' or 'false'.",
+          "example": false
+        },
+        "expectedTimes": {
+          "description": "Expected Arrival and Departure Time information.",
+          "$ref": "#/definitions/ExpectedTimesType"
+        },
+        "bookingMedium": {
+          "description": "Indicates the Origin of the reservation",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "example": "OTA"
+        }
+      },
+      "required": [
+        "arrivalDate",
+        "departureDate",
+        "roomRates"
       ]
     },
     "ReservationIdResponse": {
@@ -1459,50 +2248,50 @@
         }
       }
     },
-    "CancelReservationIdResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Global reservation number from external channel. Maximum length is 50 alphanumeric characters without spaces.",
-          "example": "5030863"
-        },
-        "type": {
-          "type": "string",
-          "description": "Type of id",
-          "enum": [
-            "Others",
-            "Confirmation",
-            "Reservation",
-            "Cancellation"
-          ],
-          "example": "Others"
-        },
-        "idContext": {
-          "type": "string",
-          "description": "Context of the Id.",
-          "example": "CH1"
-        },
-        "idExtension": {
-          "type": "string",
-          "description": "This is the index number for multi leg reservations. Numeric values only.",
-          "example": "1"
-        }
-      }
-    },
-    "BookingNotificationType": {
+    "CancelNotificationType": {
       "type": "object",
       "properties": {
         "reservations": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SingleReservationNotification"
+            "$ref": "#/definitions/CancelReservationNotification"
           },
           "minItems": 1
         }
       },
       "required": [
         "reservations"
+      ]
+    },
+    "CancelReservationNotification": {
+      "type": "object",
+      "properties": {
+        "reservationIdList": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ReservationIdNotification"
+          }
+        },
+        "lastModifyDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time when this reservation was last updated, including time zone information. Timestamp as defined in ISO 8601 format and always be in the following format: YYYY-MM-DDThh:mm:ssZ (time is UTC).",
+          "example": "2023-11-17T12:21:00Z"
+        },
+        "hotelCode": {
+          "description": "The unique identifier of the Property in Channel system.",
+          "type": "string",
+          "example": "XUSXXYY99"
+        },
+        "messageId": {
+          "description": "Reservation Message Number generated by the requester.",
+          "type": "string",
+          "example": "22922909"
+        }
+      },
+      "required": [
+        "reservationIdList"
       ]
     },
     "ReservationIdNotification": {
@@ -1525,8 +2314,8 @@
         },
         "idContext": {
           "type": "string",
-          "example": "CH1",
-          "description": "Context of the Id."
+          "description": "Context of the Id.",
+          "example": "CH1"
         },
         "idExtension": {
           "type": "string",
@@ -1536,6 +2325,100 @@
       },
       "required": [
         "id"
+      ]
+    },
+    "ExceptionObj": {
+      "type": "object",
+      "properties": {
+        "logId": {
+          "type": "integer",
+          "example": 884366973
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "example": "Error Occurred During Reservation Processing"
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "o.errorCode": {
+          "type": "string",
+          "description": "HDP error code, which is different from HTTP error code.",
+          "example": "DRSC10000"
+        },
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
+        },
+        "timestamp": {
+          "type": "string",
+          "example": "2023-09-17T08:17:18.321Z",
+          "format": "date-time"
+        },
+        "o.errorDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorDetailsObj"
+          }
+        }
+      },
+      "required": [
+        "logId",
+        "title",
+        "status"
+      ]
+    },
+    "ErrorDetailsObj": {
+      "type": "object",
+      "properties": {
+        "logId": {
+          "type": "integer",
+          "example": 443265783
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization.",
+          "example": "Reservation Id was not found"
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server.",
+          "example": 400
+        },
+        "o.errorCode": {
+          "type": "string",
+          "description": "HDP error code, which is different from HTTP error code.",
+          "example": "DRSV30007"
+        },
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem.",
+          "example": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.x"
+        },
+        "timestamp": {
+          "type": "string",
+          "example": "2023-09-17T08:17:18.321Z",
+          "format": "date-time"
+        }
+      }
+    },
+    "BookingNotificationType": {
+      "type": "object",
+      "properties": {
+        "reservations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SingleReservationNotification"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "reservations"
       ]
     },
     "SingleReservationNotification": {
@@ -1572,6 +2455,7 @@
                       {
                         "surname": "Smith",
                         "givenName": "Mary",
+                        "middleName": "Angel",
                         "nameTitle": "Mr and Mrs",
                         "nameType": "Primary",
                         "email": "customer@example.com",
@@ -1790,6 +2674,14 @@
           "type": "boolean",
           "description": "Defines if guest agreed to receive correspondence from the property via email, phone, letter, etc. Possible values are 'true' or 'false'.",
           "example": false
+        },
+        "travelPurpose": {
+          "description": "Indicates the purpose of Guest Stay",
+          "type": "string",
+          "enum": [
+            "Leisure",
+            "Business"
+          ]
         }
       },
       "required": [
@@ -1799,340 +2691,60 @@
         "reservationPaymentMethods"
       ]
     },
-    "CancelNotificationType": {
+    "ReservationGuestRequest": {
       "type": "object",
+      "description": "Reservation Guest Information",
       "properties": {
-        "reservations": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CancelReservationNotification"
-          },
-          "minItems": 1
-        }
-      },
-      "required": [
-        "reservations"
-      ]
-    },
-    "CancelReservationNotification": {
-      "type": "object",
-      "properties": {
-        "reservationIdList": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/ReservationIdNotification"
-          }
-        },
-        "lastModifyDateTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Date and time when this reservation was last updated, including time zone information. Timestamp as defined in ISO 8601 format and always be in the following format: YYYY-MM-DDThh:mm:ssZ (time is UTC).",
-          "example": "2023-11-17T12:21:00Z"
-        },
-        "hotelCode": {
-          "description": "The unique identifier of the Property in Channel system.",
-          "type": "string",
-          "example": "XUSXXYY99"
-        },
-        "messageId": {
-          "description": "Reservation Message Number generated by the requester.",
-          "type": "string",
-          "example": "22922909"
-        }
-      },
-      "required": [
-        "reservationIdList"
-      ]
-    },
-    "GuestCount": {
-      "type": "object",
-      "description": "Reservation Guest Count details in room Stay level",
-      "properties": {
-        "childAges": {
-          "description": "Ages of children",
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "example": [
-            4,
-            9,
-            17
-          ]
-        },
-        "adults": {
-          "description": "Number of adults",
-          "type": "integer",
-          "format": "int32",
-          "example": 2
-        },
-        "children": {
-          "description": "Number of children",
-          "type": "integer",
-          "format": "int32",
-          "example": 3
-        }
-      },
-      "required": [
-        "adults"
-      ]
-    },
-    "RoomRate": {
-      "type": "object",
-      "properties": {
-        "base": {
-          "type": "object",
-          "description": "Base Rate Details\n* If the rate plan is configured as Tax Inclusive, Amount After Tax is expected in reservation requests.\n* If the rate Plan is configured as Tax exclusive, Amount Before Tax is expected in reservation requests.\n",
-          "properties": {
-            "amountAfterTax": {
-              "type": "number",
-              "example": 214.5,
-              "description": "Room Rate including all known taxes, fees and surcharges."
-            },
-            "amountBeforeTax": {
-              "type": "number",
-              "description": "Room Rate excluding all known taxes, fees and surcharges.",
-              "example": 200
-            },
-            "currencyCode": {
-              "$ref": "#/definitions/CurrencyCode"
-            }
-          }
-        },
-        "start": {
-          "description": "Effective Start Date of the room rate.\n* Value must be of format 'date'\n",
-          "type": "string",
-          "format": "date",
-          "example": "2024-05-16"
-        },
-        "end": {
-          "description": "Effective End Date of the room rate.\n* Value must be of format 'date'\n",
-          "type": "string",
-          "format": "date",
-          "example": "2024-05-16"
-        }
-      },
-      "required": [
-        "start",
-        "end"
-      ]
-    },
-    "InfoRoomRateResponse": {
-      "type": "object",
-      "properties": {
-        "rates": {
+        "profileInfo": {
           "type": "object",
           "properties": {
-            "rate": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/RoomRate"
-              }
+            "profileIdList": {
+              "$ref": "#/definitions/ProfileIdListRequest"
+            },
+            "profile": {
+              "$ref": "#/definitions/Profile"
             }
           },
           "required": [
-            "rate"
+            "profile"
           ]
         },
-        "guestCounts": {
-          "$ref": "#/definitions/GuestCount"
-        },
-        "reservationBlock": {
-          "type": "object",
-          "description": "Block related information",
-          "properties": {
-            "blockIdList": {
-              "description": "List of Block Ids",
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BlockIdList"
-              }
-            },
-            "blockName": {
-              "description": "Name of the Block",
-              "type": "string",
-              "maxLength": 2000,
-              "example": "ABC Annual Meet"
-            }
-          }
-        },
-        "roomType": {
-          "type": "string",
-          "description": "Room Type Code for which the reservation is requested for.",
-          "example": "XA1K"
-        },
-        "ratePlanCode": {
-          "type": "string",
-          "description": "* Rate Plan Code for which the reservation is requested.\n* Rate plan code is mandatory for Transient ( non Block) reservation requests.\n* Rate Plan Code is optional if the reservation is for a Business Block.\n",
-          "example": "XDAILY"
-        },
-        "roomId": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Room Number to be assigned to the reservation.",
-          "example": "301"
-        },
-        "suppressRate": {
+        "primary": {
           "type": "boolean",
-          "description": "Used to suppress the display of the room rate in various correspondence. Possible values are 'true' or 'false'.",
-          "example": true
+          "example": true,
+          "description": "Indicates if the profile is primary if multiple profiles of the same type are being sent. Should be true by default if only one profile of same type is sent"
         },
-        "numberOfUnits": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Number of rooms to be booked for this reservation",
-          "example": 1
+        "arrivalTransport": {
+          "description": "Arrival Transport details of the Guest",
+          "$ref": "#/definitions/ReservationTransport"
         },
-        "marketCode": {
-          "type": "string",
-          "description": "The code that relates to the market being sold to (e.g., the corporate market, packages).",
-          "example": "BR"
-        },
-        "sourceCode": {
-          "type": "string",
-          "description": "To specify where the business came from e.g.radio, newspaper ad, etc.",
-          "example": "OTA"
-        },
-        "start": {
-          "description": "Effective Start Date of the room rate.\n* Value must be of format 'date'\n",
-          "type": "string",
-          "format": "date",
-          "example": "2024-05-16"
-        },
-        "end": {
-          "description": "Effective End Date of the room rate.\n* Value must be of format 'date'\n",
-          "type": "string",
-          "format": "date",
-          "example": "2024-05-16"
+        "departureTransport": {
+          "description": "Departure Transport details of the Guest",
+          "$ref": "#/definitions/ReservationTransport"
         }
       },
       "required": [
-        "rates",
-        "guestCounts",
-        "roomType",
-        "start",
-        "end"
+        "profileInfo"
       ]
     },
-    "InfoRoomRate": {
-      "type": "object",
-      "properties": {
-        "rates": {
-          "type": "object",
-          "properties": {
-            "rate": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/RoomRate"
-              }
-            }
+    "ProfileIdListRequest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique ID associated with that profile"
           },
-          "required": [
-            "rate"
-          ]
-        },
-        "guestCounts": {
-          "$ref": "#/definitions/GuestCount"
-        },
-        "reservationBlock": {
-          "type": "object",
-          "description": "Block related information",
-          "properties": {
-            "blockIdList": {
-              "description": "List of Block Ids",
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BlockIdList"
-              }
-            }
+          "idContext": {
+            "type": "string",
+            "example": "Central",
+            "description": "The Context of the ID sent above. Possible Values : Central"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of profile being sent Possible Values : Guest, TravelAgent, Source, Company"
           }
-        },
-        "roomType": {
-          "type": "string",
-          "description": "Room Type Code for which the reservation is requested for.",
-          "example": "XA1K"
-        },
-        "ratePlanCode": {
-          "type": "string",
-          "description": "* Rate Plan Code for which the reservation is requested.\n* Rate plan code is mandatory for Transient ( non Block) reservation requests.\n* Rate Plan Code is optional if the reservation is for a Business Block.\n",
-          "example": "XDAILY"
-        },
-        "roomId": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Room Number to be assigned to the reservation.",
-          "example": "301"
-        },
-        "suppressRate": {
-          "type": "boolean",
-          "description": "Used to suppress the display of the room rate in various correspondence. Possible values are 'true' or 'false'.",
-          "example": true
-        },
-        "numberOfUnits": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Number of rooms to be booked for this reservation",
-          "example": 1
-        },
-        "marketCode": {
-          "type": "string",
-          "description": "The code that relates to the market being sold to (e.g., the corporate market, packages).",
-          "example": "BR"
-        },
-        "sourceCode": {
-          "type": "string",
-          "description": "To specify where the business came from e.g.radio, newspaper ad, etc.",
-          "example": "OTA"
-        },
-        "start": {
-          "description": "Effective Start Date of the room rate.\n* Value must be of format 'date'\n",
-          "type": "string",
-          "format": "date",
-          "example": "2024-05-16"
-        },
-        "end": {
-          "description": "Effective End Date of the room rate.\n* Value must be of format 'date'\n",
-          "type": "string",
-          "format": "date",
-          "example": "2024-05-16"
-        }
-      },
-      "required": [
-        "rates",
-        "guestCounts",
-        "roomType",
-        "start",
-        "end"
-      ]
-    },
-    "CommentType": {
-      "type": "object",
-      "properties": {
-        "text": {
-          "type": "object",
-          "description": "Comment Free Text",
-          "properties": {
-            "value": {
-              "type": "string",
-              "example": "Room away from the elevator."
-            }
-          }
-        },
-        "commentTitle": {
-          "description": "Title of the Comment",
-          "type": "string",
-          "example": "Notes from Channel"
-        },
-        "internal": {
-          "description": "When true, the comment may not be shown to the consumer. When false, the comment may be shown to the consumer. Possible values are 'true' or 'false'. Default value is false",
-          "type": "boolean",
-          "example": false
         }
       }
     },
@@ -2161,8 +2773,8 @@
           }
         },
         "promotion": {
-          "type": "object",
           "description": "Details of Promotion attached to the reservation.",
+          "type": "object",
           "properties": {
             "promotionCode": {
               "type": "string",
@@ -2259,7 +2871,7 @@
             "guaranteeType": {
               "type": "string",
               "example": "5",
-              "description": "Accepts OTA Standard Guarantee Type.\nPossible Values : (5, 8, 19, 22, 38) where 5 = Credit Card, 8 = Deposit, 19 = Travel agency IATA number, 22 = Frequent guest, 38 = None.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeType and no guaranteeCode is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
+              "description": "Accepts OTA Standard Guarantee Type.\nPossible Values : (5, 8, 19, 22, 38) where 5 = Credit Card, 8 = Deposit, 19 = Travel agency IATA number, 22 = Frequent guest, 30 = Corporate ID/CD Number, 38 = None.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeType and no guaranteeCode is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
             },
             "onHold": {
               "type": "boolean",
@@ -2272,6 +2884,17 @@
           "type": "boolean",
           "description": "Defines if the rate is printed on various correspondence. Possible values are 'true' or 'false'.",
           "example": false
+        },
+        "expectedTimes": {
+          "description": "Expected Arrival and Departure Time information.",
+          "$ref": "#/definitions/ExpectedTimesType"
+        },
+        "bookingMedium": {
+          "description": "Indicates the Origin of the reservation",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20,
+          "example": "OTA"
         }
       },
       "required": [
@@ -2280,555 +2903,98 @@
         "roomRates"
       ]
     },
-    "RoomStayResponse": {
-      "type": "object",
-      "description": "List of room stay information including Room Rates, Promotion, Guest Counts and Guarantee",
-      "properties": {
-        "arrivalDate": {
-          "type": "string",
-          "format": "date",
-          "description": "Arrival Date of the Reservation. Value must be of format YYYY-MM-DD",
-          "example": "2024-05-16"
-        },
-        "departureDate": {
-          "type": "string",
-          "format": "date",
-          "description": "Departure Date of the Reservation. Value must be of format YYYY-MM-DD",
-          "example": "2024-05-17"
-        },
-        "roomRates": {
-          "type": "array",
-          "description": "Room Rate Information",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/InfoRoomRateResponse"
-          }
-        },
-        "promotion": {
-          "$ref": "#/definitions/Promotion"
-        },
-        "guestCounts": {
-          "type": "object",
-          "description": "Guest Counts details of the reservation.",
-          "properties": {
-            "adults": {
-              "type": "integer",
-              "format": "int32",
-              "description": "Adults count",
-              "example": 2
-            },
-            "children": {
-              "type": "integer",
-              "format": "int32",
-              "description": "Children count",
-              "example": 3
-            },
-            "childAges": {
-              "description": "Ages of children",
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "example": [
-                4,
-                9,
-                17
-              ]
-            }
-          },
-          "required": [
-            "adults"
-          ]
-        },
-        "total": {
-          "type": "object",
-          "description": "Reservation Total Rate Information\n* If the rate plan is configured as Tax Inclusive, Amount After Tax is returned.\n* If the rate Plan is configured as Tax Exclusive, Amount Before Tax is returned.\n",
-          "properties": {
-            "taxes": {
-              "type": "object",
-              "description": "Total Tax details applicable for this reservation",
-              "$ref": "#/definitions/Taxes"
-            },
-            "currencySymbol": {
-              "type": "string",
-              "description": "Symbol of Rate Currency.",
-              "example": "$"
-            },
-            "decimalPlaces": {
-              "type": "integer",
-              "format": "int32",
-              "description": "Rate Amount decimal Places.",
-              "example": 1
-            },
-            "rateOverride": {
-              "type": "boolean",
-              "description": "Indicated if the rate is overridden or not.",
-              "example": true
-            },
-            "amountAfterTax": {
-              "type": "number",
-              "example": 214.5,
-              "description": "Reservation Total Rate including all known taxes, fees and surcharges."
-            },
-            "amountBeforeTax": {
-              "type": "number",
-              "description": "Reservation Total Rate excluding all known taxes, fees and surcharges.",
-              "example": 200
-            },
-            "currencyCode": {
-              "$ref": "#/definitions/CurrencyCode"
-            }
-          }
-        },
-        "guarantee": {
-          "type": "object",
-          "description": "Reservation guarantee details.",
-          "properties": {
-            "guaranteeCode": {
-              "type": "string",
-              "example": "CC",
-              "description": "Accepts Property Guarantee Code.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeCode and no guaranteeType is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
-            },
-            "guaranteeType": {
-              "type": "string",
-              "example": "5",
-              "description": "Accepts OTA Standard Guarantee Type.\nPossible Values : (5, 8, 19, 22, 38) where 5 = Credit Card, 8 = Deposit, 19 = Travel agency IATA number, 22 = Frequent guest, 38 = None.\nEither of guaranteeCode or guaranteeType should be provided.\nIf no guaranteeType and no guaranteeCode is provided the reservation will be created as Non Guaranteed (OTA Code : 38). Both guaranteeType and guaranteeCode should not be sent in a single reservation request; if sent the reservation would be rejected.\n"
-            },
-            "onHold": {
-              "type": "boolean",
-              "example": false,
-              "description": "If true indicates this Guarantee Code is used only to hold the inventory during reservation process."
-            }
-          }
-        },
-        "printRate": {
-          "type": "boolean",
-          "description": "Defines if the rate is printed on various correspondence. Possible values are 'true' or 'false'.",
-          "example": false
-        }
-      },
-      "required": [
-        "arrivalDate",
-        "departureDate",
-        "roomRates"
-      ]
-    },
-    "ReservationGuestRequest": {
-      "type": "object",
-      "description": "Reservation Guest Information",
-      "properties": {
-        "profileInfo": {
-          "type": "object",
-          "properties": {
-            "profileIdList": {
-              "$ref": "#/definitions/ProfileIdListRequest"
-            },
-            "profile": {
-              "$ref": "#/definitions/Profile"
-            }
-          },
-          "required": [
-            "profile"
-          ]
-        },
-        "primary": {
-          "type": "boolean",
-          "example": true,
-          "description": "Indicates if the profile is primary if multiple profiles of the same type are being sent. Should be true by default if only one profile of same type is sent"
-        },
-        "arrivalTransport": {
-          "description": "Arrival Transport details of the Guest",
-          "$ref": "#/definitions/ReservationTransport"
-        },
-        "departureTransport": {
-          "description": "Departure Transport details of the Guest",
-          "$ref": "#/definitions/ReservationTransport"
-        }
-      },
-      "required": [
-        "profileInfo"
-      ]
-    },
-    "ReservationGuestResponse": {
-      "type": "object",
-      "description": "Reservation Guest Information",
-      "properties": {
-        "profileInfo": {
-          "type": "object",
-          "properties": {
-            "profileIdList": {
-              "$ref": "#/definitions/ProfileIdListResponse"
-            },
-            "profile": {
-              "$ref": "#/definitions/Profile"
-            }
-          },
-          "required": [
-            "profile"
-          ]
-        },
-        "primary": {
-          "type": "boolean",
-          "example": true,
-          "description": "Indicates if the profile is primary if multiple profiles of the same type are being sent. Should be true by default if only one profile of same type is sent"
-        },
-        "arrivalTransport": {
-          "description": "Arrival Transport details of the Guest",
-          "$ref": "#/definitions/ReservationTransport"
-        },
-        "departureTransport": {
-          "description": "Departure Transport details of the Guest",
-          "$ref": "#/definitions/ReservationTransport"
-        }
-      },
-      "required": [
-        "profileInfo"
-      ]
-    },
-    "ReservationTransport": {
+    "InfoRoomRate": {
       "type": "object",
       "properties": {
-        "comments": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000,
-          "description": "Any additional info regarding the travel can be sent here"
-        },
-        "type": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Method of conveyance of the guest. For Ex : Air, Rail, Bus, Private Auto, Boat, Other"
-        },
-        "transportCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Enter the transportation Code such as the airline flight number/city of origin applicable to the guest mode of transportation upon arrival. For example Flight 1660"
-        },
-        "carrierCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Enter the code associated with the air, rail, bus or car rental transport company being used by this guest at arrival; for example, Delta, Amtrak, Greyhound, Avis."
-        },
-        "stationCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Enter the code for the airport, bus station or other location of the guest arrival; for example, JFK International, Penn Station, Port Authority Bus Terminal."
-        },
-        "dateTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Enter the expected time here"
-        },
-        "transportationReqd": {
-          "type": "boolean",
-          "description": "Indicates if transportation is required or not"
-        }
-      }
-    },
-    "ProfileIdListRequest": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique ID associated with that profile"
-          },
-          "idContext": {
-            "type": "string",
-            "example": "Central",
-            "description": "The Context of the ID sent above. Possible Values : Central"
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of profile being sent Possible Values : Guest, TravelAgent, Source, Company"
-          }
-        }
-      }
-    },
-    "ProfileIdListResponse": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique ID associated with that profile"
-          },
-          "idContext": {
-            "type": "string",
-            "example": "Central",
-            "description": "The Context of the ID sent above. Possible Values : Central"
-          },
-          "type": {
-            "type": "string",
-            "description": "The type of profile being sent Possible Values : Guest, TravelAgent, Source, Company and Profile"
-          }
-        }
-      }
-    },
-    "Profile": {
-      "type": "object",
-      "properties": {
-        "customer": {
+        "rates": {
           "type": "object",
           "properties": {
-            "personName": {
+            "rate": {
               "type": "array",
               "minItems": 1,
               "items": {
-                "$ref": "#/definitions/PersonName"
+                "$ref": "#/definitions/RoomRate"
               }
-            },
-            "language": {
-              "description": "Reservation Language Code",
-              "type": "string",
-              "example": "en-us"
             }
           },
           "required": [
-            "personName"
+            "rate"
           ]
         },
-        "profileType": {
-          "$ref": "#/definitions/ProfileType"
+        "guestCounts": {
+          "$ref": "#/definitions/GuestCount"
         },
-        "companyInfo": {
+        "reservationBlock": {
           "type": "object",
+          "description": "Block related information",
           "properties": {
-            "companyName": {
-              "type": "string",
-              "description": "Name of the associated Company, Source or Travel Agent"
-            },
-            "email": {
-              "type": "string",
-              "description": "Email of Guest",
-              "example": "customer@example.com"
-            },
-            "phoneNumber": {
-              "type": "string",
-              "description": "Phone number of Guest",
-              "example": "415.555.0100"
-            },
-            "address": {
-              "$ref": "#/definitions/Address"
+            "blockIdList": {
+              "description": "List of Block Ids",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BlockIdList"
+              }
             }
           }
-        }
-      }
-    },
-    "ProfileType": {
-      "type": "string",
-      "enum": [
-        "Guest",
-        "TravelAgent",
-        "Source",
-        "Company"
-      ],
-      "example": "Guest",
-      "description": "The type of profile being sent"
-    },
-    "PersonName": {
-      "type": "object",
-      "properties": {
-        "givenName": {
-          "type": "string",
-          "description": "Given Name of Guest",
-          "example": "Mary"
         },
-        "surname": {
+        "roomType": {
           "type": "string",
-          "description": "Last Name of Guest",
-          "minLength": 2,
-          "example": "Smith"
+          "description": "Room Type Code for which the reservation is requested for.",
+          "example": "XA1K"
         },
-        "nameTitle": {
+        "ratePlanCode": {
           "type": "string",
-          "description": "Title of Guest",
-          "example": "Mr and Mrs"
+          "description": "* Rate Plan Code for which the reservation is requested.\n* Rate plan code is mandatory for Transient ( non Block) reservation requests.\n* Rate Plan Code is optional if the reservation is for a Business Block.\n",
+          "example": "XDAILY"
         },
-        "nameType": {
+        "roomId": {
           "type": "string",
-          "description": "Name Type. Valid value 'Primary'",
-          "example": "Primary"
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Room Number to be assigned to the reservation.",
+          "example": "301"
         },
-        "email": {
+        "suppressRate": {
+          "type": "boolean",
+          "description": "Used to suppress the display of the room rate in various correspondence. Possible values are 'true' or 'false'.",
+          "example": true
+        },
+        "numberOfUnits": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of rooms to be booked for this reservation",
+          "example": 1
+        },
+        "marketCode": {
           "type": "string",
-          "description": "Email of Guest",
-          "example": "customer@example.com"
+          "description": "The code that relates to the market being sold to (e.g., the corporate market, packages).",
+          "example": "BR"
         },
-        "phoneNumber": {
+        "sourceCode": {
           "type": "string",
-          "description": "Phone number of Guest",
-          "example": "415.555.0100"
+          "description": "To specify where the business came from e.g.radio, newspaper ad, etc.",
+          "example": "OTA"
         },
-        "address": {
-          "$ref": "#/definitions/Address"
+        "start": {
+          "description": "Effective Start Date of the room rate.\n* Value must be of format 'date'\n",
+          "type": "string",
+          "format": "date",
+          "example": "2024-05-16"
+        },
+        "end": {
+          "description": "Effective End Date of the room rate.\n* Value must be of format 'date'\n",
+          "type": "string",
+          "format": "date",
+          "example": "2024-05-16"
         }
       },
       "required": [
-        "surname"
+        "rates",
+        "guestCounts",
+        "roomType",
+        "start",
+        "end"
       ]
-    },
-    "Address": {
-      "type": "object",
-      "properties": {
-        "addressLine": {
-          "description": "Guest Address Details",
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "example": [
-            "Street 7031 Columbia Gateway Dr."
-          ]
-        },
-        "cityName": {
-          "description": "Name of the City",
-          "type": "string",
-          "example": "Columbia"
-        },
-        "postalCode": {
-          "description": "Postal Code of the Guest Address",
-          "type": "string",
-          "example": "Z23457A9"
-        },
-        "country": {
-          "$ref": "#/definitions/Country"
-        },
-        "state": {
-          "description": "State Code.",
-          "type": "string",
-          "example": "MD"
-        }
-      }
-    },
-    "Country": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string",
-          "description": "Supported codes for countries are ISO 3166-1 Alpha-2 values only, ie. US, not USA.",
-          "example": "US"
-        }
-      }
-    },
-    "CurrencyCode": {
-      "type": "string",
-      "description": "The rate currency code. This should be ISO currency code.\n  *  Matches regex pattern: [A-Z]{3}\n  *  Length of string must be less than, or equal to 3\n  *  Length of string must be greater than, or equal to 3\n",
-      "example": "USD"
-    },
-    "PaymentMethod": {
-      "type": "object",
-      "properties": {
-        "paymentMethod": {
-          "type": "string",
-          "description": "Indicated how the payment would be done Possible Values : 5 (for Credit Card) and 1 (for Cash)",
-          "example": "1"
-        },
-        "folioView": {
-          "type": "string",
-          "description": "folio number for payment method (example: use 1 for guest guarantee, 2 for company/travel agent guarantee)",
-          "example": "1"
-        },
-        "paymentCard": {
-          "$ref": "#/definitions/PaymentCard"
-        }
-      },
-      "required": [
-        "paymentMethod"
-      ]
-    },
-    "ReservationSpecialRequestsResponse": {
-      "type": "object",
-      "properties": {
-        "requestCodes": {
-          "description": "Collection of special requests such as Preferences for a reservation guest",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RequestCodesResponse"
-          }
-        },
-        "requestCodeType": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "example": "SPECIALS",
-          "description": "Group code of special request such as specials, feature, bed feature, etc."
-        },
-        "requestCodeTypeContext": {
-          "type": "string",
-          "description": "It represents request code and request type are OHD configured values.",
-          "enum": [
-            "Central"
-          ]
-        }
-      }
-    },
-    "Promotion": {
-      "type": "object",
-      "description": "Details of Promotion attached to the reservation.",
-      "properties": {
-        "promotionCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Promotion code associated with the promotional offers.",
-          "example": "CASINO"
-        },
-        "promotionName": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "description": "Descriptive name of promotion code.",
-          "example": "Casino Promotion"
-        }
-      }
-    },
-    "ReservationPackages": {
-      "type": "object",
-      "properties": {
-        "scheduleList": {
-          "description": "A HotelPackageSchedule type.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/ScheduleList"
-          }
-        },
-        "packageCode": {
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20,
-          "example": "SUMPKG1",
-          "description": "Package code. This is the unique code used for the package and is a required element."
-        },
-        "startDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8,
-          "example": "2023-06-12",
-          "description": "Required value when changing a reservation package. If the original start date was null, then null is required."
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date",
-          "maxLength": 8,
-          "example": "2023-06-14",
-          "description": "Required value when changing a reservation package. If the original end date was null, then null is required."
-        },
-        "source": {
-          "type": "string",
-          "example": "Reservation",
-          "description": "Sources of Products."
-        }
-      }
     },
     "RequestCodes": {
       "type": "object",
@@ -2842,203 +3008,109 @@
         }
       }
     },
-    "RequestCodesResponse": {
-      "type": "object",
-      "properties": {
-        "requestCodeValue": {
-          "description": "Special request code from OHD configuration",
-          "example": "PILLOW",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 200
-        },
-        "requestCodeDescription": {
-          "description": "Special request's description or name.",
-          "example": "Additional Pillows",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 2000
-        }
+    "CancelResponse": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CancelResponseItem"
       }
     },
-    "BlockIdList": {
+    "CancelResponseItem": {
       "type": "object",
       "properties": {
-        "id": {
-          "description": "Unique OPERA Block ID which is a primary identification of a Block in OPERA.",
-          "type": "string",
-          "maxLength": 40,
-          "example": "ABCEVENT0523"
-        },
-        "type": {
-          "description": "Type of the Block Id. Valid value 'BlockCode'",
-          "type": "string",
-          "enum": [
-            "BlockCode"
+        "reservationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CancelReservationIdResponse"
+          },
+          "example": [
+            {
+              "id": "5030863",
+              "type": "Others",
+              "idContext": "CH1",
+              "idExtension": "1"
+            },
+            {
+              "id": "LZDI6496738895",
+              "type": "Confirmation",
+              "idContext": "Central",
+              "idExtension": "1"
+            },
+            {
+              "id": "2342342",
+              "type": "Reservation",
+              "idContext": "Central",
+              "idExtension": "1"
+            },
+            {
+              "id": "YMWSGD-1631707751742-8812771",
+              "type": "Cancellation",
+              "idContext": "Central",
+              "idExtension": "1"
+            }
           ]
-        }
-      }
-    },
-    "ScheduleList": {
-      "type": "object",
-      "properties": {
-        "consumptionDate": {
-          "description": "The date the package was used or can be used.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8,
-          "example": "2023-12-17"
         },
-        "unitPrice": {
-          "description": "The price per unit of the package.",
-          "type": "number",
-          "example": 50
-        },
-        "totalQuantity": {
-          "description": "The total quantity of the package for this date, calculated based on the calculation rule as defined in the PackageHeaderType",
-          "type": "integer",
-          "format": "int32",
-          "example": 1
-        },
-        "reservationDate": {
-          "description": "The date of the Reservation when this package is applicable. This can be different from the date the package will be consumed. Example are next day packages. Reservation date is when the package is applied to the guest and Consumption date is when the guest can consume the package.",
-          "type": "string",
-          "format": "date",
-          "maxLength": 8,
-          "example": "2023-12-17"
-        }
-      }
-    },
-    "ReservationMembership": {
-      "type": "object",
-      "description": "Details of the membership added to the reservation.",
-      "properties": {
-        "membershipLevel": {
-          "type": "string",
-          "example": "ENTRY",
-          "description": "Code that designates this membership level."
-        },
-        "membershipId": {
-          "type": "string",
-          "example": "O12345F",
-          "description": "The guest's membership ID number"
-        },
-        "membershipType": {
-          "type": "string",
-          "example": "MF",
-          "description": "The membership type belonging to the program the guest is enrolled with"
-        }
-      },
-      "required": [
-        "membershipId"
-      ]
-    },
-    "MembershipComment": {
-      "type": "object",
-      "properties": {
-        "text": {
+        "reservationPayload": {
           "type": "object",
           "properties": {
-            "value": {
+            "lastModifyDateTime": {
               "type": "string",
-              "example": "text value"
+              "format": "date-time",
+              "description": "Date and time when this reservation was last updated, including time zone information. Timestamp as defined in ISO 8601 format and always be in the following format: YYYY-MM-DDThh:mm:ssZ (time is UTC).",
+              "example": "2023-11-17T12:21:00Z"
             },
-            "language": {
+            "hotelCode": {
+              "description": "The unique identifier of the Property in Channel system.",
               "type": "string",
-              "example": "English"
+              "example": "XUSXXYY99"
+            },
+            "reservationStatus": {
+              "type": "string",
+              "enum": [
+                "Reserved",
+                "ReservedChanged",
+                "Cancelled",
+                "OnHold"
+              ],
+              "example": "Cancelled"
             }
-          }
-        }
-      }
-    },
-    "Benefit": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string",
-          "example": "benefit code"
-        },
-        "message": {
-          "type": "string",
-          "example": "message"
-        },
-        "inactive": {
-          "type": "boolean",
-          "example": false
-        }
-      }
-    },
-    "PaymentCard": {
-      "type": "object",
-      "properties": {
-        "cardType": {
-          "description": "Type of the Credit Card",
-          "type": "string",
-          "example": "MC"
-        },
-        "cardNumber": {
-          "description": "Full Card Number or the Card Token",
-          "type": "string",
-          "example": "5105105105105100"
-        },
-        "expirationDate": {
-          "description": "Expiration date in format MM/YY",
-          "type": "string",
-          "pattern": "^((?:0[1-9]|1[0-2])\\/([0-9][0-9])|(?:\\d{4})-(?:0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]))$",
-          "example": "06/23"
-        },
-        "cardHolderName": {
-          "description": "Credit card holder name",
-          "type": "string",
-          "example": "Mary Smith"
-        },
-        "cardNumberMasked": {
-          "description": "Masked card number.",
-          "example": "XXXXXXXXXXXX0005",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "cardOrToken": {
-          "description": "This contains information on whether credit card is tokenized (token enabled). A value of 'Token' indicates cardNumber holds token value and 'CardNumber' indicates cardNumber holds credit card number.",
-          "type": "string",
-          "enum": [
-            "CardNumber",
-            "Token"
+          },
+          "required": [
+            "reservationStatus"
           ]
-        },
-        "citId": {
-          "type": "string",
-          "description": "Customer Initiated Transaction(CIT) Id for Credit Cards. This is only used when PAYMENT SERVICES DIRECTIVE (PSD2) Opera Control is active.",
-          "minLength": 0,
-          "maxLength": 16,
-          "example": "654321ABC1234578"
         }
       },
       "required": [
-        "cardType",
-        "cardNumber",
-        "expirationDate",
-        "cardHolderName"
+        "reservationIds",
+        "reservationPayload"
       ]
     }
   },
   "parameters": {
-    "language": {
-      "name": "lang",
-      "in": "query",
-      "description": "Language.",
+    "hotelCodePath": {
+      "name": "hotelCode",
+      "description": "The unique identifier of the Property in Channel system.",
       "type": "string",
-      "required": false,
-      "x-example": "en-GB"
+      "in": "path",
+      "required": true,
+      "minLength": 1,
+      "x-example": "XUSXXYY99"
     },
-    "x-request-id": {
-      "name": "x-request-id",
+    "x-tracing-key": {
+      "name": "x-hdp-tracing-key",
       "in": "header",
       "description": "Unique tracing key e.g. 4664ab3423434a45",
-      "required": false,
+      "required": true,
       "type": "string",
       "x-example": "4664ab3423434a45"
+    },
+    "confirmationNumberPath": {
+      "name": "confirmationNum",
+      "description": "Opera Confirmation number",
+      "type": "string",
+      "in": "path",
+      "required": true,
+      "minLength": 1,
+      "x-example": "89786934"
     },
     "authKey": {
       "name": "authorization",
@@ -3046,14 +3118,6 @@
       "description": "Bearer token that needs to be passed which is generated post user authentication",
       "required": true,
       "type": "string"
-    },
-    "appKey": {
-      "name": "x-app-key",
-      "in": "header",
-      "description": "OHIP Partner",
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
-      "type": "string",
-      "required": false
     },
     "channelCodeHeader": {
       "name": "x-channelCode",
@@ -3064,23 +3128,26 @@
       "required": true,
       "x-example": "CH1"
     },
-    "hotelCodePath": {
-      "name": "hotelCode",
-      "description": "The unique identifier of the Property in Channel system.",
+    "appKey": {
+      "name": "x-app-key",
+      "in": "header",
+      "description": "OHIP Partner",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
       "type": "string",
-      "in": "path",
-      "required": true,
-      "minLength": 1,
-      "x-example": "XUSXXYY99"
+      "required": false
     },
-    "confirmationNumberPath": {
-      "name": "confirmationNum",
-      "description": "Opera Confirmation number",
+    "x-request-id": {
+      "name": "x-request-id",
       "type": "string",
-      "in": "path",
-      "required": true,
-      "minLength": 1,
-      "x-example": "89786934"
+      "description": "Unique tracing key e.g. 4664ab3423434a45",
+      "in": "header",
+      "x-example": "4664ab3423434a45"
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
     }
   },
   "responses": {
