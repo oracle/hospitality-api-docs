@@ -10,8 +10,6 @@ To understand these Postman collections register to watch this free on demand  [
 
 The Postman collections are now available in our [online Postman workspace](https://www.postman.com/hospitalityapis/workspace/oracle-hospitality-apis/overview).
 
-Note that some of these APIs are v0 - these are our Early Adopter APIs.  To find out what these are and how to get access to these register to watch this on demand video [Why be an OHIP Early Adopter](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).
-
 ## Get Help
 
 Ask questions by sending us an email to <hospitality-integrations_ww@oracle.com>.
