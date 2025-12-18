@@ -1,36 +1,104 @@
-# Oracle Hospitality APIs
+# Oracle Hospitality API Documentation
 
-This repository stores REST API specifications and accompanying Postman collections for Oracle Hospitality APIs.
+This repository contains OpenAPI specifications, Postman collections, GraphQL schemas, and TypeScript type definitions for Oracle Hospitality APIs.
 
-For more information see [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/).
+## Contents
 
-Want help getting started with OHIP?  Register for this free on demand webcast [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).
+- **[rest-api-specs/](rest-api-specs/)** - OpenAPI/Swagger specifications for REST APIs
+  - Property Management APIs
+  - Distribution APIs
+  - NOR1 Integration APIs
+  
+- **[postman-collections/](postman-collections/)** - Postman collections for API testing
 
-Specifications for Oracle Hospitality REST APIs are held in the [rest-api-specs](rest-api-specs) folder while Postman collections are held in the [postman-collection](postman-collections) folder.
+- **[graphql/](graphql/)** - GraphQL schemas for data and streaming APIs
 
-## Get Help
+- **[types/](types/)** - Auto-generated TypeScript type definitions
 
-Ask questions on by sending us an email to <hospitality_apis_ww_grp@oracle.com>.
+## TypeScript Types
 
-## Getting Started
+This repository includes auto-generated TypeScript type definitions from the OpenAPI specifications. These types can be used in TypeScript projects via git submodule.
 
-- Learn how to [contribute](CONTRIBUTING.md)
-- See [issues](https://github.com/oracle/hospitality-api-docs/issues) for issues you can help with.
+### Quick Start
 
-## Contributing
+```bash
+# Install dependencies
+npm install
 
-This project welcomes contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md)
+# Generate TypeScript types
+npm run build:types
 
-## Security
+# Clean and regenerate
+npm run rebuild
+```
 
-Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process
+### Using Types in Your Project
+
+See [TYPES_USAGE.md](TYPES_USAGE.md) for detailed instructions on:
+- Adding this repo as a git submodule
+- Configuring TypeScript path mappings
+- Usage examples for all APIs
+- Updating types when specs change
+
+### Example Usage
+
+```typescript
+import type { paths, definitions } from '@oracle/api-types/property/rsv';
+
+type Reservation = definitions['Reservation'];
+type CreateReservationRequest = 
+  paths['/reservations']['post']['requestBody']['content']['application/json'];
+```
+
+## Available APIs
+
+### Property APIs
+- **Reservations** (`rsv`) - Reservation management
+- **CRM** (`crm`) - Customer relationship management
+- **Events** (`evm`) - Catering and events management
+- **Front Office** (`fof`) - Front office operations
+- **Cashiering** (`csh`) - Cashiering and billing
+- **Housekeeping** (`hsk`) - Housekeeping management
+- **Blocks** (`blk`) - Block management
+- **Activities** (`act`) - Activity management
+- And many more...
+
+### Distribution APIs
+- **Distribution** - Main distribution API
+- **Shop** - Availability and rate shopping
+- **Book** - Reservation booking
+- **Content** - Property content management
+- **Authentication** - OAuth authentication
+
+### NOR1 APIs
+- **Upsell Offers** - Published upsell offers
+
+## Scripts
+
+- `npm run build:types` - Generate TypeScript types from OpenAPI specs
+- `npm run clean` - Remove generated types directory
+- `npm run rebuild` - Clean and regenerate all types
+
+## Documentation
+
+- [TYPES_USAGE.md](TYPES_USAGE.md) - Comprehensive guide for using TypeScript types
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+- [SECURITY.md](SECURITY.md) - Security policy
+- [LICENSE.txt](LICENSE.txt) - Universal Permissive License v 1.0
+
+## Requirements
+
+- Node.js 14.0.0 or higher
+- TypeScript 5.x (for consuming projects)
 
 ## License
 
-This project and all content within is available under the [Universal Permissive License v 1.0](https://oss.oracle.com/licenses/upl).
+This project is licensed under the Universal Permissive License v 1.0 (UPL).
 
-See [LICENSE](LICENSE.txt) for more details.
+Copyright (c) 2020, 2025 Oracle and/or its affiliates.
 
-## Copyright
+## Support
 
-Copyright (c) 2021, 2025 Oracle and/or its affiliates.
+For more information about Oracle Hospitality APIs, visit:
+- [Oracle Hospitality Documentation](https://docs.oracle.com/en/industries/hospitality/integration_platforms.html)
+- [OPERA Cloud APIs](https://docs.oracle.com/en/industries/hospitality/opera-cloud-services.html)
