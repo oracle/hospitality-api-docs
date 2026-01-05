@@ -8,4 +8,4 @@ Click to [<img src="../run-in-postman.svg" alt="Run In Postman" style="width: 12
 
 Click to [<img src="../run-in-postman.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://www.postman.com/hospitalityapis/oracle-hospitality-apis/collection/15729853-706f9505-6067-42a9-a311-e35051554bfc/2-property-rest-api-workflows/fork?origin=tab) our Workflows collection, [explained here](WORKFLOWS.md).
 
-This document and all content within is available under the [Universal Permissive License v 1.0](https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.
+This document and all content within is available under the [Universal Permissive License v 1.0](https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.
