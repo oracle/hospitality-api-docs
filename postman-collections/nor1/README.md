@@ -6,4 +6,4 @@ Both Postman collections use the [oracle-hospitality Postman Environment](../ora
 
 Click to [<img src="../run-in-postman.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://www.postman.com/hospitalityapis/oracle-hospitality-apis/collection/46029196-53613a8c-53f4-4708-b94f-3df6071acccc/4-nor1-upgrade-rest-apis/fork?origin=tab).
 
-This document and all content within is available under the [Universal Permissive License v 1.0](https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2025 Oracle and/or its affiliates.
+This document and all content within is available under the [Universal Permissive License v 1.0](https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.

@@ -31,4 +31,4 @@ See [LICENSE](../LICENSE.txt) for more details.
 
 ## Copyright
 
-Copyright (c) 2021, 2025 Oracle and/or its affiliates.
+Copyright (c) 2021, 2026 Oracle and/or its affiliates.
