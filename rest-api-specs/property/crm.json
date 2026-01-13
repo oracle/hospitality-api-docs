@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Customer Relationship Management API",
-    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.<br /><br /> There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much  more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br />Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 20.99.99.99.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.<br /><br /> There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much  more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -12508,7 +12508,7 @@
             "name": "phone",
             "in": "query",
             "required": false,
-            "description": "The phone number assoicated to the profile.",
+            "description": "The phone number associated to the profile.",
             "type": "string"
           },
           {
@@ -12517,6 +12517,14 @@
             "required": false,
             "description": "The email address associated to the profile.",
             "type": "string"
+          },
+          {
+            "name": "lastStayBefore",
+            "in": "query",
+            "required": false,
+            "description": "Date to filter profiles with stays before.",
+            "type": "string",
+            "format": "date"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -20665,6 +20673,60 @@
             "required": false
           },
           {
+            "name": "centralOriginalId",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value for a central system. The ID attribute may be used to reference a primary-key value within a central database..",
+            "type": "string"
+          },
+          {
+            "name": "centralOriginalIdContext",
+            "in": "query",
+            "required": false,
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "type": "string"
+          },
+          {
+            "name": "centralOriginalIdType",
+            "in": "query",
+            "required": false,
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "type": "string"
+          },
+          {
+            "name": "centralToBeMergedId",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A unique identifying value for a central system. The ID attribute may be used to reference a primary-key value within a central database.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "centralToBeMergedIdContext",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "centralToBeMergedIdType",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "A reference to the type of object defined by the UniqueID element.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -21506,6 +21568,145 @@
             "schema": {
               "$ref": "#/definitions/reProcessStageRecords"
             }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "Profile"
+        ]
+      }
+    },
+    "/reProcessStageRecords/logs": {
+      "get": {
+        "summary": "Get reProcess stage records logs.",
+        "description": "Use this API to fetch logs for reProcess and rematch operations. The log can be filtered by date, users, and job ID.<p><strong>OperationId:</strong>getReProcessStageRecordsLogs</p>",
+        "operationId": "getReProcessStageRecordsLogs",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "in": "query",
+            "required": false,
+            "description": "Fetch logs from this date (inclusive).",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "users",
+            "in": "query",
+            "required": false,
+            "description": "User(s) who initiated the process. Can be comma separated or supplied as multiple params.",
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "integer",
+              "maxItems": 40
+            }
+          },
+          {
+            "name": "jobId",
+            "in": "query",
+            "required": false,
+            "description": "Job ID to fetch logs for a specific process/job.",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records this api should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetch reProcess stage records logs. This object contains a collection of logs for each job/process request, including job id, log type, log content, record counts, date/time, and user.",
+            "schema": {
+              "$ref": "#/definitions/reProcessStageRecordsLogInfo"
+            }
+          },
+          "204": {
+            "description": "Logs not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -24871,6 +25072,131 @@
           },
           "204": {
             "description": "SuspendedStays not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "SuspendedStay"
+        ]
+      }
+    },
+    "/suspendedStaysErrorsSummary": {
+      "get": {
+        "summary": "Get suspended stays errors summary",
+        "description": "Use this API to fetch the suspended stays errors summary.",
+        "operationId": "getSuspendedStaysErrorsSummary",
+        "parameters": [
+          {
+            "name": "getByProperty",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether to fetch errors summary by property",
+            "type": "boolean"
+          },
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "description": "Filter by specific property",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 20,
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer",
+            "maximum": 200
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching suspended stays errors summary",
+            "schema": {
+              "$ref": "#/definitions/suspendedStaysErrorsSummaryResponse"
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -35171,6 +35497,12 @@
           "minLength": 0,
           "maxLength": 20
         },
+        "flexFieldExternalProfileId": {
+          "description": "Unique Identifier of the Profile on the External System that would be fetched against flexFieldExternalProfileId. (For internal use only).",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
         "eligibleForFiscalFolio": {
           "description": "Eligible for Fiscal Folio/Payload generation.",
           "type": "string",
@@ -38458,6 +38790,13 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "netRevenueByTransactionType": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticsRevenueTypeType"
+          }
         }
       }
     },
@@ -38565,6 +38904,13 @@
         },
         "year": {
           "type": "string"
+        },
+        "netRevenueByTransactionType": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/statisticsRevenueTypeType"
+          }
         }
       }
     },
@@ -38968,6 +39314,10 @@
         "revenueBucketsSummary": {
           "description": "Details about revenue summary.",
           "$ref": "#/definitions/revenueBucketListType"
+        },
+        "revenueTransactionCodes": {
+          "description": "Details about revenue by transaction codes.",
+          "$ref": "#/definitions/revenueTransactionCodeListType"
         },
         "year": {
           "description": "Year of the revenue.",
@@ -41294,6 +41644,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "offshoreEligible": {
+          "description": "Indicates whether the profile is eligible to use offshore rates or not.",
+          "type": "boolean"
         }
       }
     },
@@ -44622,6 +44976,10 @@
       "description": "Criteria to identify the profiles to be forgotten.",
       "properties": {
         "profiles": {
+          "description": "Collection of Unique Identifiers of profiles to be forgotten.",
+          "$ref": "#/definitions/profiles"
+        },
+        "centralProfiles": {
           "description": "Collection of Unique Identifiers of profiles to be forgotten.",
           "$ref": "#/definitions/profiles"
         }
@@ -48031,6 +48389,223 @@
         "MatchingProfiles",
         "StagedAndMatchingProfiles"
       ]
+    },
+    "reProcessStageRecordsLogInfo": {
+      "type": "object",
+      "description": "Response object for fetch reProcessStageRecords logs.",
+      "properties": {
+        "logs": {
+          "type": "array",
+          "description": "List of reprocess/rematch job logs.",
+          "items": {
+            "$ref": "#/definitions/reProcessStageRecordLogEntry"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Page offset index",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Maximum number of records returned",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Number of records in current response",
+          "type": "integer"
+        },
+        "totalResults": {
+          "description": "Total number of records matching criteria",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Whether more results are available to fetch",
+          "type": "boolean"
+        }
+      }
+    },
+    "reProcessStageRecordLogEntry": {
+      "type": "object",
+      "description": "A log entry for a reprocess/rematch job.",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "description": "ID of the reprocess/rematch job."
+        },
+        "recordsProcessed": {
+          "type": "integer",
+          "description": "Number of records processed in this job."
+        },
+        "successful": {
+          "type": "integer",
+          "description": "Number of records successfully processed."
+        },
+        "created": {
+          "type": "integer",
+          "description": "Number of records successfully created."
+        },
+        "merged": {
+          "type": "integer",
+          "description": "Number of records successfully merged."
+        },
+        "failed": {
+          "type": "integer",
+          "description": "Number of records failed to process."
+        },
+        "dateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time when log entry was created/completed."
+        },
+        "user": {
+          "type": "string",
+          "description": "User who initiated/executed this job."
+        },
+        "state": {
+          "type": "string",
+          "description": "State information of the job."
+        }
+      }
+    },
+    "suspendedStaysErrorsSummaryResponse": {
+      "type": "object",
+      "properties": {
+        "suspendedStaysErrorsSummary": {
+          "$ref": "#/definitions/suspendedStaysErrorsSummaryType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "suspendedStaysErrorsSummaryType": {
+      "type": "object",
+      "properties": {
+        "errorsSummary": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/suspendedStaysErrorsSummary"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "suspendedStaysErrorsSummary": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "description": "Property related to the errors",
+          "type": "string"
+        },
+        "errorsDescription": {
+          "description": "Description of the errors",
+          "type": "string"
+        },
+        "errorCount": {
+          "description": "Number of errors",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "errorsDescription",
+        "errorCount"
+      ]
+    },
+    "revenueTransactionCodeListType": {
+      "type": "object",
+      "description": "List of revenue by transaction codes.",
+      "properties": {
+        "revenueTransactionCodes": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/revenueTransactionCode"
+          }
+        }
+      }
+    },
+    "revenueTransactionCode": {
+      "type": "object",
+      "description": "Revenue by transaction codes.",
+      "properties": {
+        "transactionDate": {
+          "description": "Transaction date.",
+          "type": "string",
+          "format": "date",
+          "maxLength": 8
+        },
+        "transactionCode": {
+          "description": "Transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "transactionCodeDescription": {
+          "description": "Description of transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "transactionCodeType": {
+          "description": "Transaction code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2
+        },
+        "transactionCodeTypeDescription": {
+          "description": "Description of transaction code type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "centralRevenue": {
+          "description": "Central Revenue for Stay.",
+          "type": "number"
+        },
+        "localRevenue": {
+          "description": "Local Revenue for Stay.",
+          "type": "number"
+        },
+        "qualifyingForPoints": {
+          "description": "Flag to indicate if revenue qualifies for points.",
+          "type": "boolean"
+        }
+      }
     }
   },
   "tags": [

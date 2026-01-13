@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block Reservation Asynchronous API",
-    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -2123,7 +2123,399 @@
           "BlockAsync"
         ]
       }
-    }
+    },
+    "/hotels/{hotelId}/blocks/{blockId}/async": {
+        "post": {
+                "summary": "Use this API to retrieve a Block by ID using an asynchronous process.",
+                "description": "Initiates an asynchronous operation to retrieve a block by ID.  You will need to know the blockID in the request; if you don't know it, please go ahead and use getBlocks API first.  The response will include detailed information about the block. <p><strong>OperationId:</strong>postStartFetchBlockProcess</p>",
+                "operationId": "postStartFetchBlockProcess",
+                "x-interaction": [
+                    "async-polling"
+                ],
+                "parameters": [
+                    {
+                        "name": "hotelId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    },
+                    {
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+                    },
+ 
+                    {
+                        "name": "markAsRecentlyAccessed",
+                        "in": "query",
+                        "required": false,
+                        "description": "Mark this block as recently accessed.",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "fetchInstructions",
+                        "in": "query",
+                        "type": "array",
+                        "collectionFormat": "multi",
+                        "description": "Type for block instructions that can be used in requests for partial operations.",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "AccessExclusions",
+                                "Aliases",
+                                "AlternateDates",
+                                "Attachments",
+                                "Block",
+                                "BlockNextStatuses",
+                                "BlockStatusHistory",
+                                "CatNextStatuses",
+                                "CatStatusHistory",
+                                "CentralSalesLeads",
+                                "Comments",
+                                "DateProtect",
+                                "ExternalReferences",
+                                "GenericRateGrid",
+                                "Header",
+                                "Indicators",
+                                "InventoryItems",
+                                "Owners",
+                                "Packages",
+                                "Policies",
+                                "PrimaryOwners",
+                                "PrimaryProfiles",
+                                "PrimaryRates",
+                                "Profiles",
+                                "RateGrid",
+                                "RateProgram",
+                                "Rates",
+                                "Restrictions",
+                                "SellMessages",
+                                "Statistics",
+                                "SummaryStatistics",
+                                "Traces",
+                                "WashSchedules"
+                            ]
+                        },
+                        "required": false
+                    },
+                    {
+                        "name": "fetchAllocatedRoomTypes",
+                        "in": "query",
+                        "required": false,
+                        "description": "Indicates whether to fetch only those room types that have rooms or rates allocated. If this flag is true then only those room types with rooms or rates allocated for the block are fetched. Only applicable to fetch instruction RateGrid.",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "description": "Start Date for the rate grid data. Only applicable to fetch instruction RateGrid.",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "numberOfDays",
+                        "in": "query",
+                        "required": false,
+                        "description": "Number of days to fetch for the rate grid data. Only applicable to fetch instruction RateGrid. If this query parameter is not provided, the API defaults to returning data for 7 days.",
+                        "type": "number"
+                    },
+                    {
+                        "name": "roomAllocationCriteria",
+                        "in": "query",
+                        "type": "array",
+                        "collectionFormat": "multi",
+                        "description": "Simple type for block allocation used in room rate grid.",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "Initial",
+                                "Actual",
+                                "Rates",
+                                "Pickup",
+                                "Contract",
+                                "Available",
+                                "Pickupperc",
+                                "Changes",
+                                "Released",
+                                "Houseavailability",
+                                "SellLimit",
+                                "AvailableSellLimit",
+                                "MasterAllocInitial",
+                                "Allocated",
+                                "SubAllocResv",
+                                "CutoffDate",
+                                "ForecastRooms",
+                                "ForecastRates"
+                            ]
+                        },
+                        "required": false
+                    },
+                    {
+                        "name": "roomTypes",
+                        "in": "query",
+                        "type": "array",
+                        "maxItems": 4000,
+                        "collectionFormat": "multi",
+                        "description": "The Room Types that need to be fetched for the rate room grid data. If these values are not provided, all room types for the block will be fetched.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "required": false
+                    },
+                    {
+                        "name": "fetchRoomTypesWithInventory",
+                        "in": "query",
+                        "required": false,
+                        "description": "Indicates whether to fetch only those room types that have rooms allocated. If this flag is true then only those room types with rooms allocated for the block are fetched. Only applicable to fetch instruction RateGrid.",
+                        "default": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "$ref": "#/parameters/authKey"
+                    }, {
+                      "$ref": "#/parameters/externalData"
+                    },
+                    {
+                        "$ref": "#/parameters/x-app-key"
+                    }, {
+                      "$ref": "#/parameters/x-request-id"
+                    }, {
+                      "$ref": "#/parameters/x-originating-application"
+                    },
+                    {
+                        "$ref": "#/parameters/x-hotelid"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept-Language"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            },
+                            "Location": {
+                                "type": "string",
+                                "description": "Location of process status resource"
+                            }
+                        },
+                        "description": "HATEOAS links which help the consumer to navigate to resources",
+                        "schema": {
+                            "$ref": "#/definitions/links"
+                        }
+                    }
+                },
+                "consumes": [
+                    "application/json;charset=UTF-8"
+                ],
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ],
+                "tags": [
+                    "BlockAsync"
+                ]
+          }
+        }, 
+        "/hotels/{hotelId}/blocks/{blockId}/async/{requestId}": {
+            "head": {
+                "summary": "This API returns the status of asynchronous process scheduled for given id.",
+                "description": " Use this to check whether the request sent have been processed or not. <p><strong>OperationId:</strong>headFetchBlockProcessStatus</p>",
+                "operationId": "headFetchBlockProcessStatus",
+                "parameters": [
+                    {
+                        "name": "hotelId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    },
+                    {
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    },
+                    {
+                        "$ref": "#/parameters/authKey"
+                    }, {
+                      "$ref": "#/parameters/externalData"
+                    },
+                    {
+                        "$ref": "#/parameters/x-app-key"
+                    }, {
+                      "$ref": "#/parameters/x-request-id"
+                    }, {
+                      "$ref": "#/parameters/x-originating-application"
+                    },
+                    {
+                        "$ref": "#/parameters/x-hotelid"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept-Language"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            },
+                            "Status": {
+                                "type": "string",
+                                "description": "Status of the requested process.",
+                                "enum": [
+                                    "Processing",
+                                    "Invalid"
+                                ]
+                            },
+                            "Cache-Control": {
+                                "type": "string",
+                                "description": "number of seconds to wait before polling again.",
+                                "x-example": "max-age=10"
+                            }
+                        },
+                        "description": "Response for status of scheduled asynchronous process."
+                    },
+                    "201": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            },
+                            "Status": {
+                                "type": "string",
+                                "description": "Status of the requested process.",
+                                "enum": [
+                                    "Completed"
+                                ]
+                            },
+                            "Location": {
+                                "type": "string",
+                                "description": "Location of newly created resource once the status of process run is Complete."
+                            }
+                        },
+                        "description": "Response for status of scheduled asynchronous process."
+                    }
+                },
+                "consumes": [
+                    "application/json;charset=UTF-8"
+                ],
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ],
+                "tags": [
+                    "BlockAsync"
+                ]
+            },
+            "get": {
+                "summary": "The API returns information about the block retrieval request.",
+                "description": "This API will fetch block information requested. <p><strong>OperationId:</strong>getFetchBlockProcess</p>",
+                "operationId": "getFetchBlockProcess",
+                "parameters": [
+                    {
+                        "name": "hotelId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    },
+                    {
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                    },
+                    {
+                        "$ref": "#/parameters/authKey"
+                    }, {
+                      "$ref": "#/parameters/externalData"
+                    },
+                    {
+                        "$ref": "#/parameters/x-app-key"
+                    }, {
+                      "$ref": "#/parameters/x-request-id"
+                    }, {
+                      "$ref": "#/parameters/x-originating-application"
+                    },
+                    {
+                        "$ref": "#/parameters/x-hotelid"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept-Language"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            }
+                        },
+                        "description": "Callback request object for fetched block Block information requested.",
+                        "schema": {
+                            "$ref": "#/definitions/block"
+                        }
+                    },
+                    "204": {
+                        "description": "getBlockProcessInfo not found."
+                    }
+                },
+                "consumes": [
+                    "application/json;charset=UTF-8"
+                ],
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ],
+                "tags": [
+                    "BlockAsync"
+                ]
+            }
+        }
   },
   "parameters": {
     "externalData": {

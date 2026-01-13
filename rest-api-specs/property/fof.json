@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Front Desk Operations Service",
-    "description": "APIs to cater for Front Desk Operations and Front Desk Statistic functionality in OPERA Cloud. <br /><br /> Front Desk features some of the most commonly used operations in OPERA Cloud, such as managing guest arrivals, managing in-house guests, and managing guest departures. Some additional tasks you can complete from the Front Desk menu are room searches, room assignments, and quick check outs as well as opening folios, creating registration cards, setting wake up calls, and sending messages to guests.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs to cater for Front Desk Operations and Front Desk Statistic functionality in OPERA Cloud. <br /><br /> Front Desk features some of the most commonly used operations in OPERA Cloud, such as managing guest arrivals, managing in-house guests, and managing guest departures. Some additional tasks you can complete from the Front Desk menu are room searches, room assignments, and quick check outs as well as opening folios, creating registration cards, setting wake up calls, and sending messages to guests.<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -14758,7 +14758,9 @@
                 "ExcludeRoomSuggestion",
                 "Keys",
                 "Voucher",
-                "ScheduledRoomMoves"
+                "ScheduledRoomMoves",
+                "TotalCostOfStay",
+                "TotalDepositPaid"
               ]
             },
             "required": false
@@ -21883,7 +21885,7 @@
           "$ref": "#/definitions/currencyAmountType"
         },
         "totalPayment": {
-          "description": "Total payment received for the reservation.",
+          "description": "Total of all payments on the guest ledger for the reservation.",
           "$ref": "#/definitions/currencyAmountType"
         },
         "roomRevenue": {
@@ -21912,6 +21914,10 @@
         },
         "compBalance": {
           "description": "Comp Balance amount",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "totalDepositPaid": {
+          "description": "Total of all deposit payment posted to the reservation.",
           "$ref": "#/definitions/currencyAmountType"
         }
       }
@@ -24157,7 +24163,8 @@
           "language": {
             "description": "Language identification.",
             "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+            "minLength": 0,
+            "maxLength": 20
           }
         },
         "description": "Language code for the translation."
@@ -26693,6 +26700,10 @@
             },
             "excludeBackToBackReservations": {
               "description": "When this flag is set to true, it will exclude the linked reservations which are marked as Back to Back in the result.Marking reservations as Back to Back is available when the Back to Back Handling for Linked Reservations OPERA control is active.",
+              "type": "boolean"
+            },
+            "includeScheduledMoveOutRoom": {
+              "description": "Indicates if Move Out rooms are to be included in the auto assignment. Move Out rooms are rooms that are assigned to reservations with a scheduled room move on the day of assignment.Scheduled Room Move functionality is available when the Advanced Daily Details OPERA Control is active.",
               "type": "boolean"
             }
           }
@@ -38849,6 +38860,12 @@
           "description": "KeyTrack Data.",
           "$ref": "#/definitions/keyTrackType"
         },
+        "keyPin": {
+          "description": "PIN provided in keyTrack3 from the Door Lock System that is used to unlock a room. This is supported when Key Pin handling is active for the property and the Door Lock System in use.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
         "links": {
           "$ref": "#/definitions/links"
         },
@@ -40677,6 +40694,12 @@
         },
         "keyUserType": {
           "$ref": "#/definitions/keyUserType"
+        },
+        "keyPin": {
+          "description": "PIN provided in keyTrack3 from the Door Lock System that is used to unlock a room. This is supported when Key Pin handling is active for the property and the Door Lock System in use.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         }
       },
       "required": [

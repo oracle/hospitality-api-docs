@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud CRM Asynchronous API",
-    "description": "APIs to insert Stay Records related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs to insert Stay Records related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -351,6 +351,203 @@
         "tags": [
           "CRMAsync"
         ]
+      }
+    },
+    "/deleteSuspendedStays": {
+      "delete": {
+        "summary": "This API facilitates deleting multiple suspended stay records based on criteria.",
+        "description": "This API can be used to delete multiple suspended stay records based on the available criteria. <p><strong>OperationId:</strong>deleteSuspendedStays</p>",
+        "operationId": "deleteSuspendedStays",
+        "x-interaction": ["async-polling"],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/links"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "required": false,
+            "description": "Hotel code.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          }, {
+            "name": "reservationStatus",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Status of reservation.",
+            "minLength": 1,
+            "maxLength": 20
+          }, {
+            "name": "importDate",
+            "in": "query",
+            "required": false,
+            "description": "Date of creation or import of stay.",
+            "type": "string",
+            "format": "date"
+          }, {
+            "$ref": "#/parameters/authKey"
+          }, {
+            "$ref": "#/parameters/externalData"
+          }, {
+            "$ref": "#/parameters/x-app-key"
+          }, {
+            "$ref": "#/parameters/x-request-id"
+          }, {
+            "$ref": "#/parameters/x-originating-application"
+          }, {
+            "$ref": "#/parameters/x-hotelid"
+          }, {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "consumes": ["application/json;charset=UTF-8"],
+        "produces": ["application/json;charset=UTF-8"],
+        "tags": ["CRMAsync"]
+      }
+    },
+    "/deleteSuspendedStays/{requestId}": {
+      "head": {
+        "summary": "This API retrieves the status of the delete suspended stays asynchronous process based on unique request id.",
+        "description": "Use the API to retrieve the status of the delete suspended stays process job associated with the unique request ID obtained from the 'Location' header in the deleteSuspendedStays API response. <p><strong>OperationId:</strong>getSuspendedStaysDeleteStatus</p>",
+        "operationId": "getSuspendedStaysDeleteStatus",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [ "Processing", "Invalid" ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [ "Completed" ]
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "parameters": [ {
+          "name": "requestId",
+          "in": "path",
+          "description": "Request Id for polling.",
+          "required": true,
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }, {
+          "$ref": "#/parameters/authKey"
+        }, {
+          "$ref": "#/parameters/externalData"
+        }, {
+          "$ref": "#/parameters/x-app-key"
+        }, {
+          "$ref": "#/parameters/x-request-id"
+        }, {
+          "$ref": "#/parameters/x-originating-application"
+        }, {
+          "$ref": "#/parameters/x-hotelid"
+        }, {
+          "$ref": "#/parameters/Accept-Language"
+        } ],
+        "consumes": [ "application/json;charset=UTF-8" ],
+        "produces": [ "application/json;charset=UTF-8" ],
+        "tags": [ "CRMAsync" ]
+      },
+      "get": {
+        "summary": "This API facilitates fetching the status for suspended stay records deleted.",
+        "description": "Use this to check whether the request sent has been processed. <p><strong>OperationId:</strong>getSuspendedStaysDelete</p>",
+        "operationId": "getSuspendedStaysDelete",
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for suspended stay records deleted.",
+            "schema": {
+              "$ref": "#/definitions/suspendedStayDeleteStatus"
+            }
+          },
+          "204": {
+            "description": "Resource not found."
+          }
+        },
+        "parameters": [ {
+          "name": "requestId",
+          "in": "path",
+          "description": "Request Id for polling.",
+          "required": true,
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }, {
+          "$ref": "#/parameters/authKey"
+        }, {
+          "$ref": "#/parameters/externalData"
+        }, {
+          "$ref": "#/parameters/x-app-key"
+        }, {
+          "$ref": "#/parameters/x-request-id"
+        }, {
+          "$ref": "#/parameters/x-originating-application"
+        }, {
+          "$ref": "#/parameters/x-hotelid"
+        }, {
+          "$ref": "#/parameters/Accept-Language"
+        } ],
+        "consumes": [ "application/json;charset=UTF-8" ],
+        "produces": [ "application/json;charset=UTF-8" ],
+        "tags": [ "CRMAsync" ]
       }
     }
   },
@@ -1102,6 +1299,19 @@
         },
         "links": {
           "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "suspendedStayDeleteStatus" : {
+      "type" : "object",
+      "description" : "Response for suspended stay records deleted.",
+      "properties" : {
+        "warnings" : {
+          "description" : "List of warnings that occurred.",
+          "$ref" : "#/definitions/warningsType"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
         }
       }
     }
