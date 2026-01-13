@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "Opera Cloud Rate Plan Asynchronous Service API",
-    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -1802,7 +1802,612 @@
           "RatePlanAsync"
         ]
       }
-    }
+    },
+    "/hotels/{hotelId}/ratePlans/deletions": {
+      "post": {
+          "summary": "Delete ratePlans",
+          "description": "This API allows you to do bulk ratePlans deletion.<p><strong>OperationId:</strong>startRatePlanDeletionProcess</p>",
+          "operationId": "startRatePlanDeletionProcess",
+          "x-interaction": [
+              "async-polling"
+          ],
+          "responses": {
+              "202": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      },
+                      "Location": {
+                          "type": "string",
+                          "description": "Location of process status resource"
+                      }
+                  },
+                  "description": "Location of process status resource"
+              }
+          },
+          "parameters": [
+              {
+                  "name": "hotelId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of a Hotel",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              },
+              {
+                  "name": "ratePlanCodes",
+                  "in": "body",
+                  "required": true,
+                  "description": "Request object for submitting ratePlans to delete.",
+                  "schema": {
+                      "$ref": "#/definitions/deleteRatePlanCodesType"
+                  }
+              },
+              {
+                  "$ref": "#/parameters/authKey"
+              }, {
+                  "$ref": "#/parameters/externalData"
+              },
+              {
+                  "$ref": "#/parameters/x-app-key"
+              },
+              {
+                  "$ref": "#/parameters/x-hotelid"
+              },
+              {
+                  "$ref": "#/parameters/Accept-Language"
+              }
+          ],
+          "consumes": [
+              "application/json;charset=UTF-8"
+          ],
+          "produces": [
+              "application/json;charset=UTF-8"
+          ],
+          "tags": [
+              "RatePlanAsync"
+          ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/deletions/{requestId}": {
+      "head": {
+          "summary": "Check status of delete ratePlans process.",
+          "description": "Use this to check whether delete ratePlans process has been completed. You can get the value of requestId from the process API response (under header location). <p><strong>OperationId:</strong>headRatePlanDeletionProcessStatus</p>",
+          "operationId": "headRatePlanDeletionProcessStatus",
+          "responses": {
+              "200": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      },
+                      "Status": {
+                          "type": "string",
+                          "description": "Status of the requested process.",
+                          "enum": [
+                              "Processing",
+                              "Invalid"
+                          ]
+                      },
+                      "Cache-Control": {
+                          "type": "string",
+                          "description": "number of seconds to wait before polling again.",
+                          "x-example": "max-age=10"
+                      }
+                  },
+                  "description": "Response for status of scheduled asynchronous process."
+              },
+              "201": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      },
+                      "Status": {
+                          "type": "string",
+                          "description": "Status of the requested process.",
+                          "enum": [
+                              "Completed"
+                          ]
+                      },
+                      "Location": {
+                          "type": "string",
+                          "description": "Location of newly created resource once the status of process run is Complete."
+                      }
+                  },
+                  "description": "Response for status of scheduled asynchronous process."
+              }
+          },
+          "parameters": [
+              {
+                  "name": "requestId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of delete Rate Plans process",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+              },
+              {
+                  "name": "hotelId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of a Hotel",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              },
+              {
+                  "$ref": "#/parameters/authKey"
+              }, {
+                  "$ref": "#/parameters/externalData"
+              },
+              {
+                  "$ref": "#/parameters/x-app-key"
+              },
+              {
+                  "$ref": "#/parameters/x-hotelid"
+              },
+              {
+                  "$ref": "#/parameters/Accept-Language"
+              }
+          ],
+          "consumes": [
+              "application/json;charset=UTF-8"
+          ],
+          "produces": [
+              "application/json;charset=UTF-8"
+          ],
+          "tags": [
+              "RatePlanAsync"
+          ]
+      },
+      "get": {
+          "summary": "Get results of delete Rate Plans process.",
+          "description": "This API returns a summary of the delete Rate Plans process. You can get the value of requestId from the process API response (under header location). <p><strong>OperationId:</strong>getRatePlanDeletionProcessSummary</p>",
+          "operationId": "getRatePlanDeletionProcessSummary",
+          "parameters": [
+              {
+                  "name": "requestId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of delete Rate Plans process",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+              },
+              {
+                  "name": "hotelId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of a Hotel",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              },
+              {
+                  "$ref": "#/parameters/authKey"
+              }, {
+                  "$ref": "#/parameters/externalData"
+              },
+              {
+                  "$ref": "#/parameters/x-app-key"
+              },
+              {
+                  "$ref": "#/parameters/x-hotelid"
+              },
+              {
+                  "$ref": "#/parameters/Accept-Language"
+              }
+          ],
+          "responses": {
+              "200": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      }
+                  },
+                  "description": "Request object for delete Rate Plans process summary",
+                  "schema": {
+                      "$ref": "#/definitions/deleteRatePlansSummaryType"
+                  },
+                  "examples": {
+                      "application/json": {}
+                  }
+              },
+              "204": {
+                  "description": "Delete Rate Plans Process Summary not found."
+              }
+          },
+          "consumes": [
+              "application/json;charset=UTF-8"
+          ],
+          "produces": [
+              "application/json;charset=UTF-8"
+          ],
+          "tags": [
+              "RatePlanAsync"
+          ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/schedules/deletions": {
+      "post": {
+          "summary": "Delete ratePlan Schedules ",
+          "description": "This API allows you to do bulk ratePlan schedules deletion.<p><strong>OperationId:</strong>startRatePlanScheduleDeletionProcess</p>",
+          "operationId": "startRatePlanScheduleDeletionProcess",
+          "x-interaction": [
+              "async-polling"
+          ],
+          "responses": {
+              "202": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      },
+                      "Location": {
+                          "type": "string",
+                          "description": "Location of process status resource"
+                      }
+                  },
+                  "description": "Location of process status resource"
+              }
+          },
+          "parameters": [
+              {
+                  "name": "hotelId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of a Hotel",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              },
+              {
+                  "name": "ratePlanSchedules",
+                  "in": "body",
+                  "required": true,
+                  "description": "Request object for submitting ratePlan schedules to delete.",
+                  "schema": {
+                      "allOf": [
+                          {
+                              "$ref": "#/definitions/deleteRatePlansSchedulesType"
+                          }
+                      ]
+                  }
+              },
+              {
+                  "$ref": "#/parameters/authKey"
+              }, {
+                  "$ref": "#/parameters/externalData"
+              },
+              {
+                  "$ref": "#/parameters/x-app-key"
+              },
+              {
+                  "$ref": "#/parameters/x-hotelid"
+              },
+              {
+                  "$ref": "#/parameters/Accept-Language"
+              }
+          ],
+          "consumes": [
+              "application/json;charset=UTF-8"
+          ],
+          "produces": [
+              "application/json;charset=UTF-8"
+          ],
+          "tags": [
+              "RatePlanAsync"
+          ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/schedules/deletions/{requestId}": {
+      "head": {
+          "summary": "Check status of delete ratePlan schedules process.",
+          "description": "Use this to check whether delete ratePlan schedules process has been completed. You can get the value of requestId from the process API response (under header location). <p><strong>OperationId:</strong>headRatePlanScheduleDeletionProcessStatus</p>",
+          "operationId": "headRatePlanScheduleDeletionProcessStatus",
+          "responses": {
+              "200": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      },
+                      "Status": {
+                          "type": "string",
+                          "description": "Status of the requested process.",
+                          "enum": [
+                              "Processing",
+                              "Invalid"
+                          ]
+                      },
+                      "Cache-Control": {
+                          "type": "string",
+                          "description": "number of seconds to wait before polling again.",
+                          "x-example": "max-age=10"
+                      }
+                  },
+                  "description": "Response for status of scheduled asynchronous process."
+              },
+              "201": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      },
+                      "Status": {
+                          "type": "string",
+                          "description": "Status of the requested process.",
+                          "enum": [
+                              "Completed"
+                          ]
+                      },
+                      "Location": {
+                          "type": "string",
+                          "description": "Location of newly created resource once the status of process run is Complete."
+                      }
+                  },
+                  "description": "Response for status of scheduled asynchronous process."
+              }
+          },
+          "parameters": [
+              {
+                  "name": "hotelId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of a Hotel",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              },
+              {
+                  "name": "requestId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of delete Rate Plan schedules process",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+              },
+              {
+                  "$ref": "#/parameters/authKey"
+              }, {
+                  "$ref": "#/parameters/externalData"
+              },
+              {
+                  "$ref": "#/parameters/x-app-key"
+              },
+              {
+                  "$ref": "#/parameters/x-hotelid"
+              },
+              {
+                  "$ref": "#/parameters/Accept-Language"
+              }
+          ],
+          "consumes": [
+              "application/json;charset=UTF-8"
+          ],
+          "produces": [
+              "application/json;charset=UTF-8"
+          ],
+          "tags": [
+              "RatePlanAsync"
+          ]
+      },
+      "get": {
+          "summary": "Get results of delete Rate Plan Schedules process.",
+          "description": "This API returns a summary of the delete Rate Plan Schedules process. You can get the value of requestId from the process API response (under header location). <p><strong>OperationId:</strong>getRatePlanScheduleDeletionProcessSummary</p>",
+          "operationId": "getRatePlanScheduleDeletionProcessSummary",
+          "parameters": [
+              {
+                  "name": "hotelId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of a Hotel",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              },
+              {
+                  "name": "requestId",
+                  "in": "path",
+                  "required": true,
+                  "description": "Unique ID of delete Rate Plan Schedules process",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+              },
+              {
+                  "$ref": "#/parameters/authKey"
+              }, {
+                  "$ref": "#/parameters/externalData"
+              },
+              {
+                  "$ref": "#/parameters/x-app-key"
+              },
+              {
+                  "$ref": "#/parameters/x-hotelid"
+              },
+              {
+                  "$ref": "#/parameters/Accept-Language"
+              }
+          ],
+          "responses": {
+              "200": {
+                  "headers": {
+                      "Content-Language": {
+                          "type": "string",
+                          "description": "Audience language",
+                          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                          "x-example": "en-GB"
+                      }
+                  },
+                  "description": "Request object for delete Rate Plan Schedules process summary",
+                  "schema": {
+                      "$ref": "#/definitions/deleteRatePlanSchedulesSummaryType"
+                  },
+                  "examples": {
+                      "application/json": {}
+                  }
+              },
+              "204": {
+                  "description": "Delete Rate Plan Schedules Process Summary not found."
+              }
+          },
+          "consumes": [
+              "application/json;charset=UTF-8"
+          ],
+          "produces": [
+              "application/json;charset=UTF-8"
+          ],
+          "tags": [
+              "RatePlanAsync"
+          ]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/schedules/sync": {
+          "post": {
+            "summary": "Sync pricing schedules from a standard rate plan to linked base rates.",
+            "description": "Starts an async job to synchronize pricing schedules from a standard rate plan to linked base rates. Use syncMode to choose one of two behaviors: SINGLE_SCHEDULE_TO_ALL_BASE_RATES (one schedule to all linked base rates) or ALL_SCHEDULES_TO_ONE_BASE_RATE (all schedules to one linked base rate).<p><strong>OperationId:</strong>startRatePlanSchedulesSyncProcess</p>",
+            "operationId": "startRatePlanSchedulesSyncProcess",
+            "x-interaction": ["async-polling"],
+            "responses": {
+              "202": {
+                "headers": {
+                  "Content-Language": {
+                    "type": "string",
+                    "description": "Audience language",
+                    "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                    "x-example": "en-GB"
+                  },
+                  "Location": {
+                    "type": "string",
+                    "description": "Location of process status resource"
+                  }
+                },
+                "description": "Location of process status resource"
+              }
+            },
+            "parameters": [
+              {
+                "name": "hotelId",
+                "in": "path",
+                "required": true,
+                "type": "string",
+                "description": "Hotel ID"
+              },
+              {
+                "name": "ratePlanSchedulesSyncType",
+                "in": "body",
+                "required": true,
+                "description": "Request body to specify the sync mode and required identifiers.",
+                "schema": { "$ref": "#/definitions/ratePlanSchedulesSyncType" }
+              },
+              { "$ref": "#/parameters/authKey" },
+              { "$ref": "#/parameters/x-app-key" },
+              { "$ref": "#/parameters/x-request-id" }
+            ],
+            "consumes": ["application/json;charset=UTF-8"],
+            "produces": ["application/json;charset=UTF-8"],
+            "tags": ["RatePlanAsync"]
+          }
+        },
+        "/hotels/{hotelId}/ratePlans/schedules/sync/{requestId}": {
+          "head": {
+            "summary": "Check status of rate plan schedules sync process.",
+            "description": "Check status of rate plan schedules sync process.<p><strong>OperationId:</strong>headRatePlanSchedulesSyncProcessStatus</p>",
+            "operationId": "headRatePlanSchedulesSyncProcessStatus",
+            "parameters": [
+              { "name": "hotelId", "in": "path", "required": true, "type": "string", "description": "Hotel ID" },
+              { "name": "requestId", "in": "path", "required": true, "type": "string", "description": "Async job request id" },
+              { "$ref": "#/parameters/authKey" }
+            ],
+            "responses": {
+                    "200": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            },
+                            "Status": {
+                                "type": "string",
+                                "description": "Status of the requested process.",
+                                "enum": [
+                                    "Processing",
+                                    "Invalid"
+                                ]
+                            },
+                            "Cache-Control": {
+                                "type": "string",
+                                "description": "number of seconds to wait before polling again.",
+                                "x-example": "max-age=10"
+                            }
+                        },
+                        "description": "Response for status of scheduled asynchronous process."
+                    },
+                    "201": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            },
+                            "Status": {
+                                "type": "string",
+                                "description": "Status of the requested process.",
+                                "enum": [
+                                    "Completed"
+                                ]
+                            },
+                            "Location": {
+                                "type": "string",
+                                "description": "Location of newly created resource once the status of process run is Complete."
+                            }
+                        },
+                        "description": "Response for status of scheduled asynchronous process."
+                    }
+                },
+            "tags": ["RatePlanAsync"]
+          },
+          "get": {
+            "summary": "Get result of rate plan schedules sync async process.",
+            "description": "API to fetch result of pricing schedules sync process.<p><strong>OperationId:</strong>getRatePlanSchedulesSyncProcessSummary</p>",
+            "operationId": "getRatePlanSchedulesSyncProcessSummary",
+            "parameters": [
+              { "name": "hotelId", "in": "path", "required": true, "type": "string", "description": "Hotel ID" },
+              { "name": "requestId", "in": "path", "required": true, "type": "string", "description": "Async job request id" },
+              { "$ref": "#/parameters/authKey" }
+            ],
+            "responses": {
+              "200": {
+                "schema": { "$ref": "#/definitions/ratePlanSchedulesSyncSummaryType" },
+                "description": "Process Summary"
+              }
+            },
+            "tags": ["RatePlanAsync"]
+          }
+        }
   },
   "parameters": {
     "externalData": {
@@ -2856,7 +3461,264 @@
           "maxLength": 4000
         }
       }
-    }
+    },
+    "deleteRatePlanCodesType": {
+        "type": "object",
+        "description": "List of rate plans to delete.",
+        "properties": {
+            "ratePlanCodes": {
+                "description": "Rate Plan Code",
+                "type": "array",
+                "maxItems": 4000,
+                "items": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                }
+            }
+        },
+        "required": [
+            "ratePlanCodes"
+        ]
+    },
+    "deleteRatePlansSummaryType": {
+        "type": "object",
+        "description": "Response object for delete Rate Plans process summary.",
+        "properties": {
+            "deleteRatePlansOutcomesType": {
+                "$ref": "#/definitions/deleteRatePlansOutcomesType"
+            },
+            "links": {
+                "$ref": "#/definitions/links"
+            },
+            "warnings": {
+                "$ref": "#/definitions/warningsType"
+            }
+        }
+    },
+    "deleteRatePlansOutcomesType": {
+        "type": "array",
+        "description": "Collection of outcome of delete Rate Plans.",
+        "maxItems": 4000,
+        "items": {
+            "$ref": "#/definitions/deleteRatePlansOutcomeType"
+        }
+    },
+    "deleteRatePlansOutcomeType": {
+        "type": "object",
+        "description": "Response object for outcome of delete Rate Plans.",
+        "properties": {
+            "hotelId": {
+                "description": "Hotel code.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+            },
+            "ratePlanCode": {
+                "description": "Rate Plan Code",
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 20
+            },
+            "status": {
+                "type": "string",
+                "description": "Delete Rate Plans Status.",
+                "enum": [
+                    "Success",
+                    "Fail"
+                ]
+            },
+            "outcomeMessages": {
+                "description": "Status of the update",
+                "maxItems": 4000,
+                "items": {
+                    "$ref": "#/definitions/outcomeMessageType"
+                }
+            }
+        }
+    },
+    "deleteRatePlansSchedulesType": {
+        "type": "object",
+        "description": " Delete list of rate plans schedules.",
+        "properties": {
+            "ratePlansSchedules": {
+                "description": "Hotel rate plan schedules to be deleted.",
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                    "$ref": "#/definitions/deleteRatePlanSchedules"
+                }
+            }
+        }
+    },
+    "deleteRatePlanSchedules": {
+        "type": "object",
+        "description": "Delete list of ratePlan schedules",
+        "properties": {
+            "ratePlanCode": {
+                "description": "Rate Plan Code",
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 20
+            },
+            "ratePlanScheduleIdList": {
+                "type": "array",
+                "description": "Rate Plan Schedule Ids list.",
+                "maxItems": 4000,
+                "items": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 80
+                }
+            }
+        }
+    },
+    "deleteRatePlanSchedulesSummaryType": {
+        "type": "object",
+        "description": "Response object for delete Rate Plan Schedules process summary.",
+        "properties": {
+            "deleteRatePlanSchedulesOutcomesType": {
+                "$ref": "#/definitions/deleteRatePlanSchedulesOutcomesType"
+            },
+            "links": {
+                "$ref": "#/definitions/links"
+            },
+            "warnings": {
+                "$ref": "#/definitions/warningsType"
+            }
+        }
+    },
+    "deleteRatePlanSchedulesOutcomesType": {
+        "type": "array",
+        "description": "Collection of outcome of delete Rate Plan Schedules.",
+        "maxItems": 4000,
+        "items": {
+            "$ref": "#/definitions/deleteRatePlanSchedulesOutcomeType"
+        }
+    },
+    "deleteRatePlanSchedulesOutcomeType": {
+        "type": "object",
+        "description": "Response object for outcome of delete Rate Plan Schedule.",
+        "properties": {
+            "hotelId": {
+                "description": "hotelId",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+            },
+            "ratePlanCode": {
+                "description": "Rate Plan Code",
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 20
+            },
+            "ratePlanScheduleId": {
+                "description": "Rate Plan Schedule Id",
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 2000
+            },
+            "status": {
+                "type": "string",
+                "description": "Delete Rate Plan Schedule Status.",
+                "enum": [
+                    "Success",
+                    "Fail"
+                ]
+            },
+            "outcomeMessages": {
+                "description": "Status of the update",
+                "maxItems": 4000,
+                "items": {
+                    "$ref": "#/definitions/outcomeMessageType"
+                }
+            }
+        }
+    },
+    "syncBaseRateSchedulesType": {
+            "type": "object",
+            "description": "Request to sync pricing schedules from the parent (standard) rate code to the base rate code.",
+            "properties": {
+                "baseRateCode": {
+                    "description": "Base rate code that will receive the synced schedules.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20
+                }
+            },
+            "required": [
+                "baseRateCode"
+            ]
+        },
+        "ratePlanSchedulesSyncType": {
+          "type": "object",
+          "description": "Provide syncMode and corresponding required identifiers. Validation: SINGLE_SCHEDULE_TO_ALL_BASE_RATES requires ratePlanCode + rateSetId + parentRateSetAction. ALL_SCHEDULES_TO_ONE_BASE_RATE requires baseRateCode.",
+          "properties": {
+            "syncMode": {
+                "type": "string",
+                "enum": ["SINGLE_SCHEDULE_TO_ALL_BASE_RATES", "ALL_SCHEDULES_TO_ONE_BASE_RATE"],
+                "description": "SINGLE_SCHEDULE_TO_ALL_BASE_RATES: Sync one selected schedule from the given rate plan to all linked base rates. ALL_SCHEDULES_TO_ONE_BASE_RATE: Sync all schedules from the given rate plan to one specified linked base rate."
+            },
+            "ratePlanCode": {
+              "description": "The standard rate plan code whose schedules are to be synced (required when syncMode=SINGLE_SCHEDULE_TO_ALL_BASE_RATES).",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "rateSetId": {
+              "description": "Identifier for the rate schedule to sync (required when syncMode=SINGLE_SCHEDULE_TO_ALL_BASE_RATES).",
+              "type": "integer"
+            },
+            "parentRateSetAction": {
+              "description": "Action applied on the parent (standard) rate set before syncing to base rates (required when syncMode=SINGLE_SCHEDULE_TO_ALL_BASE_RATES).",
+              "type": "string",
+              "enum": ["NEW", "UPDATE"]
+            },
+            "baseRateCode": {
+                "type": "string",
+                "description": "Linked base rate code where pricing schedules will be synced to (required when syncMode=ALL_SCHEDULES_TO_ONE_BASE_RATE)."
+            }
+          },
+          "required": ["syncMode"]
+        },
+        "ratePlanSchedulesSyncSummaryType": {
+          "type": "object",
+          "description": "Summary response for the rate plan schedules sync process.",
+          "properties": {
+            "baseRateSyncStatuses": {
+              "description": "Array of base rates and their status for this sync.",
+              "type": "array",
+              "items": { "$ref": "#/definitions/ratePlanSchedulesSyncBaseRateStatusType" }
+            },
+            "warnings": {
+              "description": "Business or technical warnings.",
+              "$ref": "#/definitions/warningsType"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
+            }
+          }
+        },
+        "ratePlanSchedulesSyncBaseRateStatusType": {
+          "type": "object",
+          "description": "Outcome for a single base rate during sync process.",
+          "properties": {
+            "baseRateCode": {
+              "description": "Base rate code to which schedule was synced.",
+              "type": "string"
+            },
+            "syncStatus": {
+              "description": "Status for this base rate.",
+              "type": "string",
+              "enum": ["Success", "Fail"]
+            },
+            "outcomeMessages": {
+              "description": "Detail messages for this base rate update.",
+              "type": "array",
+              "items": { "$ref": "#/definitions/outcomeMessageType" }
+            }
+          }
+        }
   },
   "tags": [
     {

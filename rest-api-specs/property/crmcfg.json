@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud CRM Configuration API",
-    "description": "APIs for Customer Relationship Management (profile) configuration, such as creating preferences, or address types.  It also includes Membership Configuration, where you can retrieve membership levels that are configured for a property, or create new membership enrollment codes .<br /><br />Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 20.99.99.99.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs for Customer Relationship Management (profile) configuration, such as creating preferences, or address types.  It also includes Membership Configuration, where you can retrieve membership levels that are configured for a property, or create new membership enrollment codes .<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -2446,6 +2446,15 @@
             "required": false
           },
           {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of Guest Titles."
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -3121,7 +3130,7 @@
     "/cityPostalCodes": {
       "get": {
         "summary": "Get CityPostalCodes",
-        "description": "Use this API to get City Postal Codes. <p><strong>OperationId:</strong>getCityPostalCodes</p> <p>The maximum allowable limit for this API is <strong>200</strong>.</p>",
+        "description": "Use this API to get City Postal Codes. <p><strong>OperationId:</strong>getCityPostalCodes</p> <p>The maximum allowable limit for this API is <strong>1000</strong>.</p>",
         "operationId": "getCityPostalCodes",
         "parameters": [
           {
@@ -3659,6 +3668,64 @@
         "tags": [
           "ChainConfig"
         ]
+      }
+    },
+    "/upsert/cityPostalCodes" : {
+      "put" : {
+        "summary" : "Create/Change City Postal Codes",
+        "description" : "Use this API to create/update City Postal Codes. <p><strong>OperationId:</strong>changeUpsertCityPostalCodes</p>",
+        "operationId" : "changeUpsertCityPostalCodes",
+        "parameters" : [ 
+        {
+          "name" : "cityPostalCodesToBeChanged",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for updating city and postal codes.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/cityPostalCodesToBeChanged"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref": "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref": "#/parameters/x-request-id"
+        }, {
+          "$ref": "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "ChainConfig" ]
       }
     },
     "/claimAdjustmentLimits": {
@@ -9198,6 +9265,15 @@
               "type": "string"
             },
             "required": false
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of Guest Titles."
           },
           {
             "$ref": "#/parameters/authKey"
@@ -27798,6 +27874,63 @@
         ]
       }
     },
+    "/upsert/profileNameValidations" : {
+      "put" : {
+        "summary" : "Create/Change Profile Name Validations",
+        "description" : "You can use this API to create/change Profile Name Validations. <p><strong>OperationId:</strong>putUpsertProfileNameValidations</p>",
+        "operationId" : "putUpsertProfileNameValidations",
+        "parameters" : [ {
+          "name" : "profileNameValidationsToChange",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object to edit Profile names.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/profileNameValidationsToChange"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref": "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref": "#/parameters/x-request-id"
+        }, {
+          "$ref": "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "ProfileConfiguration" ]
+      }
+    },
     "/profileRestrictionReasons": {
       "get": {
         "summary": "Get Profile Restriction Reasons",
@@ -33162,6 +33295,1199 @@
         ]
       }
     },
+    "/upsert/membershipOriginGroups/{membershipOriginGroupId}": {
+      "put": {
+        "summary": "Create/Change Membership origin group",
+        "description": "You can use this API to create/change Membership origin group.<p><strong>OperationId:</strong>putUpsertMembershipOriginGroup</p>",
+        "operationId": "putUpsertMembershipOriginGroup",
+        "parameters": [
+          {
+            "name": "membershipOriginGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Membership origin group code which will be changed."
+          },
+          {
+            "name": "membershipOriginGroup",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing existing Membership Origin Group Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipOriginGroupDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipPropertyGroups/{membershipPropertyGroupsId}": {
+      "put": {
+        "summary": "Create/Change Membership property groups",
+        "description": "You can use this API to create/change Membership property groups. <p><strong>OperationId:</strong>putUpsertMembershipPropertyGroups</p>",
+        "operationId": "putUpsertMembershipPropertyGroups",
+        "parameters": [
+          {
+            "name": "membershipPropertyGroupsId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "membershipPropertyGroups",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing existing Membership Property Groups Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipPropertyGroups"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipRateGroups/{membershipRateGroupId}": {
+      "put": {
+        "summary": "Create/Change Membership rate groups",
+        "description": "You can use this API to create/change Membership rate groups. <p><strong>OperationId:</strong>putUpsertMembershipRateGroups</p>",
+        "operationId": "putUpsertMembershipRateGroups",
+        "parameters": [
+          {
+            "name": "membershipRateGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "membershipRateGroups",
+            "in": "body",
+            "required": true,
+            "description": "Request object for modifying Membership Rate Groups.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipRateGroups"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipRates/{membershipRatesId}": {
+      "put": {
+        "summary": "Create/Change Membership rates",
+        "description": "You can use this API to create/change Membership rates. <p><strong>OperationId:</strong>putUpsertMembershipRates</p>",
+        "operationId": "putUpsertMembershipRates",
+        "parameters": [
+          {
+            "name": "membershipRatesId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "membershipRates",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing membership rate rules.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipRates"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipRevenueGroups/{membershipRevenueGroupId}": {
+      "put": {
+        "summary": "Create/Change Membership revenue groups",
+        "description": "You can use this API to create/change Membership revenue groups.<br><p><strong><mark>This API is deprecated.</mark></strong></p> <p><strong>OperationId:</strong>putUpsertMembershipRevenueGroups</p>",
+        "operationId": "putUpsertMembershipRevenueGroups",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "membershipRevenueGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "membershipRevenueGroups",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing new membership revenue groups.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipRevenueGroups"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipRevenueTypes/{membershipRevenueTypesId}": {
+      "put": {
+        "summary": "Create/Change Membership revenue types",
+        "description": "You can use this API to create/change Membership revenue types.<br><p><strong><mark>This API is deprecated.</mark></strong></p> <p><strong>OperationId:</strong>putUpsertMembershipRevenueTypes</p>",
+        "operationId": "putUpsertMembershipRevenueTypes",
+        "parameters": [
+          {
+            "name": "membershipRevenueTypesId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "membershipRevenueTypes",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing new membership revenue types.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipRevenueTypes"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipRoomGroups/{membershipRoomGroupsId}": {
+      "put": {
+        "summary": "Create/Change Membership room groups",
+        "description": "You can use this API to create/change Membership room groups.<br><p><strong><mark>This API is deprecated.</mark></strong></p> <p><strong>OperationId:</strong>putUpsertMembershipRoomGroups</p>",
+        "operationId": "putUpsertMembershipRoomGroups",
+        "parameters": [
+          {
+            "name": "membershipRoomGroupsId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "membershipRoomGroups",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing membership room groups.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipRoomGroups"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/membershipSourceGroups/{membershipSourceGroupId}": {
+      "put": {
+        "summary": "Create/Change Membership source group",
+        "description": "You can use this API to create/change Membership source group.<p><strong>OperationId:</strong>putUpsertMembershipSourceGroup</p>",
+        "operationId": "putUpsertMembershipSourceGroup",
+        "parameters": [
+          {
+            "name": "membershipSourceGroupId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Membership source group code which will be changed."
+          },
+          {
+            "name": "membershipSourceGroup",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing existing Membership Source Group Configurations.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/membershipSourceGroupDetails"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/qualifyingRates/{qualifyingRatesId}": {
+      "put": {
+        "summary": "Upsert Qualifying Rates",
+        "description": "You can use this API to upsert Qualifying Rates.<br><p><strong><mark>This API is deprecated.</mark></strong></p> <p><strong>OperationId:</strong>putUpsertQualifyingRates</p>",
+        "operationId": "putUpsertQualifyingRates",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "qualifyingRatesId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Fetch membershipClasses values based on given membershipClassId"
+          },
+          {
+            "name": "qualifyingRates",
+            "in": "body",
+            "required": true,
+            "description": "Request object for changing qualifying rate rules.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/qualifyingRates"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "MembershipConfig"
+        ]
+      }
+    },
+    "/upsert/relationships": {
+      "put": {
+        "summary": "Create/Change profile relationships",
+        "description": "You can use this API to create/change profile relationships. <p><strong>OperationId:</strong>putUpsertProfileRelationships</p>",
+        "operationId": "putUpsertProfileRelationships",
+        "parameters": [
+          {
+            "name": "profileLinks",
+            "in": "body",
+            "required": true,
+            "description": "Request Object for change profile links",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/profileLinks"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileConfiguration"
+        ]
+      }
+    },
     "/vipLevels": {
       "get": {
         "summary": "Get VIP Levels",
@@ -34441,7 +35767,8 @@
           "language": {
             "description": "Language identification.",
             "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+            "minLength": 0,
+            "maxLength": 20
           }
         },
         "description": "Language code for the translation."
@@ -35164,6 +36491,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -38274,6 +39604,9 @@
         "hotels": {
           "description": "Collection of property codes which associated for a Membership Property Group.",
           "$ref": "#/definitions/membershipPropertyCodesType"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -38348,6 +39681,9 @@
         "rateCodes": {
           "description": "Collection of Rate codes associated with this Rate Group.",
           "$ref": "#/definitions/membershipRateCodesType"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -40467,6 +41803,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 80
+        },
+        "managedBy" : {
+           "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -40676,6 +42015,9 @@
         "hasHierarchy": {
           "description": "Determines whether this relationship is hierarchichal or not.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -41175,6 +42517,9 @@
         "guaranteed": {
           "description": "Indicates whether the rule is used for member guaranteed availability.",
           "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -41386,6 +42731,9 @@
           "items": {
             "$ref": "#/definitions/codeDescriptionType"
           }
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -41452,6 +42800,9 @@
           "items": {
             "$ref": "#/definitions/codeDescriptionType"
           }
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -42029,6 +43380,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -42063,6 +43417,9 @@
         "sequence": {
           "description": "Sequence of the room group.",
           "type": "integer"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -42447,6 +43804,128 @@
           "items": {
             "$ref": "#/definitions/profileRegionType"
           }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "qualifyingRatesType": {
+      "type": "array",
+      "description": "Qualifying Rate information.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/qualifyingRateType"
+      }
+    },
+    "qualifyingRateType": {
+      "type": "object",
+      "description": "Qualifying Rate information. Only Qualifying field is considered while updating record.",
+      "properties": {
+        "hotelId": {
+          "description": "Qualifying Rate hotel code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "ratePlanCode": {
+          "description": "Qualifying rate code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the Qualifying rate.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "marketCode": {
+          "description": "Qualifying rate market code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "qualifying": {
+          "description": "Indicates whether the Rate code is Qualifying or not.",
+          "type": "boolean"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
+        }
+      }
+    },
+    "qualifyingRates": {
+      "type": "object",
+      "description": "Request object for changing qualifying rate rules.",
+      "properties": {
+        "qualifyingRates": {
+          "description": "Collection of qualifying rates to be changed.",
+          "$ref": "#/definitions/qualifyingRatesType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipRevenueGroupsType": {
+      "type": "array",
+      "description": "Details of membership revenue group type.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/membershipRevenueGroupType"
+      }
+    },
+    "membershipRevenueGroupType": {
+      "type": "object",
+      "description": "Base type provides information about Membership Market/Property Groups Configuration.",
+      "properties": {
+        "code": {
+          "description": "Code is used to identify a Membership Market/Resort Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the Membership Market/Propety Group.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "displaySequence": {
+          "description": "Membership Market/Property Groups display sequence Number",
+          "type": "number"
+        },
+        "revenueTypes": {
+          "description": "Collection of code and description of revenue types that are associated to the membership revenue group.",
+          "$ref": "#/definitions/membershipRevenueTypesInfoType"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
+        }
+      }
+    },
+    "membershipRevenueTypesInfoType": {
+      "type": "array",
+      "description": "Membership revenue type code and description.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/codeDescriptionType"
+      }
+    },
+    "membershipRevenueGroups": {
+      "type": "object",
+      "description": "Request object for changing new membership revenue groups.",
+      "properties": {
+        "membershipRevenueGroups": {
+          "description": "Collection of membership revenue groups.",
+          "$ref": "#/definitions/membershipRevenueGroupsType"
         },
         "links": {
           "$ref": "#/definitions/links"

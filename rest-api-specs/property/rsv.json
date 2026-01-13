@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation API",
-    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -1057,7 +1057,8 @@
                 "BlockReservations",
                 "TaxType",
                 "GuestDeviceNotification",
-                "RoomAssignedByAI"
+                "RoomAssignedByAI",
+                "OffshoreRates"
               ]
             },
             "required": false
@@ -6877,7 +6878,8 @@
                 "CommissionsInfo",
                 "DepartureReservationInfo",
                 "MultipleMemberships",
-                "FetchChildAges"
+                "FetchChildAges",
+                "OffshoreRates"
               ]
             },
             "required": false
@@ -7558,6 +7560,13 @@
             "format": "date",
             "required": false,
             "description": "Forecasted package consumption date for which package details are to be returned. When used,  the details of packages with a forecasted consumption date equal to the specified date will be returned for each reservation. Required if pkgCategoryToFetch is used."
+          },
+          {
+            "name": "preRegisteredOnly",
+            "in": "query",
+            "required": false,
+            "description": "Fetch only reservations that are pre-registered.",
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -10584,7 +10593,9 @@
                 "DailySummary",
                 "RateInfoDetails",
                 "OffshoreRates",
-                "FetchChildAges"
+                "FetchChildAges",
+                "TotalDepositPaid",
+                "ReservationProtection"
               ]
             },
             "required": false
@@ -24744,6 +24755,22 @@
             "type": "boolean"
           },
           {
+            "name": "linkedReservationsOnly",
+            "in": "query",
+            "required": false,
+            "description": "Indicates that only linked reservations are expected in the result.",
+            "type": "boolean"
+          },
+          {
+            "name": "linkedName",
+            "in": "query",
+            "required": false,
+            "description": "Name of the group of Linked Reservations to be searched.",
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50
+          },
+          {
             "name": "scheduledRoomMoveOnly",
             "in": "query",
             "required": false,
@@ -27060,7 +27087,8 @@
                 "TaxType",
                 "GuestDeviceNotification",
                 "RoomAssignedByAI",
-                "FetchChildAges"
+                "FetchChildAges",
+                "OffshoreRates"
               ]
             },
             "required": false
@@ -27611,6 +27639,13 @@
             "items": {
               "type": "string"
             }
+          },
+          {
+            "name": "preRegisteredOnly",
+            "in": "query",
+            "required": false,
+            "description": "Fetch only reservations that are pre-registered.",
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -31320,6 +31355,9 @@
           "description": "Rate amount",
           "$ref": "#/definitions/currencyAmountType"
         },
+        "offshoreRateInformation": {
+          "$ref": "#/definitions/offshoreRateType"
+        },
         "points": {
           "description": "The Points contains the number of points used to book a particular room type.",
           "$ref": "#/definitions/pointsType"
@@ -32677,7 +32715,7 @@
           "$ref": "#/definitions/currencyAmountType"
         },
         "totalPayment": {
-          "description": "Total payment received for the reservation.",
+          "description": "Total of all payments on the guest ledger for the reservation.",
           "$ref": "#/definitions/currencyAmountType"
         },
         "roomRevenue": {
@@ -32706,6 +32744,10 @@
         },
         "compBalance": {
           "description": "Comp Balance amount",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "totalDepositPaid": {
+          "description": "Total of all deposit payment posted to the reservation.",
           "$ref": "#/definitions/currencyAmountType"
         }
       }
@@ -33896,6 +33938,10 @@
             "$ref": "#/definitions/reservationPackageType"
           }
         },
+        "rateSummary": {
+          "description": "Rate Summary of the Reservation.",
+          "$ref": "#/definitions/reservationRateSummaryType"
+        },
         "inventoryItems": {
           "description": "A collection of inventory items attached to a reservation.",
           "$ref": "#/definitions/resInventoryItemsType"
@@ -34027,6 +34073,10 @@
         "fixedCharges": {
           "description": "List of reservation fixed charges.",
           "$ref": "#/definitions/fixedChargesType"
+        },
+        "depositPayment": {
+          "description": "Request to post a deposit payment to a reservation.",
+          "$ref": "#/definitions/depositPaymentType"
         },
         "guestMessages": {
           "description": "List of Messages.",
@@ -34324,6 +34374,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        },
+        "reservationProtection": {
+          "description": "Reservation Protection information related to the reservation.",
+          "$ref": "#/definitions/reservationProtectionType"
         }
       }
     },
@@ -34759,9 +34813,6 @@
         "scheduledMoveStatus": {
           "description": "Scheduled room move status for the room segment of the reservation. Scheduled Room Move functionality is available when the Advance Daily Detail OPERA Control is active.",
           "$ref": "#/definitions/scheduledRoomMoveStatusType"
-        },
-        "rateSummary": {
-          "$ref": "#/definitions/reservationRateSummaryType"
         }
       }
     },
@@ -41291,6 +41342,10 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 200
+        },
+        "image": {
+          "description": "The Alert image.",
+          "$ref": "#/definitions/imageSetType"
         }
       }
     },
@@ -42027,7 +42082,7 @@
           "description": "Recipient of the Message",
           "type": "string",
           "minLength": 0,
-          "maxLength": 2000
+          "maxLength": 20000
         },
         "operator": {
           "description": "User who created the Message",
@@ -43992,6 +44047,10 @@
           "items": {
             "$ref": "#/definitions/externalDailyRateType"
           }
+        },
+        "reservationProtection": {
+          "description": "Reservation Protection information related to the reservation.",
+          "$ref": "#/definitions/reservationProtectionType"
         }
       }
     },
@@ -46983,7 +47042,8 @@
           "language": {
             "description": "Language identification.",
             "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+            "minLength": 0,
+            "maxLength": 20
           }
         },
         "description": "Language code for the translation."
@@ -50007,6 +50067,12 @@
         "roomOwnershipType": {
           "description": "Provides the information of the assigned reservation room is an Owner, Referral or regular room.This value is returned when Room Rotation OPERA Control is active and room number is assigned to a reservation.",
           "$ref": "#/definitions/reservationRoomOwnershipType"
+        },
+        "roomTypeToCharge": {
+          "description": "The Room Type on which the rate is based on. The reservation may use a different room type but is charged based on a different room type. This value is returned when Advance Daily Detail OPERA Control is active.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     },
@@ -50318,6 +50384,12 @@
         "turnaway": {
           "description": "Detailed turn away information including guest info, turn away reason and comments. Refer to the Generic common types document for information on TurnawayType.",
           "$ref": "#/definitions/turnawayType"
+        },
+        "croCode": {
+          "description": "This is the Central Reservation office code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
         },
         "links": {
           "$ref": "#/definitions/links"
@@ -53009,6 +53081,112 @@
         "estimatedAmount": {
           "description": "Estimated amount for this rule",
           "type": "number"
+        }
+      }
+    },
+    "reservationProtectionType": {
+      "type": "object",
+      "description": "Reservation Protection information related to the reservation.",
+      "properties": {
+        "reservationProtected": {
+          "description": "This attribute indicates if the reservation is marked as Protected or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "depositPaymentType": {
+      "type": "object",
+      "description": "Request to post a deposit payment to a reservation.",
+      "properties": {
+        "criteria": {
+          "description": "Criteria for the deposit payment information to be posted.",
+          "$ref": "#/definitions/reservationDepositPaymentCriteriaType"
+        }
+      }
+    },
+    "reservationDepositPaymentCriteriaType": {
+      "type": "object",
+      "description": "Criteria for posting a deposit payment to a reservation.",
+      "properties": {
+        "paymentMethod": {
+          "description": "Payment method used by the payee.",
+          "$ref": "#/definitions/cashieringPaymentMethodType"
+        },
+        "postingAmount": {
+          "description": "Amount to post to the folio.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "postingReference": {
+          "description": "User-defined posting reference.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "postingRemark": {
+          "description": "User-defined posting remark.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "comments": {
+          "description": "User Defined Comments. Used for Deposit Payment postings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "folioWindowNo": {
+          "type": "integer"
+        },
+        "cashierId": {
+          "type": "integer"
+        }
+      }
+    },
+    "cashieringPaymentMethodType": {
+      "type": "object",
+      "properties": {
+        "paymentCard": {
+          "$ref": "#/definitions/resPaymentCardType"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "authorizationApproval": {
+          "description": "Authorization approval record.",
+          "$ref": "#/definitions/authorizationInfoType"
+        }
+      }
+    },
+    "authorizationInfoType": {
+      "type": "object",
+      "properties": {
+        "approvalAmount": {
+          "description": "Approved amount.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "approvalCode": {
+          "description": "The approval code authenticates the authorization.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "originalAuthSequence": {
+          "description": "Unique Authorization Sequence for the authorization and settlement.",
+          "type": "integer"
+        },
+        "vendorTranId": {
+          "description": "Vendor transaction id for the authorization.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "alternateTransRef": {
+          "description": "Alternate vendor transaction id for the authorization.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 64
         }
       }
     }

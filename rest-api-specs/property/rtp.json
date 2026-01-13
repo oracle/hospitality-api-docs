@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Rate API",
-    "description": "APIs to cater for Rate Availability functionality in OPERA Cloud. <br /><br /> Rate Management provides all the tools you need to effectively define and manage the rate structures for a property in OPERA Cloud. Some of the things you can do include creating and managing rate codes, rate classes, rate categories, display sets, rate strategies, as well as managing promotion groups and codes.<br /><br /> Compatible with OPERA Cloud release 25.4.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "25.4.0.0",
+    "description": "APIs to cater for Rate Availability functionality in OPERA Cloud. <br /><br /> Rate Management provides all the tools you need to effectively define and manage the rate structures for a property in OPERA Cloud. Some of the things you can do include creating and managing rate codes, rate classes, rate categories, display sets, rate strategies, as well as managing promotion groups and codes.<br /><br /> Compatible with OPERA Cloud release 25.5.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "25.5.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
       "email": "hospitality_apis_ww_grp@oracle.com"
@@ -8231,7 +8231,7 @@
     "/hotels/{hotelId}/ratePlans": {
       "get": {
         "summary": "Get rate plans by Hotel Code",
-        "description": "This API allows you to fetch Rate Plans for a given hotel id. <p><strong>OperationId:</strong>getRatePlansByHotel</p>",
+        "description": "This API allows you to fetch Rate Plans for a given hotel id. API returns only Nightly rates when posting interval is not provided <p><strong>OperationId:</strong>getRatePlansByHotel</p>",
         "operationId": "getRatePlansByHotel",
         "parameters": [
           {
@@ -8249,6 +8249,23 @@
             "required": false,
             "description": "Rate plan code.",
             "type": "string"
+          },
+          {
+            "name": "postingInterval",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Optional posting interval filter. When nothing is provided in this filter then only Nightly rates will be returned",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Nightly",
+                "Weekly",
+                "Monthly",
+                "All"
+              ]
+            }
           },
           {
             "name": "fetchInstructions",
@@ -13357,6 +13374,18 @@
             "required": false
           },
           {
+            "name": "packageCategory",
+            "description": "Package Category based on which results should be filtered.",
+            "required": false,
+            "in": "query",
+            "type": "array",
+            "maxItems": 4000,
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
             "name": "descriptionWildCard",
             "in": "query",
             "required": false,
@@ -15025,7 +15054,7 @@
     "/ratePlans": {
       "get": {
         "summary": "Get rate plans",
-        "description": "This API allows you to fetch Rate Plans. <p><strong>OperationId:</strong>getRatePlans</p> <p>The maximum allowable limit for this API is <strong>1000</strong>.</p>",
+        "description": "This API allows you to fetch Rate Plans. API returns only Nightly rates when posting interval is not provided. <p><strong>OperationId:</strong>getRatePlans</p> <p>The maximum allowable limit for this API is <strong>1000</strong>.</p>",
         "operationId": "getRatePlans",
         "parameters": [
           {
@@ -15100,6 +15129,23 @@
             "required": false,
             "description": "Display set for the rate plan.",
             "type": "string"
+          },
+          {
+            "name": "postingInterval",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Optional posting interval filter. When nothing is provided in this filter then only Nightly rates will be returned",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Nightly",
+                "Weekly",
+                "Monthly",
+                "All"
+              ]
+            }
           },
           {
             "name": "id",
@@ -16859,6 +16905,135 @@
           "HotelConfig"
         ]
       }
+    },
+    "/upsert/hotels/{hotelId}/rateSeasons/{seasonCode}": {
+      "put": {
+        "summary": "Create/Change Hotel Rate Seasons",
+        "description": "Use this API to create/update Hotel Rate Seasons. <p><strong>OperationId:</strong>changeUpsertRateSeasons</p>",
+        "operationId": "changeUpsertRateSeasons",
+        "parameters": [
+          {
+            "name": "seasonCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Code of season."
+          },
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of hotel."
+          },
+          {
+            "name": "rateSeasonsToBeChanged",
+            "in": "body",
+            "required": true,
+            "description": "Request object for modifying rate seasons for a hotel.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/rateSeasonsToBeChanged"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "HotelConfig"
+        ]
+      }
     }
   },
   "parameters": {
@@ -17059,7 +17234,8 @@
           "language": {
             "description": "Language identification.",
             "type": "string",
-            "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+            "minLength": 0,
+            "maxLength": 20
           }
         },
         "description": "Language code for the translation."
@@ -18639,11 +18815,19 @@
           "minLength": 0,
           "maxLength": 2000
         },
+        "translatedDescription": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
         "shortDescription": {
           "description": "The short description of the package group.",
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        },
+        "translatedShortDescription": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationTextType40"
         },
         "code": {
           "description": "Package group Code.",
@@ -18775,11 +18959,19 @@
           "minLength": 0,
           "maxLength": 2000
         },
+        "translatedDescription": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
         "shortDescription": {
           "description": "The short description of the package.",
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        },
+        "translatedShortDescription": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationTextType40"
         },
         "forecastGroup": {
           "description": "The Forecast group package belongs to.",
@@ -19692,6 +19884,11 @@
           "description": "Sell Sequence for the rate plan.",
           "type": "number"
         },
+        "postingInterval": {
+          "description": "Specifies the frequency at which charges are posted for this rate plan (Nightly, Weekly, or Monthly; default is Nightly).",
+          "type": "string",
+          "$ref": "#/definitions/ratePostingInterval"
+        },
         "privilegedRate": {
           "description": "The particular rate code is marked as privileged making it restrictive on who can update information.",
           "type": "boolean"
@@ -19711,6 +19908,10 @@
         "approvalStatus": {
           "description": "Approval Status of the Rate Plan.",
           "$ref": "#/definitions/ratePlanApprovalStatusType"
+        },
+        "offshoreRate": {
+          "type": "boolean",
+          "description": "If true, indicates that rate code is Offshore Rate."
         }
       }
     },
@@ -21692,11 +21893,19 @@
           "minLength": 0,
           "maxLength": 2000
         },
+        "translatedDescription": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationTextType2000"
+        },
         "shortDescription": {
           "description": "The short description of the package group.",
           "type": "string",
           "minLength": 0,
           "maxLength": 40
+        },
+        "translatedShortDescription": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationTextType40"
         },
         "code": {
           "description": "Package group Code.",
@@ -23399,6 +23608,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -24571,6 +24783,9 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -24997,6 +25212,31 @@
         },
         "warnings": {
           "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "ratePostingInterval": {
+      "type": "string",
+      "description": "Allowed values for rate posting interval. Nightly is default when not provided.",
+      "enum": [
+        "Nightly",
+        "Weekly",
+        "Monthly"
+      ]
+    },
+    "translationTextType40": {
+      "type": "object",
+      "description": "Contains Multiple translated texts and language codes.",
+      "properties": {
+        "defaultText": {
+          "description": "Default text with Character length from 0 to 2000.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "translatedTexts": {
+          "description": "List of translated text and language codes.",
+          "$ref": "#/definitions/translationsTextType"
         }
       }
     }
