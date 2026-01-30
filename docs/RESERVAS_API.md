@@ -390,21 +390,113 @@ WHERE r.fecha_actualizacion < ra.fecha_actualizacion;
 
 ## Campos Adicionales Disponibles
 
-El endpoint devuelve más campos que puedes usar si los necesitas:
+### A nivel de RESERVA (datos del huésped principal)
+
+| Campo | Descripción | Notas |
+|-------|-------------|-------|
+| `nationality` | Nacionalidad del huésped principal | Código ISO país |
+| `guestCountry` | País de residencia del huésped principal | De su dirección principal |
+| `resvType` | Tipo de reserva | |
+| `noOfRooms` | Número de habitaciones en la reserva | Para multi-room |
+| `sharedYn` | Indica si la reserva tiene sharers | Y/N |
+| `sharersList` | Lista de confirmation numbers de sharers | |
+| `checkedOutDate` | Fecha real de check-out | |
+| `cancellationReasonCode` | Motivo de cancelación | Si está cancelada |
+
+### A nivel de RESERVA (datos de perfiles asociados)
+
+| Campo | Descripción | Notas |
+|-------|-------------|-------|
+| `companyId` / `companyName` | Empresa asociada | |
+| `travelAgentId` / `travelAgentName` | Agencia de viajes | |
+| `iataCode` | Código IATA de la agencia | |
+| `groupId` / `groupName` | Grupo al que pertenece | |
+| `blockCode` | **Código del bloque/rooming list** | Ver nota abajo |
+| `sourceId` / `sourceName` | Fuente de la reserva | |
+| `resvContactId` / `resvContactName` | Contacto de la reserva | |
+
+### A nivel de RESERVA (datos de fidelización)
 
 | Campo | Descripción |
 |-------|-------------|
-| `companyName` | Empresa de la reserva |
-| `groupName` | Nombre del grupo |
-| `blockCode` | Código de bloque |
-| `nationality` | Nacionalidad del huésped |
-| `guestCountry` | País del huésped |
-| `membershipType` / `membershipLevel` | Datos de fidelización |
-| `iataCode` | Código IATA de la agencia |
-| `roomRevenue` | Ingresos de habitación |
-| `fbRevenue` | Ingresos F&B |
-| `totalRevenue` | Ingresos totales |
-| `packageRevenue` | Ingresos de paquetes |
+| `membershipId` / `membershipNumber` | Número de tarjeta de fidelización |
+| `membershipType` | Tipo de programa (ej: "LOYALTY") |
+| `membershipLevel` | Nivel del huésped (ej: "GOLD", "PLATINUM") |
+
+### A nivel de DÍA (dailySummary) - Ingresos
+
+| Campo | Descripción | Notas |
+|-------|-------------|-------|
+| `rateAmount` | Importe bruto de la tarifa | Con impuestos incluidos |
+| `netRateAmount` | **Importe neto de la tarifa** | **SIN impuestos** (usar este) |
+| `roomRevenue` | Ingresos de habitación | |
+| `fbRevenue` | Ingresos de F&B | |
+| `otherRevenue` | Otros ingresos | |
+| `totalRevenue` | Ingresos totales | |
+| `packageRevenue` | Ingresos de paquetes | |
+| `tax` | Importe de impuestos | |
+
+---
+
+## Nota sobre `blockCode` (Bloques y Rooming Lists)
+
+En Opera Cloud, los **grupos** se gestionan como **Blocks**:
+
+- Un **Block** representa un grupo/convención/evento con múltiples habitaciones reservadas
+- Cada Block tiene un código único (`blockCode`)
+- Las reservas individuales del **rooming list** heredan el `blockCode`
+- También viene `groupId` y `groupName` para información adicional
+
+**Ejemplo:**
+```
+Block: "CONGRESO2026" (100 habitaciones)
+├── Reserva 12345 (blockCode: "CONGRESO2026", groupName: "Congreso Nacional")
+├── Reserva 12346 (blockCode: "CONGRESO2026", groupName: "Congreso Nacional")
+└── ...
+```
+
+---
+
+## Limitación: Edad del Huésped (birthDate)
+
+**La fecha de nacimiento NO viene en el Daily Summary.**
+
+El `birthDate` está en el **perfil del huésped** (CRM) y el Daily Summary no incluye el `profileId` necesario para consultarlo.
+
+### Opciones para obtener la edad:
+
+| Opción | Complejidad | Proceso |
+|--------|-------------|---------|
+| **A. No incluirla** | Ninguna | Aceptar que no está disponible en este endpoint |
+| **B. Endpoint síncrono** | Media | 1. Para cada reserva, llamar a `GET /rsv/v1/hotels/{hotelId}/reservations/{reservationId}` que devuelve `profileId`<br>2. Llamar a `GET /crm/v1/profiles/{profileId}` para obtener `birthDate` |
+| **C. Extracción paralela** | Alta | 1. Extraer todos los perfiles del CRM con `GET /crm/v1/profiles`<br>2. Cruzar en tu BD por nombre/email |
+
+### Si eliges Opción B (recomendada para enriquecimiento):
+
+```bash
+# 1. Obtener detalle de reserva con profileId
+GET /rsv/v1/hotels/{hotelId}/reservations/{reservationId}?fetchInstructions=ReservationGuests
+
+# Response incluye:
+{
+  "reservationGuests": [{
+    "profileInfo": {
+      "profileIdList": [{ "id": "789012", "type": "Profile" }]
+    }
+  }]
+}
+
+# 2. Obtener perfil con birthDate
+GET /crm/v1/profiles/{profileId}
+
+# Response incluye:
+{
+  "birthDate": "1985-03-15",
+  "birthDateMasked": "****-**-15"  # Versión enmascarada por privacidad
+}
+```
+
+**Nota:** Esto añade 2 llamadas adicionales por reserva. Considera hacerlo solo para reservas nuevas o como proceso batch separado.
 
 ---
 
