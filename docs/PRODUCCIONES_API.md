@@ -110,23 +110,195 @@ Obtiene todas las transacciones financieras (postings) del hotel en un rango de 
 | transactionSubGroup | - | Subgrupo mas especifico |
 | description | outlet | Nombre del outlet |
 
-## Identificacion de Impuestos
+## Obtencion de Importes SIN Impuestos
 
-Opera Cloud incluye transacciones de impuestos auto-generadas. Para obtener importes SIN impuestos:
+Opera Cloud auto-genera transacciones de impuestos. Para obtener importes netos hay dos enfoques:
 
-### Opcion 1: Excluir por Transaction Group
-Los impuestos suelen tener `transactionGroup` = "Taxes" o similar. Consultar la configuracion del hotel.
+---
 
-### Opcion 2: Excluir por Transaction Code
-Los codigos de impuestos tipicamente empiezan con patrones especificos (ej: "TAX", "IVA", "VAT").
+### Enfoque Recomendado: Configuracion de Transaction Codes
 
-### Opcion 3: Usar Endpoint Alternativo (por reserva)
-`GET /csh/v1/hotels/{hotelId}/financialPostingsNetVat` devuelve `netAmount` y `grossAmount` separados, pero requiere `reservationId` (no util para extraccion masiva).
+#### Endpoint de Configuracion
 
-### Recomendacion
-Crear un mapeo de transaction codes que son impuestos vs revenue en su sistema y filtrar al agregar.
+**GET /fof/cfg/v1/transactionCodes?hotelIds={hotelId}**
+
+Devuelve la configuracion completa de todos los transaction codes incluyendo:
+- Tipo de transaccion (si es impuesto o revenue)
+- Impuestos que genera automaticamente cada codigo
+- Porcentaje de cada impuesto
+
+#### Estructura de Respuesta
+
+```json
+{
+  "transactionCodes": [
+    {
+      "code": "5010",
+      "hotelId": "HOTEL1",
+      "description": "Bar Beverage",
+      "classification": {
+        "type": "Revenue",
+        "transactionType": {
+          "code": "FoodAndBeverage"
+        },
+        "group": {
+          "code": "F&B",
+          "description": "Food and Beverage"
+        },
+        "subgroup": {
+          "code": "BAR",
+          "description": "Bar"
+        }
+      },
+      "generatesSetup": {
+        "generates": [
+          {
+            "code": "9010",
+            "description": "IVA 10%",
+            "rule": {
+              "percentage": {
+                "amount": 10.0,
+                "calculatedOn": "Base"
+              }
+            }
+          },
+          {
+            "code": "9020",
+            "description": "City Tax",
+            "rule": {
+              "flatAmount": {
+                "amount": 1.50
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "code": "9010",
+      "description": "IVA 10%",
+      "classification": {
+        "type": "Revenue",
+        "transactionType": {
+          "code": "Tax",
+          "taxCode": 1
+        },
+        "group": {
+          "code": "TAX",
+          "description": "Taxes"
+        }
+      }
+    }
+  ]
+}
+```
+
+#### Campos Clave para Identificar Impuestos
+
+| Campo | Valor | Significado |
+|-------|-------|-------------|
+| `classification.transactionType.code` | `Tax` | Es un codigo de impuesto |
+| `classification.transactionType.code` | `Lodging`, `FoodAndBeverage`, `Minibar`, `Others` | Es revenue |
+| `generatesSetup.generates[].rule.percentage.amount` | `10.0` | 10% de impuesto |
+| `generatesSetup.generates[].rule.flatAmount.amount` | `1.50` | Impuesto fijo |
+
+#### Tipos de Transaction Code (`transactionType.code`)
+
+| Tipo | Descripcion |
+|------|-------------|
+| Lodging | Alojamiento |
+| FoodAndBeverage | Comida y bebida |
+| Telephone | Telefono |
+| Minibar | Minibar |
+| **Tax** | **Impuesto (EXCLUIR)** |
+| NonRevenue | No-revenue |
+| Others | Otros servicios |
+
+---
+
+### Proceso para Calcular Netos
+
+#### Paso 1: Extraer Configuracion (una vez por hotel)
+
+```
+GET /fof/cfg/v1/transactionCodes?hotelIds=HOTEL1
+
+Para cada transactionCode:
+  - Si transactionType.code = "Tax" -> Marcar como IMPUESTO
+  - Si transactionType.code != "Tax" -> Marcar como REVENUE
+  - Guardar generates[].rule.percentage.amount como tasa_impuesto
+```
+
+#### Paso 2: Extraer Transacciones Diarias
+
+```
+GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-10&endDate=2024-01-14
+
+Para cada posting:
+  - Si transactionCode esta marcado como IMPUESTO -> IGNORAR
+  - Si es REVENUE -> Agregar al total por fecha/outlet
+```
+
+#### Paso 3: Calculo Alternativo de Neto (si no filtras impuestos)
+
+Si prefieres NO filtrar los transaction codes de impuestos y calcular el neto:
+
+```
+importe_bruto = postedAmount (incluye impuestos)
+tasa_impuesto = porcentaje del generates del transactionCode
+
+importe_neto = importe_bruto / (1 + tasa_impuesto/100)
+```
+
+Ejemplo:
+- Posting de "Bar Beverage" = 110 EUR (bruto)
+- IVA configurado = 10%
+- Neto = 110 / 1.10 = 100 EUR
+
+---
+
+### Enfoque Alternativo: Por Reserva (Net/VAT separados)
+
+Si necesitas precision absoluta por reserva:
+
+**GET /csh/v1/hotels/{hotelId}/financialPostingsNetVat**
+
+Devuelve para cada posting:
+```json
+{
+  "posting": { ... },
+  "postingBreakdown": {
+    "grossAmount": { "amount": 110.00, "currencyCode": "EUR" },
+    "netAmount": { "amount": 100.00, "currencyCode": "EUR" },
+    "taxes": [
+      {
+        "amount": { "amount": 10.00, "currencyCode": "EUR" },
+        "transactionCode": "9010"
+      }
+    ]
+  }
+}
+```
+
+**Limitacion:** Requiere `reservationId` - no util para extraccion masiva diaria.
 
 ## Proceso de Extraccion
+
+### Proceso Inicial (una vez por hotel)
+
+```
+Para cada hotel:
+  1. GET /fof/cfg/v1/transactionCodes?hotelIds={hotelId}
+
+  2. Para cada transactionCode en respuesta:
+     - Guardar code, description, group, subgroup
+     - Si classification.transactionType.code = "Tax":
+         es_impuesto = TRUE
+     - Si tiene generatesSetup.generates[]:
+         tasa_impuesto = SUM(generates[].rule.percentage.amount)
+
+  3. INSERT/UPDATE en tabla transaction_codes_config
+```
 
 ### Proceso Diario
 Ejecutar cada dia para los ultimos 4-5 dias cerrados (por seguridad ante ajustes tardios):
@@ -139,15 +311,15 @@ Para cada hotel:
 
   2. Iterar paginas mientras hasMore=true (incrementar offset)
 
-  3. Filtrar postings donde transactionType = "Revenue"
+  3. Para cada posting:
+     a. Buscar transactionCode en tabla transaction_codes_config
+     b. Si es_impuesto = TRUE -> IGNORAR
+     c. Si es_impuesto = FALSE:
+        - importe_bruto = postedAmount.amount
+        - importe_neto = importe_bruto / (1 + tasa_impuesto/100)
+        - Agregar a acumulador por fecha + transactionCode
 
-  4. Agregar por fecha + transactionCode:
-     - Sumar postedAmount.amount
-     - Mapear transactionCode -> transactionGroup (agrupacion)
-
-  5. Excluir transaction codes que son impuestos
-
-  6. Upsert en base de datos
+  4. Upsert en tabla producciones
 ```
 
 ### Ejemplo de Llamadas
@@ -162,7 +334,28 @@ GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-10&endDate=2024-01
 # Continuar hasta hasMore=false
 ```
 
-## Estructura de Tabla Destino
+## Estructura de Tablas Destino
+
+### Tabla de Configuracion de Transaction Codes (extraer una vez)
+
+```sql
+CREATE TABLE transaction_codes_config (
+    id SERIAL PRIMARY KEY,
+    idhotel VARCHAR(20) NOT NULL,
+    transaction_code VARCHAR(20) NOT NULL,
+    description VARCHAR(200),
+    transaction_type VARCHAR(20),     -- Lodging, FoodAndBeverage, Tax, etc.
+    es_impuesto BOOLEAN DEFAULT FALSE,
+    grupo VARCHAR(50),                -- F&B, Rooms, Tax, etc.
+    subgrupo VARCHAR(50),
+    tasa_impuesto DECIMAL(5,2),       -- % de impuesto que genera
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE (idhotel, transaction_code)
+);
+```
+
+### Tabla de Producciones (extraccion diaria)
 
 ```sql
 CREATE TABLE producciones (
@@ -172,7 +365,8 @@ CREATE TABLE producciones (
     transaction_code VARCHAR(20) NOT NULL,
     outlet VARCHAR(200),
     agrupacion VARCHAR(50),           -- F&B, Rooms, Other, etc.
-    importe DECIMAL(15,2),            -- SIN impuestos (filtrado)
+    importe_bruto DECIMAL(15,2),      -- Importe original
+    importe_neto DECIMAL(15,2),       -- SIN impuestos (calculado)
     moneda VARCHAR(3),
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -220,26 +414,26 @@ Ejemplo: `HOTEL1-2024-01-15-5010`
 
 **Nota:** Los codigos de transaccion son configurables por hotel. Consultar la configuracion especifica de cada propiedad.
 
-## Endpoint para Obtener Codigos de Transaccion
+## Endpoint de Configuracion de Transaction Codes
 
-### GET /lov/v1/listOfValues/hotels/{hotelId}/transactionCodes
+### GET /fof/cfg/v1/transactionCodes
 
-Devuelve todos los transaction codes configurados para el hotel con sus grupos y descripciones.
+Devuelve configuracion completa incluyendo impuestos y tasas.
 
-```json
-{
-  "listOfValues": [
-    {
-      "code": "5010",
-      "description": "Bar Beverage",
-      "transactionGroup": "F&B",
-      "transactionSubGroup": "BAR"
-    }
-  ]
-}
+**Parametros:**
+
+| Parametro | Tipo | Requerido | Descripcion |
+|-----------|------|-----------|-------------|
+| hotelIds | query | Si | Codigos de hotel (array) |
+| transactionGroupCodes | query | No | Filtrar por grupos |
+| includeInactive | query | No | Incluir inactivos (default: false) |
+
+**Ejemplo:**
+```bash
+GET /fof/cfg/v1/transactionCodes?hotelIds=HOTEL1&hotelIds=HOTEL2
 ```
 
-**Recomendacion:** Extraer esta lista una vez y mantener un mapeo local de codigos a grupos.
+**Recomendacion:** Extraer esta configuracion una vez y refrescar periodicamente (semanal/mensual) para capturar cambios en tasas impositivas.
 
 ## Notas Importantes
 
