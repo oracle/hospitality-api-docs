@@ -93,6 +93,7 @@ Obtiene todas las transacciones financieras (postings) del hotel en un rango de 
 
 | Campo API | Campo Destino | Descripcion |
 |-----------|---------------|-------------|
+| **transactionNo** | **id_transaccion** | **ID unico de la transaccion (para upsert)** |
 | hotelId (header) | idhotel | Codigo del hotel |
 | revenueDate | fecha | Fecha de ingreso (dia cerrado) |
 | transactionCode | outlet_code | Codigo del outlet/concepto |
@@ -284,7 +285,18 @@ Devuelve para cada posting:
 
 ## Proceso de Extraccion
 
-### Proceso Inicial (una vez por hotel)
+### ID Unico para Upsert
+
+Cada posting tiene un **`transactionNo`** unico que permite:
+- Detectar registros nuevos (INSERT)
+- Detectar registros modificados (UPDATE)
+- Mantener registros existentes sin cambios
+
+**Clave unica:** `{idhotel}-{transactionNo}`
+
+---
+
+### Paso 1: Configuracion de Transaction Codes (una vez por hotel)
 
 ```
 Para cada hotel:
@@ -300,8 +312,50 @@ Para cada hotel:
   3. INSERT/UPDATE en tabla transaction_codes_config
 ```
 
-### Proceso Diario
-Ejecutar cada dia para los ultimos 4-5 dias cerrados (por seguridad ante ajustes tardios):
+---
+
+### Paso 2: Carga Historica Inicial (una vez)
+
+Para cargar datos historicos, iterar en bloques de 30 dias (limite del API):
+
+```
+Para cada hotel:
+  fecha_inicio = fecha_apertura_hotel (o fecha deseada)
+  fecha_fin = ayer
+
+  Mientras fecha_inicio < fecha_fin:
+    bloque_fin = MIN(fecha_inicio + 29 dias, fecha_fin)
+
+    1. GET /csh/v1/hotels/{hotelId}/financialPostings
+       ?startDate={fecha_inicio}&endDate={bloque_fin}
+       &limit=50
+
+    2. Iterar paginas mientras hasMore=true
+
+    3. Para cada posting:
+       - Usar transactionNo como ID unico
+       - Calcular importe_neto
+       - INSERT en tabla producciones_detalle
+
+    fecha_inicio = bloque_fin + 1 dia
+```
+
+**Ejemplo para cargar 1 año:**
+```bash
+# Bloque 1: Enero
+GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-01&endDate=2024-01-30
+
+# Bloque 2: Febrero
+GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-31&endDate=2024-02-29
+
+# ... continuar hasta hoy
+```
+
+---
+
+### Paso 3: Proceso Diario Incremental
+
+Ejecutar cada dia para los ultimos 4-5 dias (capturar ajustes tardios):
 
 ```
 Para cada hotel:
@@ -312,26 +366,34 @@ Para cada hotel:
   2. Iterar paginas mientras hasMore=true (incrementar offset)
 
   3. Para cada posting:
-     a. Buscar transactionCode en tabla transaction_codes_config
-     b. Si es_impuesto = TRUE -> IGNORAR
-     c. Si es_impuesto = FALSE:
-        - importe_bruto = postedAmount.amount
-        - importe_neto = importe_bruto / (1 + tasa_impuesto/100)
-        - Agregar a acumulador por fecha + transactionCode
+     a. Buscar en BD por idhotel + transactionNo
+     b. Si NO existe -> INSERT
+     c. Si existe y datos diferentes -> UPDATE
+     d. Si existe e igual -> SKIP
 
-  4. Upsert en tabla producciones
+     Para cada INSERT/UPDATE:
+       - Buscar transactionCode en tabla transaction_codes_config
+       - Si es_impuesto = TRUE -> marcar como impuesto
+       - Calcular importe_neto = importe_bruto / (1 + tasa/100)
+
+  4. Registros en BD con fecha en rango pero NO en respuesta API:
+     -> Pueden haber sido eliminados/anulados
+     -> Considerar marcar como "eliminado" o borrar
 ```
+
+---
 
 ### Ejemplo de Llamadas
 
 ```bash
-# Dia 1: obtener transacciones de los ultimos 5 dias
+# Carga historica - bloque de 30 dias
+GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-01&endDate=2024-01-30&limit=50&offset=0
+
+# Proceso diario - ultimos 5 dias
 GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-10&endDate=2024-01-14&limit=50&offset=0
 
-# Si hasMore=true, pagina 2
+# Paginacion si hasMore=true
 GET /csh/v1/hotels/HOTEL1/financialPostings?startDate=2024-01-10&endDate=2024-01-14&limit=50&offset=50
-
-# Continuar hasta hasMore=false
 ```
 
 ## Estructura de Tablas Destino
@@ -355,27 +417,61 @@ CREATE TABLE transaction_codes_config (
 );
 ```
 
-### Tabla de Producciones (extraccion diaria)
+### Tabla de Producciones Detalle (cada transaccion individual)
 
 ```sql
-CREATE TABLE producciones (
+CREATE TABLE producciones_detalle (
     id SERIAL PRIMARY KEY,
     idhotel VARCHAR(20) NOT NULL,
-    fecha DATE NOT NULL,
+    transaction_no BIGINT NOT NULL,        -- ID unico de Opera (para upsert)
+    fecha DATE NOT NULL,                   -- revenueDate
     transaction_code VARCHAR(20) NOT NULL,
-    outlet VARCHAR(200),
-    agrupacion VARCHAR(50),           -- F&B, Rooms, Other, etc.
-    importe_bruto DECIMAL(15,2),      -- Importe original
-    importe_neto DECIMAL(15,2),       -- SIN impuestos (calculado)
+    descripcion VARCHAR(200),
+    transaction_type VARCHAR(20),          -- Revenue, Payment, Wrapper
+    es_impuesto BOOLEAN DEFAULT FALSE,
+    importe_bruto DECIMAL(15,2),
+    importe_neto DECIMAL(15,2),            -- Calculado
     moneda VARCHAR(3),
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    UNIQUE (idhotel, fecha, transaction_code)
+    UNIQUE (idhotel, transaction_no)       -- Clave para upsert
 );
 
--- Indice para upsert
-CREATE INDEX idx_producciones_lookup
-ON producciones(idhotel, fecha, transaction_code);
+-- Indices
+CREATE INDEX idx_producciones_detalle_fecha
+ON producciones_detalle(idhotel, fecha);
+
+CREATE INDEX idx_producciones_detalle_outlet
+ON producciones_detalle(idhotel, transaction_code, fecha);
+```
+
+### Vista de Producciones Agregadas (para reporting)
+
+```sql
+CREATE VIEW producciones_agregadas AS
+SELECT
+    pd.idhotel,
+    pd.fecha,
+    pd.transaction_code,
+    tc.description AS outlet,
+    tc.grupo AS agrupacion,
+    SUM(pd.importe_bruto) AS importe_bruto_total,
+    SUM(pd.importe_neto) AS importe_neto_total,
+    pd.moneda,
+    COUNT(*) AS num_transacciones
+FROM producciones_detalle pd
+JOIN transaction_codes_config tc
+    ON pd.idhotel = tc.idhotel
+    AND pd.transaction_code = tc.transaction_code
+WHERE pd.es_impuesto = FALSE
+GROUP BY
+    pd.idhotel,
+    pd.fecha,
+    pd.transaction_code,
+    tc.description,
+    tc.grupo,
+    pd.moneda;
+```
 ```
 
 ## ID Unico para Upsert
