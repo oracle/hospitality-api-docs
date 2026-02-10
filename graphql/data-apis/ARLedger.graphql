@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA ARLedger GraphQL API,
-# description : GraphQL API to cater for Ledger details showing activity in accounts receivables including reservation and transaction details..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Ledger details showing activity in accounts receivables including reservation and transaction details.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -71,6 +79,13 @@ input FloatRangeInput {
   start: Float!
   end: Float!
 }
+
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - arledgerDetailsResort
+# 		 - arledgerDetailsTrxDate
+
 
 input ARLedgerQueryArgumentsType {
   """AR Led Debit"""
@@ -142,7 +157,7 @@ input ARLedgerQueryArgumentsType {
   """Product"""
   arledgerDetailsProduct: StringInput
   """Code to uniquely identify the Property"""
-  arledgerDetailsResort: StringInput!
+  arledgerDetailsResort: StringInput!                                   @mandatoryInput
   """Rate Code"""
   arledgerDetailsRateCode: StringInput
   """Indicates the receipt type. Different receipts are identified by different types"""
@@ -162,7 +177,7 @@ input ARLedgerQueryArgumentsType {
   """Tran Action ID"""
   arledgerDetailsTranActionId: FloatInput
   """Transaction Date"""
-  arledgerDetailsTrxDate: DateInput!
+  arledgerDetailsTrxDate: DateInput!                                    @mandatoryInput
   """Transaction Number"""
   arledgerDetailsTrxNo: FloatInput
   """Transaction Code"""
@@ -265,6 +280,8 @@ input ARLedgerQueryArgumentsType {
   reservationDetailsCancellationDate: DateTimeInput
   """Cancellation Number"""
   reservationDetailsCancellationNo: StringInput
+  """Chain Code"""
+  reservationDetailsChainCode: StringInput
   """Shared Confirmation Number"""
   reservationDetailsConfirmationNo: StringInput
   """Credit Card ID"""
@@ -741,6 +758,8 @@ input ARLedgerQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -2100,6 +2119,8 @@ type ARLedgerReservationDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -2340,12 +2361,16 @@ type ARLedgerReservationDetailsType {
   centralWaitlistReason: String
   """Central Waitlist Reason Description"""
   centralWaitlistReasonDescription: String
+  """Chain Code"""
+  chainCode: String
   """Channel Description"""
   channelDescription: String
   """Channel Order By"""
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -2454,6 +2479,10 @@ type ARLedgerReservationDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -2552,6 +2581,8 @@ type ARLedgerReservationDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -2978,6 +3009,8 @@ type ARLedgerReservationDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -3084,6 +3117,8 @@ type ARLedgerReservationDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
@@ -3744,6 +3779,8 @@ type ARLedgerPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""

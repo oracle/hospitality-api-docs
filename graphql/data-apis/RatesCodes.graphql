@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA RatesCodes GraphQL API,
-# description : GraphQL API to cater for Rate detail information including all rate header details,  room type, rate tiers and rate amounts per occupant..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Rate detail information including all rate header details,  room type, rate tiers and rate amounts per occupant.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -71,6 +79,12 @@ input FloatRangeInput {
   start: Float!
   end: Float!
 }
+
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - ratecodeDetailsResort
+
 
 input RatesCodesQueryArgumentsType {
   """Base Rate Code"""
@@ -120,7 +134,7 @@ input RatesCodesQueryArgumentsType {
   """Indicates whether the rate code is pending for approval or not"""
   ratecodeDetailsPendingApprovalYn: StringInput
   """Code to uniquely identify the Property"""
-  ratecodeDetailsResort: StringInput!
+  ratecodeDetailsResort: StringInput!                                   @mandatoryInput
   """Yield rate bucket"""
   ratecodeDetailsRateBucket: StringInput
   """Rate Code ID"""
@@ -509,6 +523,8 @@ input RatesCodesQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -697,6 +713,8 @@ input RatesCodesQueryArgumentsType {
   allotmentDetailsBlockType: StringInput
   """Central Xchange Date"""
   allotmentDetailsCXchangeDate: DateInput
+  """Chain Code"""
+  allotmentDetailsChainCode: StringInput
   """Company Name ID"""
   allotmentDetailsCompanyNameId: FloatInput
   """Contact Name ID"""
@@ -773,8 +791,12 @@ input RatesCodesQueryArgumentsType {
   financialtransDetailsBusinessDate: DateInput
   """Central Xchange Date"""
   financialtransDetailsCXchangeDate: DateInput
+  """Central Xchange Rate"""
+  financialtransDetailsCXchangeRate: FloatInput
   """Cashier ID"""
   financialtransDetailsCashierId: FloatInput
+  """Chain Code"""
+  financialtransDetailsChainCode: StringInput
   """Check Number"""
   financialtransDetailsChequeNumber: StringInput
   """Closure Number"""
@@ -801,6 +823,8 @@ input RatesCodesQueryArgumentsType {
   financialtransDetailsFolioid: FloatInput
   """From Resv ID"""
   financialtransDetailsFromResvId: FloatInput
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  financialtransDetailsFtSubtype: StringInput
   """Guest Account Ledger Credit"""
   financialtransDetailsGuestAccountCredit: FloatInput
   """Debit amount on the guest account"""
@@ -837,6 +861,10 @@ input RatesCodesQueryArgumentsType {
   financialtransDetailsOriginalresvid: FloatInput
   """Package"""
   financialtransDetailsProduct: StringInput
+  """Credit amount on the guest package account."""
+  financialtransDetailsPackageCredit: FloatInput
+  """Debit amount on the guest package account"""
+  financialtransDetailsPackageDebit: FloatInput
   """Packagelinkfintransid"""
   financialtransDetailsPackagelinkfintransid: FloatInput
   """Parentfintransid"""
@@ -1714,6 +1742,8 @@ type RatesCodesPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""
@@ -2336,6 +2366,8 @@ type RatesCodesBlockDetailsType {
   blockAlias: String
   """Block Code"""
   blockCode: String
+  """Block Date Actual"""
+  blockDateActual: Date
   """Block Date Definite"""
   blockDateDefinite: DateTime
   """Block Date Prospect"""
@@ -2464,6 +2496,8 @@ type RatesCodesBlockDetailsType {
   cateringCancellationReason: String
   """Catering Currency"""
   cateringCurrency: String
+  """Catering Date Actual"""
+  cateringDateActual: Date
   """Catering Decision Date"""
   cateringDecisionDate: Date
   """Catering Deduct Inventory"""
@@ -2590,6 +2624,8 @@ type RatesCodesBlockDetailsType {
   centralSourceCodeDescription: String
   """Central Tax Amount"""
   centralTaxAmount: Float
+  """Chain Code"""
+  chainCode: String
   """Channelid"""
   channelid: String
   """Code"""
@@ -3518,6 +3554,8 @@ type RatesCodesFinancialTransactionDetailsType {
   cTaxRate: Float
   """Central Vat Amount"""
   cVatAmount: Float
+  """CC Approval Code"""
+  cCApproval: String
   """Calculate Points YN"""
   calculatePointsYN: String
   """Cash Bag Number"""
@@ -3592,6 +3630,8 @@ type RatesCodesFinancialTransactionDetailsType {
   centralTrialBalanceAmountGross: Float
   """Central Trial Balance Amount Net"""
   centralTrialBalanceAmountNet: Float
+  """Chain Code"""
+  chainCode: String
   """Change Due"""
   changeDue: Float
   """This field will store the file number for the guest check PNG file which has to be appended to the application settings base URL."""

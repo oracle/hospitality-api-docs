@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA ProfilesIndividuals GraphQL API,
-# description : GraphQL API to cater for Guest profile data including contact information, VIP codes, memberships and stay statistics with room and revenue details..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Guest profile data including contact information, VIP codes, memberships and stay statistics with room and revenue details.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,19 +80,43 @@ input FloatRangeInput {
   end: Float!
 }
 
+
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - profileallDetailsChainCode 
+# Pair - [2] 
+# 		 - profileallDetailsActiveYn 
+# 		 - profileallDetailsCompanyGroupId 
+# 		 - profileallDetailsCrsNameid 
+# 		 - profileallDetailsInactiveDate 
+# 		 - profileallDetailsIndexName 
+# 		 - profileallDetailsJrnupdatedttm 
+# 		 - profileallDetailsNameCode 
+# 		 - profileallDetailsNameId 
+# 		 - profileallDetailsOrganizationId 
+# 		 - profileallDetailsProfileId 
+# 		 - profileallDetailsSfirst 
+# 		 - profileallDetailsSname 
+# 		 - profileallDetailsSrepCode 
+# 		 - profileallDetailsSxfirstName 
+# 		 - profileallDetailsSxname 
+# 		 - profileallDetailsUpdateDate 
+
 input ProfilesIndividualsQueryArgumentsType {
   """The primary key for this table."""
-  profileallDetailsNameId: FloatInput
+  profileallDetailsNameId: FloatInput                                   @conditionalInputPair(pair: 2)
   """Profile is active or not."""
-  profileallDetailsActiveYn: StringInput
+  profileallDetailsActiveYn: StringInput                                @conditionalInputPair(pair: 2)
   """This is a  name_id (Profile number) of profiles that exist in a Central database in a typical CRS environment."""
-  profileallDetailsCrsNameid: FloatInput
+  profileallDetailsCrsNameid: FloatInput                                @conditionalInputPair(pair: 2)
   """Chain Code"""
-  profileallDetailsChainCode: StringInput!
+  profileallDetailsChainCode: StringInput                               @conditionalInputPair(pair: 1)
   """The unique key of this name stores IATA# Company # etc."""
-  profileallDetailsNameCode: StringInput
+  profileallDetailsNameCode: StringInput                                @conditionalInputPair(pair: 2)
   """The company group or company group user ID in hierarchical format"""
-  profileallDetailsCompanyGroupId: StringInput
+  profileallDetailsCompanyGroupId: StringInput                          @conditionalInputPair(pair: 2)
   """Used in S&C Module."""
   profileallDetailsContactFlag: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -96,19 +128,19 @@ input ProfilesIndividualsQueryArgumentsType {
   """Keep guest in history Y/N"""
   profileallDetailsHistoryYn: StringInput
   """The date the record was marked as inactive"""
-  profileallDetailsInactiveDate: DateTimeInput
+  profileallDetailsInactiveDate: DateTimeInput                          @conditionalInputPair(pair: 2)
   """Index Name"""
-  profileallDetailsIndexName: StringInput
+  profileallDetailsIndexName: StringInput                               @conditionalInputPair(pair: 2)
   """Organization ID"""
-  profileallDetailsOrganizationId: FloatInput
+  profileallDetailsOrganizationId: FloatInput                           @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  profileallDetailsJrnupdatedttm: DateTimeInput
+  profileallDetailsJrnupdatedttm: DateTimeInput                         @conditionalInputPair(pair: 2)
   """The type of Profile."""
   profileallDetailsNameType: StringInput
   """Internal ID to uniquely identify the Organization"""
   profileallDetailsOrganizationid: FloatInput
   """The primary key for this table."""
-  profileallDetailsProfileId: FloatInput
+  profileallDetailsProfileId: FloatInput                                @conditionalInputPair(pair: 2)
   """The type of Profile."""
   profileallDetailsProfileType: StringInput
   """Resort for which Job is registered."""
@@ -116,17 +148,17 @@ input ProfilesIndividualsQueryArgumentsType {
   """This column store the Name of the Company Profiles."""
   profileallDetailsCompany: StringInput
   """The Uppercase value of Last or Company."""
-  profileallDetailsSname: StringInput
+  profileallDetailsSname: StringInput                                   @conditionalInputPair(pair: 2)
   """Internal Indexed field for Searching by Extended Byte Name."""
-  profileallDetailsSxname: StringInput
+  profileallDetailsSxname: StringInput                                  @conditionalInputPair(pair: 2)
   """Uppercase value of First Name."""
-  profileallDetailsSfirst: StringInput
+  profileallDetailsSfirst: StringInput                                  @conditionalInputPair(pair: 2)
   """Used in QMS Module"""
-  profileallDetailsSrepCode: StringInput
+  profileallDetailsSrepCode: StringInput                                @conditionalInputPair(pair: 2)
   """Internal Indexed field for Searching by Extended Byte First Name."""
-  profileallDetailsSxfirstName: StringInput
+  profileallDetailsSxfirstName: StringInput                             @conditionalInputPair(pair: 2)
   """The date the record was modified"""
-  profileallDetailsUpdateDate: DateTimeInput
+  profileallDetailsUpdateDate: DateTimeInput                            @conditionalInputPair(pair: 2)
   """The first line of street address."""
   profileaddressDetailsAddress1: StringInput
   """The second line of street address."""

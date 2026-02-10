@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA InventoryHousekeepingManagementRoom GraphQL API,
 # description : GraphQL API to cater for Details on Tasks, Task Sheets and Credits and providing Information on Rooms, Room Attributes and Statuses for the current date.
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,13 +80,20 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - hkdailytaskroomDetailsResort
+# 		 - hkdailytaskroomDetailsTaskDate
+
+
 input InventoryHousekeepingManagementRoomQueryArgumentsType {
   """JRN Update Date and Time"""
   hkdailytaskroomDetailsJrnupdatedttm: DateTimeInput
   """Code to uniquely identify the Property"""
-  hkdailytaskroomDetailsResort: StringInput!
+  hkdailytaskroomDetailsResort: StringInput!                            @mandatoryInput
   """Breakout Date."""
-  hkdailytaskroomDetailsTaskDate: DateInput!
+  hkdailytaskroomDetailsTaskDate: DateInput!                            @mandatoryInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   roomDetailsDsi: FloatInput
   """JRN Update Date and Time"""
@@ -527,6 +542,8 @@ input InventoryHousekeepingManagementRoomQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -671,6 +688,8 @@ input InventoryHousekeepingManagementRoomQueryArgumentsType {
   resortDetailsWeekendDays: StringInput
   """Internal"""
   resortDetailsZeroInvPurDays: FloatInput
+  """Daykey"""
+  datedetailDetailsDaykey: DateInput
 }
 type Query {
   """Details on Tasks Task Sheets and Credits and providing Information on Rooms Room Attributes and Statuses for the current date"""
@@ -695,8 +714,8 @@ type InventoryHousekeepingManagementRoomType {
   houseKeepingDailyTaskDetails: InventoryHousekeepingManagementRoomHouseKeepingDailyTaskDetailsType
   """Resort Details"""
   propertyPropertyDetails: InventoryHousekeepingManagementRoomPropertyPropertyDetailsType
-  """Date Details"""
-  dateDetails: InventoryHousekeepingManagementRoomDateDetailsType
+  """Date Calendar"""
+  dateCalendarDetails: InventoryHousekeepingManagementRoomDateCalendarDetailsType
   inventoryHousekeepingManagementRoomRecordCount: Int
 }
 type InventoryHousekeepingManagementRoomHouseKeepingDailyTaskRoomDetailsType {
@@ -706,6 +725,10 @@ type InventoryHousekeepingManagementRoomHouseKeepingDailyTaskRoomDetailsType {
   assignmentCode: String
   """Additional comments why this room was assigned to this task sheet."""
   assignmentComments: String
+  """Attendant Room Status"""
+  attendantRoomStatus: String
+  """Attendant Room Status Desc"""
+  attendantRoomStatusDesc: String
   """Auto generated filters."""
   autoGenerateFilters: String
   """Indicates if task has been automatically generated."""
@@ -736,6 +759,8 @@ type InventoryHousekeepingManagementRoomHouseKeepingDailyTaskRoomDetailsType {
   dirtyInd: Float
   """Facility Task Codes"""
   facilityTaskCodes: String
+  """Final End Room Status"""
+  finalEndRoomStatus: String
   """House Use Rooms"""
   houseUseRooms: Float
   """Hk Breakout Job ID"""
@@ -790,6 +815,8 @@ type InventoryHousekeepingManagementRoomHouseKeepingDailyTaskRoomDetailsType {
   serviceTime: String
   """This indicates whether the task is simple or not"""
   simpleTaskYn: String
+  """Square Units"""
+  squareUnits: Float
   """Target Credits"""
   targetCredits: Float
   """Date on which task is completed."""
@@ -3156,6 +3183,8 @@ type InventoryHousekeepingManagementRoomPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""
@@ -3301,11 +3330,103 @@ type InventoryHousekeepingManagementRoomPropertyPropertyDetailsType {
   """Internal"""
   zeroInvPurDays: Float
 }
-type InventoryHousekeepingManagementRoomDateDetailsType {
+type InventoryHousekeepingManagementRoomDateCalendarDetailsType {
+  """Day Description."""
+  dayDesc: String
+  """Day End Date."""
+  dayEndDate: Date
+  """Day number of the month."""
+  dayNoOfMonth: Float
+  """Day number of the quarter."""
+  dayNoOfQuarter: Float
+  """Day number of the week."""
+  dayNoOfWeek: String
+  """Day Of Week"""
+  dayOfWeek: String
+  """Day of the Year."""
+  dayOfYear: Float
+  """Day Timespan."""
+  dayTimespan: Float
   """Daykey"""
   daykey: Date
   """Monthkey"""
-  monthkey: Float
+  internalMonthkey: Float
   """Yearkey"""
-  yearkey: Float
+  internalYearkey: Float
+  """Iso Week Of Year"""
+  isoWeekOfYear: String
+  """Julian Daykey"""
+  julianDaykey: String
+  """Last Year Daykey"""
+  lastYearDaykey: Date
+  """Month Description."""
+  monthDsc: String
+  """Month End Date."""
+  monthEndDate: Date
+  """Month Key"""
+  monthKey: String
+  """Month Name."""
+  monthName: String
+  """Month of the quarter."""
+  monthOfQuarter: Float
+  """Month of the year."""
+  monthOfYear: Float
+  """Month Timespan."""
+  monthTimespan: Float
+  """Month Year Key"""
+  monthYrKey: String
+  """Prior Julian Daykey"""
+  priorJulianDaykey: String
+  """Prior Month Key"""
+  priorMonthKey: String
+  """Prior Week Key"""
+  priorWeekKey: String
+  """Prior Year Daykey"""
+  priorYearDaykey: Date
+  """Prior Year Key"""
+  priorYearKey: String
+  """Prior Year Month Key"""
+  priorYearMonthKey: String
+  """Prior Year Quarter Key"""
+  priorYearQuarterKey: String
+  """Prior Year Week Key"""
+  priorYearWeekKey: String
+  """Quarter Description."""
+  quarterDsc: String
+  """Quarter End Date."""
+  quarterEndDate: Date
+  """Quarter Key"""
+  quarterKey: String
+  """Quarter of the year."""
+  quarterOfYear: String
+  """Quarter Timespan."""
+  quarterTimespan: Float
+  """Week Dsc"""
+  weekDsc: String
+  """End date of the week."""
+  weekEndDate: Date
+  """Week End Dsc"""
+  weekEndDsc: String
+  """Week End Key"""
+  weekEndKey: String
+  """Week End Month Dsc"""
+  weekEndMonthDsc: String
+  """Week End Date of the Month."""
+  weekEndMonthEndDate: Date
+  """Week Key"""
+  weekKey: String
+  """Week of the month."""
+  weekOfMonth: String
+  """Week of the year."""
+  weekOfYear: String
+  """Week Timespan."""
+  weekTimespan: Float
+  """Year description."""
+  yearDsc: String
+  """Year End Date."""
+  yearEndDate: Date
+  """Year Key"""
+  yearKey: String
+  """Year Timespan."""
+  yearTimespan: Float
 }

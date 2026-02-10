@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA BookingsBlockStatusChanges GraphQL API,
-# description : GraphQL API to cater for Detailed information on the status changes throughout the production period of a block, including the new and old status codes, rooms and associated revenues, by property and Block Owner..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Detailed information on the status changes throughout the production period of a block, including the new and old status codes, rooms and associated revenues, by property and Block Owner.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -71,6 +79,13 @@ input FloatRangeInput {
   start: Float!
   end: Float!
 }
+
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - bookstatuschangeDetailsInsertDate
+# 		 - bookstatuschangeDetailsResort
+
 
 input BookingsBlockStatusChangesQueryArgumentsType {
   """Action ID"""
@@ -102,7 +117,7 @@ input BookingsBlockStatusChangesQueryArgumentsType {
   """Inactive Flag"""
   bookstatuschangeDetailsInactiveflag: StringInput
   """Insert Date"""
-  bookstatuschangeDetailsInsertDate: DateTimeInput!
+  bookstatuschangeDetailsInsertDate: DateTimeInput!                     @mandatoryInput
   """Deleted Flag"""
   bookstatuschangeDetailsDeletedflag: StringInput
   """JRN Update Date and Time"""
@@ -112,7 +127,7 @@ input BookingsBlockStatusChangesQueryArgumentsType {
   """Priorbookingstatusid"""
   bookstatuschangeDetailsPriorbookingstatusid: StringInput
   """Code to uniquely identify the Property"""
-  bookstatuschangeDetailsResort: StringInput!
+  bookstatuschangeDetailsResort: StringInput!                           @mandatoryInput
   """RnA Insertdate"""
   bookstatuschangeDetailsRnaInsertdate: DateTimeInput
   """RnA Updatedate"""
@@ -151,6 +166,8 @@ input BookingsBlockStatusChangesQueryArgumentsType {
   allotmentDetailsBlockType: StringInput
   """Central Xchange Date"""
   allotmentDetailsCXchangeDate: DateInput
+  """Chain Code"""
+  allotmentDetailsChainCode: StringInput
   """Company Name ID"""
   allotmentDetailsCompanyNameId: FloatInput
   """Contact Name ID"""
@@ -583,6 +600,8 @@ input BookingsBlockStatusChangesQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -1132,6 +1151,8 @@ type BookingsBlockStatusChangesBlockDetailsType {
   blockAlias: String
   """Block Code"""
   blockCode: String
+  """Block Date Actual"""
+  blockDateActual: Date
   """Block Date Definite"""
   blockDateDefinite: DateTime
   """Block Date Prospect"""
@@ -1260,6 +1281,8 @@ type BookingsBlockStatusChangesBlockDetailsType {
   cateringCancellationReason: String
   """Catering Currency"""
   cateringCurrency: String
+  """Catering Date Actual"""
+  cateringDateActual: Date
   """Catering Decision Date"""
   cateringDecisionDate: Date
   """Catering Deduct Inventory"""
@@ -1386,6 +1409,8 @@ type BookingsBlockStatusChangesBlockDetailsType {
   centralSourceCodeDescription: String
   """Central Tax Amount"""
   centralTaxAmount: Float
+  """Chain Code"""
+  chainCode: String
   """Channelid"""
   channelid: String
   """Code"""
@@ -2574,6 +2599,8 @@ type BookingsBlockStatusChangesPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""

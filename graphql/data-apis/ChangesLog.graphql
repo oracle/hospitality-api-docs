@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA ChangesLog GraphQL API,
 # description : GraphQL API to cater for Provides detailed information on actions and the users who completed the action, including date, time, activity type, and description. Also providing the capability to combine with reservation, block and profile data.
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,9 +80,15 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - actionDetailsInsertDate
+
+
 input ChangesLogQueryArgumentsType {
   """Action Date"""
-  actionDetailsInsertDate: DateInput!
+  actionDetailsInsertDate: DateInput!                                   @mandatoryInput
   """Action ID"""
   actionDetailsActionId: FloatInput
   """Action Type"""
@@ -131,6 +145,8 @@ input ChangesLogQueryArgumentsType {
   reservationDetailsCancellationDate: DateTimeInput
   """Cancellation Number"""
   reservationDetailsCancellationNo: StringInput
+  """Chain Code"""
+  reservationDetailsChainCode: StringInput
   """Shared Confirmation Number"""
   reservationDetailsConfirmationNo: StringInput
   """Credit Card ID"""
@@ -249,6 +265,8 @@ input ChangesLogQueryArgumentsType {
   allotmentDetailsBlockType: StringInput
   """Central Xchange Date"""
   allotmentDetailsCXchangeDate: DateInput
+  """Chain Code"""
+  allotmentDetailsChainCode: StringInput
   """Company Name ID"""
   allotmentDetailsCompanyNameId: FloatInput
   """Contact Name ID"""
@@ -311,6 +329,8 @@ input ChangesLogQueryArgumentsType {
   eventDetailsBookId: FloatInput
   """Block End Date"""
   eventDetailsAllotmentenddate: DateInput
+  """Chain Code"""
+  eventDetailsChainCode: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   eventDetailsDsi: FloatInput
   """End Date"""
@@ -847,6 +867,8 @@ input ChangesLogQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -1186,6 +1208,8 @@ type ChangesLogReservationDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -1426,12 +1450,16 @@ type ChangesLogReservationDetailsType {
   centralWaitlistReason: String
   """Central Waitlist Reason Description"""
   centralWaitlistReasonDescription: String
+  """Chain Code"""
+  chainCode: String
   """Channel Description"""
   channelDescription: String
   """Channel Order By"""
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -1540,6 +1568,10 @@ type ChangesLogReservationDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -1638,6 +1670,8 @@ type ChangesLogReservationDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -2064,6 +2098,8 @@ type ChangesLogReservationDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -2170,6 +2206,8 @@ type ChangesLogReservationDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
@@ -2524,6 +2562,8 @@ type ChangesLogBlockDetailsType {
   blockAlias: String
   """Block Code"""
   blockCode: String
+  """Block Date Actual"""
+  blockDateActual: Date
   """Block Date Definite"""
   blockDateDefinite: DateTime
   """Block Date Prospect"""
@@ -2652,6 +2692,8 @@ type ChangesLogBlockDetailsType {
   cateringCancellationReason: String
   """Catering Currency"""
   cateringCurrency: String
+  """Catering Date Actual"""
+  cateringDateActual: Date
   """Catering Decision Date"""
   cateringDecisionDate: Date
   """Catering Deduct Inventory"""
@@ -2778,6 +2820,8 @@ type ChangesLogBlockDetailsType {
   centralSourceCodeDescription: String
   """Central Tax Amount"""
   centralTaxAmount: Float
+  """Chain Code"""
+  chainCode: String
   """Channelid"""
   channelid: String
   """Code"""
@@ -3612,12 +3656,16 @@ type ChangesLogEventDetailsType {
   centralDiscountAmount: Float
   """Central Meal Type"""
   centralMealType: String
+  """Central Package Price"""
+  centralPackagePrice: Float
   """Central Rental Amount"""
   centralRentalAmount: Float
   """Central Room Class"""
   centralRoomClass: String
   """Central Room Class Description"""
   centralRoomClassDescription: String
+  """Chain Code"""
+  chainCode: String
   """Combination Room YN"""
   combinationRoomYN: String
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -3646,6 +3694,8 @@ type ChangesLogEventDetailsType {
   endDateTime: Date
   """End Time"""
   endTime: String
+  """End Time with Teardown"""
+  endTimeWithTeardown: String
   """Event Property."""
   evResort: String
   """Ev Status Order By"""
@@ -3740,6 +3790,8 @@ type ChangesLogEventDetailsType {
   packageActualAttendees: Float
   """Package Code"""
   packageCode: String
+  """Package Discount Percentage"""
+  packageDiscountPercentage: Float
   """Pkg Ev ID"""
   packageEvId: Float
   """Expected Attendees"""
@@ -3750,6 +3802,8 @@ type ChangesLogEventDetailsType {
   packageID: Float
   """Package Name"""
   packageName: String
+  """Package Price"""
+  packagePrice: Float
   """Package Property"""
   packageProperty: String
   """Packageeventid"""
@@ -3812,6 +3866,8 @@ type ChangesLogEventDetailsType {
   startDateTime: Date
   """Start Time"""
   startTime: String
+  """Start Time with Setup"""
+  startTimeWithSetup: String
   """Date when the status was changed"""
   statusDate: Date
   """Tear-Down Time"""
@@ -5332,6 +5388,8 @@ type ChangesLogPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""

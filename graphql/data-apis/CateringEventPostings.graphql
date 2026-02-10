@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA CateringEventPostings GraphQL API,
 # description : GraphQL API to cater for Event posting details including revenues by property, Block, Event and Revenue groups.
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -71,6 +79,12 @@ input FloatRangeInput {
   start: Float!
   end: Float!
 }
+
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - eventpostingDetailsResort
+
 
 input CateringEventPostingsQueryArgumentsType {
   """Book ID"""
@@ -92,7 +106,7 @@ input CateringEventPostingsQueryArgumentsType {
   """Posted By ID"""
   eventpostingDetailsPostedById: FloatInput
   """Code to uniquely identify the Property"""
-  eventpostingDetailsResort: StringInput!
+  eventpostingDetailsResort: StringInput!                               @mandatoryInput
   """Resource Type"""
   eventpostingDetailsPostedBy: StringInput
   """Revenue Type"""
@@ -103,6 +117,8 @@ input CateringEventPostingsQueryArgumentsType {
   eventDetailsBookId: FloatInput
   """Block End Date"""
   eventDetailsAllotmentenddate: DateInput
+  """Chain Code"""
+  eventDetailsChainCode: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   eventDetailsDsi: FloatInput
   """End Date"""
@@ -179,6 +195,8 @@ input CateringEventPostingsQueryArgumentsType {
   allotmentDetailsBlockType: StringInput
   """Central Xchange Date"""
   allotmentDetailsCXchangeDate: DateInput
+  """Chain Code"""
+  allotmentDetailsChainCode: StringInput
   """Company Name ID"""
   allotmentDetailsCompanyNameId: FloatInput
   """Contact Name ID"""
@@ -235,6 +253,606 @@ input CateringEventPostingsQueryArgumentsType {
   allotmentDetailsUpdateDate: DateTimeInput
   """Multi Byte Description in uppercase"""
   allotmentDetailsXudescription: StringInput
+  """AR Ledger Credit"""
+  financialtransincrevenuetaxDetailsArLedCredit: FloatInput
+  """AR Ledger Debit"""
+  financialtransincrevenuetaxDetailsArLedDebit: FloatInput
+  """AR State"""
+  financialtransincrevenuetaxDetailsArState: StringInput
+  """Account Code"""
+  financialtransincrevenuetaxDetailsArNumber: FloatInput
+  """Accountid"""
+  financialtransincrevenuetaxDetailsAccountid: FloatInput
+  """Article ID"""
+  financialtransincrevenuetaxDetailsArticleId: FloatInput
+  """Authemployeeid"""
+  financialtransincrevenuetaxDetailsAuthemployeeid: FloatInput
+  """Bonus Check ID"""
+  financialtransincrevenuetaxDetailsBonusCheckId: FloatInput
+  """Business Date"""
+  financialtransincrevenuetaxDetailsBusinessDate: DateInput
+  """Central Xchange Date"""
+  financialtransincrevenuetaxDetailsCXchangeDate: DateInput
+  """Central Xchange Rate"""
+  financialtransincrevenuetaxDetailsCXchangeRate: FloatInput
+  """Cashier ID"""
+  financialtransincrevenuetaxDetailsCashierId: FloatInput
+  """Chain Code"""
+  financialtransincrevenuetaxDetailsChainCode: StringInput
+  """Check Number"""
+  financialtransincrevenuetaxDetailsChequeNumber: StringInput
+  """Closure Number"""
+  financialtransincrevenuetaxDetailsClosureNo: FloatInput
+  """Trx code of original transaction that was turned into a comp"""
+  financialtransincrevenuetaxDetailsCompLinkTrxCode: StringInput
+  """Complinktranscodeid"""
+  financialtransincrevenuetaxDetailsComplinktranscodeid: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  financialtransincrevenuetaxDetailsDsi: FloatInput
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  financialtransincrevenuetaxDetailsExchDiffTrxNo: FloatInput
+  """Number to identify the DML sequence."""
+  financialtransincrevenuetaxDetailsFinDmlSeqNo: FloatInput
+  """Fintransactionid"""
+  financialtransincrevenuetaxDetailsFintransactionid: FloatInput
+  """Fintransid"""
+  financialtransincrevenuetaxDetailsFintransid: FloatInput
+  """Folio Number"""
+  financialtransincrevenuetaxDetailsBillNo: FloatInput
+  """Folio View"""
+  financialtransincrevenuetaxDetailsFolioView: FloatInput
+  """Folioid"""
+  financialtransincrevenuetaxDetailsFolioid: FloatInput
+  """From Resv ID"""
+  financialtransincrevenuetaxDetailsFromResvId: FloatInput
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  financialtransincrevenuetaxDetailsFtSubtype: StringInput
+  """Guest Account Ledger Credit"""
+  financialtransincrevenuetaxDetailsGuestAccountCredit: FloatInput
+  """Debit amount on the guest account"""
+  financialtransincrevenuetaxDetailsGuestAccountDebit: FloatInput
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  financialtransincrevenuetaxDetailsHotelAcct: StringInput
+  """Insert Date"""
+  financialtransincrevenuetaxDetailsInsertDate: DateTimeInput
+  """Articleid"""
+  financialtransincrevenuetaxDetailsArticleid: FloatInput
+  """Businessdate"""
+  financialtransincrevenuetaxDetailsBusinessdate: DateInput
+  """Cashierid"""
+  financialtransincrevenuetaxDetailsCashierid: FloatInput
+  """Internal Window ID"""
+  financialtransincrevenuetaxDetailsFolioNo: FloatInput
+  """Invoice Number"""
+  financialtransincrevenuetaxDetailsInvoiceNo: FloatInput
+  """JRN Update Date and Time"""
+  financialtransincrevenuetaxDetailsJrnupdatedttm: DateTimeInput
+  """Link Transaction No"""
+  financialtransincrevenuetaxDetailsLinkTrxNo: FloatInput
+  """Internal ID to uniquely identify the Property"""
+  financialtransincrevenuetaxDetailsLocationid: StringInput
+  """Name ID"""
+  financialtransincrevenuetaxDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  financialtransincrevenuetaxDetailsOrganizationid: FloatInput
+  """Original Resv Name ID"""
+  financialtransincrevenuetaxDetailsOriginalResvNameId: FloatInput
+  """Original Room"""
+  financialtransincrevenuetaxDetailsOriginalRoom: StringInput
+  """Originalresvid"""
+  financialtransincrevenuetaxDetailsOriginalresvid: FloatInput
+  """Package"""
+  financialtransincrevenuetaxDetailsProduct: StringInput
+  """Credit amount on the guest package account."""
+  financialtransincrevenuetaxDetailsPackageCredit: FloatInput
+  """Debit amount on the guest package account"""
+  financialtransincrevenuetaxDetailsPackageDebit: FloatInput
+  """Packagelinkfintransid"""
+  financialtransincrevenuetaxDetailsPackagelinkfintransid: FloatInput
+  """Parentfintransid"""
+  financialtransincrevenuetaxDetailsParentfintransid: FloatInput
+  """Postit Number"""
+  financialtransincrevenuetaxDetailsPostitNo: FloatInput
+  """Productid"""
+  financialtransincrevenuetaxDetailsProductid: StringInput
+  """Profileid"""
+  financialtransincrevenuetaxDetailsProfileid: FloatInput
+  """Code to uniquely identify the Property"""
+  financialtransincrevenuetaxDetailsResort: StringInput
+  """Rate Code"""
+  financialtransincrevenuetaxDetailsRateCode: StringInput
+  """Ratecodeid"""
+  financialtransincrevenuetaxDetailsRatecodeid: StringInput
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  financialtransincrevenuetaxDetailsRecptType: StringInput
+  """Reservationid"""
+  financialtransincrevenuetaxDetailsReservationid: FloatInput
+  """Room Number"""
+  financialtransincrevenuetaxDetailsRoom: StringInput
+  """Roomid"""
+  financialtransincrevenuetaxDetailsRoomid: StringInput
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  financialtransincrevenuetaxDetailsRoundLinkTrxno: FloatInput
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  financialtransincrevenuetaxDetailsRoutingInstrnId: FloatInput
+  """Tax Elements"""
+  financialtransincrevenuetaxDetailsTaxElements: StringInput
+  """Transaction Code Group"""
+  financialtransincrevenuetaxDetailsTcGroup: StringInput
+  """Transaction Code Subgroup"""
+  financialtransincrevenuetaxDetailsTcSubgroup: StringInput
+  """Tran Action ID"""
+  financialtransincrevenuetaxDetailsTranActionId: FloatInput
+  """Transaction Code"""
+  financialtransincrevenuetaxDetailsTranscodeid: StringInput
+  """Transaction Date"""
+  financialtransincrevenuetaxDetailsTrxDate: DateInput
+  """Transaction Number Added By"""
+  financialtransincrevenuetaxDetailsTrxNoAddedBy: FloatInput
+  """Transaction Reservation Name ID"""
+  financialtransincrevenuetaxDetailsResvNameId: FloatInput
+  """Transaction Code"""
+  financialtransincrevenuetaxDetailsTrxCode: StringInput
+  """Trx Number"""
+  financialtransincrevenuetaxDetailsTrxNo: FloatInput
+  """Trx Number Against Package"""
+  financialtransincrevenuetaxDetailsTrxNoAgainstPackage: FloatInput
+  """The trx_no against which this transaction gets adjusted."""
+  financialtransincrevenuetaxDetailsTrxNoAdjust: FloatInput
+  """Transaction No Header"""
+  financialtransincrevenuetaxDetailsTrxNoHeader: FloatInput
+  """User ID"""
+  financialtransincrevenuetaxDetailsAuthorizerId: FloatInput
+  """AR Ledger Credit"""
+  financialtransextrarevenuetaxDetailsArLedCredit: FloatInput
+  """AR Ledger Debit"""
+  financialtransextrarevenuetaxDetailsArLedDebit: FloatInput
+  """AR State"""
+  financialtransextrarevenuetaxDetailsArState: StringInput
+  """Account Code"""
+  financialtransextrarevenuetaxDetailsArNumber: FloatInput
+  """Accountid"""
+  financialtransextrarevenuetaxDetailsAccountid: FloatInput
+  """Article ID"""
+  financialtransextrarevenuetaxDetailsArticleId: FloatInput
+  """Authemployeeid"""
+  financialtransextrarevenuetaxDetailsAuthemployeeid: FloatInput
+  """Bonus Check ID"""
+  financialtransextrarevenuetaxDetailsBonusCheckId: FloatInput
+  """Business Date"""
+  financialtransextrarevenuetaxDetailsBusinessDate: DateInput
+  """Central Xchange Date"""
+  financialtransextrarevenuetaxDetailsCXchangeDate: DateInput
+  """Central Xchange Rate"""
+  financialtransextrarevenuetaxDetailsCXchangeRate: FloatInput
+  """Cashier ID"""
+  financialtransextrarevenuetaxDetailsCashierId: FloatInput
+  """Chain Code"""
+  financialtransextrarevenuetaxDetailsChainCode: StringInput
+  """Check Number"""
+  financialtransextrarevenuetaxDetailsChequeNumber: StringInput
+  """Closure Number"""
+  financialtransextrarevenuetaxDetailsClosureNo: FloatInput
+  """Trx code of original transaction that was turned into a comp"""
+  financialtransextrarevenuetaxDetailsCompLinkTrxCode: StringInput
+  """Complinktranscodeid"""
+  financialtransextrarevenuetaxDetailsComplinktranscodeid: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  financialtransextrarevenuetaxDetailsDsi: FloatInput
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  financialtransextrarevenuetaxDetailsExchDiffTrxNo: FloatInput
+  """Number to identify the DML sequence."""
+  financialtransextrarevenuetaxDetailsFinDmlSeqNo: FloatInput
+  """Fintransactionid"""
+  financialtransextrarevenuetaxDetailsFintransactionid: FloatInput
+  """Fintransid"""
+  financialtransextrarevenuetaxDetailsFintransid: FloatInput
+  """Folio Number"""
+  financialtransextrarevenuetaxDetailsBillNo: FloatInput
+  """Folio View"""
+  financialtransextrarevenuetaxDetailsFolioView: FloatInput
+  """Folioid"""
+  financialtransextrarevenuetaxDetailsFolioid: FloatInput
+  """From Resv ID"""
+  financialtransextrarevenuetaxDetailsFromResvId: FloatInput
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  financialtransextrarevenuetaxDetailsFtSubtype: StringInput
+  """Guest Account Ledger Credit"""
+  financialtransextrarevenuetaxDetailsGuestAccountCredit: FloatInput
+  """Debit amount on the guest account"""
+  financialtransextrarevenuetaxDetailsGuestAccountDebit: FloatInput
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  financialtransextrarevenuetaxDetailsHotelAcct: StringInput
+  """Insert Date"""
+  financialtransextrarevenuetaxDetailsInsertDate: DateTimeInput
+  """Articleid"""
+  financialtransextrarevenuetaxDetailsArticleid: FloatInput
+  """Businessdate"""
+  financialtransextrarevenuetaxDetailsBusinessdate: DateInput
+  """Cashierid"""
+  financialtransextrarevenuetaxDetailsCashierid: FloatInput
+  """Internal Window ID"""
+  financialtransextrarevenuetaxDetailsFolioNo: FloatInput
+  """Invoice Number"""
+  financialtransextrarevenuetaxDetailsInvoiceNo: FloatInput
+  """JRN Update Date and Time"""
+  financialtransextrarevenuetaxDetailsJrnupdatedttm: DateTimeInput
+  """Link Transaction No"""
+  financialtransextrarevenuetaxDetailsLinkTrxNo: FloatInput
+  """Internal ID to uniquely identify the Property"""
+  financialtransextrarevenuetaxDetailsLocationid: StringInput
+  """Name ID"""
+  financialtransextrarevenuetaxDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  financialtransextrarevenuetaxDetailsOrganizationid: FloatInput
+  """Original Resv Name ID"""
+  financialtransextrarevenuetaxDetailsOriginalResvNameId: FloatInput
+  """Original Room"""
+  financialtransextrarevenuetaxDetailsOriginalRoom: StringInput
+  """Originalresvid"""
+  financialtransextrarevenuetaxDetailsOriginalresvid: FloatInput
+  """Package"""
+  financialtransextrarevenuetaxDetailsProduct: StringInput
+  """Credit amount on the guest package account."""
+  financialtransextrarevenuetaxDetailsPackageCredit: FloatInput
+  """Debit amount on the guest package account"""
+  financialtransextrarevenuetaxDetailsPackageDebit: FloatInput
+  """Packagelinkfintransid"""
+  financialtransextrarevenuetaxDetailsPackagelinkfintransid: FloatInput
+  """Parentfintransid"""
+  financialtransextrarevenuetaxDetailsParentfintransid: FloatInput
+  """Postit Number"""
+  financialtransextrarevenuetaxDetailsPostitNo: FloatInput
+  """Productid"""
+  financialtransextrarevenuetaxDetailsProductid: StringInput
+  """Profileid"""
+  financialtransextrarevenuetaxDetailsProfileid: FloatInput
+  """Code to uniquely identify the Property"""
+  financialtransextrarevenuetaxDetailsResort: StringInput
+  """Rate Code"""
+  financialtransextrarevenuetaxDetailsRateCode: StringInput
+  """Ratecodeid"""
+  financialtransextrarevenuetaxDetailsRatecodeid: StringInput
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  financialtransextrarevenuetaxDetailsRecptType: StringInput
+  """Reservationid"""
+  financialtransextrarevenuetaxDetailsReservationid: FloatInput
+  """Room Number"""
+  financialtransextrarevenuetaxDetailsRoom: StringInput
+  """Roomid"""
+  financialtransextrarevenuetaxDetailsRoomid: StringInput
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  financialtransextrarevenuetaxDetailsRoundLinkTrxno: FloatInput
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  financialtransextrarevenuetaxDetailsRoutingInstrnId: FloatInput
+  """Tax Elements"""
+  financialtransextrarevenuetaxDetailsTaxElements: StringInput
+  """Transaction Code Group"""
+  financialtransextrarevenuetaxDetailsTcGroup: StringInput
+  """Transaction Code Subgroup"""
+  financialtransextrarevenuetaxDetailsTcSubgroup: StringInput
+  """Tran Action ID"""
+  financialtransextrarevenuetaxDetailsTranActionId: FloatInput
+  """Transaction Code"""
+  financialtransextrarevenuetaxDetailsTranscodeid: StringInput
+  """Transaction Date"""
+  financialtransextrarevenuetaxDetailsTrxDate: DateInput
+  """Transaction Number Added By"""
+  financialtransextrarevenuetaxDetailsTrxNoAddedBy: FloatInput
+  """Transaction Reservation Name ID"""
+  financialtransextrarevenuetaxDetailsResvNameId: FloatInput
+  """Transaction Code"""
+  financialtransextrarevenuetaxDetailsTrxCode: StringInput
+  """Trx Number"""
+  financialtransextrarevenuetaxDetailsTrxNo: FloatInput
+  """Trx Number Against Package"""
+  financialtransextrarevenuetaxDetailsTrxNoAgainstPackage: FloatInput
+  """The trx_no against which this transaction gets adjusted."""
+  financialtransextrarevenuetaxDetailsTrxNoAdjust: FloatInput
+  """Transaction No Header"""
+  financialtransextrarevenuetaxDetailsTrxNoHeader: FloatInput
+  """User ID"""
+  financialtransextrarevenuetaxDetailsAuthorizerId: FloatInput
+  """AR Ledger Credit"""
+  financialtranssvcchargeincrevDetailsArLedCredit: FloatInput
+  """AR Ledger Debit"""
+  financialtranssvcchargeincrevDetailsArLedDebit: FloatInput
+  """AR State"""
+  financialtranssvcchargeincrevDetailsArState: StringInput
+  """Account Code"""
+  financialtranssvcchargeincrevDetailsArNumber: FloatInput
+  """Accountid"""
+  financialtranssvcchargeincrevDetailsAccountid: FloatInput
+  """Article ID"""
+  financialtranssvcchargeincrevDetailsArticleId: FloatInput
+  """Authemployeeid"""
+  financialtranssvcchargeincrevDetailsAuthemployeeid: FloatInput
+  """Bonus Check ID"""
+  financialtranssvcchargeincrevDetailsBonusCheckId: FloatInput
+  """Business Date"""
+  financialtranssvcchargeincrevDetailsBusinessDate: DateInput
+  """Central Xchange Date"""
+  financialtranssvcchargeincrevDetailsCXchangeDate: DateInput
+  """Central Xchange Rate"""
+  financialtranssvcchargeincrevDetailsCXchangeRate: FloatInput
+  """Cashier ID"""
+  financialtranssvcchargeincrevDetailsCashierId: FloatInput
+  """Chain Code"""
+  financialtranssvcchargeincrevDetailsChainCode: StringInput
+  """Check Number"""
+  financialtranssvcchargeincrevDetailsChequeNumber: StringInput
+  """Closure Number"""
+  financialtranssvcchargeincrevDetailsClosureNo: FloatInput
+  """Trx code of original transaction that was turned into a comp"""
+  financialtranssvcchargeincrevDetailsCompLinkTrxCode: StringInput
+  """Complinktranscodeid"""
+  financialtranssvcchargeincrevDetailsComplinktranscodeid: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  financialtranssvcchargeincrevDetailsDsi: FloatInput
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  financialtranssvcchargeincrevDetailsExchDiffTrxNo: FloatInput
+  """Number to identify the DML sequence."""
+  financialtranssvcchargeincrevDetailsFinDmlSeqNo: FloatInput
+  """Fintransactionid"""
+  financialtranssvcchargeincrevDetailsFintransactionid: FloatInput
+  """Fintransid"""
+  financialtranssvcchargeincrevDetailsFintransid: FloatInput
+  """Folio Number"""
+  financialtranssvcchargeincrevDetailsBillNo: FloatInput
+  """Folio View"""
+  financialtranssvcchargeincrevDetailsFolioView: FloatInput
+  """Folioid"""
+  financialtranssvcchargeincrevDetailsFolioid: FloatInput
+  """From Resv ID"""
+  financialtranssvcchargeincrevDetailsFromResvId: FloatInput
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  financialtranssvcchargeincrevDetailsFtSubtype: StringInput
+  """Guest Account Ledger Credit"""
+  financialtranssvcchargeincrevDetailsGuestAccountCredit: FloatInput
+  """Debit amount on the guest account"""
+  financialtranssvcchargeincrevDetailsGuestAccountDebit: FloatInput
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  financialtranssvcchargeincrevDetailsHotelAcct: StringInput
+  """Insert Date"""
+  financialtranssvcchargeincrevDetailsInsertDate: DateTimeInput
+  """Articleid"""
+  financialtranssvcchargeincrevDetailsArticleid: FloatInput
+  """Businessdate"""
+  financialtranssvcchargeincrevDetailsBusinessdate: DateInput
+  """Cashierid"""
+  financialtranssvcchargeincrevDetailsCashierid: FloatInput
+  """Internal Window ID"""
+  financialtranssvcchargeincrevDetailsFolioNo: FloatInput
+  """Invoice Number"""
+  financialtranssvcchargeincrevDetailsInvoiceNo: FloatInput
+  """JRN Update Date and Time"""
+  financialtranssvcchargeincrevDetailsJrnupdatedttm: DateTimeInput
+  """Link Transaction No"""
+  financialtranssvcchargeincrevDetailsLinkTrxNo: FloatInput
+  """Internal ID to uniquely identify the Property"""
+  financialtranssvcchargeincrevDetailsLocationid: StringInput
+  """Name ID"""
+  financialtranssvcchargeincrevDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  financialtranssvcchargeincrevDetailsOrganizationid: FloatInput
+  """Original Resv Name ID"""
+  financialtranssvcchargeincrevDetailsOriginalResvNameId: FloatInput
+  """Original Room"""
+  financialtranssvcchargeincrevDetailsOriginalRoom: StringInput
+  """Originalresvid"""
+  financialtranssvcchargeincrevDetailsOriginalresvid: FloatInput
+  """Package"""
+  financialtranssvcchargeincrevDetailsProduct: StringInput
+  """Credit amount on the guest package account."""
+  financialtranssvcchargeincrevDetailsPackageCredit: FloatInput
+  """Debit amount on the guest package account"""
+  financialtranssvcchargeincrevDetailsPackageDebit: FloatInput
+  """Packagelinkfintransid"""
+  financialtranssvcchargeincrevDetailsPackagelinkfintransid: FloatInput
+  """Parentfintransid"""
+  financialtranssvcchargeincrevDetailsParentfintransid: FloatInput
+  """Postit Number"""
+  financialtranssvcchargeincrevDetailsPostitNo: FloatInput
+  """Productid"""
+  financialtranssvcchargeincrevDetailsProductid: StringInput
+  """Profileid"""
+  financialtranssvcchargeincrevDetailsProfileid: FloatInput
+  """Code to uniquely identify the Property"""
+  financialtranssvcchargeincrevDetailsResort: StringInput
+  """Rate Code"""
+  financialtranssvcchargeincrevDetailsRateCode: StringInput
+  """Ratecodeid"""
+  financialtranssvcchargeincrevDetailsRatecodeid: StringInput
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  financialtranssvcchargeincrevDetailsRecptType: StringInput
+  """Reservationid"""
+  financialtranssvcchargeincrevDetailsReservationid: FloatInput
+  """Room Number"""
+  financialtranssvcchargeincrevDetailsRoom: StringInput
+  """Roomid"""
+  financialtranssvcchargeincrevDetailsRoomid: StringInput
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  financialtranssvcchargeincrevDetailsRoundLinkTrxno: FloatInput
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  financialtranssvcchargeincrevDetailsRoutingInstrnId: FloatInput
+  """Tax Elements"""
+  financialtranssvcchargeincrevDetailsTaxElements: StringInput
+  """Transaction Code Group"""
+  financialtranssvcchargeincrevDetailsTcGroup: StringInput
+  """Transaction Code Subgroup"""
+  financialtranssvcchargeincrevDetailsTcSubgroup: StringInput
+  """Tran Action ID"""
+  financialtranssvcchargeincrevDetailsTranActionId: FloatInput
+  """Transaction Code"""
+  financialtranssvcchargeincrevDetailsTranscodeid: StringInput
+  """Transaction Date"""
+  financialtranssvcchargeincrevDetailsTrxDate: DateInput
+  """Transaction Number Added By"""
+  financialtranssvcchargeincrevDetailsTrxNoAddedBy: FloatInput
+  """Transaction Reservation Name ID"""
+  financialtranssvcchargeincrevDetailsResvNameId: FloatInput
+  """Transaction Code"""
+  financialtranssvcchargeincrevDetailsTrxCode: StringInput
+  """Trx Number"""
+  financialtranssvcchargeincrevDetailsTrxNo: FloatInput
+  """Trx Number Against Package"""
+  financialtranssvcchargeincrevDetailsTrxNoAgainstPackage: FloatInput
+  """The trx_no against which this transaction gets adjusted."""
+  financialtranssvcchargeincrevDetailsTrxNoAdjust: FloatInput
+  """Transaction No Header"""
+  financialtranssvcchargeincrevDetailsTrxNoHeader: FloatInput
+  """User ID"""
+  financialtranssvcchargeincrevDetailsAuthorizerId: FloatInput
+  """AR Ledger Credit"""
+  financialtranssvcchargeextrarevDetailsArLedCredit: FloatInput
+  """AR Ledger Debit"""
+  financialtranssvcchargeextrarevDetailsArLedDebit: FloatInput
+  """AR State"""
+  financialtranssvcchargeextrarevDetailsArState: StringInput
+  """Account Code"""
+  financialtranssvcchargeextrarevDetailsArNumber: FloatInput
+  """Accountid"""
+  financialtranssvcchargeextrarevDetailsAccountid: FloatInput
+  """Article ID"""
+  financialtranssvcchargeextrarevDetailsArticleId: FloatInput
+  """Authemployeeid"""
+  financialtranssvcchargeextrarevDetailsAuthemployeeid: FloatInput
+  """Bonus Check ID"""
+  financialtranssvcchargeextrarevDetailsBonusCheckId: FloatInput
+  """Business Date"""
+  financialtranssvcchargeextrarevDetailsBusinessDate: DateInput
+  """Central Xchange Date"""
+  financialtranssvcchargeextrarevDetailsCXchangeDate: DateInput
+  """Central Xchange Rate"""
+  financialtranssvcchargeextrarevDetailsCXchangeRate: FloatInput
+  """Cashier ID"""
+  financialtranssvcchargeextrarevDetailsCashierId: FloatInput
+  """Chain Code"""
+  financialtranssvcchargeextrarevDetailsChainCode: StringInput
+  """Check Number"""
+  financialtranssvcchargeextrarevDetailsChequeNumber: StringInput
+  """Closure Number"""
+  financialtranssvcchargeextrarevDetailsClosureNo: FloatInput
+  """Trx code of original transaction that was turned into a comp"""
+  financialtranssvcchargeextrarevDetailsCompLinkTrxCode: StringInput
+  """Complinktranscodeid"""
+  financialtranssvcchargeextrarevDetailsComplinktranscodeid: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  financialtranssvcchargeextrarevDetailsDsi: FloatInput
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  financialtranssvcchargeextrarevDetailsExchDiffTrxNo: FloatInput
+  """Number to identify the DML sequence."""
+  financialtranssvcchargeextrarevDetailsFinDmlSeqNo: FloatInput
+  """Fintransactionid"""
+  financialtranssvcchargeextrarevDetailsFintransactionid: FloatInput
+  """Fintransid"""
+  financialtranssvcchargeextrarevDetailsFintransid: FloatInput
+  """Folio Number"""
+  financialtranssvcchargeextrarevDetailsBillNo: FloatInput
+  """Folio View"""
+  financialtranssvcchargeextrarevDetailsFolioView: FloatInput
+  """Folioid"""
+  financialtranssvcchargeextrarevDetailsFolioid: FloatInput
+  """From Resv ID"""
+  financialtranssvcchargeextrarevDetailsFromResvId: FloatInput
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  financialtranssvcchargeextrarevDetailsFtSubtype: StringInput
+  """Guest Account Ledger Credit"""
+  financialtranssvcchargeextrarevDetailsGuestAccountCredit: FloatInput
+  """Debit amount on the guest account"""
+  financialtranssvcchargeextrarevDetailsGuestAccountDebit: FloatInput
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  financialtranssvcchargeextrarevDetailsHotelAcct: StringInput
+  """Insert Date"""
+  financialtranssvcchargeextrarevDetailsInsertDate: DateTimeInput
+  """Articleid"""
+  financialtranssvcchargeextrarevDetailsArticleid: FloatInput
+  """Businessdate"""
+  financialtranssvcchargeextrarevDetailsBusinessdate: DateInput
+  """Cashierid"""
+  financialtranssvcchargeextrarevDetailsCashierid: FloatInput
+  """Internal Window ID"""
+  financialtranssvcchargeextrarevDetailsFolioNo: FloatInput
+  """Invoice Number"""
+  financialtranssvcchargeextrarevDetailsInvoiceNo: FloatInput
+  """JRN Update Date and Time"""
+  financialtranssvcchargeextrarevDetailsJrnupdatedttm: DateTimeInput
+  """Link Transaction No"""
+  financialtranssvcchargeextrarevDetailsLinkTrxNo: FloatInput
+  """Internal ID to uniquely identify the Property"""
+  financialtranssvcchargeextrarevDetailsLocationid: StringInput
+  """Name ID"""
+  financialtranssvcchargeextrarevDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  financialtranssvcchargeextrarevDetailsOrganizationid: FloatInput
+  """Original Resv Name ID"""
+  financialtranssvcchargeextrarevDetailsOriginalResvNameId: FloatInput
+  """Original Room"""
+  financialtranssvcchargeextrarevDetailsOriginalRoom: StringInput
+  """Originalresvid"""
+  financialtranssvcchargeextrarevDetailsOriginalresvid: FloatInput
+  """Package"""
+  financialtranssvcchargeextrarevDetailsProduct: StringInput
+  """Credit amount on the guest package account."""
+  financialtranssvcchargeextrarevDetailsPackageCredit: FloatInput
+  """Debit amount on the guest package account"""
+  financialtranssvcchargeextrarevDetailsPackageDebit: FloatInput
+  """Packagelinkfintransid"""
+  financialtranssvcchargeextrarevDetailsPackagelinkfintransid: FloatInput
+  """Parentfintransid"""
+  financialtranssvcchargeextrarevDetailsParentfintransid: FloatInput
+  """Postit Number"""
+  financialtranssvcchargeextrarevDetailsPostitNo: FloatInput
+  """Productid"""
+  financialtranssvcchargeextrarevDetailsProductid: StringInput
+  """Profileid"""
+  financialtranssvcchargeextrarevDetailsProfileid: FloatInput
+  """Code to uniquely identify the Property"""
+  financialtranssvcchargeextrarevDetailsResort: StringInput
+  """Rate Code"""
+  financialtranssvcchargeextrarevDetailsRateCode: StringInput
+  """Ratecodeid"""
+  financialtranssvcchargeextrarevDetailsRatecodeid: StringInput
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  financialtranssvcchargeextrarevDetailsRecptType: StringInput
+  """Reservationid"""
+  financialtranssvcchargeextrarevDetailsReservationid: FloatInput
+  """Room Number"""
+  financialtranssvcchargeextrarevDetailsRoom: StringInput
+  """Roomid"""
+  financialtranssvcchargeextrarevDetailsRoomid: StringInput
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  financialtranssvcchargeextrarevDetailsRoundLinkTrxno: FloatInput
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  financialtranssvcchargeextrarevDetailsRoutingInstrnId: FloatInput
+  """Tax Elements"""
+  financialtranssvcchargeextrarevDetailsTaxElements: StringInput
+  """Transaction Code Group"""
+  financialtranssvcchargeextrarevDetailsTcGroup: StringInput
+  """Transaction Code Subgroup"""
+  financialtranssvcchargeextrarevDetailsTcSubgroup: StringInput
+  """Tran Action ID"""
+  financialtranssvcchargeextrarevDetailsTranActionId: FloatInput
+  """Transaction Code"""
+  financialtranssvcchargeextrarevDetailsTranscodeid: StringInput
+  """Transaction Date"""
+  financialtranssvcchargeextrarevDetailsTrxDate: DateInput
+  """Transaction Number Added By"""
+  financialtranssvcchargeextrarevDetailsTrxNoAddedBy: FloatInput
+  """Transaction Reservation Name ID"""
+  financialtranssvcchargeextrarevDetailsResvNameId: FloatInput
+  """Transaction Code"""
+  financialtranssvcchargeextrarevDetailsTrxCode: StringInput
+  """Trx Number"""
+  financialtranssvcchargeextrarevDetailsTrxNo: FloatInput
+  """Trx Number Against Package"""
+  financialtranssvcchargeextrarevDetailsTrxNoAgainstPackage: FloatInput
+  """The trx_no against which this transaction gets adjusted."""
+  financialtranssvcchargeextrarevDetailsTrxNoAdjust: FloatInput
+  """Transaction No Header"""
+  financialtranssvcchargeextrarevDetailsTrxNoHeader: FloatInput
+  """User ID"""
+  financialtranssvcchargeextrarevDetailsAuthorizerId: FloatInput
 }
 type Query {
   """Event posting details including revenues by property Block Event and Revenue groups"""
@@ -247,6 +865,14 @@ type CateringEventPostingsType {
   eventDetails: CateringEventPostingsEventDetailsType
   """Block"""
   blockDetails: CateringEventPostingsBlockDetailsType
+  """Financial Transaction Inc Revenue Tax Details"""
+  financialTransactionIncRevenueTaxDetails: CateringEventPostingsFinancialTransactionIncRevenueTaxDetailsType
+  """Financial Transaction Extra Revenue Tax Details"""
+  financialTransactionExtraRevenueTaxDetails: CateringEventPostingsFinancialTransactionExtraRevenueTaxDetailsType
+  """Financial Transaction Svc Charge Inc Revenue Details"""
+  financialTransactionSvcChargeIncRevDetails: CateringEventPostingsFinancialTransactionSvcChargeIncRevDetailsType
+  """Financial Transaction Svc Charge Extra Revenue Details"""
+  financialTransactionSvcChargeExtraRevDetails: CateringEventPostingsFinancialTransactionSvcChargeExtraRevDetailsType
   cateringEventPostingsRecordCount: Int
 }
 type CateringEventPostingsEventPostingDetailsType {
@@ -450,12 +1076,16 @@ type CateringEventPostingsEventDetailsType {
   centralDiscountAmount: Float
   """Central Meal Type"""
   centralMealType: String
+  """Central Package Price"""
+  centralPackagePrice: Float
   """Central Rental Amount"""
   centralRentalAmount: Float
   """Central Room Class"""
   centralRoomClass: String
   """Central Room Class Description"""
   centralRoomClassDescription: String
+  """Chain Code"""
+  chainCode: String
   """Combination Room YN"""
   combinationRoomYN: String
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -484,6 +1114,8 @@ type CateringEventPostingsEventDetailsType {
   endDateTime: Date
   """End Time"""
   endTime: String
+  """End Time with Teardown"""
+  endTimeWithTeardown: String
   """Event Property."""
   evResort: String
   """Ev Status Order By"""
@@ -578,6 +1210,8 @@ type CateringEventPostingsEventDetailsType {
   packageActualAttendees: Float
   """Package Code"""
   packageCode: String
+  """Package Discount Percentage"""
+  packageDiscountPercentage: Float
   """Pkg Ev ID"""
   packageEvId: Float
   """Expected Attendees"""
@@ -588,6 +1222,8 @@ type CateringEventPostingsEventDetailsType {
   packageID: Float
   """Package Name"""
   packageName: String
+  """Package Price"""
+  packagePrice: Float
   """Package Property"""
   packageProperty: String
   """Packageeventid"""
@@ -650,6 +1286,8 @@ type CateringEventPostingsEventDetailsType {
   startDateTime: Date
   """Start Time"""
   startTime: String
+  """Start Time with Setup"""
+  startTimeWithSetup: String
   """Date when the status was changed"""
   statusDate: Date
   """Tear-Down Time"""
@@ -756,6 +1394,8 @@ type CateringEventPostingsBlockDetailsType {
   blockAlias: String
   """Block Code"""
   blockCode: String
+  """Block Date Actual"""
+  blockDateActual: Date
   """Block Date Definite"""
   blockDateDefinite: DateTime
   """Block Date Prospect"""
@@ -884,6 +1524,8 @@ type CateringEventPostingsBlockDetailsType {
   cateringCancellationReason: String
   """Catering Currency"""
   cateringCurrency: String
+  """Catering Date Actual"""
+  cateringDateActual: Date
   """Catering Decision Date"""
   cateringDecisionDate: Date
   """Catering Deduct Inventory"""
@@ -1010,6 +1652,8 @@ type CateringEventPostingsBlockDetailsType {
   centralSourceCodeDescription: String
   """Central Tax Amount"""
   centralTaxAmount: Float
+  """Chain Code"""
+  chainCode: String
   """Channelid"""
   channelid: String
   """Code"""
@@ -1818,4 +2462,2900 @@ type CateringEventPostingsBlockDetailsType {
   webOverbookYN: String
   """Multi Byte Description in uppercase"""
   xudescription: String
+}
+type CateringEventPostingsFinancialTransactionIncRevenueTaxDetailsType {
+  """AR Charge Transfer YN"""
+  aRChargeTransferFlagYN: String
+  """Indicates if an individual charge has been transferred to another invoice in AR. Used to disallow operations such as the transfer of same charge multiple times editing an already transferred charge etc."""
+  aRChargeTransferYN: String
+  """AR Ledger Credit"""
+  aRLedgerCredit: Float
+  """AR Ledger Debit"""
+  aRLedgerDebit: Float
+  """AR State"""
+  aRState: String
+  """AR Transfer Date"""
+  aRTransferDate: Date
+  """Set Y to transactions when the application parameter ONLY POST TAXES ONCE FOR APARTMENT STYLE BILLING CHARGES is set. Proper rows and net amount will be shown in reports when the parameter is turned on or off."""
+  aSBOnlyPostTaxesOnceYn: String
+  """Populate the tax rows that are inserted for Trial balance with "ASB_TB_TAX". Other reports and screens will hide these transactions."""
+  aSBTaxFlag: String
+  """Account Code"""
+  accountCode: Float
+  """Account Name"""
+  accountName: String
+  """Account Number"""
+  accountNumber: String
+  """Account Type Flag"""
+  accountTypeFlag: String
+  """Accountid"""
+  accountid: Float
+  """Adjustment YN"""
+  adjustmentYN: String
+  """Transaction code of the master posting of the automatic adjustment posting for advanced generates."""
+  advGenerateTrxCode: String
+  """Identifies if this Advance Bill has been reversed."""
+  advanceBillReversedYn: String
+  """Identifies if this transaction was generated by Advance Bill."""
+  advanceBillYn: String
+  """The charge / generate is eligible as part of advanced generates functionality."""
+  advancedGenerateYn: String
+  """Indicates the automatic adjustment posting for advanced generates. Possible values are ?NA? ?CO?."""
+  advancedGeneratedAdjustment: String
+  """Advgentranscodeid"""
+  advgentranscodeid: String
+  """Distinguish "Same day" package from a next day package by storing N/S."""
+  allowanceType: String
+  """Indicates ASB transactions: Rental charge for an [A]partment Style Rental Cycle [O]ffsetting transaction for Rental charge for an Apartment Style Rental Cycle [N]ightly Rental Posting [W]aived Nights Rental Posting"""
+  apartmentStyleBillingType: String
+  """Approval Code"""
+  approvalCode: String
+  """Approval Date"""
+  approvalDate: Date
+  """Approval Status"""
+  approvalStatus: String
+  """Arrangement Code"""
+  arrangementCode: String
+  """Arrangement Description for the Transaction Code."""
+  arrangementDesc: String
+  """Arrangement ID"""
+  arrangementId: Float
+  """Article ID"""
+  articleId: Float
+  """Indicates the associated receipt number printed for a particular receipt type."""
+  associatedReceiptNo: Float
+  """Indicates the associated transaction number for a particular receipt type."""
+  associatedTrxNumber: Float
+  """Authemployeeid"""
+  authemployeeid: Float
+  """Authorizer"""
+  authorizer: String
+  """Indicates if this column was automatically created for Automatic Credit Bills."""
+  autoCreditbillYn: String
+  """Auto Settle Y/N"""
+  autoSettleYn: String
+  """Billing Event ID"""
+  billingEventID: Float
+  """Bonus Check ID"""
+  bonusCheckId: Float
+  """Bucket code related to this redemption."""
+  bucketCode: String
+  """Indicates that this transaction was a gaming bucket redemption."""
+  bucketRedempYn: String
+  """Business Date"""
+  businessDate: Date
+  """Central Cashier Opening Balance"""
+  cCashierOpeningBalance: Float
+  """Central Change Due"""
+  cChangeDue: Float
+  """Central Contract Gross Amount"""
+  cContractGrossAmount: Float
+  """Central Contract Guest Credit"""
+  cContractGuestCredit: Float
+  """Central Contract Guest Debit"""
+  cContractGuestDebit: Float
+  """Central Contract Net Amount"""
+  cContractNetAmount: Float
+  """Central Xchange Date"""
+  cExchangeDate: Date
+  """Central Xchange Rate"""
+  cExchangeRate: Float
+  """Central Forex Comm Amount"""
+  cForexCommissionAmount: Float
+  """Central Org Ar Led Debit"""
+  cOrganizationARLedgerDebit: Float
+  """Central Org Posted Amount"""
+  cOrganizationPostedAmount: Float
+  """Central Package Allowance"""
+  cPackageAllowance: Float
+  """Central Parallel Gross Amount"""
+  cParallelGrossAmount: Float
+  """Central Parallel Guest Credit"""
+  cParallelGuestCredit: Float
+  """Central Parallel Guest Debit"""
+  cParallelGuestDebit: Float
+  """Central Parallel Net Amount"""
+  cParallelNetAmount: Float
+  """Central Payment Surcharge Amt"""
+  cPaymentSurchargeAmount: Float
+  """Central Tax Rate"""
+  cTaxRate: Float
+  """Central Vat Amount"""
+  cVatAmount: Float
+  """CC Approval Code"""
+  cCApproval: String
+  """Calculate Points YN"""
+  calculatePointsYN: String
+  """Cash Bag Number"""
+  cashBagNumber: String
+  """Cashier"""
+  cashier: String
+  """Cashier Credit"""
+  cashierCredit: Float
+  """Cashier Debit"""
+  cashierDebit: Float
+  """Cashier ID"""
+  cashierID: Float
+  """Cashier Opening Balance"""
+  cashierOpeningBalance: Float
+  """Identifies if this record was the result of a credit card refund possible values: REFUND or OVERRIDE.OVERRIDE means a user authorized a refund amount larger than the original cc charge."""
+  ccRefundPosting: String
+  """Central AR Ledger Credit"""
+  centralARLedgerCredit: Float
+  """Central AR Ledger Debit"""
+  centralARLedgerDebit: Float
+  """Central Advanced Generated Transaction Code"""
+  centralAdvancedGeneratedTransactionCode: String
+  """Central Cashier Credit"""
+  centralCashierCredit: Float
+  """Central Cashier Debit"""
+  centralCashierDebit: Float
+  """Central Credit Card Surcharge"""
+  centralCreditCardSurcharge: Float
+  """Central Deposit Ledger Credit"""
+  centralDepositLedgerCredit: Float
+  """Central Deposit Ledger Debit"""
+  centralDepositLedgerDebit: Float
+  """Central Gross Amount"""
+  centralGrossAmount: Float
+  """Central Guest Account Ledger Credit"""
+  centralGuestAccountLedgerCredit: Float
+  """Central Guest Account Ledger Debit"""
+  centralGuestAccountLedgerDebit: Float
+  """Central In-House Credit"""
+  centralInHouseCredit: Float
+  """Central In-House Debit"""
+  centralInHouseDebit: Float
+  """Central Included Revenue Tax"""
+  centralIncludedRevenueTax: Float
+  """Central Market Code"""
+  centralMarketCode: String
+  """Central Market Description"""
+  centralMarketDescription: String
+  """Central Market Group Code"""
+  centralMarketGroupCode: String
+  """Central Market Group Description"""
+  centralMarketGroupDescription: String
+  """Central Net Amount"""
+  centralNetAmount: Float
+  """Central Non Revenue Amount"""
+  centralNonRevenueAmount: Float
+  """Central Package"""
+  centralPackage: String
+  """Central Package Ledger Credit"""
+  centralPackageLedgerCredit: Float
+  """Central Package Ledger Debit"""
+  centralPackageLedgerDebit: Float
+  """Central Posted Amount in Base Currency"""
+  centralPostedAmountInBaseCurrency: Float
+  """Central Price Per Unit"""
+  centralPricePerUnit: Float
+  """Central Revenue Included"""
+  centralRevenueIncluded: Float
+  """Central Transaction Code Description"""
+  centralTransactionCodeDescription: String
+  """Central Trial Balance Amount Gross"""
+  centralTrialBalanceAmountGross: Float
+  """Central Trial Balance Amount Net"""
+  centralTrialBalanceAmountNet: Float
+  """Chain Code"""
+  chainCode: String
+  """Change Due"""
+  changeDue: Float
+  """This field will store the file number for the guest check PNG file which has to be appended to the application settings base URL."""
+  checkFileId: String
+  """Check Number"""
+  checkNumber: String
+  """Closure Number"""
+  closureNumber: Float
+  """Y => tax posting for a collecting agent"""
+  collectionAgentPostingYn: String
+  """Comments"""
+  comments: String
+  """Trx code of original transaction that was turned into a comp"""
+  compLinkTrxCode: String
+  """Trx no of original transaction that was turned into a comp"""
+  compLinkTrxNumber: Float
+  """Comp Type Code"""
+  compTypeCode: String
+  """Complinktranscodeid"""
+  complinktranscodeid: String
+  """Compressed Y/N"""
+  compressedYn: String
+  """Contract Foreign Currency ID"""
+  contractforeigncurrencyid: String
+  """Indicates if this transaction is used as part of a correction folio."""
+  correctionYn: String
+  """Coupon Number"""
+  couponNo: String
+  """Covers"""
+  covers: String
+  """Credit Card ID"""
+  creditCardId: Float
+  """Fee (surcharge) amount for a credit card transaction."""
+  creditCardSurcharge: Float
+  """Credit YN"""
+  creditYN: String
+  """Currency Code"""
+  currencyCode: String
+  """This is the custom charge date populated by Property Charge Adjustments."""
+  customChargeDate: Date
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Debit YN"""
+  debitYN: String
+  """Deferred Y/N"""
+  deferredYn: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """Indicates if the posting is a deposit posting as part of the Guest Ledger Deposits functionality. Also indicates if the charge has been offset after checkin. Possible values [PRX]"""
+  depPostingFlag: String
+  """Indicates if this row is a deposit tax which has been transfered."""
+  depTaxTransferedYn: String
+  """Deposit Ledger Credit"""
+  depositLedgerCredit: Float
+  """Deposit Ledger Debit"""
+  depositLedgerDebit: Float
+  """Deposit Transaction ID"""
+  depositTransactionId: String
+  """Depositlinkfintransid"""
+  depositlinkfintransid: Float
+  """Displayflag"""
+  displayflag: String
+  """Cuurency code for parrallel currency."""
+  dualCurrency: String
+  """Dual Currency Gross Amount"""
+  dualCurrencyGrossAmount: Float
+  """Credit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestCredit: Float
+  """Debit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestDebit: Float
+  """Dual Currency Net Amount"""
+  dualCurrencyNetAmount: Float
+  """Transactions statement date used for OVOS statement reports to allocate transactions into required statement period."""
+  effectiveDate: Date
+  """Stores the voucher_no from VOUCHERS_DETAILS to keep track of voucher amount consumed."""
+  electronicVoucherNo: Float
+  """File Name of the Electronically Signed Payment Receipt."""
+  esignedReceiptName: String
+  """Euro Exchange Rate"""
+  euroExchangeRate: Float
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  exchDifferenceTrxNumber: Float
+  """Exchange Date"""
+  exchangeDate: Date
+  """Exchange Difference YN"""
+  exchangeDifferenceYN: String
+  """Exchange Rate"""
+  exchangeRate: Float
+  """Type of currency exchange conducted.  Possible values: [E]xchange [S]ettlement [C]ommission [M]embership [EC] Exchange Check [P]osting."""
+  exchangeType: String
+  """Export Invoice Type"""
+  expInvoiceType: String
+  """Export Original Invoice"""
+  expOriginalInvoice: String
+  """Oxi interface to External System Result message text."""
+  extSysResultMsg: String
+  """Transaction ID from external system."""
+  extTransactionId: String
+  """Flexible Benefit Award certificate number."""
+  fbaCertificateNumber: String
+  """Number to identify the DML sequence."""
+  financialDmlSeqNumber: Float
+  """Financial Transaction Code Type"""
+  financialTransactionCodeType: String
+  """Fintransactionid"""
+  fintransactionid: Float
+  """Fintransid"""
+  fintransid: Float
+  """Fiscal Bill Number"""
+  fiscalBillNo: String
+  """Fixed Charges YN"""
+  fixedChargesYN: String
+  """Folio Number"""
+  folioNo: Float
+  """Folio Type"""
+  folioType: String
+  """Folio Type Join"""
+  folioTypeJoin: String
+  """Folio View"""
+  folioView: Float
+  """Folioid"""
+  folioid: Float
+  """Foreign Currency ID"""
+  foreignCurrencyID: String
+  """Foreign Exchange commission amount."""
+  forexCommAmount: Float
+  """Foreign Exchange commission percentage."""
+  forexCommPerc: Float
+  """Populate as Y for transactions posted with application settings 1)Currency Exchange Tax and 2)Currency Exchange Offset."""
+  forexTaxYn: String
+  """Type of Foreign Currency Exchange. B=Buy  S=Sell."""
+  forexType: String
+  """From Resv ID"""
+  fromReservationId: Float
+  """Column has become unused after the chage of business rules down the line."""
+  ftGeneratedType: String
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  ftSubtype: String
+  """General Cashier Id."""
+  genCashierId: Float
+  """HYATT mode: Gold Passport Award Cancel Code. Field will be populated for transactions that are created when awards redeemed in the past are cancelled e.g. when a Folio is Re-opened."""
+  gpAwardCancelCode: String
+  """HYATT mode: Gold Passport Award Code associated with the redemption of points. Field will be populated for a payment transaction."""
+  gpAwardCode: String
+  """Gross Amount"""
+  grossAmount: Float
+  """HYATT mode: Indicates if an Award Transaction was cancelled."""
+  groupAwardCancelledYN: String
+  """Guest Account Ledger Credit"""
+  guestAccountLedgerCredit: Float
+  """Debit amount on the guest account"""
+  guestAccountLedgerDebit: Float
+  """Guest Country"""
+  guestCountry: String
+  """Guest Country Code"""
+  guestCountryCode: String
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  hotelAcct: String
+  """In-House Credit"""
+  inHouseCredit: Float
+  """In-House Debit"""
+  inHouseDebit: Float
+  """Identifies if this transaction has had inclusive taxes removed during comping."""
+  incTaxDeductedYn: String
+  """Included Revenue Tax"""
+  includedRevenueTax: Float
+  """Included Revenue Tax Percent"""
+  includedRevenueTaxPercent: Float
+  """Ind Adjustment Y/N"""
+  individualAdjustmentYN: String
+  """Insert Date"""
+  insertDate: DateTime
+  """Insert User"""
+  insertUser: Float
+  """The name of the user who created the record."""
+  insertUserName: String
+  """Installments"""
+  installments: Float
+  """Articleid"""
+  internalArticleid: Float
+  """Businessdate"""
+  internalBusinessdate: Date
+  """Cashierid"""
+  internalCashierid: Float
+  """Internal Window ID"""
+  internalWindowId: Float
+  """Internal YN"""
+  internalYN: String
+  """Invoice Close Date"""
+  invoiceCloseDate: Date
+  """Invoice Number"""
+  invoiceNumber: Float
+  """Invoice Type"""
+  invoiceType: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Link Transaction No"""
+  linkTrxNumber: Float
+  """Internal ID to uniquely identify the Property"""
+  locationID: String
+  """Market Code"""
+  marketCode: String
+  """Market Description"""
+  marketDescription: String
+  """Market Display Sequence"""
+  marketDisplaySequence: Float
+  """Market Group Code"""
+  marketGroupCode: String
+  """Market Group Description"""
+  marketGroupDescription: String
+  """Market Group Display Sequence"""
+  marketGroupDisplaySequence: Float
+  """Marketid"""
+  marketid: String
+  """Membership ID"""
+  membershipID: Float
+  """Sequence number generated automatically when packages are posted during manual room and tax."""
+  mtrxNoAgainstPackage: Float
+  """Name ID"""
+  nameId: Float
+  """Name Tax Type"""
+  nameTaxType: String
+  """Net Amount"""
+  netAmount: Float
+  """Non Revenue Amount"""
+  nonRevenueAmount: Float
+  """Number Dialed."""
+  numberDialed: String
+  """Transaction Description."""
+  oTransactionDesc: String
+  """Currency code for contract currency."""
+  oVOSCurrency: String
+  """Contract equivalent to the GROSS_AMOUNT field value for the transaction number this record applies to."""
+  oVOSGrossAmount: Float
+  """Stores the credit amount on the guest account in contract currency."""
+  oVOSGuestCredit: Float
+  """Stores the debit amount on the guest account in contract currency."""
+  oVOSGuestDebit: Float
+  """Contract equivalent to the NET_AMOUNT field value for the transaction number this record applies to."""
+  oVOSNetAmount: Float
+  """On Hold YN"""
+  onHoldYN: String
+  """The original transaction amount sent to the financial API."""
+  orgPostedAmount: Float
+  """Stores the original AR ledger debit amount for Direct Bill transactions."""
+  organizationArLedgerDebit: Float
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Stores original bill number after void."""
+  originalBillNumber: Float
+  """Stores original folio type after void."""
+  originalFolioNumber: String
+  """Original Resv Name ID"""
+  originalReservationNameId: Float
+  """Original Room"""
+  originalRoom: String
+  """Originalresvid"""
+  originalresvid: Float
+  """Others Bag Number"""
+  othersBagNumber: String
+  """Package"""
+  package: String
+  """Package Allowance amount of a package that has an allowance."""
+  packageAllowance: Float
+  """Arrangement code from the package associated to this transaction."""
+  packageArrangementCode: String
+  """Credit amount on the guest package account."""
+  packageLedgerCredit: Float
+  """Debit amount on the guest package account"""
+  packageLedgerDebit: Float
+  """Identifies the type of a package posting. Possible values are: PKG_WRAPPER INCLTAX_PKG_ROOM EXCLTAX_PKG_ROOM INCLTAX_PKG_WITH_ALLOWANCE EXCLTAX_PKG_WITH_ALLOWANCE INCLTAX_PKG_WITHOUT_ALLOWANCE EXCLTAX_PKG_WITHOUT_ALLOWANCE"""
+  packageTrxType: String
+  """Packagelinkfintransid"""
+  packagelinkfintransid: Float
+  """Parallel Foreign Currency ID"""
+  parallelforeigncurrencyid: String
+  """Parentfintransid"""
+  parentfintransid: Float
+  """Passerby Name."""
+  passerByName: String
+  """Payment Surcharge Amount."""
+  paymentSurchargeAmt: Float
+  """Payment Surcharge Type. Currency for the CASH payment method."""
+  paymentSurchargeType: String
+  """Payment Type"""
+  paymentType: String
+  """Payments-Reference"""
+  paymentsReference: String
+  """Posted Amount in Base Currency"""
+  postedAmountInBaseCurrency: Float
+  """Posting Date"""
+  postingDate: DateTime
+  """Posting Rhythm"""
+  postingRhythm: String
+  """Source Profile of the posting coming from IFC. Related to 9700 functionality."""
+  postingSourceNameId: Float
+  """Indicates if the posting is part of a rate code posting (RATE CODE) or if posted manually (MANUAL)."""
+  postingType: String
+  """Postit Number"""
+  postitNo: Float
+  """Postit Y/N"""
+  postitYn: String
+  """Price Per Unit"""
+  pricePerUnit: Float
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Processed 8300 YN"""
+  processed8300YN: String
+  """Productid"""
+  productid: String
+  """Profileid"""
+  profileid: Float
+  """Populated with [P] for package profit and [L] for package loss transactions."""
+  profitLossFlag: String
+  """Proforma Y/N"""
+  proformaYn: String
+  """Code to uniquely identify the Property"""
+  property: String
+  """Property Bill Prefix"""
+  propertyBillPrefix: String
+  """Quantity"""
+  quantity: Float
+  """Queue Name"""
+  queueName: String
+  """Rate Code"""
+  rateCode: String
+  """Ratecodeid"""
+  ratecodeid: String
+  """Receipt Number"""
+  receiptNumber: Float
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  receiptType: String
+  """Reporting Trx Code"""
+  repTransactionCode: String
+  """Reporting Tc Group"""
+  repTransactionCodeGroup: String
+  """Reporting Tc Group Desc"""
+  repTransactionCodeGroupDescription: String
+  """Reporting Tc Subgroup"""
+  repTransactionCodeSubgroup: String
+  """Reporting Tc Subgroup Desc"""
+  repTransactionCodeSubgroupDescription: String
+  """Stores Reservation_deposit_schedule_id from RESERVATION_DEPOSIT_SCHEDULE table  to link the deposit payment to the deposit request."""
+  reservationDepositId: Float
+  """Reservationid"""
+  reservationid: Float
+  """Resvenddate"""
+  resvenddate: Date
+  """Revenue Amount."""
+  revenueAmount: Float
+  """Stores the trx_no of the reversed payment."""
+  reversePaymentTrxNumber: Float
+  """Revision Number"""
+  revisionNo: Float
+  """RnA Insertdate"""
+  rnaInsertDate: DateTime
+  """RnA Updatedate"""
+  rnaUpdateDate: DateTime
+  """Room Class"""
+  roomClass: String
+  """Room Nts"""
+  roomNts: Float
+  """Stores the effective room nights with decimals making it significant for postings splits edits and adjustments. Required by B&B Hotels."""
+  roomNtsEffective: Float
+  """Room Number"""
+  roomNumber: String
+  """Roomid"""
+  roomid: String
+  """Round Factor Y/N"""
+  roundFactorYn: String
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  roundLinkTrxno: Float
+  """Indicates if the transaction has been routed."""
+  routedYn: String
+  """Routing date for comp routings - populated only if routed transaction has trx date less than business date."""
+  routingDate: Date
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  routingInstrnId: Float
+  """Indicates if the transaction is a service recovery adjustment."""
+  serviceRecoveryAdjustmentYn: String
+  """Stores the department code responsible for the adjustment."""
+  serviceRecoveryDeptCode: String
+  """Settlement Flag"""
+  settlementFlag: String
+  """Source Code"""
+  sourceCode: String
+  """Current transaction uses Net or Gross revenue for Source commission calculation."""
+  sourceCommissionNetYn: String
+  """Source Description"""
+  sourceDescription: String
+  """Source Display Sequence"""
+  sourceDisplaySequence: Float
+  """Source Group Code"""
+  sourceGroupCode: String
+  """Source Group Description"""
+  sourceGroupDescription: String
+  """Source Group Display Sequence"""
+  sourceGroupDisplaySequence: Float
+  """Sourceid"""
+  sourceid: String
+  """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
+  splitType: String
+  """Identifies if the transaction is stamp duty."""
+  stampDutyYN: String
+  """Supplement"""
+  supplement: String
+  """Current transaction uses Net or Gross revenue for Travel Agent commission calculation."""
+  taCommissionNetYn: String
+  """Target Property"""
+  targetResort: String
+  """Targetlocationid"""
+  targetlocationid: String
+  """Tax Deferred Until Check-Out YN"""
+  taxDeferredUntilCheckOutYN: String
+  """Tax Elements"""
+  taxElements: String
+  """Tax Generated YN"""
+  taxGeneratedYN: String
+  """Tax Inclusive YN"""
+  taxInclusiveYN: String
+  """Tax Invoice No"""
+  taxInvNumber: String
+  """Tax Rate"""
+  taxRate: Float
+  """Tax Rate Type"""
+  taxRateType: String
+  """Transaction Code Group"""
+  tcGroup: String
+  """Transaction Code Subgroup"""
+  tcSubgroup: String
+  """Class1 Code."""
+  tclCode1: String
+  """Class1 Code."""
+  tclCode2: String
+  """Threshold Diversion ID"""
+  thresholdDiversionId: Float
+  """Stores the corresponding quantity of the threshold for QUANTITY and MINUTES types."""
+  thresholdEntityQty: Float
+  """Threshold Entity Type"""
+  thresholdEntityType: String
+  """Flag to identify how the posting was treated.[THRESHOLD_ALLOWED] --> OPERA treated this of ?Allowed? type at the time of posting.[THRESHOLD_REQUIRED] --> OPERA treated this of ?Required? type at the time of posting.[null / blank] --> not a diversion related transaction."""
+  thresholdTreatmentFlag: String
+  """To Resv Name ID"""
+  toReservationNameId: Float
+  """Tran Action ID"""
+  tranActionId: Float
+  """Transaction Activity Date"""
+  transactionActivityDate: Date
+  """Transaction Code"""
+  transactionCode: String
+  """Transaction Code Description"""
+  transactionCodeDescription: String
+  """Tc Group Description"""
+  transactionCodeGroupDesc: String
+  """Tc Subgroup Description"""
+  transactionCodeSubgroupDesc: String
+  """Transaction Date"""
+  transactionDate: Date
+  """Transaction Number Added By"""
+  transactionNumberAddedBy: Float
+  """Transaction Posting Date"""
+  transactionPostingDate: Date
+  """Time transaction was posted."""
+  transactionPostingTime: String
+  """Time transaction was posted with seconds."""
+  transactionPostingTimeWithSeconds: String
+  """Transaction Reservation Name ID"""
+  transactionReservationNameID: Float
+  """Transaction Status"""
+  transactionStatus: String
+  """Transaction Type"""
+  transactionType: String
+  """Transaction from Account"""
+  transactionFromAccount: Float
+  """Transaction to Account"""
+  transactionToAccount: Float
+  """Transactions-Reason Code"""
+  transactionsReasonCode: String
+  """Transcodearrangementid"""
+  transcodearrangementid: Float
+  """Transferfromaccountid"""
+  transferfromaccountid: Float
+  """Transferfromresvid"""
+  transferfromresvid: Float
+  """Transfertoaccountid"""
+  transfertoaccountid: Float
+  """Transfertoresvid"""
+  transfertoresvid: Float
+  """Travel Agent Commissionable YN"""
+  travelAgentCommissionableYN: String
+  """Trial Balance Amount Gross"""
+  trialBalanceAmountGross: Float
+  """Trial Balance Amount Net"""
+  trialBalanceAmountNet: Float
+  """Transaction Code"""
+  trxCode: String
+  """Trx Number"""
+  trxNo: Float
+  """Trx Number Against Package"""
+  trxNoAgainstPackage: Float
+  """The trx_no against which this transaction gets adjusted."""
+  trxNumberAdjust: Float
+  """Transaction No Header"""
+  trxNumberHeader: Float
+  """Stores the Trx_No of the main transaction being split."""
+  trxNumberSplit: Float
+  """Transaction Service Type"""
+  trxServiceType: String
+  """Transaction type: possible values: [CACH]."""
+  trxType: String
+  """Update Date"""
+  updateDate: DateTime
+  """Update User"""
+  updateUser: Float
+  """Flag to identify an Upsell posting."""
+  upsellChargeYn: String
+  """User ID"""
+  userID: Float
+  """Tax Amount for Commission."""
+  vatAmount: Float
+  """Vat Offset Y/N"""
+  vatOffsetYn: String
+  """Vendor Tran ID"""
+  vendorTranID: String
+}
+type CateringEventPostingsFinancialTransactionExtraRevenueTaxDetailsType {
+  """AR Charge Transfer YN"""
+  aRChargeTransferFlagYN: String
+  """Indicates if an individual charge has been transferred to another invoice in AR. Used to disallow operations such as the transfer of same charge multiple times editing an already transferred charge etc."""
+  aRChargeTransferYN: String
+  """AR Ledger Credit"""
+  aRLedgerCredit: Float
+  """AR Ledger Debit"""
+  aRLedgerDebit: Float
+  """AR State"""
+  aRState: String
+  """AR Transfer Date"""
+  aRTransferDate: Date
+  """Set Y to transactions when the application parameter ONLY POST TAXES ONCE FOR APARTMENT STYLE BILLING CHARGES is set. Proper rows and net amount will be shown in reports when the parameter is turned on or off."""
+  aSBOnlyPostTaxesOnceYn: String
+  """Populate the tax rows that are inserted for Trial balance with "ASB_TB_TAX". Other reports and screens will hide these transactions."""
+  aSBTaxFlag: String
+  """Account Code"""
+  accountCode: Float
+  """Account Name"""
+  accountName: String
+  """Account Number"""
+  accountNumber: String
+  """Account Type Flag"""
+  accountTypeFlag: String
+  """Accountid"""
+  accountid: Float
+  """Adjustment YN"""
+  adjustmentYN: String
+  """Transaction code of the master posting of the automatic adjustment posting for advanced generates."""
+  advGenerateTrxCode: String
+  """Identifies if this Advance Bill has been reversed."""
+  advanceBillReversedYn: String
+  """Identifies if this transaction was generated by Advance Bill."""
+  advanceBillYn: String
+  """The charge / generate is eligible as part of advanced generates functionality."""
+  advancedGenerateYn: String
+  """Indicates the automatic adjustment posting for advanced generates. Possible values are ?NA? ?CO?."""
+  advancedGeneratedAdjustment: String
+  """Advgentranscodeid"""
+  advgentranscodeid: String
+  """Distinguish "Same day" package from a next day package by storing N/S."""
+  allowanceType: String
+  """Indicates ASB transactions: Rental charge for an [A]partment Style Rental Cycle [O]ffsetting transaction for Rental charge for an Apartment Style Rental Cycle [N]ightly Rental Posting [W]aived Nights Rental Posting"""
+  apartmentStyleBillingType: String
+  """Approval Code"""
+  approvalCode: String
+  """Approval Date"""
+  approvalDate: Date
+  """Approval Status"""
+  approvalStatus: String
+  """Arrangement Code"""
+  arrangementCode: String
+  """Arrangement Description for the Transaction Code."""
+  arrangementDesc: String
+  """Arrangement ID"""
+  arrangementId: Float
+  """Article ID"""
+  articleId: Float
+  """Indicates the associated receipt number printed for a particular receipt type."""
+  associatedReceiptNo: Float
+  """Indicates the associated transaction number for a particular receipt type."""
+  associatedTrxNumber: Float
+  """Authemployeeid"""
+  authemployeeid: Float
+  """Authorizer"""
+  authorizer: String
+  """Indicates if this column was automatically created for Automatic Credit Bills."""
+  autoCreditbillYn: String
+  """Auto Settle Y/N"""
+  autoSettleYn: String
+  """Billing Event ID"""
+  billingEventID: Float
+  """Bonus Check ID"""
+  bonusCheckId: Float
+  """Bucket code related to this redemption."""
+  bucketCode: String
+  """Indicates that this transaction was a gaming bucket redemption."""
+  bucketRedempYn: String
+  """Business Date"""
+  businessDate: Date
+  """Central Cashier Opening Balance"""
+  cCashierOpeningBalance: Float
+  """Central Change Due"""
+  cChangeDue: Float
+  """Central Contract Gross Amount"""
+  cContractGrossAmount: Float
+  """Central Contract Guest Credit"""
+  cContractGuestCredit: Float
+  """Central Contract Guest Debit"""
+  cContractGuestDebit: Float
+  """Central Contract Net Amount"""
+  cContractNetAmount: Float
+  """Central Xchange Date"""
+  cExchangeDate: Date
+  """Central Xchange Rate"""
+  cExchangeRate: Float
+  """Central Forex Comm Amount"""
+  cForexCommissionAmount: Float
+  """Central Org Ar Led Debit"""
+  cOrganizationARLedgerDebit: Float
+  """Central Org Posted Amount"""
+  cOrganizationPostedAmount: Float
+  """Central Package Allowance"""
+  cPackageAllowance: Float
+  """Central Parallel Gross Amount"""
+  cParallelGrossAmount: Float
+  """Central Parallel Guest Credit"""
+  cParallelGuestCredit: Float
+  """Central Parallel Guest Debit"""
+  cParallelGuestDebit: Float
+  """Central Parallel Net Amount"""
+  cParallelNetAmount: Float
+  """Central Payment Surcharge Amt"""
+  cPaymentSurchargeAmount: Float
+  """Central Tax Rate"""
+  cTaxRate: Float
+  """Central Vat Amount"""
+  cVatAmount: Float
+  """CC Approval Code"""
+  cCApproval: String
+  """Calculate Points YN"""
+  calculatePointsYN: String
+  """Cash Bag Number"""
+  cashBagNumber: String
+  """Cashier"""
+  cashier: String
+  """Cashier Credit"""
+  cashierCredit: Float
+  """Cashier Debit"""
+  cashierDebit: Float
+  """Cashier ID"""
+  cashierID: Float
+  """Cashier Opening Balance"""
+  cashierOpeningBalance: Float
+  """Identifies if this record was the result of a credit card refund possible values: REFUND or OVERRIDE.OVERRIDE means a user authorized a refund amount larger than the original cc charge."""
+  ccRefundPosting: String
+  """Central AR Ledger Credit"""
+  centralARLedgerCredit: Float
+  """Central AR Ledger Debit"""
+  centralARLedgerDebit: Float
+  """Central Advanced Generated Transaction Code"""
+  centralAdvancedGeneratedTransactionCode: String
+  """Central Cashier Credit"""
+  centralCashierCredit: Float
+  """Central Cashier Debit"""
+  centralCashierDebit: Float
+  """Central Credit Card Surcharge"""
+  centralCreditCardSurcharge: Float
+  """Central Deposit Ledger Credit"""
+  centralDepositLedgerCredit: Float
+  """Central Deposit Ledger Debit"""
+  centralDepositLedgerDebit: Float
+  """Central Extra Revenue Tax"""
+  centralExtraRevenueTax: Float
+  """Central Gross Amount"""
+  centralGrossAmount: Float
+  """Central Guest Account Ledger Credit"""
+  centralGuestAccountLedgerCredit: Float
+  """Central Guest Account Ledger Debit"""
+  centralGuestAccountLedgerDebit: Float
+  """Central In-House Credit"""
+  centralInHouseCredit: Float
+  """Central In-House Debit"""
+  centralInHouseDebit: Float
+  """Central Market Code"""
+  centralMarketCode: String
+  """Central Market Description"""
+  centralMarketDescription: String
+  """Central Market Group Code"""
+  centralMarketGroupCode: String
+  """Central Market Group Description"""
+  centralMarketGroupDescription: String
+  """Central Net Amount"""
+  centralNetAmount: Float
+  """Central Non Revenue Amount"""
+  centralNonRevenueAmount: Float
+  """Central Package"""
+  centralPackage: String
+  """Central Package Ledger Credit"""
+  centralPackageLedgerCredit: Float
+  """Central Package Ledger Debit"""
+  centralPackageLedgerDebit: Float
+  """Central Posted Amount in Base Currency"""
+  centralPostedAmountInBaseCurrency: Float
+  """Central Price Per Unit"""
+  centralPricePerUnit: Float
+  """Central Revenue Included"""
+  centralRevenueIncluded: Float
+  """Central Transaction Code Description"""
+  centralTransactionCodeDescription: String
+  """Central Trial Balance Amount Gross"""
+  centralTrialBalanceAmountGross: Float
+  """Central Trial Balance Amount Net"""
+  centralTrialBalanceAmountNet: Float
+  """Chain Code"""
+  chainCode: String
+  """Change Due"""
+  changeDue: Float
+  """This field will store the file number for the guest check PNG file which has to be appended to the application settings base URL."""
+  checkFileId: String
+  """Check Number"""
+  checkNumber: String
+  """Closure Number"""
+  closureNumber: Float
+  """Y => tax posting for a collecting agent"""
+  collectionAgentPostingYn: String
+  """Comments"""
+  comments: String
+  """Trx code of original transaction that was turned into a comp"""
+  compLinkTrxCode: String
+  """Trx no of original transaction that was turned into a comp"""
+  compLinkTrxNumber: Float
+  """Comp Type Code"""
+  compTypeCode: String
+  """Complinktranscodeid"""
+  complinktranscodeid: String
+  """Compressed Y/N"""
+  compressedYn: String
+  """Contract Foreign Currency ID"""
+  contractforeigncurrencyid: String
+  """Indicates if this transaction is used as part of a correction folio."""
+  correctionYn: String
+  """Coupon Number"""
+  couponNo: String
+  """Covers"""
+  covers: String
+  """Credit Card ID"""
+  creditCardId: Float
+  """Fee (surcharge) amount for a credit card transaction."""
+  creditCardSurcharge: Float
+  """Credit YN"""
+  creditYN: String
+  """Currency Code"""
+  currencyCode: String
+  """This is the custom charge date populated by Property Charge Adjustments."""
+  customChargeDate: Date
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Debit YN"""
+  debitYN: String
+  """Deferred Y/N"""
+  deferredYn: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """Indicates if the posting is a deposit posting as part of the Guest Ledger Deposits functionality. Also indicates if the charge has been offset after checkin. Possible values [PRX]"""
+  depPostingFlag: String
+  """Indicates if this row is a deposit tax which has been transfered."""
+  depTaxTransferedYn: String
+  """Deposit Ledger Credit"""
+  depositLedgerCredit: Float
+  """Deposit Ledger Debit"""
+  depositLedgerDebit: Float
+  """Deposit Transaction ID"""
+  depositTransactionId: String
+  """Depositlinkfintransid"""
+  depositlinkfintransid: Float
+  """Displayflag"""
+  displayflag: String
+  """Cuurency code for parrallel currency."""
+  dualCurrency: String
+  """Dual Currency Gross Amount"""
+  dualCurrencyGrossAmount: Float
+  """Credit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestCredit: Float
+  """Debit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestDebit: Float
+  """Dual Currency Net Amount"""
+  dualCurrencyNetAmount: Float
+  """Transactions statement date used for OVOS statement reports to allocate transactions into required statement period."""
+  effectiveDate: Date
+  """Stores the voucher_no from VOUCHERS_DETAILS to keep track of voucher amount consumed."""
+  electronicVoucherNo: Float
+  """File Name of the Electronically Signed Payment Receipt."""
+  esignedReceiptName: String
+  """Euro Exchange Rate"""
+  euroExchangeRate: Float
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  exchDifferenceTrxNumber: Float
+  """Exchange Date"""
+  exchangeDate: Date
+  """Exchange Difference YN"""
+  exchangeDifferenceYN: String
+  """Exchange Rate"""
+  exchangeRate: Float
+  """Type of currency exchange conducted.  Possible values: [E]xchange [S]ettlement [C]ommission [M]embership [EC] Exchange Check [P]osting."""
+  exchangeType: String
+  """Export Invoice Type"""
+  expInvoiceType: String
+  """Export Original Invoice"""
+  expOriginalInvoice: String
+  """Oxi interface to External System Result message text."""
+  extSysResultMsg: String
+  """Transaction ID from external system."""
+  extTransactionId: String
+  """Extra Revenue Tax"""
+  extraRevenueTax: Float
+  """Extra Revenue Tax Percent"""
+  extraRevenueTaxPercent: Float
+  """Flexible Benefit Award certificate number."""
+  fbaCertificateNumber: String
+  """Number to identify the DML sequence."""
+  financialDmlSeqNumber: Float
+  """Financial Transaction Code Type"""
+  financialTransactionCodeType: String
+  """Fintransactionid"""
+  fintransactionid: Float
+  """Fintransid"""
+  fintransid: Float
+  """Fiscal Bill Number"""
+  fiscalBillNo: String
+  """Fixed Charges YN"""
+  fixedChargesYN: String
+  """Folio Number"""
+  folioNo: Float
+  """Folio Type"""
+  folioType: String
+  """Folio Type Join"""
+  folioTypeJoin: String
+  """Folio View"""
+  folioView: Float
+  """Folioid"""
+  folioid: Float
+  """Foreign Currency ID"""
+  foreignCurrencyID: String
+  """Foreign Exchange commission amount."""
+  forexCommAmount: Float
+  """Foreign Exchange commission percentage."""
+  forexCommPerc: Float
+  """Populate as Y for transactions posted with application settings 1)Currency Exchange Tax and 2)Currency Exchange Offset."""
+  forexTaxYn: String
+  """Type of Foreign Currency Exchange. B=Buy  S=Sell."""
+  forexType: String
+  """From Resv ID"""
+  fromReservationId: Float
+  """Column has become unused after the chage of business rules down the line."""
+  ftGeneratedType: String
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  ftSubtype: String
+  """General Cashier Id."""
+  genCashierId: Float
+  """HYATT mode: Gold Passport Award Cancel Code. Field will be populated for transactions that are created when awards redeemed in the past are cancelled e.g. when a Folio is Re-opened."""
+  gpAwardCancelCode: String
+  """HYATT mode: Gold Passport Award Code associated with the redemption of points. Field will be populated for a payment transaction."""
+  gpAwardCode: String
+  """Gross Amount"""
+  grossAmount: Float
+  """HYATT mode: Indicates if an Award Transaction was cancelled."""
+  groupAwardCancelledYN: String
+  """Guest Account Ledger Credit"""
+  guestAccountLedgerCredit: Float
+  """Debit amount on the guest account"""
+  guestAccountLedgerDebit: Float
+  """Guest Country"""
+  guestCountry: String
+  """Guest Country Code"""
+  guestCountryCode: String
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  hotelAcct: String
+  """In-House Credit"""
+  inHouseCredit: Float
+  """In-House Debit"""
+  inHouseDebit: Float
+  """Identifies if this transaction has had inclusive taxes removed during comping."""
+  incTaxDeductedYn: String
+  """Ind Adjustment Y/N"""
+  individualAdjustmentYN: String
+  """Insert Date"""
+  insertDate: DateTime
+  """Insert User"""
+  insertUser: Float
+  """The name of the user who created the record."""
+  insertUserName: String
+  """Installments"""
+  installments: Float
+  """Articleid"""
+  internalArticleid: Float
+  """Businessdate"""
+  internalBusinessdate: Date
+  """Cashierid"""
+  internalCashierid: Float
+  """Internal Window ID"""
+  internalWindowId: Float
+  """Internal YN"""
+  internalYN: String
+  """Invoice Close Date"""
+  invoiceCloseDate: Date
+  """Invoice Number"""
+  invoiceNumber: Float
+  """Invoice Type"""
+  invoiceType: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Link Transaction No"""
+  linkTrxNumber: Float
+  """Internal ID to uniquely identify the Property"""
+  locationID: String
+  """Market Code"""
+  marketCode: String
+  """Market Description"""
+  marketDescription: String
+  """Market Display Sequence"""
+  marketDisplaySequence: Float
+  """Market Group Code"""
+  marketGroupCode: String
+  """Market Group Description"""
+  marketGroupDescription: String
+  """Market Group Display Sequence"""
+  marketGroupDisplaySequence: Float
+  """Marketid"""
+  marketid: String
+  """Membership ID"""
+  membershipID: Float
+  """Sequence number generated automatically when packages are posted during manual room and tax."""
+  mtrxNoAgainstPackage: Float
+  """Name ID"""
+  nameId: Float
+  """Name Tax Type"""
+  nameTaxType: String
+  """Net Amount"""
+  netAmount: Float
+  """Non Revenue Amount"""
+  nonRevenueAmount: Float
+  """Number Dialed."""
+  numberDialed: String
+  """Transaction Description."""
+  oTransactionDesc: String
+  """Currency code for contract currency."""
+  oVOSCurrency: String
+  """Contract equivalent to the GROSS_AMOUNT field value for the transaction number this record applies to."""
+  oVOSGrossAmount: Float
+  """Stores the credit amount on the guest account in contract currency."""
+  oVOSGuestCredit: Float
+  """Stores the debit amount on the guest account in contract currency."""
+  oVOSGuestDebit: Float
+  """Contract equivalent to the NET_AMOUNT field value for the transaction number this record applies to."""
+  oVOSNetAmount: Float
+  """On Hold YN"""
+  onHoldYN: String
+  """The original transaction amount sent to the financial API."""
+  orgPostedAmount: Float
+  """Stores the original AR ledger debit amount for Direct Bill transactions."""
+  organizationArLedgerDebit: Float
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Stores original bill number after void."""
+  originalBillNumber: Float
+  """Stores original folio type after void."""
+  originalFolioNumber: String
+  """Original Resv Name ID"""
+  originalReservationNameId: Float
+  """Original Room"""
+  originalRoom: String
+  """Originalresvid"""
+  originalresvid: Float
+  """Others Bag Number"""
+  othersBagNumber: String
+  """Package"""
+  package: String
+  """Package Allowance amount of a package that has an allowance."""
+  packageAllowance: Float
+  """Arrangement code from the package associated to this transaction."""
+  packageArrangementCode: String
+  """Credit amount on the guest package account."""
+  packageLedgerCredit: Float
+  """Debit amount on the guest package account"""
+  packageLedgerDebit: Float
+  """Identifies the type of a package posting. Possible values are: PKG_WRAPPER INCLTAX_PKG_ROOM EXCLTAX_PKG_ROOM INCLTAX_PKG_WITH_ALLOWANCE EXCLTAX_PKG_WITH_ALLOWANCE INCLTAX_PKG_WITHOUT_ALLOWANCE EXCLTAX_PKG_WITHOUT_ALLOWANCE"""
+  packageTrxType: String
+  """Packagelinkfintransid"""
+  packagelinkfintransid: Float
+  """Parallel Foreign Currency ID"""
+  parallelforeigncurrencyid: String
+  """Parentfintransid"""
+  parentfintransid: Float
+  """Passerby Name."""
+  passerByName: String
+  """Payment Surcharge Amount."""
+  paymentSurchargeAmt: Float
+  """Payment Surcharge Type. Currency for the CASH payment method."""
+  paymentSurchargeType: String
+  """Payment Type"""
+  paymentType: String
+  """Payments-Reference"""
+  paymentsReference: String
+  """Posted Amount in Base Currency"""
+  postedAmountInBaseCurrency: Float
+  """Posting Date"""
+  postingDate: DateTime
+  """Posting Rhythm"""
+  postingRhythm: String
+  """Source Profile of the posting coming from IFC. Related to 9700 functionality."""
+  postingSourceNameId: Float
+  """Indicates if the posting is part of a rate code posting (RATE CODE) or if posted manually (MANUAL)."""
+  postingType: String
+  """Postit Number"""
+  postitNo: Float
+  """Postit Y/N"""
+  postitYn: String
+  """Price Per Unit"""
+  pricePerUnit: Float
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Processed 8300 YN"""
+  processed8300YN: String
+  """Productid"""
+  productid: String
+  """Profileid"""
+  profileid: Float
+  """Populated with [P] for package profit and [L] for package loss transactions."""
+  profitLossFlag: String
+  """Proforma Y/N"""
+  proformaYn: String
+  """Code to uniquely identify the Property"""
+  property: String
+  """Property Bill Prefix"""
+  propertyBillPrefix: String
+  """Quantity"""
+  quantity: Float
+  """Queue Name"""
+  queueName: String
+  """Rate Code"""
+  rateCode: String
+  """Ratecodeid"""
+  ratecodeid: String
+  """Receipt Number"""
+  receiptNumber: Float
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  receiptType: String
+  """Reporting Trx Code"""
+  repTransactionCode: String
+  """Reporting Tc Group"""
+  repTransactionCodeGroup: String
+  """Reporting Tc Group Desc"""
+  repTransactionCodeGroupDescription: String
+  """Reporting Tc Subgroup"""
+  repTransactionCodeSubgroup: String
+  """Reporting Tc Subgroup Desc"""
+  repTransactionCodeSubgroupDescription: String
+  """Stores Reservation_deposit_schedule_id from RESERVATION_DEPOSIT_SCHEDULE table  to link the deposit payment to the deposit request."""
+  reservationDepositId: Float
+  """Reservationid"""
+  reservationid: Float
+  """Resvenddate"""
+  resvenddate: Date
+  """Revenue Amount."""
+  revenueAmount: Float
+  """Stores the trx_no of the reversed payment."""
+  reversePaymentTrxNumber: Float
+  """Revision Number"""
+  revisionNo: Float
+  """RnA Insertdate"""
+  rnaInsertDate: DateTime
+  """RnA Updatedate"""
+  rnaUpdateDate: DateTime
+  """Room Class"""
+  roomClass: String
+  """Room Nts"""
+  roomNts: Float
+  """Stores the effective room nights with decimals making it significant for postings splits edits and adjustments. Required by B&B Hotels."""
+  roomNtsEffective: Float
+  """Room Number"""
+  roomNumber: String
+  """Roomid"""
+  roomid: String
+  """Round Factor Y/N"""
+  roundFactorYn: String
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  roundLinkTrxno: Float
+  """Indicates if the transaction has been routed."""
+  routedYn: String
+  """Routing date for comp routings - populated only if routed transaction has trx date less than business date."""
+  routingDate: Date
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  routingInstrnId: Float
+  """Indicates if the transaction is a service recovery adjustment."""
+  serviceRecoveryAdjustmentYn: String
+  """Stores the department code responsible for the adjustment."""
+  serviceRecoveryDeptCode: String
+  """Settlement Flag"""
+  settlementFlag: String
+  """Source Code"""
+  sourceCode: String
+  """Current transaction uses Net or Gross revenue for Source commission calculation."""
+  sourceCommissionNetYn: String
+  """Source Description"""
+  sourceDescription: String
+  """Source Display Sequence"""
+  sourceDisplaySequence: Float
+  """Source Group Code"""
+  sourceGroupCode: String
+  """Source Group Description"""
+  sourceGroupDescription: String
+  """Source Group Display Sequence"""
+  sourceGroupDisplaySequence: Float
+  """Sourceid"""
+  sourceid: String
+  """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
+  splitType: String
+  """Identifies if the transaction is stamp duty."""
+  stampDutyYN: String
+  """Supplement"""
+  supplement: String
+  """Current transaction uses Net or Gross revenue for Travel Agent commission calculation."""
+  taCommissionNetYn: String
+  """Target Property"""
+  targetResort: String
+  """Targetlocationid"""
+  targetlocationid: String
+  """Tax Deferred Until Check-Out YN"""
+  taxDeferredUntilCheckOutYN: String
+  """Tax Elements"""
+  taxElements: String
+  """Tax Generated YN"""
+  taxGeneratedYN: String
+  """Tax Inclusive YN"""
+  taxInclusiveYN: String
+  """Tax Invoice No"""
+  taxInvNumber: String
+  """Tax Rate"""
+  taxRate: Float
+  """Tax Rate Type"""
+  taxRateType: String
+  """Transaction Code Group"""
+  tcGroup: String
+  """Transaction Code Subgroup"""
+  tcSubgroup: String
+  """Class1 Code."""
+  tclCode1: String
+  """Class1 Code."""
+  tclCode2: String
+  """Threshold Diversion ID"""
+  thresholdDiversionId: Float
+  """Stores the corresponding quantity of the threshold for QUANTITY and MINUTES types."""
+  thresholdEntityQty: Float
+  """Threshold Entity Type"""
+  thresholdEntityType: String
+  """Flag to identify how the posting was treated.[THRESHOLD_ALLOWED] --> OPERA treated this of ?Allowed? type at the time of posting.[THRESHOLD_REQUIRED] --> OPERA treated this of ?Required? type at the time of posting.[null / blank] --> not a diversion related transaction."""
+  thresholdTreatmentFlag: String
+  """To Resv Name ID"""
+  toReservationNameId: Float
+  """Tran Action ID"""
+  tranActionId: Float
+  """Transaction Activity Date"""
+  transactionActivityDate: Date
+  """Transaction Code"""
+  transactionCode: String
+  """Transaction Code Description"""
+  transactionCodeDescription: String
+  """Tc Group Description"""
+  transactionCodeGroupDesc: String
+  """Tc Subgroup Description"""
+  transactionCodeSubgroupDesc: String
+  """Transaction Date"""
+  transactionDate: Date
+  """Transaction Number Added By"""
+  transactionNumberAddedBy: Float
+  """Transaction Posting Date"""
+  transactionPostingDate: Date
+  """Time transaction was posted."""
+  transactionPostingTime: String
+  """Time transaction was posted with seconds."""
+  transactionPostingTimeWithSeconds: String
+  """Transaction Reservation Name ID"""
+  transactionReservationNameID: Float
+  """Transaction Status"""
+  transactionStatus: String
+  """Transaction Type"""
+  transactionType: String
+  """Transaction from Account"""
+  transactionFromAccount: Float
+  """Transaction to Account"""
+  transactionToAccount: Float
+  """Transactions-Reason Code"""
+  transactionsReasonCode: String
+  """Transcodearrangementid"""
+  transcodearrangementid: Float
+  """Transferfromaccountid"""
+  transferfromaccountid: Float
+  """Transferfromresvid"""
+  transferfromresvid: Float
+  """Transfertoaccountid"""
+  transfertoaccountid: Float
+  """Transfertoresvid"""
+  transfertoresvid: Float
+  """Travel Agent Commissionable YN"""
+  travelAgentCommissionableYN: String
+  """Trial Balance Amount Gross"""
+  trialBalanceAmountGross: Float
+  """Trial Balance Amount Net"""
+  trialBalanceAmountNet: Float
+  """Transaction Code"""
+  trxCode: String
+  """Trx Number"""
+  trxNo: Float
+  """Trx Number Against Package"""
+  trxNoAgainstPackage: Float
+  """The trx_no against which this transaction gets adjusted."""
+  trxNumberAdjust: Float
+  """Transaction No Header"""
+  trxNumberHeader: Float
+  """Stores the Trx_No of the main transaction being split."""
+  trxNumberSplit: Float
+  """Transaction Service Type"""
+  trxServiceType: String
+  """Transaction type: possible values: [CACH]."""
+  trxType: String
+  """Update Date"""
+  updateDate: DateTime
+  """Update User"""
+  updateUser: Float
+  """Flag to identify an Upsell posting."""
+  upsellChargeYn: String
+  """User ID"""
+  userID: Float
+  """Tax Amount for Commission."""
+  vatAmount: Float
+  """Vat Offset Y/N"""
+  vatOffsetYn: String
+  """Vendor Tran ID"""
+  vendorTranID: String
+}
+type CateringEventPostingsFinancialTransactionSvcChargeIncRevDetailsType {
+  """AR Charge Transfer YN"""
+  aRChargeTransferFlagYN: String
+  """Indicates if an individual charge has been transferred to another invoice in AR. Used to disallow operations such as the transfer of same charge multiple times editing an already transferred charge etc."""
+  aRChargeTransferYN: String
+  """AR Ledger Credit"""
+  aRLedgerCredit: Float
+  """AR Ledger Debit"""
+  aRLedgerDebit: Float
+  """AR State"""
+  aRState: String
+  """AR Transfer Date"""
+  aRTransferDate: Date
+  """Set Y to transactions when the application parameter ONLY POST TAXES ONCE FOR APARTMENT STYLE BILLING CHARGES is set. Proper rows and net amount will be shown in reports when the parameter is turned on or off."""
+  aSBOnlyPostTaxesOnceYn: String
+  """Populate the tax rows that are inserted for Trial balance with "ASB_TB_TAX". Other reports and screens will hide these transactions."""
+  aSBTaxFlag: String
+  """Account Code"""
+  accountCode: Float
+  """Account Name"""
+  accountName: String
+  """Account Number"""
+  accountNumber: String
+  """Account Type Flag"""
+  accountTypeFlag: String
+  """Accountid"""
+  accountid: Float
+  """Adjustment YN"""
+  adjustmentYN: String
+  """Transaction code of the master posting of the automatic adjustment posting for advanced generates."""
+  advGenerateTrxCode: String
+  """Identifies if this Advance Bill has been reversed."""
+  advanceBillReversedYn: String
+  """Identifies if this transaction was generated by Advance Bill."""
+  advanceBillYn: String
+  """The charge / generate is eligible as part of advanced generates functionality."""
+  advancedGenerateYn: String
+  """Indicates the automatic adjustment posting for advanced generates. Possible values are ?NA? ?CO?."""
+  advancedGeneratedAdjustment: String
+  """Advgentranscodeid"""
+  advgentranscodeid: String
+  """Distinguish "Same day" package from a next day package by storing N/S."""
+  allowanceType: String
+  """Indicates ASB transactions: Rental charge for an [A]partment Style Rental Cycle [O]ffsetting transaction for Rental charge for an Apartment Style Rental Cycle [N]ightly Rental Posting [W]aived Nights Rental Posting"""
+  apartmentStyleBillingType: String
+  """Approval Code"""
+  approvalCode: String
+  """Approval Date"""
+  approvalDate: Date
+  """Approval Status"""
+  approvalStatus: String
+  """Arrangement Code"""
+  arrangementCode: String
+  """Arrangement Description for the Transaction Code."""
+  arrangementDesc: String
+  """Arrangement ID"""
+  arrangementId: Float
+  """Article ID"""
+  articleId: Float
+  """Indicates the associated receipt number printed for a particular receipt type."""
+  associatedReceiptNo: Float
+  """Indicates the associated transaction number for a particular receipt type."""
+  associatedTrxNumber: Float
+  """Authemployeeid"""
+  authemployeeid: Float
+  """Authorizer"""
+  authorizer: String
+  """Indicates if this column was automatically created for Automatic Credit Bills."""
+  autoCreditbillYn: String
+  """Auto Settle Y/N"""
+  autoSettleYn: String
+  """Billing Event ID"""
+  billingEventID: Float
+  """Bonus Check ID"""
+  bonusCheckId: Float
+  """Bucket code related to this redemption."""
+  bucketCode: String
+  """Indicates that this transaction was a gaming bucket redemption."""
+  bucketRedempYn: String
+  """Business Date"""
+  businessDate: Date
+  """Central Cashier Opening Balance"""
+  cCashierOpeningBalance: Float
+  """Central Change Due"""
+  cChangeDue: Float
+  """Central Contract Gross Amount"""
+  cContractGrossAmount: Float
+  """Central Contract Guest Credit"""
+  cContractGuestCredit: Float
+  """Central Contract Guest Debit"""
+  cContractGuestDebit: Float
+  """Central Contract Net Amount"""
+  cContractNetAmount: Float
+  """Central Xchange Date"""
+  cExchangeDate: Date
+  """Central Xchange Rate"""
+  cExchangeRate: Float
+  """Central Forex Comm Amount"""
+  cForexCommissionAmount: Float
+  """Central Org Ar Led Debit"""
+  cOrganizationARLedgerDebit: Float
+  """Central Org Posted Amount"""
+  cOrganizationPostedAmount: Float
+  """Central Package Allowance"""
+  cPackageAllowance: Float
+  """Central Parallel Gross Amount"""
+  cParallelGrossAmount: Float
+  """Central Parallel Guest Credit"""
+  cParallelGuestCredit: Float
+  """Central Parallel Guest Debit"""
+  cParallelGuestDebit: Float
+  """Central Parallel Net Amount"""
+  cParallelNetAmount: Float
+  """Central Payment Surcharge Amt"""
+  cPaymentSurchargeAmount: Float
+  """Central Tax Rate"""
+  cTaxRate: Float
+  """Central Vat Amount"""
+  cVatAmount: Float
+  """CC Approval Code"""
+  cCApproval: String
+  """Calculate Points YN"""
+  calculatePointsYN: String
+  """Cash Bag Number"""
+  cashBagNumber: String
+  """Cashier"""
+  cashier: String
+  """Cashier Credit"""
+  cashierCredit: Float
+  """Cashier Debit"""
+  cashierDebit: Float
+  """Cashier ID"""
+  cashierID: Float
+  """Cashier Opening Balance"""
+  cashierOpeningBalance: Float
+  """Identifies if this record was the result of a credit card refund possible values: REFUND or OVERRIDE.OVERRIDE means a user authorized a refund amount larger than the original cc charge."""
+  ccRefundPosting: String
+  """Central AR Ledger Credit"""
+  centralARLedgerCredit: Float
+  """Central AR Ledger Debit"""
+  centralARLedgerDebit: Float
+  """Central Advanced Generated Transaction Code"""
+  centralAdvancedGeneratedTransactionCode: String
+  """Central Cashier Credit"""
+  centralCashierCredit: Float
+  """Central Cashier Debit"""
+  centralCashierDebit: Float
+  """Central Credit Card Surcharge"""
+  centralCreditCardSurcharge: Float
+  """Central Deposit Ledger Credit"""
+  centralDepositLedgerCredit: Float
+  """Central Deposit Ledger Debit"""
+  centralDepositLedgerDebit: Float
+  """Central Gross Amount"""
+  centralGrossAmount: Float
+  """Central Guest Account Ledger Credit"""
+  centralGuestAccountLedgerCredit: Float
+  """Central Guest Account Ledger Debit"""
+  centralGuestAccountLedgerDebit: Float
+  """Central In-House Credit"""
+  centralInHouseCredit: Float
+  """Central In-House Debit"""
+  centralInHouseDebit: Float
+  """Central Market Code"""
+  centralMarketCode: String
+  """Central Market Description"""
+  centralMarketDescription: String
+  """Central Market Group Code"""
+  centralMarketGroupCode: String
+  """Central Market Group Description"""
+  centralMarketGroupDescription: String
+  """Central Net Amount"""
+  centralNetAmount: Float
+  """Central Non Revenue Amount"""
+  centralNonRevenueAmount: Float
+  """Central Package"""
+  centralPackage: String
+  """Central Package Ledger Credit"""
+  centralPackageLedgerCredit: Float
+  """Central Package Ledger Debit"""
+  centralPackageLedgerDebit: Float
+  """Central Posted Amount in Base Currency"""
+  centralPostedAmountInBaseCurrency: Float
+  """Central Price Per Unit"""
+  centralPricePerUnit: Float
+  """Central Revenue Included"""
+  centralRevenueIncluded: Float
+  """Central Service Charge Included Revenue Tax"""
+  centralServiceChargeIncludedRevenueTax: Float
+  """Central Transaction Code Description"""
+  centralTransactionCodeDescription: String
+  """Central Trial Balance Amount Gross"""
+  centralTrialBalanceAmountGross: Float
+  """Central Trial Balance Amount Net"""
+  centralTrialBalanceAmountNet: Float
+  """Chain Code"""
+  chainCode: String
+  """Change Due"""
+  changeDue: Float
+  """This field will store the file number for the guest check PNG file which has to be appended to the application settings base URL."""
+  checkFileId: String
+  """Check Number"""
+  checkNumber: String
+  """Closure Number"""
+  closureNumber: Float
+  """Y => tax posting for a collecting agent"""
+  collectionAgentPostingYn: String
+  """Comments"""
+  comments: String
+  """Trx code of original transaction that was turned into a comp"""
+  compLinkTrxCode: String
+  """Trx no of original transaction that was turned into a comp"""
+  compLinkTrxNumber: Float
+  """Comp Type Code"""
+  compTypeCode: String
+  """Complinktranscodeid"""
+  complinktranscodeid: String
+  """Compressed Y/N"""
+  compressedYn: String
+  """Contract Foreign Currency ID"""
+  contractforeigncurrencyid: String
+  """Indicates if this transaction is used as part of a correction folio."""
+  correctionYn: String
+  """Coupon Number"""
+  couponNo: String
+  """Covers"""
+  covers: String
+  """Credit Card ID"""
+  creditCardId: Float
+  """Fee (surcharge) amount for a credit card transaction."""
+  creditCardSurcharge: Float
+  """Credit YN"""
+  creditYN: String
+  """Currency Code"""
+  currencyCode: String
+  """This is the custom charge date populated by Property Charge Adjustments."""
+  customChargeDate: Date
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Debit YN"""
+  debitYN: String
+  """Deferred Y/N"""
+  deferredYn: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """Indicates if the posting is a deposit posting as part of the Guest Ledger Deposits functionality. Also indicates if the charge has been offset after checkin. Possible values [PRX]"""
+  depPostingFlag: String
+  """Indicates if this row is a deposit tax which has been transfered."""
+  depTaxTransferedYn: String
+  """Deposit Ledger Credit"""
+  depositLedgerCredit: Float
+  """Deposit Ledger Debit"""
+  depositLedgerDebit: Float
+  """Deposit Transaction ID"""
+  depositTransactionId: String
+  """Depositlinkfintransid"""
+  depositlinkfintransid: Float
+  """Displayflag"""
+  displayflag: String
+  """Cuurency code for parrallel currency."""
+  dualCurrency: String
+  """Dual Currency Gross Amount"""
+  dualCurrencyGrossAmount: Float
+  """Credit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestCredit: Float
+  """Debit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestDebit: Float
+  """Dual Currency Net Amount"""
+  dualCurrencyNetAmount: Float
+  """Transactions statement date used for OVOS statement reports to allocate transactions into required statement period."""
+  effectiveDate: Date
+  """Stores the voucher_no from VOUCHERS_DETAILS to keep track of voucher amount consumed."""
+  electronicVoucherNo: Float
+  """File Name of the Electronically Signed Payment Receipt."""
+  esignedReceiptName: String
+  """Euro Exchange Rate"""
+  euroExchangeRate: Float
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  exchDifferenceTrxNumber: Float
+  """Exchange Date"""
+  exchangeDate: Date
+  """Exchange Difference YN"""
+  exchangeDifferenceYN: String
+  """Exchange Rate"""
+  exchangeRate: Float
+  """Type of currency exchange conducted.  Possible values: [E]xchange [S]ettlement [C]ommission [M]embership [EC] Exchange Check [P]osting."""
+  exchangeType: String
+  """Export Invoice Type"""
+  expInvoiceType: String
+  """Export Original Invoice"""
+  expOriginalInvoice: String
+  """Oxi interface to External System Result message text."""
+  extSysResultMsg: String
+  """Transaction ID from external system."""
+  extTransactionId: String
+  """Flexible Benefit Award certificate number."""
+  fbaCertificateNumber: String
+  """Number to identify the DML sequence."""
+  financialDmlSeqNumber: Float
+  """Financial Transaction Code Type"""
+  financialTransactionCodeType: String
+  """Fintransactionid"""
+  fintransactionid: Float
+  """Fintransid"""
+  fintransid: Float
+  """Fiscal Bill Number"""
+  fiscalBillNo: String
+  """Fixed Charges YN"""
+  fixedChargesYN: String
+  """Folio Number"""
+  folioNo: Float
+  """Folio Type"""
+  folioType: String
+  """Folio Type Join"""
+  folioTypeJoin: String
+  """Folio View"""
+  folioView: Float
+  """Folioid"""
+  folioid: Float
+  """Foreign Currency ID"""
+  foreignCurrencyID: String
+  """Foreign Exchange commission amount."""
+  forexCommAmount: Float
+  """Foreign Exchange commission percentage."""
+  forexCommPerc: Float
+  """Populate as Y for transactions posted with application settings 1)Currency Exchange Tax and 2)Currency Exchange Offset."""
+  forexTaxYn: String
+  """Type of Foreign Currency Exchange. B=Buy  S=Sell."""
+  forexType: String
+  """From Resv ID"""
+  fromReservationId: Float
+  """Column has become unused after the chage of business rules down the line."""
+  ftGeneratedType: String
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  ftSubtype: String
+  """General Cashier Id."""
+  genCashierId: Float
+  """HYATT mode: Gold Passport Award Cancel Code. Field will be populated for transactions that are created when awards redeemed in the past are cancelled e.g. when a Folio is Re-opened."""
+  gpAwardCancelCode: String
+  """HYATT mode: Gold Passport Award Code associated with the redemption of points. Field will be populated for a payment transaction."""
+  gpAwardCode: String
+  """Gross Amount"""
+  grossAmount: Float
+  """HYATT mode: Indicates if an Award Transaction was cancelled."""
+  groupAwardCancelledYN: String
+  """Guest Account Ledger Credit"""
+  guestAccountLedgerCredit: Float
+  """Debit amount on the guest account"""
+  guestAccountLedgerDebit: Float
+  """Guest Country"""
+  guestCountry: String
+  """Guest Country Code"""
+  guestCountryCode: String
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  hotelAcct: String
+  """In-House Credit"""
+  inHouseCredit: Float
+  """In-House Debit"""
+  inHouseDebit: Float
+  """Identifies if this transaction has had inclusive taxes removed during comping."""
+  incTaxDeductedYn: String
+  """Ind Adjustment Y/N"""
+  individualAdjustmentYN: String
+  """Insert Date"""
+  insertDate: DateTime
+  """Insert User"""
+  insertUser: Float
+  """The name of the user who created the record."""
+  insertUserName: String
+  """Installments"""
+  installments: Float
+  """Articleid"""
+  internalArticleid: Float
+  """Businessdate"""
+  internalBusinessdate: Date
+  """Cashierid"""
+  internalCashierid: Float
+  """Internal Window ID"""
+  internalWindowId: Float
+  """Internal YN"""
+  internalYN: String
+  """Invoice Close Date"""
+  invoiceCloseDate: Date
+  """Invoice Number"""
+  invoiceNumber: Float
+  """Invoice Type"""
+  invoiceType: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Link Transaction No"""
+  linkTrxNumber: Float
+  """Internal ID to uniquely identify the Property"""
+  locationID: String
+  """Market Code"""
+  marketCode: String
+  """Market Description"""
+  marketDescription: String
+  """Market Display Sequence"""
+  marketDisplaySequence: Float
+  """Market Group Code"""
+  marketGroupCode: String
+  """Market Group Description"""
+  marketGroupDescription: String
+  """Market Group Display Sequence"""
+  marketGroupDisplaySequence: Float
+  """Marketid"""
+  marketid: String
+  """Membership ID"""
+  membershipID: Float
+  """Sequence number generated automatically when packages are posted during manual room and tax."""
+  mtrxNoAgainstPackage: Float
+  """Name ID"""
+  nameId: Float
+  """Name Tax Type"""
+  nameTaxType: String
+  """Net Amount"""
+  netAmount: Float
+  """Non Revenue Amount"""
+  nonRevenueAmount: Float
+  """Number Dialed."""
+  numberDialed: String
+  """Transaction Description."""
+  oTransactionDesc: String
+  """Currency code for contract currency."""
+  oVOSCurrency: String
+  """Contract equivalent to the GROSS_AMOUNT field value for the transaction number this record applies to."""
+  oVOSGrossAmount: Float
+  """Stores the credit amount on the guest account in contract currency."""
+  oVOSGuestCredit: Float
+  """Stores the debit amount on the guest account in contract currency."""
+  oVOSGuestDebit: Float
+  """Contract equivalent to the NET_AMOUNT field value for the transaction number this record applies to."""
+  oVOSNetAmount: Float
+  """On Hold YN"""
+  onHoldYN: String
+  """The original transaction amount sent to the financial API."""
+  orgPostedAmount: Float
+  """Stores the original AR ledger debit amount for Direct Bill transactions."""
+  organizationArLedgerDebit: Float
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Stores original bill number after void."""
+  originalBillNumber: Float
+  """Stores original folio type after void."""
+  originalFolioNumber: String
+  """Original Resv Name ID"""
+  originalReservationNameId: Float
+  """Original Room"""
+  originalRoom: String
+  """Originalresvid"""
+  originalresvid: Float
+  """Others Bag Number"""
+  othersBagNumber: String
+  """Package"""
+  package: String
+  """Package Allowance amount of a package that has an allowance."""
+  packageAllowance: Float
+  """Arrangement code from the package associated to this transaction."""
+  packageArrangementCode: String
+  """Credit amount on the guest package account."""
+  packageLedgerCredit: Float
+  """Debit amount on the guest package account"""
+  packageLedgerDebit: Float
+  """Identifies the type of a package posting. Possible values are: PKG_WRAPPER INCLTAX_PKG_ROOM EXCLTAX_PKG_ROOM INCLTAX_PKG_WITH_ALLOWANCE EXCLTAX_PKG_WITH_ALLOWANCE INCLTAX_PKG_WITHOUT_ALLOWANCE EXCLTAX_PKG_WITHOUT_ALLOWANCE"""
+  packageTrxType: String
+  """Packagelinkfintransid"""
+  packagelinkfintransid: Float
+  """Parallel Foreign Currency ID"""
+  parallelforeigncurrencyid: String
+  """Parentfintransid"""
+  parentfintransid: Float
+  """Passerby Name."""
+  passerByName: String
+  """Payment Surcharge Amount."""
+  paymentSurchargeAmt: Float
+  """Payment Surcharge Type. Currency for the CASH payment method."""
+  paymentSurchargeType: String
+  """Payment Type"""
+  paymentType: String
+  """Payments-Reference"""
+  paymentsReference: String
+  """Posted Amount in Base Currency"""
+  postedAmountInBaseCurrency: Float
+  """Posting Date"""
+  postingDate: DateTime
+  """Posting Rhythm"""
+  postingRhythm: String
+  """Source Profile of the posting coming from IFC. Related to 9700 functionality."""
+  postingSourceNameId: Float
+  """Indicates if the posting is part of a rate code posting (RATE CODE) or if posted manually (MANUAL)."""
+  postingType: String
+  """Postit Number"""
+  postitNo: Float
+  """Postit Y/N"""
+  postitYn: String
+  """Price Per Unit"""
+  pricePerUnit: Float
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Processed 8300 YN"""
+  processed8300YN: String
+  """Productid"""
+  productid: String
+  """Profileid"""
+  profileid: Float
+  """Populated with [P] for package profit and [L] for package loss transactions."""
+  profitLossFlag: String
+  """Proforma Y/N"""
+  proformaYn: String
+  """Code to uniquely identify the Property"""
+  property: String
+  """Property Bill Prefix"""
+  propertyBillPrefix: String
+  """Quantity"""
+  quantity: Float
+  """Queue Name"""
+  queueName: String
+  """Rate Code"""
+  rateCode: String
+  """Ratecodeid"""
+  ratecodeid: String
+  """Receipt Number"""
+  receiptNumber: Float
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  receiptType: String
+  """Reporting Trx Code"""
+  repTransactionCode: String
+  """Reporting Tc Group"""
+  repTransactionCodeGroup: String
+  """Reporting Tc Group Desc"""
+  repTransactionCodeGroupDescription: String
+  """Reporting Tc Subgroup"""
+  repTransactionCodeSubgroup: String
+  """Reporting Tc Subgroup Desc"""
+  repTransactionCodeSubgroupDescription: String
+  """Stores Reservation_deposit_schedule_id from RESERVATION_DEPOSIT_SCHEDULE table  to link the deposit payment to the deposit request."""
+  reservationDepositId: Float
+  """Reservationid"""
+  reservationid: Float
+  """Resvenddate"""
+  resvenddate: Date
+  """Revenue Amount."""
+  revenueAmount: Float
+  """Stores the trx_no of the reversed payment."""
+  reversePaymentTrxNumber: Float
+  """Revision Number"""
+  revisionNo: Float
+  """RnA Insertdate"""
+  rnaInsertDate: DateTime
+  """RnA Updatedate"""
+  rnaUpdateDate: DateTime
+  """Room Class"""
+  roomClass: String
+  """Room Nts"""
+  roomNts: Float
+  """Stores the effective room nights with decimals making it significant for postings splits edits and adjustments. Required by B&B Hotels."""
+  roomNtsEffective: Float
+  """Room Number"""
+  roomNumber: String
+  """Roomid"""
+  roomid: String
+  """Round Factor Y/N"""
+  roundFactorYn: String
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  roundLinkTrxno: Float
+  """Indicates if the transaction has been routed."""
+  routedYn: String
+  """Routing date for comp routings - populated only if routed transaction has trx date less than business date."""
+  routingDate: Date
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  routingInstrnId: Float
+  """Service Charge Included Revenue Tax"""
+  serviceChargeIncludedRevenueTax: Float
+  """Service Charge Included Revenue Tax Percent"""
+  serviceChargeIncludedRevenueTaxPercent: Float
+  """Indicates if the transaction is a service recovery adjustment."""
+  serviceRecoveryAdjustmentYn: String
+  """Stores the department code responsible for the adjustment."""
+  serviceRecoveryDeptCode: String
+  """Settlement Flag"""
+  settlementFlag: String
+  """Source Code"""
+  sourceCode: String
+  """Current transaction uses Net or Gross revenue for Source commission calculation."""
+  sourceCommissionNetYn: String
+  """Source Description"""
+  sourceDescription: String
+  """Source Display Sequence"""
+  sourceDisplaySequence: Float
+  """Source Group Code"""
+  sourceGroupCode: String
+  """Source Group Description"""
+  sourceGroupDescription: String
+  """Source Group Display Sequence"""
+  sourceGroupDisplaySequence: Float
+  """Sourceid"""
+  sourceid: String
+  """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
+  splitType: String
+  """Identifies if the transaction is stamp duty."""
+  stampDutyYN: String
+  """Supplement"""
+  supplement: String
+  """Current transaction uses Net or Gross revenue for Travel Agent commission calculation."""
+  taCommissionNetYn: String
+  """Target Property"""
+  targetResort: String
+  """Targetlocationid"""
+  targetlocationid: String
+  """Tax Deferred Until Check-Out YN"""
+  taxDeferredUntilCheckOutYN: String
+  """Tax Elements"""
+  taxElements: String
+  """Tax Generated YN"""
+  taxGeneratedYN: String
+  """Tax Inclusive YN"""
+  taxInclusiveYN: String
+  """Tax Invoice No"""
+  taxInvNumber: String
+  """Tax Rate"""
+  taxRate: Float
+  """Tax Rate Type"""
+  taxRateType: String
+  """Transaction Code Group"""
+  tcGroup: String
+  """Transaction Code Subgroup"""
+  tcSubgroup: String
+  """Class1 Code."""
+  tclCode1: String
+  """Class1 Code."""
+  tclCode2: String
+  """Threshold Diversion ID"""
+  thresholdDiversionId: Float
+  """Stores the corresponding quantity of the threshold for QUANTITY and MINUTES types."""
+  thresholdEntityQty: Float
+  """Threshold Entity Type"""
+  thresholdEntityType: String
+  """Flag to identify how the posting was treated.[THRESHOLD_ALLOWED] --> OPERA treated this of ?Allowed? type at the time of posting.[THRESHOLD_REQUIRED] --> OPERA treated this of ?Required? type at the time of posting.[null / blank] --> not a diversion related transaction."""
+  thresholdTreatmentFlag: String
+  """To Resv Name ID"""
+  toReservationNameId: Float
+  """Tran Action ID"""
+  tranActionId: Float
+  """Transaction Activity Date"""
+  transactionActivityDate: Date
+  """Transaction Code"""
+  transactionCode: String
+  """Transaction Code Description"""
+  transactionCodeDescription: String
+  """Tc Group Description"""
+  transactionCodeGroupDesc: String
+  """Tc Subgroup Description"""
+  transactionCodeSubgroupDesc: String
+  """Transaction Date"""
+  transactionDate: Date
+  """Transaction Number Added By"""
+  transactionNumberAddedBy: Float
+  """Transaction Posting Date"""
+  transactionPostingDate: Date
+  """Time transaction was posted."""
+  transactionPostingTime: String
+  """Time transaction was posted with seconds."""
+  transactionPostingTimeWithSeconds: String
+  """Transaction Reservation Name ID"""
+  transactionReservationNameID: Float
+  """Transaction Status"""
+  transactionStatus: String
+  """Transaction Type"""
+  transactionType: String
+  """Transaction from Account"""
+  transactionFromAccount: Float
+  """Transaction to Account"""
+  transactionToAccount: Float
+  """Transactions-Reason Code"""
+  transactionsReasonCode: String
+  """Transcodearrangementid"""
+  transcodearrangementid: Float
+  """Transferfromaccountid"""
+  transferfromaccountid: Float
+  """Transferfromresvid"""
+  transferfromresvid: Float
+  """Transfertoaccountid"""
+  transfertoaccountid: Float
+  """Transfertoresvid"""
+  transfertoresvid: Float
+  """Travel Agent Commissionable YN"""
+  travelAgentCommissionableYN: String
+  """Trial Balance Amount Gross"""
+  trialBalanceAmountGross: Float
+  """Trial Balance Amount Net"""
+  trialBalanceAmountNet: Float
+  """Transaction Code"""
+  trxCode: String
+  """Trx Number"""
+  trxNo: Float
+  """Trx Number Against Package"""
+  trxNoAgainstPackage: Float
+  """The trx_no against which this transaction gets adjusted."""
+  trxNumberAdjust: Float
+  """Transaction No Header"""
+  trxNumberHeader: Float
+  """Stores the Trx_No of the main transaction being split."""
+  trxNumberSplit: Float
+  """Transaction Service Type"""
+  trxServiceType: String
+  """Transaction type: possible values: [CACH]."""
+  trxType: String
+  """Update Date"""
+  updateDate: DateTime
+  """Update User"""
+  updateUser: Float
+  """Flag to identify an Upsell posting."""
+  upsellChargeYn: String
+  """User ID"""
+  userID: Float
+  """Tax Amount for Commission."""
+  vatAmount: Float
+  """Vat Offset Y/N"""
+  vatOffsetYn: String
+  """Vendor Tran ID"""
+  vendorTranID: String
+}
+type CateringEventPostingsFinancialTransactionSvcChargeExtraRevDetailsType {
+  """AR Charge Transfer YN"""
+  aRChargeTransferFlagYN: String
+  """Indicates if an individual charge has been transferred to another invoice in AR. Used to disallow operations such as the transfer of same charge multiple times editing an already transferred charge etc."""
+  aRChargeTransferYN: String
+  """AR Ledger Credit"""
+  aRLedgerCredit: Float
+  """AR Ledger Debit"""
+  aRLedgerDebit: Float
+  """AR State"""
+  aRState: String
+  """AR Transfer Date"""
+  aRTransferDate: Date
+  """Set Y to transactions when the application parameter ONLY POST TAXES ONCE FOR APARTMENT STYLE BILLING CHARGES is set. Proper rows and net amount will be shown in reports when the parameter is turned on or off."""
+  aSBOnlyPostTaxesOnceYn: String
+  """Populate the tax rows that are inserted for Trial balance with "ASB_TB_TAX". Other reports and screens will hide these transactions."""
+  aSBTaxFlag: String
+  """Account Code"""
+  accountCode: Float
+  """Account Name"""
+  accountName: String
+  """Account Number"""
+  accountNumber: String
+  """Account Type Flag"""
+  accountTypeFlag: String
+  """Accountid"""
+  accountid: Float
+  """Adjustment YN"""
+  adjustmentYN: String
+  """Transaction code of the master posting of the automatic adjustment posting for advanced generates."""
+  advGenerateTrxCode: String
+  """Identifies if this Advance Bill has been reversed."""
+  advanceBillReversedYn: String
+  """Identifies if this transaction was generated by Advance Bill."""
+  advanceBillYn: String
+  """The charge / generate is eligible as part of advanced generates functionality."""
+  advancedGenerateYn: String
+  """Indicates the automatic adjustment posting for advanced generates. Possible values are ?NA? ?CO?."""
+  advancedGeneratedAdjustment: String
+  """Advgentranscodeid"""
+  advgentranscodeid: String
+  """Distinguish "Same day" package from a next day package by storing N/S."""
+  allowanceType: String
+  """Indicates ASB transactions: Rental charge for an [A]partment Style Rental Cycle [O]ffsetting transaction for Rental charge for an Apartment Style Rental Cycle [N]ightly Rental Posting [W]aived Nights Rental Posting"""
+  apartmentStyleBillingType: String
+  """Approval Code"""
+  approvalCode: String
+  """Approval Date"""
+  approvalDate: Date
+  """Approval Status"""
+  approvalStatus: String
+  """Arrangement Code"""
+  arrangementCode: String
+  """Arrangement Description for the Transaction Code."""
+  arrangementDesc: String
+  """Arrangement ID"""
+  arrangementId: Float
+  """Article ID"""
+  articleId: Float
+  """Indicates the associated receipt number printed for a particular receipt type."""
+  associatedReceiptNo: Float
+  """Indicates the associated transaction number for a particular receipt type."""
+  associatedTrxNumber: Float
+  """Authemployeeid"""
+  authemployeeid: Float
+  """Authorizer"""
+  authorizer: String
+  """Indicates if this column was automatically created for Automatic Credit Bills."""
+  autoCreditbillYn: String
+  """Auto Settle Y/N"""
+  autoSettleYn: String
+  """Billing Event ID"""
+  billingEventID: Float
+  """Bonus Check ID"""
+  bonusCheckId: Float
+  """Bucket code related to this redemption."""
+  bucketCode: String
+  """Indicates that this transaction was a gaming bucket redemption."""
+  bucketRedempYn: String
+  """Business Date"""
+  businessDate: Date
+  """Central Cashier Opening Balance"""
+  cCashierOpeningBalance: Float
+  """Central Change Due"""
+  cChangeDue: Float
+  """Central Contract Gross Amount"""
+  cContractGrossAmount: Float
+  """Central Contract Guest Credit"""
+  cContractGuestCredit: Float
+  """Central Contract Guest Debit"""
+  cContractGuestDebit: Float
+  """Central Contract Net Amount"""
+  cContractNetAmount: Float
+  """Central Xchange Date"""
+  cExchangeDate: Date
+  """Central Xchange Rate"""
+  cExchangeRate: Float
+  """Central Forex Comm Amount"""
+  cForexCommissionAmount: Float
+  """Central Org Ar Led Debit"""
+  cOrganizationARLedgerDebit: Float
+  """Central Org Posted Amount"""
+  cOrganizationPostedAmount: Float
+  """Central Package Allowance"""
+  cPackageAllowance: Float
+  """Central Parallel Gross Amount"""
+  cParallelGrossAmount: Float
+  """Central Parallel Guest Credit"""
+  cParallelGuestCredit: Float
+  """Central Parallel Guest Debit"""
+  cParallelGuestDebit: Float
+  """Central Parallel Net Amount"""
+  cParallelNetAmount: Float
+  """Central Payment Surcharge Amt"""
+  cPaymentSurchargeAmount: Float
+  """Central Tax Rate"""
+  cTaxRate: Float
+  """Central Vat Amount"""
+  cVatAmount: Float
+  """CC Approval Code"""
+  cCApproval: String
+  """Calculate Points YN"""
+  calculatePointsYN: String
+  """Cash Bag Number"""
+  cashBagNumber: String
+  """Cashier"""
+  cashier: String
+  """Cashier Credit"""
+  cashierCredit: Float
+  """Cashier Debit"""
+  cashierDebit: Float
+  """Cashier ID"""
+  cashierID: Float
+  """Cashier Opening Balance"""
+  cashierOpeningBalance: Float
+  """Identifies if this record was the result of a credit card refund possible values: REFUND or OVERRIDE.OVERRIDE means a user authorized a refund amount larger than the original cc charge."""
+  ccRefundPosting: String
+  """Central AR Ledger Credit"""
+  centralARLedgerCredit: Float
+  """Central AR Ledger Debit"""
+  centralARLedgerDebit: Float
+  """Central Advanced Generated Transaction Code"""
+  centralAdvancedGeneratedTransactionCode: String
+  """Central Cashier Credit"""
+  centralCashierCredit: Float
+  """Central Cashier Debit"""
+  centralCashierDebit: Float
+  """Central Credit Card Surcharge"""
+  centralCreditCardSurcharge: Float
+  """Central Deposit Ledger Credit"""
+  centralDepositLedgerCredit: Float
+  """Central Deposit Ledger Debit"""
+  centralDepositLedgerDebit: Float
+  """Central Gross Amount"""
+  centralGrossAmount: Float
+  """Central Guest Account Ledger Credit"""
+  centralGuestAccountLedgerCredit: Float
+  """Central Guest Account Ledger Debit"""
+  centralGuestAccountLedgerDebit: Float
+  """Central In-House Credit"""
+  centralInHouseCredit: Float
+  """Central In-House Debit"""
+  centralInHouseDebit: Float
+  """Central Market Code"""
+  centralMarketCode: String
+  """Central Market Description"""
+  centralMarketDescription: String
+  """Central Market Group Code"""
+  centralMarketGroupCode: String
+  """Central Market Group Description"""
+  centralMarketGroupDescription: String
+  """Central Net Amount"""
+  centralNetAmount: Float
+  """Central Non Revenue Amount"""
+  centralNonRevenueAmount: Float
+  """Central Package"""
+  centralPackage: String
+  """Central Package Ledger Credit"""
+  centralPackageLedgerCredit: Float
+  """Central Package Ledger Debit"""
+  centralPackageLedgerDebit: Float
+  """Central Posted Amount in Base Currency"""
+  centralPostedAmountInBaseCurrency: Float
+  """Central Price Per Unit"""
+  centralPricePerUnit: Float
+  """Central Revenue Included"""
+  centralRevenueIncluded: Float
+  """Central Service Charge Extra Revenue Tax"""
+  centralServiceChargeExtraRevenueTax: Float
+  """Central Transaction Code Description"""
+  centralTransactionCodeDescription: String
+  """Central Trial Balance Amount Gross"""
+  centralTrialBalanceAmountGross: Float
+  """Central Trial Balance Amount Net"""
+  centralTrialBalanceAmountNet: Float
+  """Chain Code"""
+  chainCode: String
+  """Change Due"""
+  changeDue: Float
+  """This field will store the file number for the guest check PNG file which has to be appended to the application settings base URL."""
+  checkFileId: String
+  """Check Number"""
+  checkNumber: String
+  """Closure Number"""
+  closureNumber: Float
+  """Y => tax posting for a collecting agent"""
+  collectionAgentPostingYn: String
+  """Comments"""
+  comments: String
+  """Trx code of original transaction that was turned into a comp"""
+  compLinkTrxCode: String
+  """Trx no of original transaction that was turned into a comp"""
+  compLinkTrxNumber: Float
+  """Comp Type Code"""
+  compTypeCode: String
+  """Complinktranscodeid"""
+  complinktranscodeid: String
+  """Compressed Y/N"""
+  compressedYn: String
+  """Contract Foreign Currency ID"""
+  contractforeigncurrencyid: String
+  """Indicates if this transaction is used as part of a correction folio."""
+  correctionYn: String
+  """Coupon Number"""
+  couponNo: String
+  """Covers"""
+  covers: String
+  """Credit Card ID"""
+  creditCardId: Float
+  """Fee (surcharge) amount for a credit card transaction."""
+  creditCardSurcharge: Float
+  """Credit YN"""
+  creditYN: String
+  """Currency Code"""
+  currencyCode: String
+  """This is the custom charge date populated by Property Charge Adjustments."""
+  customChargeDate: Date
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Debit YN"""
+  debitYN: String
+  """Deferred Y/N"""
+  deferredYn: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """Indicates if the posting is a deposit posting as part of the Guest Ledger Deposits functionality. Also indicates if the charge has been offset after checkin. Possible values [PRX]"""
+  depPostingFlag: String
+  """Indicates if this row is a deposit tax which has been transfered."""
+  depTaxTransferedYn: String
+  """Deposit Ledger Credit"""
+  depositLedgerCredit: Float
+  """Deposit Ledger Debit"""
+  depositLedgerDebit: Float
+  """Deposit Transaction ID"""
+  depositTransactionId: String
+  """Depositlinkfintransid"""
+  depositlinkfintransid: Float
+  """Displayflag"""
+  displayflag: String
+  """Cuurency code for parrallel currency."""
+  dualCurrency: String
+  """Dual Currency Gross Amount"""
+  dualCurrencyGrossAmount: Float
+  """Credit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestCredit: Float
+  """Debit amount on the guest account stored in parrallel currency."""
+  dualCurrencyGuestDebit: Float
+  """Dual Currency Net Amount"""
+  dualCurrencyNetAmount: Float
+  """Transactions statement date used for OVOS statement reports to allocate transactions into required statement period."""
+  effectiveDate: Date
+  """Stores the voucher_no from VOUCHERS_DETAILS to keep track of voucher amount consumed."""
+  electronicVoucherNo: Float
+  """File Name of the Electronically Signed Payment Receipt."""
+  esignedReceiptName: String
+  """Euro Exchange Rate"""
+  euroExchangeRate: Float
+  """Exchange difference posting transaction number of the posting that generated the exchange difference."""
+  exchDifferenceTrxNumber: Float
+  """Exchange Date"""
+  exchangeDate: Date
+  """Exchange Difference YN"""
+  exchangeDifferenceYN: String
+  """Exchange Rate"""
+  exchangeRate: Float
+  """Type of currency exchange conducted.  Possible values: [E]xchange [S]ettlement [C]ommission [M]embership [EC] Exchange Check [P]osting."""
+  exchangeType: String
+  """Export Invoice Type"""
+  expInvoiceType: String
+  """Export Original Invoice"""
+  expOriginalInvoice: String
+  """Oxi interface to External System Result message text."""
+  extSysResultMsg: String
+  """Transaction ID from external system."""
+  extTransactionId: String
+  """Flexible Benefit Award certificate number."""
+  fbaCertificateNumber: String
+  """Number to identify the DML sequence."""
+  financialDmlSeqNumber: Float
+  """Financial Transaction Code Type"""
+  financialTransactionCodeType: String
+  """Fintransactionid"""
+  fintransactionid: Float
+  """Fintransid"""
+  fintransid: Float
+  """Fiscal Bill Number"""
+  fiscalBillNo: String
+  """Fixed Charges YN"""
+  fixedChargesYN: String
+  """Folio Number"""
+  folioNo: Float
+  """Folio Type"""
+  folioType: String
+  """Folio Type Join"""
+  folioTypeJoin: String
+  """Folio View"""
+  folioView: Float
+  """Folioid"""
+  folioid: Float
+  """Foreign Currency ID"""
+  foreignCurrencyID: String
+  """Foreign Exchange commission amount."""
+  forexCommAmount: Float
+  """Foreign Exchange commission percentage."""
+  forexCommPerc: Float
+  """Populate as Y for transactions posted with application settings 1)Currency Exchange Tax and 2)Currency Exchange Offset."""
+  forexTaxYn: String
+  """Type of Foreign Currency Exchange. B=Buy  S=Sell."""
+  forexType: String
+  """From Resv ID"""
+  fromReservationId: Float
+  """Column has become unused after the chage of business rules down the line."""
+  ftGeneratedType: String
+  """This is the transaction type which says whether it is a Consumption(C) Payment (FC) or Package (PK)  and it is inherited from transaction code."""
+  ftSubtype: String
+  """General Cashier Id."""
+  genCashierId: Float
+  """HYATT mode: Gold Passport Award Cancel Code. Field will be populated for transactions that are created when awards redeemed in the past are cancelled e.g. when a Folio is Re-opened."""
+  gpAwardCancelCode: String
+  """HYATT mode: Gold Passport Award Code associated with the redemption of points. Field will be populated for a payment transaction."""
+  gpAwardCode: String
+  """Gross Amount"""
+  grossAmount: Float
+  """HYATT mode: Indicates if an Award Transaction was cancelled."""
+  groupAwardCancelledYN: String
+  """Guest Account Ledger Credit"""
+  guestAccountLedgerCredit: Float
+  """Debit amount on the guest account"""
+  guestAccountLedgerDebit: Float
+  """Guest Country"""
+  guestCountry: String
+  """Guest Country Code"""
+  guestCountryCode: String
+  """Specifies the Hotel acct against which this transaction has beenposted."""
+  hotelAcct: String
+  """In-House Credit"""
+  inHouseCredit: Float
+  """In-House Debit"""
+  inHouseDebit: Float
+  """Identifies if this transaction has had inclusive taxes removed during comping."""
+  incTaxDeductedYn: String
+  """Ind Adjustment Y/N"""
+  individualAdjustmentYN: String
+  """Insert Date"""
+  insertDate: DateTime
+  """Insert User"""
+  insertUser: Float
+  """The name of the user who created the record."""
+  insertUserName: String
+  """Installments"""
+  installments: Float
+  """Articleid"""
+  internalArticleid: Float
+  """Businessdate"""
+  internalBusinessdate: Date
+  """Cashierid"""
+  internalCashierid: Float
+  """Internal Window ID"""
+  internalWindowId: Float
+  """Internal YN"""
+  internalYN: String
+  """Invoice Close Date"""
+  invoiceCloseDate: Date
+  """Invoice Number"""
+  invoiceNumber: Float
+  """Invoice Type"""
+  invoiceType: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Link Transaction No"""
+  linkTrxNumber: Float
+  """Internal ID to uniquely identify the Property"""
+  locationID: String
+  """Market Code"""
+  marketCode: String
+  """Market Description"""
+  marketDescription: String
+  """Market Display Sequence"""
+  marketDisplaySequence: Float
+  """Market Group Code"""
+  marketGroupCode: String
+  """Market Group Description"""
+  marketGroupDescription: String
+  """Market Group Display Sequence"""
+  marketGroupDisplaySequence: Float
+  """Marketid"""
+  marketid: String
+  """Membership ID"""
+  membershipID: Float
+  """Sequence number generated automatically when packages are posted during manual room and tax."""
+  mtrxNoAgainstPackage: Float
+  """Name ID"""
+  nameId: Float
+  """Name Tax Type"""
+  nameTaxType: String
+  """Net Amount"""
+  netAmount: Float
+  """Non Revenue Amount"""
+  nonRevenueAmount: Float
+  """Number Dialed."""
+  numberDialed: String
+  """Transaction Description."""
+  oTransactionDesc: String
+  """Currency code for contract currency."""
+  oVOSCurrency: String
+  """Contract equivalent to the GROSS_AMOUNT field value for the transaction number this record applies to."""
+  oVOSGrossAmount: Float
+  """Stores the credit amount on the guest account in contract currency."""
+  oVOSGuestCredit: Float
+  """Stores the debit amount on the guest account in contract currency."""
+  oVOSGuestDebit: Float
+  """Contract equivalent to the NET_AMOUNT field value for the transaction number this record applies to."""
+  oVOSNetAmount: Float
+  """On Hold YN"""
+  onHoldYN: String
+  """The original transaction amount sent to the financial API."""
+  orgPostedAmount: Float
+  """Stores the original AR ledger debit amount for Direct Bill transactions."""
+  organizationArLedgerDebit: Float
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Stores original bill number after void."""
+  originalBillNumber: Float
+  """Stores original folio type after void."""
+  originalFolioNumber: String
+  """Original Resv Name ID"""
+  originalReservationNameId: Float
+  """Original Room"""
+  originalRoom: String
+  """Originalresvid"""
+  originalresvid: Float
+  """Others Bag Number"""
+  othersBagNumber: String
+  """Package"""
+  package: String
+  """Package Allowance amount of a package that has an allowance."""
+  packageAllowance: Float
+  """Arrangement code from the package associated to this transaction."""
+  packageArrangementCode: String
+  """Credit amount on the guest package account."""
+  packageLedgerCredit: Float
+  """Debit amount on the guest package account"""
+  packageLedgerDebit: Float
+  """Identifies the type of a package posting. Possible values are: PKG_WRAPPER INCLTAX_PKG_ROOM EXCLTAX_PKG_ROOM INCLTAX_PKG_WITH_ALLOWANCE EXCLTAX_PKG_WITH_ALLOWANCE INCLTAX_PKG_WITHOUT_ALLOWANCE EXCLTAX_PKG_WITHOUT_ALLOWANCE"""
+  packageTrxType: String
+  """Packagelinkfintransid"""
+  packagelinkfintransid: Float
+  """Parallel Foreign Currency ID"""
+  parallelforeigncurrencyid: String
+  """Parentfintransid"""
+  parentfintransid: Float
+  """Passerby Name."""
+  passerByName: String
+  """Payment Surcharge Amount."""
+  paymentSurchargeAmt: Float
+  """Payment Surcharge Type. Currency for the CASH payment method."""
+  paymentSurchargeType: String
+  """Payment Type"""
+  paymentType: String
+  """Payments-Reference"""
+  paymentsReference: String
+  """Posted Amount in Base Currency"""
+  postedAmountInBaseCurrency: Float
+  """Posting Date"""
+  postingDate: DateTime
+  """Posting Rhythm"""
+  postingRhythm: String
+  """Source Profile of the posting coming from IFC. Related to 9700 functionality."""
+  postingSourceNameId: Float
+  """Indicates if the posting is part of a rate code posting (RATE CODE) or if posted manually (MANUAL)."""
+  postingType: String
+  """Postit Number"""
+  postitNo: Float
+  """Postit Y/N"""
+  postitYn: String
+  """Price Per Unit"""
+  pricePerUnit: Float
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Processed 8300 YN"""
+  processed8300YN: String
+  """Productid"""
+  productid: String
+  """Profileid"""
+  profileid: Float
+  """Populated with [P] for package profit and [L] for package loss transactions."""
+  profitLossFlag: String
+  """Proforma Y/N"""
+  proformaYn: String
+  """Code to uniquely identify the Property"""
+  property: String
+  """Property Bill Prefix"""
+  propertyBillPrefix: String
+  """Quantity"""
+  quantity: Float
+  """Queue Name"""
+  queueName: String
+  """Rate Code"""
+  rateCode: String
+  """Ratecodeid"""
+  ratecodeid: String
+  """Receipt Number"""
+  receiptNumber: Float
+  """Indicates the receipt type. Different receipts are identified by different types"""
+  receiptType: String
+  """Reporting Trx Code"""
+  repTransactionCode: String
+  """Reporting Tc Group"""
+  repTransactionCodeGroup: String
+  """Reporting Tc Group Desc"""
+  repTransactionCodeGroupDescription: String
+  """Reporting Tc Subgroup"""
+  repTransactionCodeSubgroup: String
+  """Reporting Tc Subgroup Desc"""
+  repTransactionCodeSubgroupDescription: String
+  """Stores Reservation_deposit_schedule_id from RESERVATION_DEPOSIT_SCHEDULE table  to link the deposit payment to the deposit request."""
+  reservationDepositId: Float
+  """Reservationid"""
+  reservationid: Float
+  """Resvenddate"""
+  resvenddate: Date
+  """Revenue Amount."""
+  revenueAmount: Float
+  """Stores the trx_no of the reversed payment."""
+  reversePaymentTrxNumber: Float
+  """Revision Number"""
+  revisionNo: Float
+  """RnA Insertdate"""
+  rnaInsertDate: DateTime
+  """RnA Updatedate"""
+  rnaUpdateDate: DateTime
+  """Room Class"""
+  roomClass: String
+  """Room Nts"""
+  roomNts: Float
+  """Stores the effective room nights with decimals making it significant for postings splits edits and adjustments. Required by B&B Hotels."""
+  roomNtsEffective: Float
+  """Room Number"""
+  roomNumber: String
+  """Roomid"""
+  roomid: String
+  """Round Factor Y/N"""
+  roundFactorYn: String
+  """TRX_NO of the transaction associated with this rounding factor posting."""
+  roundLinkTrxno: Float
+  """Indicates if the transaction has been routed."""
+  routedYn: String
+  """Routing date for comp routings - populated only if routed transaction has trx date less than business date."""
+  routingDate: Date
+  """Link the posting to the routing instruction that is specified during the setup of routing instructions for guests."""
+  routingInstrnId: Float
+  """Service Charge Extra Revenue Tax"""
+  serviceChargeExtraRevenueTax: Float
+  """Service Charge Extra Revenue Tax Percent"""
+  serviceChargeExtraRevenueTaxPercent: Float
+  """Indicates if the transaction is a service recovery adjustment."""
+  serviceRecoveryAdjustmentYn: String
+  """Stores the department code responsible for the adjustment."""
+  serviceRecoveryDeptCode: String
+  """Settlement Flag"""
+  settlementFlag: String
+  """Source Code"""
+  sourceCode: String
+  """Current transaction uses Net or Gross revenue for Source commission calculation."""
+  sourceCommissionNetYn: String
+  """Source Description"""
+  sourceDescription: String
+  """Source Display Sequence"""
+  sourceDisplaySequence: Float
+  """Source Group Code"""
+  sourceGroupCode: String
+  """Source Group Description"""
+  sourceGroupDescription: String
+  """Source Group Display Sequence"""
+  sourceGroupDisplaySequence: Float
+  """Sourceid"""
+  sourceid: String
+  """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
+  splitType: String
+  """Identifies if the transaction is stamp duty."""
+  stampDutyYN: String
+  """Supplement"""
+  supplement: String
+  """Current transaction uses Net or Gross revenue for Travel Agent commission calculation."""
+  taCommissionNetYn: String
+  """Target Property"""
+  targetResort: String
+  """Targetlocationid"""
+  targetlocationid: String
+  """Tax Deferred Until Check-Out YN"""
+  taxDeferredUntilCheckOutYN: String
+  """Tax Elements"""
+  taxElements: String
+  """Tax Generated YN"""
+  taxGeneratedYN: String
+  """Tax Inclusive YN"""
+  taxInclusiveYN: String
+  """Tax Invoice No"""
+  taxInvNumber: String
+  """Tax Rate"""
+  taxRate: Float
+  """Tax Rate Type"""
+  taxRateType: String
+  """Transaction Code Group"""
+  tcGroup: String
+  """Transaction Code Subgroup"""
+  tcSubgroup: String
+  """Class1 Code."""
+  tclCode1: String
+  """Class1 Code."""
+  tclCode2: String
+  """Threshold Diversion ID"""
+  thresholdDiversionId: Float
+  """Stores the corresponding quantity of the threshold for QUANTITY and MINUTES types."""
+  thresholdEntityQty: Float
+  """Threshold Entity Type"""
+  thresholdEntityType: String
+  """Flag to identify how the posting was treated.[THRESHOLD_ALLOWED] --> OPERA treated this of ?Allowed? type at the time of posting.[THRESHOLD_REQUIRED] --> OPERA treated this of ?Required? type at the time of posting.[null / blank] --> not a diversion related transaction."""
+  thresholdTreatmentFlag: String
+  """To Resv Name ID"""
+  toReservationNameId: Float
+  """Tran Action ID"""
+  tranActionId: Float
+  """Transaction Activity Date"""
+  transactionActivityDate: Date
+  """Transaction Code"""
+  transactionCode: String
+  """Transaction Code Description"""
+  transactionCodeDescription: String
+  """Tc Group Description"""
+  transactionCodeGroupDesc: String
+  """Tc Subgroup Description"""
+  transactionCodeSubgroupDesc: String
+  """Transaction Date"""
+  transactionDate: Date
+  """Transaction Number Added By"""
+  transactionNumberAddedBy: Float
+  """Transaction Posting Date"""
+  transactionPostingDate: Date
+  """Time transaction was posted."""
+  transactionPostingTime: String
+  """Time transaction was posted with seconds."""
+  transactionPostingTimeWithSeconds: String
+  """Transaction Reservation Name ID"""
+  transactionReservationNameID: Float
+  """Transaction Status"""
+  transactionStatus: String
+  """Transaction Type"""
+  transactionType: String
+  """Transaction from Account"""
+  transactionFromAccount: Float
+  """Transaction to Account"""
+  transactionToAccount: Float
+  """Transactions-Reason Code"""
+  transactionsReasonCode: String
+  """Transcodearrangementid"""
+  transcodearrangementid: Float
+  """Transferfromaccountid"""
+  transferfromaccountid: Float
+  """Transferfromresvid"""
+  transferfromresvid: Float
+  """Transfertoaccountid"""
+  transfertoaccountid: Float
+  """Transfertoresvid"""
+  transfertoresvid: Float
+  """Travel Agent Commissionable YN"""
+  travelAgentCommissionableYN: String
+  """Trial Balance Amount Gross"""
+  trialBalanceAmountGross: Float
+  """Trial Balance Amount Net"""
+  trialBalanceAmountNet: Float
+  """Transaction Code"""
+  trxCode: String
+  """Trx Number"""
+  trxNo: Float
+  """Trx Number Against Package"""
+  trxNoAgainstPackage: Float
+  """The trx_no against which this transaction gets adjusted."""
+  trxNumberAdjust: Float
+  """Transaction No Header"""
+  trxNumberHeader: Float
+  """Stores the Trx_No of the main transaction being split."""
+  trxNumberSplit: Float
+  """Transaction Service Type"""
+  trxServiceType: String
+  """Transaction type: possible values: [CACH]."""
+  trxType: String
+  """Update Date"""
+  updateDate: DateTime
+  """Update User"""
+  updateUser: Float
+  """Flag to identify an Upsell posting."""
+  upsellChargeYn: String
+  """User ID"""
+  userID: Float
+  """Tax Amount for Commission."""
+  vatAmount: Float
+  """Vat Offset Y/N"""
+  vatOffsetYn: String
+  """Vendor Tran ID"""
+  vendorTranID: String
 }
