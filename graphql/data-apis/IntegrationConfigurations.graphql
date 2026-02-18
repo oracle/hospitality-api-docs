@@ -1,0 +1,443 @@
+
+# title : OPERA Cloud RnA IntegrationConfigurations GraphQL API,
+# description : GraphQL API to cater for Exchange Configurations data including External Systems, External Databases, Business Events, Interface Setup, Interface Controls and Interface Mappings.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
+#               This document and all content within is available under the Universal Permissive License v 1.0 
+#               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
+# version : 25.5.0.0
+# termsOfService : https://www.oracle.com/legal/terms.html
+# contact_email : hospitality_apis_ww_grp@oracle.com
+# license : https://opensource.org/licenses/upl
+
+directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
+scalar Date
+scalar DateTime
+
+# Date format: "YYYY-MM-DD"
+input DateInput{
+  _eq: Date
+  _ne: Date
+  _in: [Date]
+  _nin: [Date]
+  _gt: Date
+  _lt: Date
+  _gte: Date
+  _lte: Date
+  _btn: DateRangeInput
+  _isNull: Boolean
+}
+input DateRangeInput {
+  start: Date!
+  end: Date!
+}
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
+input DateTimeInput {
+  _eq: DateTime
+  _ne: DateTime
+  _in: [DateTime]
+  _nin: [DateTime]
+  _gt: DateTime
+  _lt: DateTime
+  _gte: DateTime
+  _lte: DateTime
+  _btn: DateTimeRangeInput
+  _isNull: Boolean
+}
+input DateTimeRangeInput {
+  start: DateTime!
+  end: DateTime!
+}
+
+input StringInput {
+  _eq: String
+  _ne: String
+  _in: [String]
+  _nin: [String]
+  _gt: String
+  _lt: String
+  _gte: String
+  _lte: String
+  _isNull: Boolean
+}
+
+input FloatInput {
+  _eq: Float
+  _ne: Float
+  _in: [Float]
+  _nin: [Float]
+  _gt: Float
+  _lt: Float
+  _gte: Float
+  _lte: Float
+  _btn: FloatRangeInput
+  _isNull: Boolean
+}
+input FloatRangeInput {
+  start: Float!
+  end: Float!
+}
+
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - extsysresortdetailsEsCode
+
+
+input IntegrationConfigurationsQueryArgumentsType {
+  """Consumer Name"""
+  extsysresortdetailsConsumerName: StringInput
+  """DSI"""
+  extsysresortdetailsDsi: FloatInput
+  """DSI"""
+  extsysresortdetailsEsDsi: FloatInput
+  """External System"""
+  extsysresortdetailsCode: StringInput
+  """External System"""
+  extsysresortdetailsEsCode: StringInput!                               @mandatoryInput
+  """External URI"""
+  extsysresortdetailsExternalUri: StringInput
+  """Inactive Date"""
+  extsysresortdetailsInactiveDate: DateInput
+  """JRN Update Date and Time"""
+  extsysresortdetailsJrnUpdateDttm: DateTimeInput
+  """JRN Update Date and Time"""
+  extsysresortdetailsEsJrnUpdateDttm: DateTimeInput
+  """Organization ID"""
+  extsysresortdetailsOrganizationid: FloatInput
+  """Organization ID"""
+  extsysresortdetailsEsOrganizationid: FloatInput
+  """Property"""
+  extsysresortdetailsResort: StringInput
+  """Chain Code"""
+  interfacealldetailsDetailsMapChainCode: StringInput
+  """Conversion Code"""
+  interfacealldetailsDetailsConversionCode: StringInput
+  """DSI"""
+  interfacealldetailsDetailsMapDsi: FloatInput
+  """DSI"""
+  interfacealldetailsDetailsDsi: FloatInput
+  """DSI"""
+  interfacealldetailsDetailsSuDsi: FloatInput
+  """External Property"""
+  interfacealldetailsDetailsExternalResort: StringInput
+  """External Value"""
+  interfacealldetailsDetailsExtValue: StringInput
+  """Interface Id"""
+  interfacealldetailsDetailsMapInterfaceId: StringInput
+  """Interface Id"""
+  interfacealldetailsDetailsInterfaceId: StringInput
+  """Interface Id"""
+  interfacealldetailsDetailsSuInterfaceId: StringInput
+  """JRN Update Date and Time"""
+  interfacealldetailsDetailsMapJrnUpdateDttm: DateInput
+  """JRN Update Date and Time"""
+  interfacealldetailsDetailsJrnUpdateDttm: DateInput
+  """JRN Update Date and Time"""
+  interfacealldetailsDetailsSuJrnUpdateDttm: DateInput
+  """OPERA Property"""
+  interfacealldetailsDetailsPmsResort: StringInput
+  """OPERA Value"""
+  interfacealldetailsDetailsPmsValue: StringInput
+  """Organization ID"""
+  interfacealldetailsDetailsMapOrganizationid: FloatInput
+  """Organization ID"""
+  interfacealldetailsDetailsOrganizationid: FloatInput
+  """Organization ID"""
+  interfacealldetailsDetailsSuOrganizationid: FloatInput
+  """Parameter Name"""
+  interfacealldetailsDetailsParameterName: StringInput
+  """Property"""
+  interfacealldetailsDetailsResort: StringInput
+  """Property"""
+  interfacealldetailsDetailsMapResort: StringInput
+  """Action Type"""
+  extdbbuseventDetailsActionType: StringInput
+  """DSI"""
+  extdbbuseventDetailsEdDsi: FloatInput
+  """DSI"""
+  extdbbuseventDetailsDsi: FloatInput
+  """Data Element"""
+  extdbbuseventDetailsDataElement: StringInput
+  """External Database"""
+  extdbbuseventDetailsEdDatabaseId: StringInput
+  """External Database"""
+  extdbbuseventDetailsDatabaseId: StringInput
+  """External System"""
+  extdbbuseventDetailsExtSystemCode: StringInput
+  """JRN Update Date and Time"""
+  extdbbuseventDetailsJrnUpdateDttm: DateTimeInput
+  """JRN Update Date and Time"""
+  extdbbuseventDetailsEdJrnUpdateDttm: DateTimeInput
+  """Module"""
+  extdbbuseventDetailsModule: StringInput
+  """Organization ID"""
+  extdbbuseventDetailsEdOrganizationid: FloatInput
+}
+type Query {
+  """Exchange Configurations data including External Systems External Databases Business Events Interface Setup Interface Controls and Interface Mappings."""
+  integrationConfigurations(limit: Int offset: Int input: IntegrationConfigurationsQueryArgumentsType!): [IntegrationConfigurationsType]
+}
+type IntegrationConfigurationsType {
+  """External System Resort"""
+  externalSystems: IntegrationConfigurationsExternalSystemsType
+  """External System Resort"""
+  externalSystemProperties: IntegrationConfigurationsExternalSystemPropertiesType
+  """Interface Setup Mapping and Parameters"""
+  interfaceMappings: IntegrationConfigurationsInterfaceMappingsType
+  """Interface Setup Mapping and Parameters"""
+  interfaceParameters: IntegrationConfigurationsInterfaceParametersType
+  """Interface Setup Mapping and Parameters"""
+  interfaceSetup: IntegrationConfigurationsInterfaceSetupType
+  """External System Database Business Events"""
+  businessEventConfiguration: IntegrationConfigurationsBusinessEventConfigurationType
+  """External System Database Business Events"""
+  externalDatabases: IntegrationConfigurationsExternalDatabasesType
+  integrationConfigurationsRecordCount: Int
+}
+type IntegrationConfigurationsExternalSystemsType {
+  """Batch BE"""
+  batchBE: String
+  """DSI"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Description"""
+  description: String
+  """External System"""
+  externalSystem: String
+  """External URI"""
+  externalURI: String
+  """Insert Date"""
+  insertDate: DateTime
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Lookup YN"""
+  lookupYN: String
+  """Organization ID"""
+  organizationID: Float
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """JRN Update Date"""
+  rNUpdateDate: Date
+  """RNA Insert Date"""
+  rNAInsertDate: DateTime
+  """RNA Update Date"""
+  rNAUpdateDate: DateTime
+  """System Type"""
+  systemType: String
+  """Update Date"""
+  updateDate: DateTime
+}
+type IntegrationConfigurationsExternalSystemPropertiesType {
+  """Consumer Name"""
+  consumerName: String
+  """DSI"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Display YN"""
+  displayYN: String
+  """External System"""
+  externalSystem: String
+  """Inactive Date"""
+  inactiveDate: Date
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Machine Name"""
+  machineName: String
+  """Organization ID"""
+  organizationID: Float
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """Property"""
+  property: String
+  """RNA Insert Date"""
+  rNAInsertDate: DateTime
+  """RNA Update Date"""
+  rNAUpdateDate: DateTime
+  """Status"""
+  status: String
+}
+type IntegrationConfigurationsInterfaceMappingsType {
+  """Chain Code"""
+  chainCode: String
+  """Conversion Code"""
+  conversionCode: String
+  """DSI"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """External To OPERA"""
+  externalToOPERA: String
+  """External Value"""
+  externalValue: String
+  """Insert Date"""
+  insertDate: Date
+  """Interface Id"""
+  interfaceId: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: Date
+  """OPERA To External"""
+  oPERAToExternal: String
+  """OPERA Value"""
+  oPERAValue: String
+  """Organization ID"""
+  organizationID: Float
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """Property"""
+  property: String
+  """RNA Insert Date"""
+  rNAInsertDate: Date
+  """RNA Update Date"""
+  rNAUpdateDate: Date
+  """Update Date"""
+  updateDate: Date
+}
+type IntegrationConfigurationsInterfaceParametersType {
+  """Chain Code"""
+  chainCode: String
+  """DSI"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Description"""
+  description: String
+  """Insert Date"""
+  insertDate: Date
+  """Interface Id"""
+  interfaceId: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: Date
+  """Organization ID"""
+  organizationID: Float
+  """Parameter Group"""
+  parameterGroup: String
+  """Parameter Name"""
+  parameterName: String
+  """Parameter Value"""
+  parameterValue: String
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """Property"""
+  property: String
+  """RNA Insert Date"""
+  rNAInsertDate: Date
+  """RNA Update Date"""
+  rNAUpdateDate: Date
+  """Update Date"""
+  updateDate: Date
+  """new view"""
+  newView: String
+}
+type IntegrationConfigurationsInterfaceSetupType {
+  """Chain Code"""
+  chainCode: String
+  """DSI"""
+  dSI: Float
+  """Data Flow"""
+  dataFlow: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """Delta Changes YN"""
+  deltaChangesYN: String
+  """Description"""
+  description: String
+  """External Property"""
+  externalProperty: String
+  """Insert Date"""
+  insertDate: Date
+  """Interface Id"""
+  interfaceId: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: Date
+  """OPERA Property"""
+  oPERAProperty: String
+  """Organization ID"""
+  organizationID: Float
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """RNA Insert Date"""
+  rNAInsertDate: Date
+  """RNA Update Date"""
+  rNAUpdateDate: Date
+  """Update Date"""
+  updateDate: Date
+}
+type IntegrationConfigurationsBusinessEventConfigurationType {
+  """Action Type"""
+  actionType: String
+  """Chain Code"""
+  chainCode: String
+  """DSI"""
+  dSI: Float
+  """Data Element"""
+  dataElement: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """External Database"""
+  externalDatabase: String
+  """External System"""
+  externalSystem: String
+  """Insert Date"""
+  insertDate: DateTime
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Module"""
+  module: String
+  """Organization ID"""
+  organizationID: Float
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """RNA Insert Date"""
+  rNAInsertDate: DateTime
+  """RNA Update Date"""
+  rNAUpdateDate: Date
+  """Update Date"""
+  updateDate: Date
+  """Where Clause"""
+  whereClause: String
+}
+type IntegrationConfigurationsExternalDatabasesType {
+  """Chain Code"""
+  chainCode: String
+  """DSI"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Description"""
+  description: String
+  """External Database"""
+  externalDatabase: String
+  """External System"""
+  externalSystem: String
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Organization ID"""
+  organizationID: Float
+  """Primary Key ID"""
+  primaryKeyID: Float
+  """Property"""
+  property: String
+  """RNA Insert Date"""
+  rNAInsertDate: DateTime
+  """RNA Update Date"""
+  rNAUpdateDate: DateTime
+  """Update Date"""
+  updateDate: Date
+}

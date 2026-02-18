@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA StatisticsReservationsDaily GraphQL API,
-# description : GraphQL API to cater for Detailed information on past reservations including occupancy and revenue figures with all profile data, broken down by Market, Rate code, room type and periods of time..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Detailed information on past reservations including occupancy and revenue figures with all profile data, broken down by Market, Rate code, room type and periods of time.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,6 +80,13 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - resvdailystatsDetailsBusinessDate
+# 		 - resvdailystatsDetailsResort
+
+
 input StatisticsReservationsDailyQueryArgumentsType {
   """Agent ID"""
   resvdailystatsDetailsAgentId: FloatInput
@@ -80,7 +95,7 @@ input StatisticsReservationsDailyQueryArgumentsType {
   """Bi Resv Name ID"""
   resvdailystatsDetailsBiResvNameId: FloatInput
   """Business Date"""
-  resvdailystatsDetailsBusinessDate: DateInput!
+  resvdailystatsDetailsBusinessDate: DateInput!                         @mandatoryInput
   """Company ID"""
   resvdailystatsDetailsCompanyId: FloatInput
   """Contact ID"""
@@ -100,7 +115,7 @@ input StatisticsReservationsDailyQueryArgumentsType {
   """Parent Company ID"""
   resvdailystatsDetailsParentCompanyId: FloatInput
   """Code to uniquely identify the Property"""
-  resvdailystatsDetailsResort: StringInput!
+  resvdailystatsDetailsResort: StringInput!                             @mandatoryInput
   """Rate Code"""
   resvdailystatsDetailsRateCode: StringInput
   """Room"""
@@ -205,6 +220,8 @@ input StatisticsReservationsDailyQueryArgumentsType {
   reservationDetailsCancellationDate: DateTimeInput
   """Cancellation Number"""
   reservationDetailsCancellationNo: StringInput
+  """Chain Code"""
+  reservationDetailsChainCode: StringInput
   """Shared Confirmation Number"""
   reservationDetailsConfirmationNo: StringInput
   """Credit Card ID"""
@@ -699,6 +716,8 @@ input StatisticsReservationsDailyQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -1521,6 +1540,8 @@ input StatisticsReservationsDailyQueryArgumentsType {
   allotmentDetailsBlockType: StringInput
   """Central Xchange Date"""
   allotmentDetailsCXchangeDate: DateInput
+  """Chain Code"""
+  allotmentDetailsChainCode: StringInput
   """Company Name ID"""
   allotmentDetailsCompanyNameId: FloatInput
   """Contact Name ID"""
@@ -3484,6 +3505,8 @@ type StatisticsReservationsDailyReservationDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -3724,12 +3747,16 @@ type StatisticsReservationsDailyReservationDetailsType {
   centralWaitlistReason: String
   """Central Waitlist Reason Description"""
   centralWaitlistReasonDescription: String
+  """Chain Code"""
+  chainCode: String
   """Channel Description"""
   channelDescription: String
   """Channel Order By"""
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -3838,6 +3865,10 @@ type StatisticsReservationsDailyReservationDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -3936,6 +3967,8 @@ type StatisticsReservationsDailyReservationDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -4362,6 +4395,8 @@ type StatisticsReservationsDailyReservationDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -4468,6 +4503,8 @@ type StatisticsReservationsDailyReservationDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
@@ -5254,6 +5291,8 @@ type StatisticsReservationsDailyPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""
@@ -8452,6 +8491,8 @@ type StatisticsReservationsDailyReservationStatisticsDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -8690,6 +8731,8 @@ type StatisticsReservationsDailyReservationStatisticsDetailsType {
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -8794,6 +8837,10 @@ type StatisticsReservationsDailyReservationStatisticsDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -8888,6 +8935,8 @@ type StatisticsReservationsDailyReservationStatisticsDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -9310,6 +9359,8 @@ type StatisticsReservationsDailyReservationStatisticsDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -9418,6 +9469,8 @@ type StatisticsReservationsDailyReservationStatisticsDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
@@ -13218,6 +13271,8 @@ type StatisticsReservationsDailyBlockDetailsType {
   blockAlias: String
   """Block Code"""
   blockCode: String
+  """Block Date Actual"""
+  blockDateActual: Date
   """Block Date Definite"""
   blockDateDefinite: DateTime
   """Block Date Prospect"""
@@ -13346,6 +13401,8 @@ type StatisticsReservationsDailyBlockDetailsType {
   cateringCancellationReason: String
   """Catering Currency"""
   cateringCurrency: String
+  """Catering Date Actual"""
+  cateringDateActual: Date
   """Catering Decision Date"""
   cateringDecisionDate: Date
   """Catering Deduct Inventory"""
@@ -13472,6 +13529,8 @@ type StatisticsReservationsDailyBlockDetailsType {
   centralSourceCodeDescription: String
   """Central Tax Amount"""
   centralTaxAmount: Float
+  """Chain Code"""
+  chainCode: String
   """Channelid"""
   channelid: String
   """Code"""
@@ -14950,6 +15009,8 @@ type StatisticsReservationsDailyAllotmentStatisticsDetailsType {
   beginDateOriginal: Date
   """Block Alias"""
   blockAlias: String
+  """Block Date Actual"""
+  blockDateActual: Date
   """Block Date Definite"""
   blockDateDefinite: Date
   """Block Date Prospect"""
@@ -15074,6 +15135,8 @@ type StatisticsReservationsDailyAllotmentStatisticsDetailsType {
   cateringCancellationReason: String
   """Catering Currency"""
   cateringCurrency: String
+  """Catering Date Actual"""
+  cateringDateActual: Date
   """Catering Decision Date"""
   cateringDecisionDate: Date
   """Catering Deduct Inventory"""

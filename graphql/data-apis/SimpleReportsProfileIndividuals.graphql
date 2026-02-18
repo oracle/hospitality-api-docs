@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA SimpleReportsProfileIndividuals GraphQL API,
 # description : GraphQL API to cater for The Simple Reports Profile-Individuals Subject Area simplifies creating and building adhoc reports, including the ability to create new reports.
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,13 +80,19 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - nameDetailsChainCode
+
+
 input SimpleReportsProfileIndividualsQueryArgumentsType {
   """Anonymization Status possible values: REQUESTED ANONYMIZED."""
   nameDetailsAnonymizationStatus: StringInput
   """The unique identifier of the CRS"""
   nameDetailsCrsNameid: FloatInput
   """Chain Code"""
-  nameDetailsChainCode: StringInput!
+  nameDetailsChainCode: StringInput!                                    @mandatoryInput
   """Linked internal ID for booker."""
   nameDetailsCompanyGroupId: StringInput
   """Contact Y/N"""
@@ -113,6 +127,8 @@ input SimpleReportsProfileIndividualsQueryArgumentsType {
   nameDetailsSxname: StringInput
   """Update Date"""
   nameDetailsUpdateDate: DateTimeInput
+  """JRN Update Date and Time"""
+  nameresortDetailsJrnupdatedttm: DateTimeInput
 }
 type Query {
   """The Simple Reports Profile-Individuals Subject Area simplifies creating and building adhoc reports including the ability to create new reports"""
@@ -121,6 +137,8 @@ type Query {
 type SimpleReportsProfileIndividualsType {
   """Profile"""
   profileDetails: SimpleReportsProfileIndividualsProfileDetailsType
+  """Profile Property"""
+  profilePropertyDetails: SimpleReportsProfileIndividualsProfilePropertyDetailsType
   simpleReportsProfileIndividualsRecordCount: Int
 }
 type SimpleReportsProfileIndividualsProfileDetailsType {
@@ -878,4 +896,92 @@ type SimpleReportsProfileIndividualsProfileDetailsType {
   xname: String
   """Zipcode Code"""
   zipCode: String
+}
+type SimpleReportsProfileIndividualsProfilePropertyDetailsType {
+  """Action Code"""
+  actionCode: String
+  """AR No"""
+  arNumber: String
+  """Activates auto population of routing instructions."""
+  autoPopulateRoutingYn: String
+  """Billing Instruction"""
+  billingInstruction: String
+  """Guest type in PH country mode. Further used for showing proper adjustment options."""
+  birGuestType: String
+  """Business ID"""
+  businessId: String
+  """This column stores the BUSINESS REGISTRATION for a Profile for this property."""
+  businessRegistration: String
+  """Commission Code"""
+  commissionCode: String
+  """Competition Code"""
+  competitionCode: String
+  """Currency Code"""
+  currencyCode: String
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Department Note"""
+  departmentNote: String
+  """Indicates if a Profile can be marked to Generate Fiscal Folio/Payload."""
+  electronicFiscalFlag: String
+  """Features"""
+  features: String
+  """Guest Type"""
+  guestType: Float
+  """Primary Key ID"""
+  internalPrimaryKeyIDToUniquelyIdentifyTheRow: Float
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Last date the guest was prompted for privacy option."""
+  lastPrivacyPromptDate: Date
+  """Name ID"""
+  nameId: Float
+  """Name Tax Type"""
+  nameTaxType: String
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Payment Method"""
+  paymentMethod: String
+  """Potential Nights"""
+  potentialNights: Float
+  """Potential Revenue"""
+  potentialRevenue: Float
+  """Priority"""
+  priority: String
+  """Product Interest"""
+  productInterest: String
+  """Code to uniquely identify the Property"""
+  property: String
+  """RNA Insert Date"""
+  rNAInsertDate: DateTime
+  """RNA Update Date"""
+  rNAUpdateDate: DateTime
+  """Rate Code"""
+  rateCode: String
+  """Reporting Actioncode"""
+  repActionCode: String
+  """Reporting Competition Code"""
+  repCompetitionCode: String
+  """Reporting Priority"""
+  repPriority: String
+  """Reporting Rooms Potential"""
+  repRoomsPotential: String
+  """Rooms Potential"""
+  roomsPotential: String
+  """Specials"""
+  specials: String
+  """Tax Perc1"""
+  taxPerc1: Float
+  """Tax Perc2"""
+  taxPerc2: Float
+  """Tax Perc3"""
+  taxPerc3: Float
+  """Tax Perc4"""
+  taxPerc4: Float
+  """Tax Perc5"""
+  taxPerc5: Float
+  """Vat Offset Y/N"""
+  vatOffsetYn: String
 }

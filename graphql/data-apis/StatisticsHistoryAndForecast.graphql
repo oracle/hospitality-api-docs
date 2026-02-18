@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA StatisticsHistoryAndForecast GraphQL API,
-# description : GraphQL API to cater for Detailed information on past and future reservations including occupancy and revenue figures with all profile data, broken down by Market, Rate code, Room type and Periods of time..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Detailed information on past and future reservations including occupancy and revenue figures with all profile data, broken down by Market, Rate code, Room type and Periods of time.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,6 +80,13 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - historyforecastDetailsFilterDate
+# 		 - historyforecastDetailsResort
+
+
 input StatisticsHistoryAndForecastQueryArgumentsType {
   """Block Status"""
   historyforecastDetailsBlockStatus: StringInput
@@ -80,7 +95,7 @@ input StatisticsHistoryAndForecastQueryArgumentsType {
   """Booking Status Description"""
   historyforecastDetailsBookingStatusDescription: StringInput
   """Filter Date"""
-  historyforecastDetailsFilterDate: DateInput!
+  historyforecastDetailsFilterDate: DateInput!                          @mandatoryInput
   """Central Booking Status"""
   historyforecastDetailsRepBookingStatus: StringInput
   """Central Booking Status Description"""
@@ -144,7 +159,7 @@ input StatisticsHistoryAndForecastQueryArgumentsType {
   """Origin Description"""
   historyforecastDetailsChannelDescription: StringInput
   """Code to uniquely identify the Property"""
-  historyforecastDetailsResort: StringInput!
+  historyforecastDetailsResort: StringInput!                            @mandatoryInput
   """Pseudo Room YN"""
   historyforecastDetailsPsuedoRoomYn: StringInput
   """Rate Category"""
@@ -645,6 +660,8 @@ input StatisticsHistoryAndForecastQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -2398,6 +2415,8 @@ type StatisticsHistoryAndForecastPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""

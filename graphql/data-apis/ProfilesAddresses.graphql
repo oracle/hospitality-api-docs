@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA ProfilesAddresses GraphQL API,
-# description : GraphQL API to cater for All associated addresses including primary and secondary addresses, and address types which can be associated with the proper profile and profile type..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for All associated addresses including primary and secondary addresses, and address types which can be associated with the proper profile and profile type.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -71,6 +79,12 @@ input FloatRangeInput {
   start: Float!
   end: Float!
 }
+
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - profileaddressDetailsChainCode
+
 
 input ProfilesAddressesQueryArgumentsType {
   """The first line of street address."""
@@ -100,7 +114,7 @@ input ProfilesAddressesQueryArgumentsType {
   """Central State Description"""
   profileaddressDetailsRepState: StringInput
   """The Chain code of the chain for which this record belongs to."""
-  profileaddressDetailsChainCode: StringInput!
+  profileaddressDetailsChainCode: StringInput!                          @mandatoryInput
   """The city for this address."""
   profileaddressDetailsCity: StringInput
   """The Timestamp when this record was cleansed."""

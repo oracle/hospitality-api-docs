@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA FinancialCommissions GraphQL API,
-# description : GraphQL API to cater for Detailed information on the commissions module, including Reservation and Travel Agent profile information, with commission codes, amounts, payment activity and processing status. Commission information can be reported across all properties by Travel Agent and Source profiles, bank account, guest information and dates..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Detailed information on the commissions module, including Reservation and Travel Agent profile information, with commission codes, amounts, payment activity and processing status. Commission information can be reported across all properties by Travel Agent and Source profiles, bank account, guest information and dates.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,11 +80,17 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - commissionagentDetailsChainCode
+
+
 input FinancialCommissionsQueryArgumentsType {
   """Active Flag"""
   commissionagentDetailsActiveYn: StringInput
   """Chain Code"""
-  commissionagentDetailsChainCode: StringInput!
+  commissionagentDetailsChainCode: StringInput!                         @mandatoryInput
   """Company"""
   commissionagentDetailsCompany: StringInput
   """Corp ID"""
@@ -1172,6 +1186,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   baseratecurrencyid: String
   """Begin City"""
   beginCity: String
+  """Begin Datetime"""
+  beginDatetime: DateTime
   """Begin District"""
   beginDistrict: String
   """Begin State"""
@@ -1210,6 +1226,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   bookedroomcategoryid: String
   """Business Date Created"""
   businessDateCreated: Date
+  """Business Datetime Created"""
+  businessDatetimeCreated: DateTime
   """Bxgy Discount Y/N"""
   bxgyDiscountYn: String
   """Central Auto Post Amount"""
@@ -1268,6 +1286,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   cancelTime: String
   """Cancellation Date"""
   cancellationDate: DateTime
+  """Cancellation Datetime"""
+  cancellationDatetime: DateTime
   """Cancellation Number"""
   cancellationNumber: String
   """Cancellation Reason Description"""
@@ -1374,6 +1394,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -1586,6 +1608,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   emailYn: String
   """End City"""
   endCity: String
+  """End Datetime"""
+  endDatetime: DateTime
   """End District"""
   endDistrict: String
   """End State"""
@@ -1722,6 +1746,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   insertActionInstanceId: Float
   """Insert Date"""
   insertDate: DateTime
+  """Insert DateTime"""
+  insertDateTime: DateTime
   """Insert User"""
   insertUser: Float
   """Intermediary Y/N"""
@@ -2438,6 +2464,8 @@ type FinancialCommissionsComputedCommissionsReservationDetailsType {
   uniCardId: String
   """Update Date"""
   updateDate: DateTime
+  """Update Datetime"""
+  updateDatetime: DateTime
   """Update User"""
   updateUser: Float
   """Updated By"""

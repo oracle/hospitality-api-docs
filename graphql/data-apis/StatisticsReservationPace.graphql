@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA StatisticsReservationPace GraphQL API,
-# description : GraphQL API to cater for The Reservation Pace subject area contains daily rooms and revenue information on reservations on the books as of specific dates in the past (snapshot dates) summarized by Property, PACERATECODE, Room Type, Channel and Rate Code..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for The Reservation Pace subject area contains daily rooms and revenue information on reservations on the books as of specific dates in the past (snapshot dates) summarized by Property, PACERATECODE, Room Type, Channel and Rate Code.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,6 +80,14 @@ input FloatRangeInput {
   end: Float!
 }
 
+# Mandatory filters:
+# The following filters are mandatory required filters. 
+# Please ensure the request includes all the below fields. 
+# 		 - resvpacefactDetailsResort
+# 		 - resvpacefactDetailsSnapshotDate
+# 		 - resvpacefactDetailsStayDate
+
+
 input StatisticsReservationPaceQueryArgumentsType {
   """Channel"""
   resvpacefactDetailsChannel: StringInput
@@ -82,15 +98,15 @@ input StatisticsReservationPaceQueryArgumentsType {
   """Internal ID to uniquely identify the Organization"""
   resvpacefactDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  resvpacefactDetailsResort: StringInput!
+  resvpacefactDetailsResort: StringInput!                               @mandatoryInput
   """Rate Code"""
   resvpacefactDetailsRateCode: StringInput
   """Room Category"""
   resvpacefactDetailsRoomCategory: StringInput
   """Date the Snapshot was created"""
-  resvpacefactDetailsSnapshotDate: DateInput!
+  resvpacefactDetailsSnapshotDate: DateInput!                           @mandatoryInput
   """Stay Date"""
-  resvpacefactDetailsStayDate: DateInput!
+  resvpacefactDetailsStayDate: DateInput!                               @mandatoryInput
   """Stay Date"""
   pacestaydateDetailsDaykey: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -238,6 +254,10 @@ type StatisticsReservationPaceReservationPaceFactDetailsType {
   budgetRooms: Float
   """Central Budget Revenue"""
   cBudgetRevenue: Float
+  """C DAG Revenue Ded"""
+  cDAGRevenueDed: Float
+  """C DAG Revenue Ndd"""
+  cDAGRevenueNdd: Float
   """Central Forecast Revenue"""
   cForecastRevenue: Float
   """Central Ly Actual Revenue"""
@@ -280,8 +300,30 @@ type StatisticsReservationPaceReservationPaceFactDetailsType {
   cRoomRevenueReservationBlockNdd: Float
   """Central Room Revenue Res Ind Ndd"""
   cRoomRevenueReservationIndividualNdd: Float
+  """C WGO Revenue Ded"""
+  cWGORevenueDed: Float
+  """C WGO Revenue Ndd"""
+  cWGORevenueNdd: Float
+  """C YGO Revenue Ded"""
+  cYGORevenueDed: Float
+  """C YGO Revenue Ndd"""
+  cYGORevenueNdd: Float
+  """C YWGO Revenue Ded"""
+  cYWGORevenueDed: Float
+  """C YWGO Revenue Ndd"""
+  cYWGORevenueNdd: Float
   """Channel"""
   channel: String
+  """D Snapshot Date"""
+  dSnapshotDate: Date
+  """DGO Revenue Ded"""
+  dGORevenueDed: Float
+  """DGO Revenue Ndd"""
+  dGORevenueNdd: Float
+  """DGO Rooms Ded"""
+  dGORoomsDed: Float
+  """DGO Rooms Ndd"""
+  dGORoomsNdd: Float
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   dSI: Float
   """Forecast Amount"""
@@ -400,6 +442,30 @@ type StatisticsReservationPaceReservationPaceFactDetailsType {
   stayRoomsResBlockNdd: Float
   """Stay Rooms Reservation Ind Ndd"""
   stayRoomsResIndividualNdd: Float
+  """WGO Revenue Ded"""
+  wGORevenueDed: Float
+  """WGO Revenue Ndd"""
+  wGORevenueNdd: Float
+  """WGO Rooms Ded"""
+  wGORoomsDed: Float
+  """WGO Rooms Ndd"""
+  wGORoomsNdd: Float
+  """YGO Revenue Ded"""
+  yGORevenueDed: Float
+  """YGO Revenue Ndd"""
+  yGORevenueNdd: Float
+  """YGO Rooms Ded"""
+  yGORoomsDed: Float
+  """YGO Rooms Ndd"""
+  yGORoomsNdd: Float
+  """YWGO Revenue Ded"""
+  yWGORevenueDed: Float
+  """YWGO Revenue Ndd"""
+  yWGORevenueNdd: Float
+  """YWGO Rooms Ded"""
+  yWGORoomsDed: Float
+  """YWGO Rooms Ndd"""
+  yWGORoomsNdd: Float
 }
 type StatisticsReservationPacePaceStayDateDetailsType {
   """Day Description."""

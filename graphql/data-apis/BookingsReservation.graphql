@@ -1,17 +1,21 @@
 
 # title : OPERA Cloud RnA BookingsReservation GraphQL API,
-# description : GraphQL API to cater for Detailed information on reservations booked in the past and future, including market code, rate code, reservation status, guest information and associated room and revenue details..
-#               Compatible with OPERA Cloud RnA release 25.3.0.0.
+# description : GraphQL API to cater for Detailed information on reservations booked in the past and future, including market code, rate code, reservation status, guest information and associated room and revenue details.
+#               Compatible with OPERA Cloud RnA release 25.5.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.4.0.0
+# version : 25.5.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
 
 directive @stream(if: Boolean, label: String, initialCount: Int = 0) on FIELD
+directive @conditionalInputPair(pair: Int) on INPUT_FIELD_DEFINITION
+directive @mandatoryInput on INPUT_FIELD_DEFINITION
 scalar Date
 scalar DateTime
+
+# Date format: "YYYY-MM-DD"
 input DateInput{
   _eq: Date
   _ne: Date
@@ -28,6 +32,8 @@ input DateRangeInput {
   start: Date!
   end: Date!
 }
+
+# Datetime format: "YYYY-MM-DD HH24:MI:SS"
 input DateTimeInput {
   _eq: DateTime
   _ne: DateTime
@@ -44,6 +50,7 @@ input DateTimeRangeInput {
   start: DateTime!
   end: DateTime!
 }
+
 input StringInput {
   _eq: String
   _ne: String
@@ -55,6 +62,7 @@ input StringInput {
   _lte: String
   _isNull: Boolean
 }
+
 input FloatInput {
   _eq: Float
   _ne: Float
@@ -72,109 +80,168 @@ input FloatRangeInput {
   end: Float!
 }
 
+
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - reservationDetailsChainCode 
+# 		 - reservationDetailsResort 
+# Pair - [2] 
+# 		 - reservationDetailsActualCheckInDateTime 
+# 		 - reservationDetailsActualCheckOutDate 
+# 		 - reservationDetailsActualCheckOutDateTime 
+# 		 - reservationDetailsAddresseeNameId 
+# 		 - reservationDetailsAllotmentHeaderId 
+# 		 - reservationDetailsAllotmentid 
+# 		 - reservationDetailsAwardMembershipId 
+# 		 - reservationDetailsBillingContactId 
+# 		 - reservationDetailsBillingcontactprofileid 
+# 		 - reservationDetailsBonusCheckId 
+# 		 - reservationDetailsBusinessDateCreated 
+# 		 - reservationDetailsCXchangeDate 
+# 		 - reservationDetailsCancellationDate 
+# 		 - reservationDetailsCancellationNo 
+# 		 - reservationDetailsConfirmationNo 
+# 		 - reservationDetailsCreditCardId 
+# 		 - reservationDetailsEndDate 
+# 		 - reservationDetailsEndbusinessdate 
+# 		 - reservationDetailsEnddatetime 
+# 		 - reservationDetailsEventId 
+# 		 - reservationDetailsFolioCloseDate 
+# 		 - reservationDetailsGuestprofileid 
+# 		 - reservationDetailsInsertActionInstanceId 
+# 		 - reservationDetailsInsertDate 
+# 		 - reservationDetailsInsertUser 
+# 		 - reservationDetailsInsertdatetime 
+# 		 - reservationDetailsJrnupdatedttm 
+# 		 - reservationDetailsLocationid 
+# 		 - reservationDetailsNameId 
+# 		 - reservationDetailsOriginalEndDate 
+# 		 - reservationDetailsParentResvNameId 
+# 		 - reservationDetailsParentreservationid 
+# 		 - reservationDetailsQuoteId 
+# 		 - reservationDetailsReservationid 
+# 		 - reservationDetailsResvContactId 
+# 		 - reservationDetailsResvNameId 
+# 		 - reservationDetailsResvNameid 
+# 		 - reservationDetailsResvcontactprofileid 
+# 		 - reservationDetailsRhBillingContactId 
+# 		 - reservationDetailsRhResvContactId 
+# 		 - reservationDetailsSplitFromResvNameId 
+# 		 - reservationDetailsSplitfromreservationid 
+# 		 - reservationDetailsTruncActualCheckOutDate 
+# 		 - reservationDetailsTruncBeginDate 
+# 		 - reservationDetailsTruncEndDate 
+# 		 - reservationDetailsUniCardId 
+# 		 - reservationDetailsUpdateDate 
+# 		 - reservationDetailsUpdatedatetime 
+
 input BookingsReservationQueryArgumentsType {
   """Actual Check In Date Time"""
-  reservationDetailsActualCheckInDateTime: DateTimeInput
+  reservationDetailsActualCheckInDateTime: DateTimeInput                @conditionalInputPair(pair: 2)
   """Actual Check Out Date Time"""
-  reservationDetailsActualCheckOutDateTime: DateTimeInput
+  reservationDetailsActualCheckOutDateTime: DateTimeInput               @conditionalInputPair(pair: 2)
   """Actual Check-Out Date"""
-  reservationDetailsActualCheckOutDate: DateInput
+  reservationDetailsActualCheckOutDate: DateInput                       @conditionalInputPair(pair: 2)
   """Addressee Name ID"""
-  reservationDetailsAddresseeNameId: FloatInput
+  reservationDetailsAddresseeNameId: FloatInput                         @conditionalInputPair(pair: 2)
   """Block ID"""
-  reservationDetailsAllotmentid: FloatInput
+  reservationDetailsAllotmentid: FloatInput                             @conditionalInputPair(pair: 2)
   """Arrival Date"""
-  reservationDetailsTruncBeginDate: DateInput!
+  reservationDetailsTruncBeginDate: DateInput                           @conditionalInputPair(pair: 2)
   """Billing Contact ID"""
-  reservationDetailsBillingContactId: FloatInput
+  reservationDetailsBillingContactId: FloatInput                        @conditionalInputPair(pair: 2)
   """Billing Contact Profile ID"""
-  reservationDetailsBillingcontactprofileid: FloatInput
+  reservationDetailsBillingcontactprofileid: FloatInput                 @conditionalInputPair(pair: 2)
   """Block ID"""
-  reservationDetailsAllotmentHeaderId: FloatInput
+  reservationDetailsAllotmentHeaderId: FloatInput                       @conditionalInputPair(pair: 2)
   """Bonus Check ID"""
-  reservationDetailsBonusCheckId: FloatInput
+  reservationDetailsBonusCheckId: FloatInput                            @conditionalInputPair(pair: 2)
   """Business Date Created"""
-  reservationDetailsBusinessDateCreated: DateInput
+  reservationDetailsBusinessDateCreated: DateInput                      @conditionalInputPair(pair: 2)
   """Central Xchange Date"""
-  reservationDetailsCXchangeDate: DateInput
+  reservationDetailsCXchangeDate: DateInput                             @conditionalInputPair(pair: 2)
   """Cancellation Date"""
-  reservationDetailsCancellationDate: DateTimeInput
+  reservationDetailsCancellationDate: DateTimeInput                     @conditionalInputPair(pair: 2)
   """Cancellation Number"""
-  reservationDetailsCancellationNo: StringInput
+  reservationDetailsCancellationNo: StringInput                         @conditionalInputPair(pair: 2)
+  """Chain Code"""
+  reservationDetailsChainCode: StringInput                              @conditionalInputPair(pair: 1)
   """Shared Confirmation Number"""
-  reservationDetailsConfirmationNo: StringInput
+  reservationDetailsConfirmationNo: StringInput                         @conditionalInputPair(pair: 2)
   """Credit Card ID"""
-  reservationDetailsCreditCardId: FloatInput
+  reservationDetailsCreditCardId: FloatInput                            @conditionalInputPair(pair: 2)
   """Custom Reference Number"""
   reservationDetailsCustomReference: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   reservationDetailsDsi: FloatInput
   """Departure Date"""
-  reservationDetailsTruncEndDate: DateInput!
+  reservationDetailsTruncEndDate: DateInput                             @conditionalInputPair(pair: 2)
   """End Datetime"""
-  reservationDetailsEnddatetime: DateTimeInput
+  reservationDetailsEnddatetime: DateTimeInput                          @conditionalInputPair(pair: 2)
   """Endbusinessdate"""
-  reservationDetailsEndbusinessdate: DateInput
+  reservationDetailsEndbusinessdate: DateInput                          @conditionalInputPair(pair: 2)
   """Event ID"""
-  reservationDetailsEventId: FloatInput
+  reservationDetailsEventId: FloatInput                                 @conditionalInputPair(pair: 2)
   """Date the folio was changed to closed."""
-  reservationDetailsFolioCloseDate: DateInput
+  reservationDetailsFolioCloseDate: DateInput                           @conditionalInputPair(pair: 2)
   """Guaranteecodeid"""
   reservationDetailsGuaranteecodeid: StringInput
   """Guestprofileid"""
-  reservationDetailsGuestprofileid: FloatInput
+  reservationDetailsGuestprofileid: FloatInput                          @conditionalInputPair(pair: 2)
   """Insert Action Instance ID"""
-  reservationDetailsInsertActionInstanceId: FloatInput
+  reservationDetailsInsertActionInstanceId: FloatInput                  @conditionalInputPair(pair: 2)
   """Insert Date"""
-  reservationDetailsInsertDate: DateTimeInput
+  reservationDetailsInsertDate: DateTimeInput                           @conditionalInputPair(pair: 2)
   """Insert DateTime"""
-  reservationDetailsInsertdatetime: DateTimeInput
+  reservationDetailsInsertdatetime: DateTimeInput                       @conditionalInputPair(pair: 2)
   """Insert User"""
-  reservationDetailsInsertUser: FloatInput
+  reservationDetailsInsertUser: FloatInput                              @conditionalInputPair(pair: 2)
   """Award Membership ID"""
-  reservationDetailsAwardMembershipId: FloatInput
+  reservationDetailsAwardMembershipId: FloatInput                       @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  reservationDetailsJrnupdatedttm: DateTimeInput
+  reservationDetailsJrnupdatedttm: DateTimeInput                        @conditionalInputPair(pair: 2)
   """Linked Departure Date"""
-  reservationDetailsEndDate: DateTimeInput
+  reservationDetailsEndDate: DateTimeInput                              @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Property"""
-  reservationDetailsLocationid: StringInput
+  reservationDetailsLocationid: StringInput                             @conditionalInputPair(pair: 2)
   """Name Usage Type"""
   reservationDetailsNameUsageType: StringInput
   """Internal ID to uniquely identify the Organization"""
   reservationDetailsOrganizationid: FloatInput
   """Original End Date"""
-  reservationDetailsOriginalEndDate: DateInput
+  reservationDetailsOriginalEndDate: DateInput                          @conditionalInputPair(pair: 2)
   """Parent Resv Name ID"""
-  reservationDetailsParentResvNameId: FloatInput
+  reservationDetailsParentResvNameId: FloatInput                        @conditionalInputPair(pair: 2)
   """Parentreservationid"""
-  reservationDetailsParentreservationid: FloatInput
+  reservationDetailsParentreservationid: FloatInput                     @conditionalInputPair(pair: 2)
   """Identifies the charging status of the reservation after check out. O=Open Checkout P=Charging Privileges C=Closed Checkout."""
   reservationDetailsPostCoFlag: StringInput
   """Quote ID provided by external system."""
-  reservationDetailsQuoteId: StringInput
+  reservationDetailsQuoteId: StringInput                                @conditionalInputPair(pair: 2)
   """Resv Contact ID"""
-  reservationDetailsResvContactId: FloatInput
+  reservationDetailsResvContactId: FloatInput                           @conditionalInputPair(pair: 2)
   """Reservation Name ID"""
-  reservationDetailsResvNameId: FloatInput
+  reservationDetailsResvNameId: FloatInput                              @conditionalInputPair(pair: 2)
   """Reservation Status"""
   reservationDetailsResvStatus: StringInput
   """Reservation Type"""
   reservationDetailsGuaranteeCode: StringInput
   """Reservationid"""
-  reservationDetailsReservationid: FloatInput
+  reservationDetailsReservationid: FloatInput                           @conditionalInputPair(pair: 2)
   """Property"""
-  reservationDetailsResort: StringInput!
+  reservationDetailsResort: StringInput                                 @conditionalInputPair(pair: 1)
   """Auto generated charge number for Point Of Sale systems to identify guests."""
   reservationDetailsResortChargeNumber: StringInput
   """Reservation Nameid"""
-  reservationDetailsResvNameid: FloatInput
+  reservationDetailsResvNameid: FloatInput                              @conditionalInputPair(pair: 2)
   """Resvcontactprofileid"""
-  reservationDetailsResvcontactprofileid: FloatInput
+  reservationDetailsResvcontactprofileid: FloatInput                    @conditionalInputPair(pair: 2)
   """Rh Billing Contact ID"""
-  reservationDetailsRhBillingContactId: FloatInput
+  reservationDetailsRhBillingContactId: FloatInput                      @conditionalInputPair(pair: 2)
   """Rh Resv Contact ID"""
-  reservationDetailsRhResvContactId: FloatInput
+  reservationDetailsRhResvContactId: FloatInput                         @conditionalInputPair(pair: 2)
   """Room Category"""
   reservationDetailsRoomCategory: StringInput
   """Roomcategoryid"""
@@ -186,21 +253,21 @@ input BookingsReservationQueryArgumentsType {
   """Sguest Name"""
   reservationDetailsSguestName: StringInput
   """Shared Profile ID"""
-  reservationDetailsNameId: FloatInput
+  reservationDetailsNameId: FloatInput                                  @conditionalInputPair(pair: 2)
   """Shared Reservation Status"""
   reservationDetailsReservationStatus: StringInput
   """Stores resv_name_id of the original multi room reservation from which this reservation is split off."""
-  reservationDetailsSplitFromResvNameId: FloatInput
+  reservationDetailsSplitFromResvNameId: FloatInput                     @conditionalInputPair(pair: 2)
   """Splitfromreservationid"""
-  reservationDetailsSplitfromreservationid: FloatInput
+  reservationDetailsSplitfromreservationid: FloatInput                  @conditionalInputPair(pair: 2)
   """This is the actual check out date with no time component."""
-  reservationDetailsTruncActualCheckOutDate: DateInput
+  reservationDetailsTruncActualCheckOutDate: DateInput                  @conditionalInputPair(pair: 2)
   """Universal Card ID used by interfaces for key encoding purposes."""
-  reservationDetailsUniCardId: StringInput
+  reservationDetailsUniCardId: StringInput                              @conditionalInputPair(pair: 2)
   """Update Date"""
-  reservationDetailsUpdateDate: DateTimeInput
+  reservationDetailsUpdateDate: DateTimeInput                           @conditionalInputPair(pair: 2)
   """Update Datetime"""
-  reservationDetailsUpdatedatetime: DateTimeInput
+  reservationDetailsUpdatedatetime: DateTimeInput                       @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   accompanyingguestDetailsDsi: FloatInput
   """JRN Update Date and Time"""
@@ -329,48 +396,6 @@ input BookingsReservationQueryArgumentsType {
   marketDetailsOrganizationid: FloatInput
   """Property"""
   marketDetailsResort: StringInput
-  """Account ID"""
-  profileaccountsDetailsProfileId: FloatInput
-  """Active Flag"""
-  profileaccountsDetailsActiveYn: StringInput
-  """Chain Code"""
-  profileaccountsDetailsChainCode: StringInput
-  """Company"""
-  profileaccountsDetailsCompany: StringInput
-  """DSI Internal Data Source ID to identify Opera Chain and instance"""
-  profileaccountsDetailsDsi: FloatInput
-  """History Y/N"""
-  profileaccountsDetailsHistoryYn: StringInput
-  """IATA Number"""
-  profileaccountsDetailsNameCode: StringInput
-  """Inactive Date"""
-  profileaccountsDetailsInactiveDate: DateTimeInput
-  """Organization ID"""
-  profileaccountsDetailsOrganizationId: FloatInput
-  """JRN Update Date and Time"""
-  profileaccountsDetailsJrnupdatedttm: DateTimeInput
-  """Last"""
-  profileaccountsDetailsLast: StringInput
-  """Name ID"""
-  profileaccountsDetailsNameId: FloatInput
-  """Internal ID to uniquely identify the Organization"""
-  profileaccountsDetailsOrganizationid: FloatInput
-  """Profile Type"""
-  profileaccountsDetailsProfileType: StringInput
-  """Profile Type Code"""
-  profileaccountsDetailsNameType: StringInput
-  """Resort for which Job is registered."""
-  profileaccountsDetailsResortRegistered: StringInput
-  """The Uppercase value of Last or Company."""
-  profileaccountsDetailsSname: StringInput
-  """Uppercase value of First Name."""
-  profileaccountsDetailsSfirst: StringInput
-  """Internal Indexed field for Searching by Extended Byte First Name."""
-  profileaccountsDetailsSxfirstName: StringInput
-  """Internal Indexed field for Searching by Extended Byte Name."""
-  profileaccountsDetailsSxname: StringInput
-  """Update Date"""
-  profileaccountsDetailsUpdateDate: DateTimeInput
   """The primary key for this table."""
   profileallDetailsNameId: FloatInput
   """Profile is active or not."""
@@ -425,6 +450,132 @@ input BookingsReservationQueryArgumentsType {
   profileallDetailsSxfirstName: StringInput
   """The date the record was modified"""
   profileallDetailsUpdateDate: DateTimeInput
+  """Account ID"""
+  reservationprofileaccountscompanyDetailsProfileId: FloatInput
+  """Active Flag"""
+  reservationprofileaccountscompanyDetailsActiveYn: StringInput
+  """Chain Code"""
+  reservationprofileaccountscompanyDetailsChainCode: StringInput
+  """Company"""
+  reservationprofileaccountscompanyDetailsCompany: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  reservationprofileaccountscompanyDetailsDsi: FloatInput
+  """History Y/N"""
+  reservationprofileaccountscompanyDetailsHistoryYn: StringInput
+  """IATA Number"""
+  reservationprofileaccountscompanyDetailsNameCode: StringInput
+  """Inactive Date"""
+  reservationprofileaccountscompanyDetailsInactiveDate: DateInput
+  """Organization ID"""
+  reservationprofileaccountscompanyDetailsOrganizationId: FloatInput
+  """JRN Update Date and Time"""
+  reservationprofileaccountscompanyDetailsJrnupdatedttm: DateTimeInput
+  """Last"""
+  reservationprofileaccountscompanyDetailsLast: StringInput
+  """Name ID"""
+  reservationprofileaccountscompanyDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  reservationprofileaccountscompanyDetailsOrganizationid: FloatInput
+  """Profile Type"""
+  reservationprofileaccountscompanyDetailsProfileType: StringInput
+  """Profile Type Code"""
+  reservationprofileaccountscompanyDetailsNameType: StringInput
+  """Resort for which Job is registered."""
+  reservationprofileaccountscompanyDetailsResortRegistered: StringInput
+  """The Uppercase value of Last or Company."""
+  reservationprofileaccountscompanyDetailsSname: StringInput
+  """Uppercase value of First Name."""
+  reservationprofileaccountscompanyDetailsSfirst: StringInput
+  """Internal Indexed field for Searching by Extended Byte First Name."""
+  reservationprofileaccountscompanyDetailsSxfirstName: StringInput
+  """Internal Indexed field for Searching by Extended Byte Name."""
+  reservationprofileaccountscompanyDetailsSxname: StringInput
+  """Update Date"""
+  reservationprofileaccountscompanyDetailsUpdateDate: DateTimeInput
+  """Account ID"""
+  profileaccountstravelagentDetailsProfileId: FloatInput
+  """Active Flag"""
+  profileaccountstravelagentDetailsActiveYn: StringInput
+  """Chain Code"""
+  profileaccountstravelagentDetailsChainCode: StringInput
+  """Company"""
+  profileaccountstravelagentDetailsCompany: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  profileaccountstravelagentDetailsDsi: FloatInput
+  """History Y/N"""
+  profileaccountstravelagentDetailsHistoryYn: StringInput
+  """IATA Number"""
+  profileaccountstravelagentDetailsNameCode: StringInput
+  """Inactive Date"""
+  profileaccountstravelagentDetailsInactiveDate: DateInput
+  """Organization ID"""
+  profileaccountstravelagentDetailsOrganizationId: FloatInput
+  """JRN Update Date and Time"""
+  profileaccountstravelagentDetailsJrnupdatedttm: DateTimeInput
+  """Last"""
+  profileaccountstravelagentDetailsLast: StringInput
+  """Name ID"""
+  profileaccountstravelagentDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  profileaccountstravelagentDetailsOrganizationid: FloatInput
+  """Profile Type"""
+  profileaccountstravelagentDetailsProfileType: StringInput
+  """Profile Type Code"""
+  profileaccountstravelagentDetailsNameType: StringInput
+  """Resort for which Job is registered."""
+  profileaccountstravelagentDetailsResortRegistered: StringInput
+  """The Uppercase value of Last or Company."""
+  profileaccountstravelagentDetailsSname: StringInput
+  """Uppercase value of First Name."""
+  profileaccountstravelagentDetailsSfirst: StringInput
+  """Internal Indexed field for Searching by Extended Byte First Name."""
+  profileaccountstravelagentDetailsSxfirstName: StringInput
+  """Internal Indexed field for Searching by Extended Byte Name."""
+  profileaccountstravelagentDetailsSxname: StringInput
+  """Update Date"""
+  profileaccountstravelagentDetailsUpdateDate: DateTimeInput
+  """Account ID"""
+  reservationprofileaccountssourceDetailsProfileId: FloatInput
+  """Active Flag"""
+  reservationprofileaccountssourceDetailsActiveYn: StringInput
+  """Chain Code"""
+  reservationprofileaccountssourceDetailsChainCode: StringInput
+  """Company"""
+  reservationprofileaccountssourceDetailsCompany: StringInput
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  reservationprofileaccountssourceDetailsDsi: FloatInput
+  """History Y/N"""
+  reservationprofileaccountssourceDetailsHistoryYn: StringInput
+  """IATA Number"""
+  reservationprofileaccountssourceDetailsNameCode: StringInput
+  """Inactive Date"""
+  reservationprofileaccountssourceDetailsInactiveDate: DateInput
+  """Organization ID"""
+  reservationprofileaccountssourceDetailsOrganizationId: FloatInput
+  """JRN Update Date and Time"""
+  reservationprofileaccountssourceDetailsJrnupdatedttm: DateTimeInput
+  """Last"""
+  reservationprofileaccountssourceDetailsLast: StringInput
+  """Name ID"""
+  reservationprofileaccountssourceDetailsNameId: FloatInput
+  """Internal ID to uniquely identify the Organization"""
+  reservationprofileaccountssourceDetailsOrganizationid: FloatInput
+  """Profile Type"""
+  reservationprofileaccountssourceDetailsProfileType: StringInput
+  """Profile Type Code"""
+  reservationprofileaccountssourceDetailsNameType: StringInput
+  """Resort for which Job is registered."""
+  reservationprofileaccountssourceDetailsResortRegistered: StringInput
+  """The Uppercase value of Last or Company."""
+  reservationprofileaccountssourceDetailsSname: StringInput
+  """Uppercase value of First Name."""
+  reservationprofileaccountssourceDetailsSfirst: StringInput
+  """Internal Indexed field for Searching by Extended Byte First Name."""
+  reservationprofileaccountssourceDetailsSxfirstName: StringInput
+  """Internal Indexed field for Searching by Extended Byte Name."""
+  reservationprofileaccountssourceDetailsSxname: StringInput
+  """Update Date"""
+  reservationprofileaccountssourceDetailsUpdateDate: DateTimeInput
   """Base Rate Code"""
   ratecodeDetailsBaseRateCode: StringInput
   """Business Date"""
@@ -1055,6 +1206,8 @@ input BookingsReservationQueryArgumentsType {
   resortDetailsPackageLoss: StringInput
   """Package Profit code for a particular Package"""
   resortDetailsPackageProfit: StringInput
+  """Parent Org Code"""
+  resortDetailsParentOrgCode: StringInput
   """Market code"""
   resortDetailsPasserbyMarket: StringInput
   """Source code"""
@@ -1741,10 +1894,14 @@ type BookingsReservationType {
   locatorsDetails: BookingsReservationLocatorsDetailsType
   """Market Details"""
   marketDetails: BookingsReservationMarketDetailsType
-  """Profile Accounts Details"""
-  profileAccountsDetails: BookingsReservationProfileAccountsDetailsType
   """Profile All Details"""
   profileAllInformationDetails: BookingsReservationProfileAllInformationDetailsType
+  """Reservation Profile Accounts Company Details"""
+  reservationProfileAccountsCompanyDetails: BookingsReservationReservationProfileAccountsCompanyDetailsType
+  """Profile Accounts Travel Agent Details"""
+  profileAccountsTravelAgentDetails: BookingsReservationProfileAccountsTravelAgentDetailsType
+  """Reservation Profile Accounts Source Details"""
+  reservationProfileAccountsSourceDetails: BookingsReservationReservationProfileAccountsSourceDetailsType
   """Rate Code Details"""
   rateCodeDetails: BookingsReservationRateCodeDetailsType
   """Reservation Alerts Details"""
@@ -1864,6 +2021,8 @@ type BookingsReservationReservationDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -2104,12 +2263,16 @@ type BookingsReservationReservationDetailsType {
   centralWaitlistReason: String
   """Central Waitlist Reason Description"""
   centralWaitlistReasonDescription: String
+  """Chain Code"""
+  chainCode: String
   """Channel Description"""
   channelDescription: String
   """Channel Order By"""
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -2218,6 +2381,10 @@ type BookingsReservationReservationDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -2316,6 +2483,8 @@ type BookingsReservationReservationDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -2742,6 +2911,8 @@ type BookingsReservationReservationDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -2848,6 +3019,8 @@ type BookingsReservationReservationDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
@@ -3130,6 +3303,8 @@ type BookingsReservationReservationDetailsType {
   ymCode: String
 }
 type BookingsReservationAccompanyingGuestDetailsType {
+  """Active YN"""
+  activeYN: String
   """Alternate Envelope Greeting"""
   alternateEnvelopeGreeting: String
   """Alternate First Name"""
@@ -3140,6 +3315,10 @@ type BookingsReservationAccompanyingGuestDetailsType {
   alternateLastName: String
   """Alternate Salutation"""
   alternateSalutation: String
+  """Attach Date Time"""
+  attachDateTime: Date
+  """Autoenroll Member YN"""
+  autoenrollMemberYN: String
   """Country of birth."""
   birthCountry: String
   """Birth Date"""
@@ -3148,6 +3327,8 @@ type BookingsReservationAccompanyingGuestDetailsType {
   birthDateStr: String
   """Place of birth."""
   birthPlace: String
+  """Cash Bl Ind"""
+  cashBlInd: String
   """Central Nationality"""
   centralNationality: String
   """Central Nationality Description"""
@@ -3156,16 +3337,30 @@ type BookingsReservationAccompanyingGuestDetailsType {
   centralTitle: String
   """Client ID"""
   clientID: String
+  """Contact Flag"""
+  contactFlag: String
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   dSI: Float
+  """Detach Date Time"""
+  detachDateTime: Date
+  """Detached YN"""
+  detachedYN: String
   """Email"""
   email: String
+  """Email YN"""
+  emailYN: String
   """Envelope Greeting"""
   envelopeGreeting: String
   """First Name"""
   firstName: String
   """Gender"""
   gender: String
+  """Guest Priv YN"""
+  guestPrivYN: String
+  """Inactive Reason"""
+  inactiveReason: String
+  """Inactive Reason Code"""
+  inactiveReasonCode: String
   """JRN Update Date"""
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
@@ -3176,6 +3371,18 @@ type BookingsReservationAccompanyingGuestDetailsType {
   languageDescription: String
   """Last Name"""
   lastName: String
+  """Mail Action Codes"""
+  mailActionCodes: String
+  """Mail Action Desc"""
+  mailActionDesc: String
+  """Mail List"""
+  mailList: String
+  """Market Research YN"""
+  marketResearchYN: String
+  """Markets"""
+  markets: String
+  """Markets Desc"""
+  marketsDesc: String
   """Middle Name"""
   middleName: String
   """Name ID"""
@@ -3190,18 +3397,48 @@ type BookingsReservationAccompanyingGuestDetailsType {
   parentReservationNameId: Float
   """Phone no."""
   phone: String
+  """Phone YN"""
+  phoneYN: String
   """Primary Key ID"""
   primaryKeyID: Float
+  """Profile Privacy Flag"""
+  profilePrivacyFlag: String
   """Code to uniquely identify the Property"""
   property: String
   """RNA Insert Date"""
   rNAInsertDate: DateTime
   """RNA Update Date"""
   rNAUpdateDate: DateTime
+  """Rep Inactive Reason"""
+  repInactiveReason: String
+  """Rep Inactive Reason Code"""
+  repInactiveReasonCode: String
+  """Rep Mail Action Codes"""
+  repMailActionCodes: String
+  """Rep Mail Action Desc"""
+  repMailActionDesc: String
+  """Rep Markets"""
+  repMarkets: String
+  """Rep Markets Desc"""
+  repMarketsDesc: String
+  """Rep VIP Name"""
+  repVIPName: String
+  """Rep VIP Status"""
+  repVIPStatus: String
   """Resv Name ID"""
   reservationNameId: Float
+  """Restricted Rule"""
+  restrictedRule: String
+  """SMS YN"""
+  sMSYN: String
   """Salutation Greeting"""
   salutation: String
+  """Tax1 No"""
+  tax1No: String
+  """Tax2 No"""
+  tax2No: String
+  """Third Party YN"""
+  thirdPartyYN: String
   """Title"""
   title: String
   """UDFC01"""
@@ -3404,6 +3641,10 @@ type BookingsReservationAccompanyingGuestDetailsType {
   uDFN39: Float
   """UDFN40"""
   uDFN40: Float
+  """VIP Name"""
+  vIPName: String
+  """VIP Status"""
+  vIPStatus: String
 }
 type BookingsReservationChannelDetailsType {
   """Business Title"""
@@ -3808,644 +4049,6 @@ type BookingsReservationMarketDetailsType {
   updateDate: DateTime
   """Update User"""
   updateUser: Float
-}
-type BookingsReservationProfileAccountsDetailsType {
-  """AR Number"""
-  aRNumber: String
-  """The date this record was last updated by the ARC update program."""
-  aRCUpdateDate: Date
-  """Account Email Primary"""
-  accountEmailPrimary: String
-  """Account ID"""
-  accountID: Float
-  """Account Name"""
-  accountName: String
-  """Account Name 2"""
-  accountName2: String
-  """Account Name 3"""
-  accountName3: String
-  """Account Owner Title"""
-  accountOwnerTitle: String
-  """Account Owners(All)"""
-  accountOwnersAll: String
-  """Phone no."""
-  accountPhonePrimary: String
-  """Account Phone Web"""
-  accountPhoneWeb: String
-  """Account Source"""
-  accountSource: String
-  """Account Source Description"""
-  accountSourceDescription: String
-  """Account Type"""
-  accountType: String
-  """Account Type Description"""
-  accountTypeDescription: String
-  """Billing contact person in company."""
-  acctContact: String
-  """Action Code"""
-  actionCode: String
-  """Active Flag"""
-  activeFlag: String
-  """Address 1"""
-  address1: String
-  """Address 2"""
-  address2: String
-  """Address 3"""
-  address3: String
-  """Address 4"""
-  address4: String
-  """Address Lang Code Description"""
-  addressLangCodeDesc: String
-  """Address Language"""
-  addressLanguage: String
-  """Address Language Code"""
-  addressLanguageCode: String
-  """Address Type"""
-  addressType: String
-  """All Properties"""
-  allProperties: String
-  """The Extended Byte Language of the Profile."""
-  alternateLanguage: String
-  """Alternate Language Description"""
-  alternateLanguageDescription: String
-  """Alternate Name"""
-  alternateName: String
-  """Alternate Salutation"""
-  alternateSalutation: String
-  """Alternate Title"""
-  alternateTitle: String
-  """AR No Central"""
-  arNumberCentral: String
-  """Autoenroll Member Y/N"""
-  autoenrollMemberYn: String
-  """Billing Instruction"""
-  billingInstruction: String
-  """For tour operators the type of billing profile for this name."""
-  billingProfileCode: String
-  """Birth Date"""
-  birthDate: Date
-  """Birth Date Str"""
-  birthDateStr: String
-  """Place of birth."""
-  birthPlace: String
-  """Bl Msg"""
-  blMsg: String
-  """Business Potential"""
-  businessPotential: String
-  """Business Potential Description"""
-  businessPotentialDescription: String
-  """Business Segement"""
-  businessSegement: String
-  """Business Segement Description"""
-  businessSegementDescription: String
-  """Business Title"""
-  businessTitle: String
-  """Central Account Owner Title"""
-  centralAccountOwnerTitle: String
-  """Central Account Source"""
-  centralAccountSource: String
-  """Central Account Source Description"""
-  centralAccountSourceDescription: String
-  """Central Account Type"""
-  centralAccountType: String
-  """Central Account Type Description"""
-  centralAccountTypeDescription: String
-  """Central Business Potential"""
-  centralBusinessPotential: String
-  """Central Business Potential Description"""
-  centralBusinessPotentialDescription: String
-  """Central Business Segement Description"""
-  centralBusinessSegementDescription: String
-  """Central Business Segment"""
-  centralBusinessSegment: String
-  """Central Competition Code"""
-  centralCompetitionCode: String
-  """Central Competition Code Description"""
-  centralCompetitionCodeDescription: String
-  """Central Corporate Type"""
-  centralCorporateType: String
-  """Central Corporate Type Description"""
-  centralCorporateTypeDescription: String
-  """Central Inactive Reason"""
-  centralInactiveReason: String
-  """Central Inactive Reason Description"""
-  centralInactiveReasonDescription: String
-  """Central Industry Code"""
-  centralIndustryCode: String
-  """Central Industry Code Description"""
-  centralIndustryCodeDescription: String
-  """Central Keyword"""
-  centralKeyword: String
-  """Central Priority"""
-  centralPriority: String
-  """Central Priority Description"""
-  centralPriorityDescription: String
-  """Central Profile Type Code"""
-  centralProfileTypeCode: String
-  """Central Profile Type Description"""
-  centralProfileTypeDescription: String
-  """Central Scope"""
-  centralScope: String
-  """Central Scope City"""
-  centralScopeCity: String
-  """Central Scope City Description"""
-  centralScopeCityDescription: String
-  """Central Scope Description"""
-  centralScopeDescription: String
-  """Central State"""
-  centralState: String
-  """Central Territory"""
-  centralTerritory: String
-  """Central Territory Description"""
-  centralTerritoryDescription: String
-  """Chain Code"""
-  chainCode: String
-  """City"""
-  city: String
-  """City Ext"""
-  cityExt: String
-  """Combined Name"""
-  combinedName: String
-  """Commission Code"""
-  commissionCode: String
-  """Commission Code All"""
-  commissionCodeAll: String
-  """Communication Role1"""
-  communicationRole1: String
-  """Communication Role2"""
-  communicationRole2: String
-  """Communication Role3"""
-  communicationRole3: String
-  """Communication Type1"""
-  communicationType1: String
-  """Communication Type2"""
-  communicationType2: String
-  """Communication Type3"""
-  communicationType3: String
-  """Communication Value1"""
-  communicationValue1: String
-  """Communication Value2"""
-  communicationValue2: String
-  """Communication Value3"""
-  communicationValue3: String
-  """Company"""
-  company: String
-  """Competition Code"""
-  competitionCode: String
-  """Competition Code Description"""
-  competitionCodeDescription: String
-  """Specified whether Name_Code column has Company # or IATA #. For Company # the value will beCOMP and for IATA # the Value of this column will be IATA."""
-  corporateType: String
-  """Corporate Type Description"""
-  corporateTypeDescription: String
-  """Country"""
-  country: String
-  """Country Description"""
-  countryDescription: String
-  """Created By User"""
-  createdByUser: String
-  """Created On Date"""
-  createdOnDate: DateTime
-  """Credit Card Name"""
-  creditCardName: String
-  """Credit Card Type"""
-  creditCardType: String
-  """Credit Rating"""
-  creditRating: String
-  """Currency Code"""
-  currencyCode: String
-  """Currency Description"""
-  currencyDescription: String
-  """DSI Internal Data Source ID to identify Opera Chain and instance"""
-  dSI: Float
-  """Deleted Flag"""
-  deletedFlag: String
-  """Email Y/N"""
-  emailYn: String
-  """Envelope Greeting"""
-  envelopeGreeting: String
-  """External ID"""
-  externalId: String
-  """F Subscription Db"""
-  fSubscriptionDb: String
-  """F Subscription Y/N"""
-  fSubscriptionYn: String
-  """Fax Number"""
-  faxNo: String
-  """First"""
-  first: String
-  """Gender"""
-  gender: String
-  """Guest Priv Y/N"""
-  guestPrivYn: String
-  """History Y/N"""
-  historyYn: String
-  """Hold Code"""
-  holdCode: String
-  """IATA Number"""
-  iATANumber: String
-  """IATA Consortia"""
-  iataConsortia: String
-  """Inactive Date"""
-  inactiveDate: DateTime
-  """Inactive Flag"""
-  inactiveFlag: String
-  """Reason Code for inactive status from REASON table"""
-  inactiveReason: String
-  """Reason why record was inactivated."""
-  inactiveReasonDescription: String
-  """Industry Code"""
-  industryCode: String
-  """Industry Code Description"""
-  industryCodeDescription: String
-  """Interest Code."""
-  interest: String
-  """Deleted Flag"""
-  internalDeletedflag: String
-  """Inactive Flag"""
-  internalInactiveflag: String
-  """Organization ID"""
-  internalOrganizationId: Float
-  """JRN Update Date"""
-  jRNUpdateDate: Date
-  """JRN Update Date and Time"""
-  jRNUpdateDateAndTime: DateTime
-  """Keyword"""
-  keyword: String
-  """Last"""
-  last: String
-  """Last Group"""
-  lastGroup: String
-  """Last Rate"""
-  lastRate: Float
-  """Not used."""
-  lastRoom: String
-  """Last Source"""
-  lastSource: String
-  """Last Stay"""
-  lastStay: Date
-  """Legal Company"""
-  legalCompany: String
-  """Letter Greeting"""
-  letterGreeting: String
-  """Mail Action"""
-  mailAction: String
-  """Mail Action Description"""
-  mailActionDescription: String
-  """Mail List"""
-  mailList: String
-  """The type of mail this user should be sent."""
-  mailType: String
-  """Mail Y/N"""
-  mailYn: String
-  """Market Research Y/N"""
-  marketResearchYn: String
-  """Middle"""
-  middle: String
-  """Name ID"""
-  nameId: Float
-  """Nationality Code"""
-  nationalityCode: String
-  """Nationality Description"""
-  nationalityDescription: String
-  """Negotiated Rate"""
-  negotiatedRate: String
-  """Next Stay"""
-  nextStay: Date
-  """The nickname of this individual."""
-  nickname: String
-  """Internal ID to uniquely identify the Organization"""
-  organizationID: Float
-  """Number of days a payment is due for the account."""
-  paymentDueDays: Float
-  """Postal Code"""
-  postalCode: String
-  """Internal Primary Key ID to uniquely identify the row"""
-  primaryKeyID: Float
-  """Primary Owner"""
-  primaryOwner: String
-  """Primary Owner Code"""
-  primaryOwnerCode: String
-  """Priority"""
-  priority: String
-  """Priority Description"""
-  priorityDescription: String
-  """Product Interest"""
-  productInterest: String
-  """Profession of the guest"""
-  profession: String
-  """Profile Language Description"""
-  profileLanguageDescription: String
-  """Profile privacy flag determine if the profile is marked as private for a property."""
-  profilePrivacyFlg: String
-  """Profile Type"""
-  profileType: String
-  """Profile Type Code"""
-  profileTypeCode: String
-  """Profile Type Description"""
-  profileTypeDescription: String
-  """Protected"""
-  protected: String
-  """RNA Insert Date"""
-  rNAInsertDate: DateTime
-  """RNA Update Date"""
-  rNAUpdateDate: DateTime
-  """Reference Currency"""
-  referenceCurrency: String
-  """Reporting Influence"""
-  repInfluence: String
-  """Reporting Influence Desc"""
-  repInfluenceDescription: String
-  """Rep Mail Action Codes"""
-  repMailActionCodes: String
-  """Rep Mail Action Desc"""
-  repMailActionDesc: String
-  """Reporting Nationality Code"""
-  repNationalityCode: String
-  """Reporting Nationality Description"""
-  repNationalityDescription: String
-  """Reporting State Desc"""
-  repStateDescription: String
-  """Reporting Tax Type Desc"""
-  repTaxTypeDescription: String
-  """Reporting Title Name"""
-  repTitleName: String
-  """Reporting Vip Name"""
-  repVIPName: String
-  """Reporting Vip Status"""
-  repVIPStatus: String
-  """User option to replace address in ORS with one from PMS."""
-  replaceAddress: String
-  """Resort for which Job is registered."""
-  resortRegistered: String
-  """Restricted"""
-  restricted: String
-  """Restricted Rule"""
-  restrictedRule: String
-  """Salutation Greeting"""
-  salutation: String
-  """Scope"""
-  scope: String
-  """Scope City"""
-  scopeCity: String
-  """Scope City Decription"""
-  scopeCityDecription: String
-  """Scope Description"""
-  scopeDescription: String
-  """The Uppercase value of Last or Company."""
-  searchAccountName: String
-  """Uppercase value of First Name."""
-  sfirst: String
-  """State"""
-  state: String
-  """State Code"""
-  stateCode: String
-  """State Description of the Guest of Payee"""
-  stateDesc: String
-  """Internal Indexed field for Searching by Extended Byte First Name."""
-  sxfirstName: String
-  """Internal Indexed field for Searching by Extended Byte Name."""
-  sxname: String
-  """Tax1 Number"""
-  tax1No: String
-  """Tax2 Number"""
-  tax2No: String
-  """Tax Category"""
-  taxCategory: String
-  """Tax Type"""
-  taxType: String
-  """Tax Type Description"""
-  taxTypeDescription: String
-  """Territory"""
-  territory: String
-  """Territory Description"""
-  territoryDescription: String
-  """Third Party Y/N"""
-  thirdPartyYn: String
-  """Trace Code"""
-  traceCode: String
-  """Trace Code Description"""
-  traceCodeDescription: String
-  """UDFC01"""
-  uDFC01: String
-  """UDFC02"""
-  uDFC02: String
-  """UDFC03"""
-  uDFC03: String
-  """UDFC04"""
-  uDFC04: String
-  """UDFC05"""
-  uDFC05: String
-  """UDFC06"""
-  uDFC06: String
-  """UDFC07"""
-  uDFC07: String
-  """UDFC08"""
-  uDFC08: String
-  """UDFC09"""
-  uDFC09: String
-  """UDFC10"""
-  uDFC10: String
-  """UDFC11"""
-  uDFC11: String
-  """UDFC12"""
-  uDFC12: String
-  """UDFC13"""
-  uDFC13: String
-  """UDFC14"""
-  uDFC14: String
-  """UDFC15"""
-  uDFC15: String
-  """UDFC16"""
-  uDFC16: String
-  """UDFC17"""
-  uDFC17: String
-  """UDFC18"""
-  uDFC18: String
-  """UDFC19"""
-  uDFC19: String
-  """UDFC20"""
-  uDFC20: String
-  """UDFC21"""
-  uDFC21: String
-  """UDFC22"""
-  uDFC22: String
-  """UDFC23"""
-  uDFC23: String
-  """UDFC24"""
-  uDFC24: String
-  """UDFC25"""
-  uDFC25: String
-  """UDFC26"""
-  uDFC26: String
-  """UDFC27"""
-  uDFC27: String
-  """UDFC28"""
-  uDFC28: String
-  """UDFC29"""
-  uDFC29: String
-  """UDFC30"""
-  uDFC30: String
-  """UDFC31"""
-  uDFC31: String
-  """UDFC32"""
-  uDFC32: String
-  """UDFC33"""
-  uDFC33: String
-  """UDFC34"""
-  uDFC34: String
-  """UDFC35"""
-  uDFC35: String
-  """UDFC36"""
-  uDFC36: String
-  """UDFC37"""
-  uDFC37: String
-  """UDFC38"""
-  uDFC38: String
-  """UDFC39"""
-  uDFC39: String
-  """UDFC40"""
-  uDFC40: String
-  """UDFD01"""
-  uDFD01: Date
-  """UDFD02"""
-  uDFD02: Date
-  """UDFD03"""
-  uDFD03: Date
-  """UDFD04"""
-  uDFD04: Date
-  """UDFD05"""
-  uDFD05: Date
-  """UDFD06"""
-  uDFD06: Date
-  """UDFD07"""
-  uDFD07: Date
-  """UDFD08"""
-  uDFD08: Date
-  """UDFD09"""
-  uDFD09: Date
-  """UDFD10"""
-  uDFD10: Date
-  """UDFD11"""
-  uDFD11: Date
-  """UDFD12"""
-  uDFD12: Date
-  """UDFD13"""
-  uDFD13: Date
-  """UDFD14"""
-  uDFD14: Date
-  """UDFD15"""
-  uDFD15: Date
-  """UDFD16"""
-  uDFD16: Date
-  """UDFD17"""
-  uDFD17: Date
-  """UDFD18"""
-  uDFD18: Date
-  """UDFD19"""
-  uDFD19: Date
-  """UDFD20"""
-  uDFD20: Date
-  """UDFN01"""
-  uDFN01: Float
-  """UDFN02"""
-  uDFN02: Float
-  """UDFN03"""
-  uDFN03: Float
-  """UDFN04"""
-  uDFN04: Float
-  """UDFN05"""
-  uDFN05: Float
-  """UDFN06"""
-  uDFN06: Float
-  """UDFN07"""
-  uDFN07: Float
-  """UDFN08"""
-  uDFN08: Float
-  """UDFN09"""
-  uDFN09: Float
-  """UDFN10"""
-  uDFN10: Float
-  """UDFN11"""
-  uDFN11: Float
-  """UDFN12"""
-  uDFN12: Float
-  """UDFN13"""
-  uDFN13: Float
-  """UDFN14"""
-  uDFN14: Float
-  """UDFN15"""
-  uDFN15: Float
-  """UDFN16"""
-  uDFN16: Float
-  """UDFN17"""
-  uDFN17: Float
-  """UDFN18"""
-  uDFN18: Float
-  """UDFN19"""
-  uDFN19: Float
-  """UDFN20"""
-  uDFN20: Float
-  """UDFN21"""
-  uDFN21: Float
-  """UDFN22"""
-  uDFN22: Float
-  """UDFN23"""
-  uDFN23: Float
-  """UDFN24"""
-  uDFN24: Float
-  """UDFN25"""
-  uDFN25: Float
-  """UDFN26"""
-  uDFN26: Float
-  """UDFN27"""
-  uDFN27: Float
-  """UDFN28"""
-  uDFN28: Float
-  """UDFN29"""
-  uDFN29: Float
-  """UDFN30"""
-  uDFN30: Float
-  """UDFN31"""
-  uDFN31: Float
-  """UDFN32"""
-  uDFN32: Float
-  """UDFN33"""
-  uDFN33: Float
-  """UDFN34"""
-  uDFN34: Float
-  """UDFN35"""
-  uDFN35: Float
-  """UDFN36"""
-  uDFN36: Float
-  """UDFN37"""
-  uDFN37: Float
-  """UDFN38"""
-  uDFN38: Float
-  """UDFN39"""
-  uDFN39: Float
-  """UDFN40"""
-  uDFN40: Float
-  """Update Date"""
-  updateDate: DateTime
-  """The last date this record's fax # was updated."""
-  updateFaxDate: Date
-  """Update User"""
-  updateUser: String
-  """VIP Name"""
-  vipName: String
-  """VIP Status"""
-  vipStatus: String
-  """Extended Byte Company Name"""
-  xcompanyName: String
-  """Xenvelope Greeting"""
-  xenvelopeGreeting: String
-  """Xfirst Name"""
-  xfirstName: String
-  """Xlast Name"""
-  xlastName: String
-  """Extended Byte middle name."""
-  xmiddleName: String
 }
 type BookingsReservationProfileAllInformationDetailsType {
   """The primary key for this table."""
@@ -5298,6 +4901,1908 @@ type BookingsReservationProfileAllInformationDetailsType {
   visaValidityType: String
   """Xdisplay Name"""
   xdisplayName: String
+  """Extended Byte middle name."""
+  xmiddleName: String
+}
+type BookingsReservationReservationProfileAccountsCompanyDetailsType {
+  """AR Number"""
+  aRNumber: String
+  """The date this record was last updated by the ARC update program."""
+  aRCUpdateDate: Date
+  """Account Email Primary"""
+  accountEmailPrimary: String
+  """Account ID"""
+  accountID: Float
+  """Account Name"""
+  accountName: String
+  """Account Name 2"""
+  accountName2: String
+  """Account Name 3"""
+  accountName3: String
+  """Account Owner Title"""
+  accountOwnerTitle: String
+  """Account Owners(All)"""
+  accountOwnersAll: String
+  """Phone no."""
+  accountPhonePrimary: String
+  """Account Phone Web"""
+  accountPhoneWeb: String
+  """Account Source"""
+  accountSource: String
+  """Account Source Description"""
+  accountSourceDescription: String
+  """Account Type"""
+  accountType: String
+  """Account Type Description"""
+  accountTypeDescription: String
+  """Billing contact person in company."""
+  acctContact: String
+  """Action Code"""
+  actionCode: String
+  """Active Flag"""
+  activeFlag: String
+  """Address 1"""
+  address1: String
+  """Address 2"""
+  address2: String
+  """Address 3"""
+  address3: String
+  """Address 4"""
+  address4: String
+  """Address Lang Code Description"""
+  addressLangCodeDesc: String
+  """Address Language"""
+  addressLanguage: String
+  """Address Language Code"""
+  addressLanguageCode: String
+  """Address Type"""
+  addressType: String
+  """All Properties"""
+  allProperties: String
+  """The Extended Byte Language of the Profile."""
+  alternateLanguage: String
+  """Alternate Language Description"""
+  alternateLanguageDescription: String
+  """Alternate Name"""
+  alternateName: String
+  """Alternate Salutation"""
+  alternateSalutation: String
+  """Alternate Title"""
+  alternateTitle: String
+  """AR No Central"""
+  arNumberCentral: String
+  """Autoenroll Member Y/N"""
+  autoenrollMemberYn: String
+  """Billing Instruction"""
+  billingInstruction: String
+  """For tour operators the type of billing profile for this name."""
+  billingProfileCode: String
+  """Birth Date"""
+  birthDate: Date
+  """Birth Date Str"""
+  birthDateStr: String
+  """Place of birth."""
+  birthPlace: String
+  """Bl Msg"""
+  blMsg: String
+  """Business Potential"""
+  businessPotential: String
+  """Business Potential Description"""
+  businessPotentialDescription: String
+  """Business Segement"""
+  businessSegement: String
+  """Business Segement Description"""
+  businessSegementDescription: String
+  """Business Title"""
+  businessTitle: String
+  """Central Account Owner Title"""
+  centralAccountOwnerTitle: String
+  """Central Account Source"""
+  centralAccountSource: String
+  """Central Account Source Description"""
+  centralAccountSourceDescription: String
+  """Central Account Type"""
+  centralAccountType: String
+  """Central Account Type Description"""
+  centralAccountTypeDescription: String
+  """Central Business Potential"""
+  centralBusinessPotential: String
+  """Central Business Potential Description"""
+  centralBusinessPotentialDescription: String
+  """Central Business Segement Description"""
+  centralBusinessSegementDescription: String
+  """Central Business Segment"""
+  centralBusinessSegment: String
+  """Central Competition Code"""
+  centralCompetitionCode: String
+  """Central Competition Code Description"""
+  centralCompetitionCodeDescription: String
+  """Central Corporate Type"""
+  centralCorporateType: String
+  """Central Corporate Type Description"""
+  centralCorporateTypeDescription: String
+  """Central Inactive Reason"""
+  centralInactiveReason: String
+  """Central Inactive Reason Description"""
+  centralInactiveReasonDescription: String
+  """Central Industry Code"""
+  centralIndustryCode: String
+  """Central Industry Code Description"""
+  centralIndustryCodeDescription: String
+  """Central Keyword"""
+  centralKeyword: String
+  """Central Priority"""
+  centralPriority: String
+  """Central Priority Description"""
+  centralPriorityDescription: String
+  """Central Profile Type Code"""
+  centralProfileTypeCode: String
+  """Central Profile Type Description"""
+  centralProfileTypeDescription: String
+  """Central Scope"""
+  centralScope: String
+  """Central Scope City"""
+  centralScopeCity: String
+  """Central Scope City Description"""
+  centralScopeCityDescription: String
+  """Central Scope Description"""
+  centralScopeDescription: String
+  """Central State"""
+  centralState: String
+  """Central Territory"""
+  centralTerritory: String
+  """Central Territory Description"""
+  centralTerritoryDescription: String
+  """Chain Code"""
+  chainCode: String
+  """City"""
+  city: String
+  """City Ext"""
+  cityExt: String
+  """Combined Name"""
+  combinedName: String
+  """Commission Code"""
+  commissionCode: String
+  """Commission Code All"""
+  commissionCodeAll: String
+  """Communication Role1"""
+  communicationRole1: String
+  """Communication Role2"""
+  communicationRole2: String
+  """Communication Role3"""
+  communicationRole3: String
+  """Communication Type1"""
+  communicationType1: String
+  """Communication Type2"""
+  communicationType2: String
+  """Communication Type3"""
+  communicationType3: String
+  """Communication Value1"""
+  communicationValue1: String
+  """Communication Value2"""
+  communicationValue2: String
+  """Communication Value3"""
+  communicationValue3: String
+  """Company"""
+  company: String
+  """Competition Code"""
+  competitionCode: String
+  """Competition Code Description"""
+  competitionCodeDescription: String
+  """Specified whether Name_Code column has Company # or IATA #. For Company # the value will beCOMP and for IATA # the Value of this column will be IATA."""
+  corporateType: String
+  """Corporate Type Description"""
+  corporateTypeDescription: String
+  """Country"""
+  country: String
+  """Country Description"""
+  countryDescription: String
+  """Created By User"""
+  createdByUser: String
+  """Created On Date"""
+  createdOnDate: DateTime
+  """Credit Card Name"""
+  creditCardName: String
+  """Credit Card Type"""
+  creditCardType: String
+  """Credit Rating"""
+  creditRating: String
+  """Currency Code"""
+  currencyCode: String
+  """Currency Description"""
+  currencyDescription: String
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Email Y/N"""
+  emailYn: String
+  """Envelope Greeting"""
+  envelopeGreeting: String
+  """External ID"""
+  externalId: String
+  """F Subscription Db"""
+  fSubscriptionDb: String
+  """F Subscription Y/N"""
+  fSubscriptionYn: String
+  """Fax Number"""
+  faxNo: String
+  """First"""
+  first: String
+  """Gender"""
+  gender: String
+  """Guest Priv Y/N"""
+  guestPrivYn: String
+  """History Y/N"""
+  historyYn: String
+  """Hold Code"""
+  holdCode: String
+  """IATA Number"""
+  iATANumber: String
+  """IATA Consortia"""
+  iataConsortia: String
+  """Inactive Date"""
+  inactiveDate: Date
+  """Inactive Flag"""
+  inactiveFlag: String
+  """Reason Code for inactive status from REASON table"""
+  inactiveReason: String
+  """Reason why record was inactivated."""
+  inactiveReasonDescription: String
+  """Industry Code"""
+  industryCode: String
+  """Industry Code Description"""
+  industryCodeDescription: String
+  """Interest Code."""
+  interest: String
+  """Deleted Flag"""
+  internalDeletedflag: String
+  """Inactive Flag"""
+  internalInactiveflag: String
+  """Organization ID"""
+  internalOrganizationId: Float
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Keyword"""
+  keyword: String
+  """Last"""
+  last: String
+  """Last Group"""
+  lastGroup: String
+  """Last Rate"""
+  lastRate: Float
+  """Not used."""
+  lastRoom: String
+  """Last Source"""
+  lastSource: String
+  """Last Stay"""
+  lastStay: Date
+  """Legal Company"""
+  legalCompany: String
+  """Letter Greeting"""
+  letterGreeting: String
+  """Mail Action"""
+  mailAction: String
+  """Mail Action Description"""
+  mailActionDescription: String
+  """Mail List"""
+  mailList: String
+  """The type of mail this user should be sent."""
+  mailType: String
+  """Mail Y/N"""
+  mailYn: String
+  """Market Research Y/N"""
+  marketResearchYn: String
+  """Middle"""
+  middle: String
+  """Name ID"""
+  nameId: Float
+  """Nationality Code"""
+  nationalityCode: String
+  """Nationality Description"""
+  nationalityDescription: String
+  """Negotiated Rate"""
+  negotiatedRate: String
+  """Next Stay"""
+  nextStay: Date
+  """The nickname of this individual."""
+  nickname: String
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Number of days a payment is due for the account."""
+  paymentDueDays: Float
+  """Postal Code"""
+  postalCode: String
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Primary Owner"""
+  primaryOwner: String
+  """Primary Owner Code"""
+  primaryOwnerCode: String
+  """Priority"""
+  priority: String
+  """Priority Description"""
+  priorityDescription: String
+  """Product Interest"""
+  productInterest: String
+  """Profession of the guest"""
+  profession: String
+  """Profile Language Description"""
+  profileLanguageDescription: String
+  """Profile privacy flag determine if the profile is marked as private for a property."""
+  profilePrivacyFlg: String
+  """Profile Type"""
+  profileType: String
+  """Profile Type Code"""
+  profileTypeCode: String
+  """Profile Type Description"""
+  profileTypeDescription: String
+  """Protected"""
+  protected: String
+  """Reference Currency"""
+  referenceCurrency: String
+  """Reporting Influence"""
+  repInfluence: String
+  """Reporting Influence Desc"""
+  repInfluenceDescription: String
+  """Rep Mail Action Codes"""
+  repMailActionCodes: String
+  """Rep Mail Action Desc"""
+  repMailActionDesc: String
+  """Reporting Nationality Code"""
+  repNationalityCode: String
+  """Reporting Nationality Description"""
+  repNationalityDescription: String
+  """Reporting State Desc"""
+  repStateDescription: String
+  """Reporting Tax Type Desc"""
+  repTaxTypeDescription: String
+  """Reporting Title Name"""
+  repTitleName: String
+  """Reporting Vip Name"""
+  repVIPName: String
+  """Reporting Vip Status"""
+  repVIPStatus: String
+  """User option to replace address in ORS with one from PMS."""
+  replaceAddress: String
+  """Resort for which Job is registered."""
+  resortRegistered: String
+  """Restricted"""
+  restricted: String
+  """Restricted Rule"""
+  restrictedRule: String
+  """Salutation Greeting"""
+  salutation: String
+  """Scope"""
+  scope: String
+  """Scope City"""
+  scopeCity: String
+  """Scope City Decription"""
+  scopeCityDecription: String
+  """Scope Description"""
+  scopeDescription: String
+  """The Uppercase value of Last or Company."""
+  searchAccountName: String
+  """Uppercase value of First Name."""
+  sfirst: String
+  """State"""
+  state: String
+  """State Code"""
+  stateCode: String
+  """State Description of the Guest of Payee"""
+  stateDesc: String
+  """Internal Indexed field for Searching by Extended Byte First Name."""
+  sxfirstName: String
+  """Internal Indexed field for Searching by Extended Byte Name."""
+  sxname: String
+  """Tax1 Number"""
+  tax1No: String
+  """Tax2 Number"""
+  tax2No: String
+  """Tax Category"""
+  taxCategory: String
+  """Tax Type"""
+  taxType: String
+  """Tax Type Description"""
+  taxTypeDescription: String
+  """Territory"""
+  territory: String
+  """Territory Description"""
+  territoryDescription: String
+  """Third Party Y/N"""
+  thirdPartyYn: String
+  """Trace Code"""
+  traceCode: String
+  """Trace Code Description"""
+  traceCodeDescription: String
+  """UDFC01"""
+  uDFC01: String
+  """UDFC02"""
+  uDFC02: String
+  """UDFC03"""
+  uDFC03: String
+  """UDFC04"""
+  uDFC04: String
+  """UDFC05"""
+  uDFC05: String
+  """UDFC06"""
+  uDFC06: String
+  """UDFC07"""
+  uDFC07: String
+  """UDFC08"""
+  uDFC08: String
+  """UDFC09"""
+  uDFC09: String
+  """UDFC10"""
+  uDFC10: String
+  """UDFC11"""
+  uDFC11: String
+  """UDFC12"""
+  uDFC12: String
+  """UDFC13"""
+  uDFC13: String
+  """UDFC14"""
+  uDFC14: String
+  """UDFC15"""
+  uDFC15: String
+  """UDFC16"""
+  uDFC16: String
+  """UDFC17"""
+  uDFC17: String
+  """UDFC18"""
+  uDFC18: String
+  """UDFC19"""
+  uDFC19: String
+  """UDFC20"""
+  uDFC20: String
+  """UDFC21"""
+  uDFC21: String
+  """UDFC22"""
+  uDFC22: String
+  """UDFC23"""
+  uDFC23: String
+  """UDFC24"""
+  uDFC24: String
+  """UDFC25"""
+  uDFC25: String
+  """UDFC26"""
+  uDFC26: String
+  """UDFC27"""
+  uDFC27: String
+  """UDFC28"""
+  uDFC28: String
+  """UDFC29"""
+  uDFC29: String
+  """UDFC30"""
+  uDFC30: String
+  """UDFC31"""
+  uDFC31: String
+  """UDFC32"""
+  uDFC32: String
+  """UDFC33"""
+  uDFC33: String
+  """UDFC34"""
+  uDFC34: String
+  """UDFC35"""
+  uDFC35: String
+  """UDFC36"""
+  uDFC36: String
+  """UDFC37"""
+  uDFC37: String
+  """UDFC38"""
+  uDFC38: String
+  """UDFC39"""
+  uDFC39: String
+  """UDFC40"""
+  uDFC40: String
+  """UDFD01"""
+  uDFD01: Date
+  """UDFD02"""
+  uDFD02: Date
+  """UDFD03"""
+  uDFD03: Date
+  """UDFD04"""
+  uDFD04: Date
+  """UDFD05"""
+  uDFD05: Date
+  """UDFD06"""
+  uDFD06: Date
+  """UDFD07"""
+  uDFD07: Date
+  """UDFD08"""
+  uDFD08: Date
+  """UDFD09"""
+  uDFD09: Date
+  """UDFD10"""
+  uDFD10: Date
+  """UDFD11"""
+  uDFD11: Date
+  """UDFD12"""
+  uDFD12: Date
+  """UDFD13"""
+  uDFD13: Date
+  """UDFD14"""
+  uDFD14: Date
+  """UDFD15"""
+  uDFD15: Date
+  """UDFD16"""
+  uDFD16: Date
+  """UDFD17"""
+  uDFD17: Date
+  """UDFD18"""
+  uDFD18: Date
+  """UDFD19"""
+  uDFD19: Date
+  """UDFD20"""
+  uDFD20: Date
+  """UDFN01"""
+  uDFN01: Float
+  """UDFN02"""
+  uDFN02: Float
+  """UDFN03"""
+  uDFN03: Float
+  """UDFN04"""
+  uDFN04: Float
+  """UDFN05"""
+  uDFN05: Float
+  """UDFN06"""
+  uDFN06: Float
+  """UDFN07"""
+  uDFN07: Float
+  """UDFN08"""
+  uDFN08: Float
+  """UDFN09"""
+  uDFN09: Float
+  """UDFN10"""
+  uDFN10: Float
+  """UDFN11"""
+  uDFN11: Float
+  """UDFN12"""
+  uDFN12: Float
+  """UDFN13"""
+  uDFN13: Float
+  """UDFN14"""
+  uDFN14: Float
+  """UDFN15"""
+  uDFN15: Float
+  """UDFN16"""
+  uDFN16: Float
+  """UDFN17"""
+  uDFN17: Float
+  """UDFN18"""
+  uDFN18: Float
+  """UDFN19"""
+  uDFN19: Float
+  """UDFN20"""
+  uDFN20: Float
+  """UDFN21"""
+  uDFN21: Float
+  """UDFN22"""
+  uDFN22: Float
+  """UDFN23"""
+  uDFN23: Float
+  """UDFN24"""
+  uDFN24: Float
+  """UDFN25"""
+  uDFN25: Float
+  """UDFN26"""
+  uDFN26: Float
+  """UDFN27"""
+  uDFN27: Float
+  """UDFN28"""
+  uDFN28: Float
+  """UDFN29"""
+  uDFN29: Float
+  """UDFN30"""
+  uDFN30: Float
+  """UDFN31"""
+  uDFN31: Float
+  """UDFN32"""
+  uDFN32: Float
+  """UDFN33"""
+  uDFN33: Float
+  """UDFN34"""
+  uDFN34: Float
+  """UDFN35"""
+  uDFN35: Float
+  """UDFN36"""
+  uDFN36: Float
+  """UDFN37"""
+  uDFN37: Float
+  """UDFN38"""
+  uDFN38: Float
+  """UDFN39"""
+  uDFN39: Float
+  """UDFN40"""
+  uDFN40: Float
+  """Update Date"""
+  updateDate: DateTime
+  """The last date this record's fax # was updated."""
+  updateFaxDate: Date
+  """Update User"""
+  updateUser: String
+  """VIP Name"""
+  vipName: String
+  """VIP Status"""
+  vipStatus: String
+  """Extended Byte Company Name"""
+  xcompanyName: String
+  """Xenvelope Greeting"""
+  xenvelopeGreeting: String
+  """Xfirst Name"""
+  xfirstName: String
+  """Xlast Name"""
+  xlastName: String
+  """Extended Byte middle name."""
+  xmiddleName: String
+}
+type BookingsReservationProfileAccountsTravelAgentDetailsType {
+  """AR Number"""
+  aRNumber: String
+  """The date this record was last updated by the ARC update program."""
+  aRCUpdateDate: Date
+  """Account Email Primary"""
+  accountEmailPrimary: String
+  """Account ID"""
+  accountID: Float
+  """Account Name"""
+  accountName: String
+  """Account Name 2"""
+  accountName2: String
+  """Account Name 3"""
+  accountName3: String
+  """Account Owner Title"""
+  accountOwnerTitle: String
+  """Account Owners(All)"""
+  accountOwnersAll: String
+  """Phone no."""
+  accountPhonePrimary: String
+  """Account Phone Web"""
+  accountPhoneWeb: String
+  """Account Source"""
+  accountSource: String
+  """Account Source Description"""
+  accountSourceDescription: String
+  """Account Type"""
+  accountType: String
+  """Account Type Description"""
+  accountTypeDescription: String
+  """Billing contact person in company."""
+  acctContact: String
+  """Action Code"""
+  actionCode: String
+  """Active Flag"""
+  activeFlag: String
+  """Address 1"""
+  address1: String
+  """Address 2"""
+  address2: String
+  """Address 3"""
+  address3: String
+  """Address 4"""
+  address4: String
+  """Address Lang Code Description"""
+  addressLangCodeDesc: String
+  """Address Language"""
+  addressLanguage: String
+  """Address Language Code"""
+  addressLanguageCode: String
+  """Address Type"""
+  addressType: String
+  """All Properties"""
+  allProperties: String
+  """The Extended Byte Language of the Profile."""
+  alternateLanguage: String
+  """Alternate Language Description"""
+  alternateLanguageDescription: String
+  """Alternate Name"""
+  alternateName: String
+  """Alternate Salutation"""
+  alternateSalutation: String
+  """Alternate Title"""
+  alternateTitle: String
+  """AR No Central"""
+  arNumberCentral: String
+  """Autoenroll Member Y/N"""
+  autoenrollMemberYn: String
+  """Billing Instruction"""
+  billingInstruction: String
+  """For tour operators the type of billing profile for this name."""
+  billingProfileCode: String
+  """Birth Date"""
+  birthDate: Date
+  """Birth Date Str"""
+  birthDateStr: String
+  """Place of birth."""
+  birthPlace: String
+  """Bl Msg"""
+  blMsg: String
+  """Business Potential"""
+  businessPotential: String
+  """Business Potential Description"""
+  businessPotentialDescription: String
+  """Business Segement"""
+  businessSegement: String
+  """Business Segement Description"""
+  businessSegementDescription: String
+  """Business Title"""
+  businessTitle: String
+  """Central Account Owner Title"""
+  centralAccountOwnerTitle: String
+  """Central Account Source"""
+  centralAccountSource: String
+  """Central Account Source Description"""
+  centralAccountSourceDescription: String
+  """Central Account Type"""
+  centralAccountType: String
+  """Central Account Type Description"""
+  centralAccountTypeDescription: String
+  """Central Business Potential"""
+  centralBusinessPotential: String
+  """Central Business Potential Description"""
+  centralBusinessPotentialDescription: String
+  """Central Business Segement Description"""
+  centralBusinessSegementDescription: String
+  """Central Business Segment"""
+  centralBusinessSegment: String
+  """Central Competition Code"""
+  centralCompetitionCode: String
+  """Central Competition Code Description"""
+  centralCompetitionCodeDescription: String
+  """Central Corporate Type"""
+  centralCorporateType: String
+  """Central Corporate Type Description"""
+  centralCorporateTypeDescription: String
+  """Central Inactive Reason"""
+  centralInactiveReason: String
+  """Central Inactive Reason Description"""
+  centralInactiveReasonDescription: String
+  """Central Industry Code"""
+  centralIndustryCode: String
+  """Central Industry Code Description"""
+  centralIndustryCodeDescription: String
+  """Central Keyword"""
+  centralKeyword: String
+  """Central Priority"""
+  centralPriority: String
+  """Central Priority Description"""
+  centralPriorityDescription: String
+  """Central Profile Type Code"""
+  centralProfileTypeCode: String
+  """Central Profile Type Description"""
+  centralProfileTypeDescription: String
+  """Central Scope"""
+  centralScope: String
+  """Central Scope City"""
+  centralScopeCity: String
+  """Central Scope City Description"""
+  centralScopeCityDescription: String
+  """Central Scope Description"""
+  centralScopeDescription: String
+  """Central State"""
+  centralState: String
+  """Central Territory"""
+  centralTerritory: String
+  """Central Territory Description"""
+  centralTerritoryDescription: String
+  """Chain Code"""
+  chainCode: String
+  """City"""
+  city: String
+  """City Ext"""
+  cityExt: String
+  """Combined Name"""
+  combinedName: String
+  """Commission Code"""
+  commissionCode: String
+  """Commission Code All"""
+  commissionCodeAll: String
+  """Communication Role1"""
+  communicationRole1: String
+  """Communication Role2"""
+  communicationRole2: String
+  """Communication Role3"""
+  communicationRole3: String
+  """Communication Type1"""
+  communicationType1: String
+  """Communication Type2"""
+  communicationType2: String
+  """Communication Type3"""
+  communicationType3: String
+  """Communication Value1"""
+  communicationValue1: String
+  """Communication Value2"""
+  communicationValue2: String
+  """Communication Value3"""
+  communicationValue3: String
+  """Company"""
+  company: String
+  """Competition Code"""
+  competitionCode: String
+  """Competition Code Description"""
+  competitionCodeDescription: String
+  """Specified whether Name_Code column has Company # or IATA #. For Company # the value will beCOMP and for IATA # the Value of this column will be IATA."""
+  corporateType: String
+  """Corporate Type Description"""
+  corporateTypeDescription: String
+  """Country"""
+  country: String
+  """Country Description"""
+  countryDescription: String
+  """Created By User"""
+  createdByUser: String
+  """Created On Date"""
+  createdOnDate: DateTime
+  """Credit Card Name"""
+  creditCardName: String
+  """Credit Card Type"""
+  creditCardType: String
+  """Credit Rating"""
+  creditRating: String
+  """Currency Code"""
+  currencyCode: String
+  """Currency Description"""
+  currencyDescription: String
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Email Y/N"""
+  emailYn: String
+  """Envelope Greeting"""
+  envelopeGreeting: String
+  """External ID"""
+  externalId: String
+  """F Subscription Db"""
+  fSubscriptionDb: String
+  """F Subscription Y/N"""
+  fSubscriptionYn: String
+  """Fax Number"""
+  faxNo: String
+  """First"""
+  first: String
+  """Gender"""
+  gender: String
+  """Guest Priv Y/N"""
+  guestPrivYn: String
+  """History Y/N"""
+  historyYn: String
+  """Hold Code"""
+  holdCode: String
+  """IATA Number"""
+  iATANumber: String
+  """IATA Consortia"""
+  iataConsortia: String
+  """Inactive Date"""
+  inactiveDate: Date
+  """Inactive Flag"""
+  inactiveFlag: String
+  """Reason Code for inactive status from REASON table"""
+  inactiveReason: String
+  """Reason why record was inactivated."""
+  inactiveReasonDescription: String
+  """Industry Code"""
+  industryCode: String
+  """Industry Code Description"""
+  industryCodeDescription: String
+  """Interest Code."""
+  interest: String
+  """Deleted Flag"""
+  internalDeletedflag: String
+  """Inactive Flag"""
+  internalInactiveflag: String
+  """Organization ID"""
+  internalOrganizationId: Float
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Keyword"""
+  keyword: String
+  """Last"""
+  last: String
+  """Last Group"""
+  lastGroup: String
+  """Last Rate"""
+  lastRate: Float
+  """Not used."""
+  lastRoom: String
+  """Last Source"""
+  lastSource: String
+  """Last Stay"""
+  lastStay: Date
+  """Legal Company"""
+  legalCompany: String
+  """Letter Greeting"""
+  letterGreeting: String
+  """Mail Action"""
+  mailAction: String
+  """Mail Action Description"""
+  mailActionDescription: String
+  """Mail List"""
+  mailList: String
+  """The type of mail this user should be sent."""
+  mailType: String
+  """Mail Y/N"""
+  mailYn: String
+  """Market Research Y/N"""
+  marketResearchYn: String
+  """Middle"""
+  middle: String
+  """Name ID"""
+  nameId: Float
+  """Nationality Code"""
+  nationalityCode: String
+  """Nationality Description"""
+  nationalityDescription: String
+  """Negotiated Rate"""
+  negotiatedRate: String
+  """Next Stay"""
+  nextStay: Date
+  """The nickname of this individual."""
+  nickname: String
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Number of days a payment is due for the account."""
+  paymentDueDays: Float
+  """Postal Code"""
+  postalCode: String
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Primary Owner"""
+  primaryOwner: String
+  """Primary Owner Code"""
+  primaryOwnerCode: String
+  """Priority"""
+  priority: String
+  """Priority Description"""
+  priorityDescription: String
+  """Product Interest"""
+  productInterest: String
+  """Profession of the guest"""
+  profession: String
+  """Profile Language Description"""
+  profileLanguageDescription: String
+  """Profile privacy flag determine if the profile is marked as private for a property."""
+  profilePrivacyFlg: String
+  """Profile Type"""
+  profileType: String
+  """Profile Type Code"""
+  profileTypeCode: String
+  """Profile Type Description"""
+  profileTypeDescription: String
+  """Protected"""
+  protected: String
+  """Reference Currency"""
+  referenceCurrency: String
+  """Reporting Influence"""
+  repInfluence: String
+  """Reporting Influence Desc"""
+  repInfluenceDescription: String
+  """Rep Mail Action Codes"""
+  repMailActionCodes: String
+  """Rep Mail Action Desc"""
+  repMailActionDesc: String
+  """Reporting Nationality Code"""
+  repNationalityCode: String
+  """Reporting Nationality Description"""
+  repNationalityDescription: String
+  """Reporting State Desc"""
+  repStateDescription: String
+  """Reporting Tax Type Desc"""
+  repTaxTypeDescription: String
+  """Reporting Title Name"""
+  repTitleName: String
+  """Reporting Vip Name"""
+  repVIPName: String
+  """Reporting Vip Status"""
+  repVIPStatus: String
+  """User option to replace address in ORS with one from PMS."""
+  replaceAddress: String
+  """Resort for which Job is registered."""
+  resortRegistered: String
+  """Restricted"""
+  restricted: String
+  """Restricted Rule"""
+  restrictedRule: String
+  """Salutation Greeting"""
+  salutation: String
+  """Scope"""
+  scope: String
+  """Scope City"""
+  scopeCity: String
+  """Scope City Decription"""
+  scopeCityDecription: String
+  """Scope Description"""
+  scopeDescription: String
+  """The Uppercase value of Last or Company."""
+  searchAccountName: String
+  """Uppercase value of First Name."""
+  sfirst: String
+  """State"""
+  state: String
+  """State Code"""
+  stateCode: String
+  """State Description of the Guest of Payee"""
+  stateDesc: String
+  """Internal Indexed field for Searching by Extended Byte First Name."""
+  sxfirstName: String
+  """Internal Indexed field for Searching by Extended Byte Name."""
+  sxname: String
+  """Tax1 Number"""
+  tax1No: String
+  """Tax2 Number"""
+  tax2No: String
+  """Tax Category"""
+  taxCategory: String
+  """Tax Type"""
+  taxType: String
+  """Tax Type Description"""
+  taxTypeDescription: String
+  """Territory"""
+  territory: String
+  """Territory Description"""
+  territoryDescription: String
+  """Third Party Y/N"""
+  thirdPartyYn: String
+  """Trace Code"""
+  traceCode: String
+  """Trace Code Description"""
+  traceCodeDescription: String
+  """UDFC01"""
+  uDFC01: String
+  """UDFC02"""
+  uDFC02: String
+  """UDFC03"""
+  uDFC03: String
+  """UDFC04"""
+  uDFC04: String
+  """UDFC05"""
+  uDFC05: String
+  """UDFC06"""
+  uDFC06: String
+  """UDFC07"""
+  uDFC07: String
+  """UDFC08"""
+  uDFC08: String
+  """UDFC09"""
+  uDFC09: String
+  """UDFC10"""
+  uDFC10: String
+  """UDFC11"""
+  uDFC11: String
+  """UDFC12"""
+  uDFC12: String
+  """UDFC13"""
+  uDFC13: String
+  """UDFC14"""
+  uDFC14: String
+  """UDFC15"""
+  uDFC15: String
+  """UDFC16"""
+  uDFC16: String
+  """UDFC17"""
+  uDFC17: String
+  """UDFC18"""
+  uDFC18: String
+  """UDFC19"""
+  uDFC19: String
+  """UDFC20"""
+  uDFC20: String
+  """UDFC21"""
+  uDFC21: String
+  """UDFC22"""
+  uDFC22: String
+  """UDFC23"""
+  uDFC23: String
+  """UDFC24"""
+  uDFC24: String
+  """UDFC25"""
+  uDFC25: String
+  """UDFC26"""
+  uDFC26: String
+  """UDFC27"""
+  uDFC27: String
+  """UDFC28"""
+  uDFC28: String
+  """UDFC29"""
+  uDFC29: String
+  """UDFC30"""
+  uDFC30: String
+  """UDFC31"""
+  uDFC31: String
+  """UDFC32"""
+  uDFC32: String
+  """UDFC33"""
+  uDFC33: String
+  """UDFC34"""
+  uDFC34: String
+  """UDFC35"""
+  uDFC35: String
+  """UDFC36"""
+  uDFC36: String
+  """UDFC37"""
+  uDFC37: String
+  """UDFC38"""
+  uDFC38: String
+  """UDFC39"""
+  uDFC39: String
+  """UDFC40"""
+  uDFC40: String
+  """UDFD01"""
+  uDFD01: Date
+  """UDFD02"""
+  uDFD02: Date
+  """UDFD03"""
+  uDFD03: Date
+  """UDFD04"""
+  uDFD04: Date
+  """UDFD05"""
+  uDFD05: Date
+  """UDFD06"""
+  uDFD06: Date
+  """UDFD07"""
+  uDFD07: Date
+  """UDFD08"""
+  uDFD08: Date
+  """UDFD09"""
+  uDFD09: Date
+  """UDFD10"""
+  uDFD10: Date
+  """UDFD11"""
+  uDFD11: Date
+  """UDFD12"""
+  uDFD12: Date
+  """UDFD13"""
+  uDFD13: Date
+  """UDFD14"""
+  uDFD14: Date
+  """UDFD15"""
+  uDFD15: Date
+  """UDFD16"""
+  uDFD16: Date
+  """UDFD17"""
+  uDFD17: Date
+  """UDFD18"""
+  uDFD18: Date
+  """UDFD19"""
+  uDFD19: Date
+  """UDFD20"""
+  uDFD20: Date
+  """UDFN01"""
+  uDFN01: Float
+  """UDFN02"""
+  uDFN02: Float
+  """UDFN03"""
+  uDFN03: Float
+  """UDFN04"""
+  uDFN04: Float
+  """UDFN05"""
+  uDFN05: Float
+  """UDFN06"""
+  uDFN06: Float
+  """UDFN07"""
+  uDFN07: Float
+  """UDFN08"""
+  uDFN08: Float
+  """UDFN09"""
+  uDFN09: Float
+  """UDFN10"""
+  uDFN10: Float
+  """UDFN11"""
+  uDFN11: Float
+  """UDFN12"""
+  uDFN12: Float
+  """UDFN13"""
+  uDFN13: Float
+  """UDFN14"""
+  uDFN14: Float
+  """UDFN15"""
+  uDFN15: Float
+  """UDFN16"""
+  uDFN16: Float
+  """UDFN17"""
+  uDFN17: Float
+  """UDFN18"""
+  uDFN18: Float
+  """UDFN19"""
+  uDFN19: Float
+  """UDFN20"""
+  uDFN20: Float
+  """UDFN21"""
+  uDFN21: Float
+  """UDFN22"""
+  uDFN22: Float
+  """UDFN23"""
+  uDFN23: Float
+  """UDFN24"""
+  uDFN24: Float
+  """UDFN25"""
+  uDFN25: Float
+  """UDFN26"""
+  uDFN26: Float
+  """UDFN27"""
+  uDFN27: Float
+  """UDFN28"""
+  uDFN28: Float
+  """UDFN29"""
+  uDFN29: Float
+  """UDFN30"""
+  uDFN30: Float
+  """UDFN31"""
+  uDFN31: Float
+  """UDFN32"""
+  uDFN32: Float
+  """UDFN33"""
+  uDFN33: Float
+  """UDFN34"""
+  uDFN34: Float
+  """UDFN35"""
+  uDFN35: Float
+  """UDFN36"""
+  uDFN36: Float
+  """UDFN37"""
+  uDFN37: Float
+  """UDFN38"""
+  uDFN38: Float
+  """UDFN39"""
+  uDFN39: Float
+  """UDFN40"""
+  uDFN40: Float
+  """Update Date"""
+  updateDate: DateTime
+  """The last date this record's fax # was updated."""
+  updateFaxDate: Date
+  """Update User"""
+  updateUser: String
+  """VIP Name"""
+  vipName: String
+  """VIP Status"""
+  vipStatus: String
+  """Extended Byte Company Name"""
+  xcompanyName: String
+  """Xenvelope Greeting"""
+  xenvelopeGreeting: String
+  """Xfirst Name"""
+  xfirstName: String
+  """Xlast Name"""
+  xlastName: String
+  """Extended Byte middle name."""
+  xmiddleName: String
+}
+type BookingsReservationReservationProfileAccountsSourceDetailsType {
+  """AR Number"""
+  aRNumber: String
+  """The date this record was last updated by the ARC update program."""
+  aRCUpdateDate: Date
+  """Account Email Primary"""
+  accountEmailPrimary: String
+  """Account ID"""
+  accountID: Float
+  """Account Name"""
+  accountName: String
+  """Account Name 2"""
+  accountName2: String
+  """Account Name 3"""
+  accountName3: String
+  """Account Owner Title"""
+  accountOwnerTitle: String
+  """Account Owners(All)"""
+  accountOwnersAll: String
+  """Phone no."""
+  accountPhonePrimary: String
+  """Account Phone Web"""
+  accountPhoneWeb: String
+  """Account Source"""
+  accountSource: String
+  """Account Source Description"""
+  accountSourceDescription: String
+  """Account Type"""
+  accountType: String
+  """Account Type Description"""
+  accountTypeDescription: String
+  """Billing contact person in company."""
+  acctContact: String
+  """Action Code"""
+  actionCode: String
+  """Active Flag"""
+  activeFlag: String
+  """Address 1"""
+  address1: String
+  """Address 2"""
+  address2: String
+  """Address 3"""
+  address3: String
+  """Address 4"""
+  address4: String
+  """Address Lang Code Description"""
+  addressLangCodeDesc: String
+  """Address Language"""
+  addressLanguage: String
+  """Address Language Code"""
+  addressLanguageCode: String
+  """Address Type"""
+  addressType: String
+  """All Properties"""
+  allProperties: String
+  """The Extended Byte Language of the Profile."""
+  alternateLanguage: String
+  """Alternate Language Description"""
+  alternateLanguageDescription: String
+  """Alternate Name"""
+  alternateName: String
+  """Alternate Salutation"""
+  alternateSalutation: String
+  """Alternate Title"""
+  alternateTitle: String
+  """AR No Central"""
+  arNumberCentral: String
+  """Autoenroll Member Y/N"""
+  autoenrollMemberYn: String
+  """Billing Instruction"""
+  billingInstruction: String
+  """For tour operators the type of billing profile for this name."""
+  billingProfileCode: String
+  """Birth Date"""
+  birthDate: Date
+  """Birth Date Str"""
+  birthDateStr: String
+  """Place of birth."""
+  birthPlace: String
+  """Bl Msg"""
+  blMsg: String
+  """Business Potential"""
+  businessPotential: String
+  """Business Potential Description"""
+  businessPotentialDescription: String
+  """Business Segement"""
+  businessSegement: String
+  """Business Segement Description"""
+  businessSegementDescription: String
+  """Business Title"""
+  businessTitle: String
+  """Central Account Owner Title"""
+  centralAccountOwnerTitle: String
+  """Central Account Source"""
+  centralAccountSource: String
+  """Central Account Source Description"""
+  centralAccountSourceDescription: String
+  """Central Account Type"""
+  centralAccountType: String
+  """Central Account Type Description"""
+  centralAccountTypeDescription: String
+  """Central Business Potential"""
+  centralBusinessPotential: String
+  """Central Business Potential Description"""
+  centralBusinessPotentialDescription: String
+  """Central Business Segement Description"""
+  centralBusinessSegementDescription: String
+  """Central Business Segment"""
+  centralBusinessSegment: String
+  """Central Competition Code"""
+  centralCompetitionCode: String
+  """Central Competition Code Description"""
+  centralCompetitionCodeDescription: String
+  """Central Corporate Type"""
+  centralCorporateType: String
+  """Central Corporate Type Description"""
+  centralCorporateTypeDescription: String
+  """Central Inactive Reason"""
+  centralInactiveReason: String
+  """Central Inactive Reason Description"""
+  centralInactiveReasonDescription: String
+  """Central Industry Code"""
+  centralIndustryCode: String
+  """Central Industry Code Description"""
+  centralIndustryCodeDescription: String
+  """Central Keyword"""
+  centralKeyword: String
+  """Central Priority"""
+  centralPriority: String
+  """Central Priority Description"""
+  centralPriorityDescription: String
+  """Central Profile Type Code"""
+  centralProfileTypeCode: String
+  """Central Profile Type Description"""
+  centralProfileTypeDescription: String
+  """Central Scope"""
+  centralScope: String
+  """Central Scope City"""
+  centralScopeCity: String
+  """Central Scope City Description"""
+  centralScopeCityDescription: String
+  """Central Scope Description"""
+  centralScopeDescription: String
+  """Central State"""
+  centralState: String
+  """Central Territory"""
+  centralTerritory: String
+  """Central Territory Description"""
+  centralTerritoryDescription: String
+  """Chain Code"""
+  chainCode: String
+  """City"""
+  city: String
+  """City Ext"""
+  cityExt: String
+  """Combined Name"""
+  combinedName: String
+  """Commission Code"""
+  commissionCode: String
+  """Commission Code All"""
+  commissionCodeAll: String
+  """Communication Role1"""
+  communicationRole1: String
+  """Communication Role2"""
+  communicationRole2: String
+  """Communication Role3"""
+  communicationRole3: String
+  """Communication Type1"""
+  communicationType1: String
+  """Communication Type2"""
+  communicationType2: String
+  """Communication Type3"""
+  communicationType3: String
+  """Communication Value1"""
+  communicationValue1: String
+  """Communication Value2"""
+  communicationValue2: String
+  """Communication Value3"""
+  communicationValue3: String
+  """Company"""
+  company: String
+  """Competition Code"""
+  competitionCode: String
+  """Competition Code Description"""
+  competitionCodeDescription: String
+  """Specified whether Name_Code column has Company # or IATA #. For Company # the value will beCOMP and for IATA # the Value of this column will be IATA."""
+  corporateType: String
+  """Corporate Type Description"""
+  corporateTypeDescription: String
+  """Country"""
+  country: String
+  """Country Description"""
+  countryDescription: String
+  """Created By User"""
+  createdByUser: String
+  """Created On Date"""
+  createdOnDate: DateTime
+  """Credit Card Name"""
+  creditCardName: String
+  """Credit Card Type"""
+  creditCardType: String
+  """Credit Rating"""
+  creditRating: String
+  """Currency Code"""
+  currencyCode: String
+  """Currency Description"""
+  currencyDescription: String
+  """DSI Internal Data Source ID to identify Opera Chain and instance"""
+  dSI: Float
+  """Deleted Flag"""
+  deletedFlag: String
+  """Email Y/N"""
+  emailYn: String
+  """Envelope Greeting"""
+  envelopeGreeting: String
+  """External ID"""
+  externalId: String
+  """F Subscription Db"""
+  fSubscriptionDb: String
+  """F Subscription Y/N"""
+  fSubscriptionYn: String
+  """Fax Number"""
+  faxNo: String
+  """First"""
+  first: String
+  """Gender"""
+  gender: String
+  """Guest Priv Y/N"""
+  guestPrivYn: String
+  """History Y/N"""
+  historyYn: String
+  """Hold Code"""
+  holdCode: String
+  """IATA Number"""
+  iATANumber: String
+  """IATA Consortia"""
+  iataConsortia: String
+  """Inactive Date"""
+  inactiveDate: Date
+  """Inactive Flag"""
+  inactiveFlag: String
+  """Reason Code for inactive status from REASON table"""
+  inactiveReason: String
+  """Reason why record was inactivated."""
+  inactiveReasonDescription: String
+  """Industry Code"""
+  industryCode: String
+  """Industry Code Description"""
+  industryCodeDescription: String
+  """Interest Code."""
+  interest: String
+  """Deleted Flag"""
+  internalDeletedflag: String
+  """Inactive Flag"""
+  internalInactiveflag: String
+  """Organization ID"""
+  internalOrganizationId: Float
+  """JRN Update Date"""
+  jRNUpdateDate: Date
+  """JRN Update Date and Time"""
+  jRNUpdateDateAndTime: DateTime
+  """Keyword"""
+  keyword: String
+  """Last"""
+  last: String
+  """Last Group"""
+  lastGroup: String
+  """Last Rate"""
+  lastRate: Float
+  """Not used."""
+  lastRoom: String
+  """Last Source"""
+  lastSource: String
+  """Last Stay"""
+  lastStay: Date
+  """Legal Company"""
+  legalCompany: String
+  """Letter Greeting"""
+  letterGreeting: String
+  """Mail Action"""
+  mailAction: String
+  """Mail Action Description"""
+  mailActionDescription: String
+  """Mail List"""
+  mailList: String
+  """The type of mail this user should be sent."""
+  mailType: String
+  """Mail Y/N"""
+  mailYn: String
+  """Market Research Y/N"""
+  marketResearchYn: String
+  """Middle"""
+  middle: String
+  """Name ID"""
+  nameId: Float
+  """Nationality Code"""
+  nationalityCode: String
+  """Nationality Description"""
+  nationalityDescription: String
+  """Negotiated Rate"""
+  negotiatedRate: String
+  """Next Stay"""
+  nextStay: Date
+  """The nickname of this individual."""
+  nickname: String
+  """Internal ID to uniquely identify the Organization"""
+  organizationID: Float
+  """Number of days a payment is due for the account."""
+  paymentDueDays: Float
+  """Postal Code"""
+  postalCode: String
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Primary Owner"""
+  primaryOwner: String
+  """Primary Owner Code"""
+  primaryOwnerCode: String
+  """Priority"""
+  priority: String
+  """Priority Description"""
+  priorityDescription: String
+  """Product Interest"""
+  productInterest: String
+  """Profession of the guest"""
+  profession: String
+  """Profile Language Description"""
+  profileLanguageDescription: String
+  """Profile privacy flag determine if the profile is marked as private for a property."""
+  profilePrivacyFlg: String
+  """Profile Type"""
+  profileType: String
+  """Profile Type Code"""
+  profileTypeCode: String
+  """Profile Type Description"""
+  profileTypeDescription: String
+  """Protected"""
+  protected: String
+  """Reference Currency"""
+  referenceCurrency: String
+  """Reporting Influence"""
+  repInfluence: String
+  """Reporting Influence Desc"""
+  repInfluenceDescription: String
+  """Rep Mail Action Codes"""
+  repMailActionCodes: String
+  """Rep Mail Action Desc"""
+  repMailActionDesc: String
+  """Reporting Nationality Code"""
+  repNationalityCode: String
+  """Reporting Nationality Description"""
+  repNationalityDescription: String
+  """Reporting State Desc"""
+  repStateDescription: String
+  """Reporting Tax Type Desc"""
+  repTaxTypeDescription: String
+  """Reporting Title Name"""
+  repTitleName: String
+  """Reporting Vip Name"""
+  repVIPName: String
+  """Reporting Vip Status"""
+  repVIPStatus: String
+  """User option to replace address in ORS with one from PMS."""
+  replaceAddress: String
+  """Resort for which Job is registered."""
+  resortRegistered: String
+  """Restricted"""
+  restricted: String
+  """Restricted Rule"""
+  restrictedRule: String
+  """Salutation Greeting"""
+  salutation: String
+  """Scope"""
+  scope: String
+  """Scope City"""
+  scopeCity: String
+  """Scope City Decription"""
+  scopeCityDecription: String
+  """Scope Description"""
+  scopeDescription: String
+  """The Uppercase value of Last or Company."""
+  searchAccountName: String
+  """Uppercase value of First Name."""
+  sfirst: String
+  """State"""
+  state: String
+  """State Code"""
+  stateCode: String
+  """State Description of the Guest of Payee"""
+  stateDesc: String
+  """Internal Indexed field for Searching by Extended Byte First Name."""
+  sxfirstName: String
+  """Internal Indexed field for Searching by Extended Byte Name."""
+  sxname: String
+  """Tax1 Number"""
+  tax1No: String
+  """Tax2 Number"""
+  tax2No: String
+  """Tax Category"""
+  taxCategory: String
+  """Tax Type"""
+  taxType: String
+  """Tax Type Description"""
+  taxTypeDescription: String
+  """Territory"""
+  territory: String
+  """Territory Description"""
+  territoryDescription: String
+  """Third Party Y/N"""
+  thirdPartyYn: String
+  """Trace Code"""
+  traceCode: String
+  """Trace Code Description"""
+  traceCodeDescription: String
+  """UDFC01"""
+  uDFC01: String
+  """UDFC02"""
+  uDFC02: String
+  """UDFC03"""
+  uDFC03: String
+  """UDFC04"""
+  uDFC04: String
+  """UDFC05"""
+  uDFC05: String
+  """UDFC06"""
+  uDFC06: String
+  """UDFC07"""
+  uDFC07: String
+  """UDFC08"""
+  uDFC08: String
+  """UDFC09"""
+  uDFC09: String
+  """UDFC10"""
+  uDFC10: String
+  """UDFC11"""
+  uDFC11: String
+  """UDFC12"""
+  uDFC12: String
+  """UDFC13"""
+  uDFC13: String
+  """UDFC14"""
+  uDFC14: String
+  """UDFC15"""
+  uDFC15: String
+  """UDFC16"""
+  uDFC16: String
+  """UDFC17"""
+  uDFC17: String
+  """UDFC18"""
+  uDFC18: String
+  """UDFC19"""
+  uDFC19: String
+  """UDFC20"""
+  uDFC20: String
+  """UDFC21"""
+  uDFC21: String
+  """UDFC22"""
+  uDFC22: String
+  """UDFC23"""
+  uDFC23: String
+  """UDFC24"""
+  uDFC24: String
+  """UDFC25"""
+  uDFC25: String
+  """UDFC26"""
+  uDFC26: String
+  """UDFC27"""
+  uDFC27: String
+  """UDFC28"""
+  uDFC28: String
+  """UDFC29"""
+  uDFC29: String
+  """UDFC30"""
+  uDFC30: String
+  """UDFC31"""
+  uDFC31: String
+  """UDFC32"""
+  uDFC32: String
+  """UDFC33"""
+  uDFC33: String
+  """UDFC34"""
+  uDFC34: String
+  """UDFC35"""
+  uDFC35: String
+  """UDFC36"""
+  uDFC36: String
+  """UDFC37"""
+  uDFC37: String
+  """UDFC38"""
+  uDFC38: String
+  """UDFC39"""
+  uDFC39: String
+  """UDFC40"""
+  uDFC40: String
+  """UDFD01"""
+  uDFD01: Date
+  """UDFD02"""
+  uDFD02: Date
+  """UDFD03"""
+  uDFD03: Date
+  """UDFD04"""
+  uDFD04: Date
+  """UDFD05"""
+  uDFD05: Date
+  """UDFD06"""
+  uDFD06: Date
+  """UDFD07"""
+  uDFD07: Date
+  """UDFD08"""
+  uDFD08: Date
+  """UDFD09"""
+  uDFD09: Date
+  """UDFD10"""
+  uDFD10: Date
+  """UDFD11"""
+  uDFD11: Date
+  """UDFD12"""
+  uDFD12: Date
+  """UDFD13"""
+  uDFD13: Date
+  """UDFD14"""
+  uDFD14: Date
+  """UDFD15"""
+  uDFD15: Date
+  """UDFD16"""
+  uDFD16: Date
+  """UDFD17"""
+  uDFD17: Date
+  """UDFD18"""
+  uDFD18: Date
+  """UDFD19"""
+  uDFD19: Date
+  """UDFD20"""
+  uDFD20: Date
+  """UDFN01"""
+  uDFN01: Float
+  """UDFN02"""
+  uDFN02: Float
+  """UDFN03"""
+  uDFN03: Float
+  """UDFN04"""
+  uDFN04: Float
+  """UDFN05"""
+  uDFN05: Float
+  """UDFN06"""
+  uDFN06: Float
+  """UDFN07"""
+  uDFN07: Float
+  """UDFN08"""
+  uDFN08: Float
+  """UDFN09"""
+  uDFN09: Float
+  """UDFN10"""
+  uDFN10: Float
+  """UDFN11"""
+  uDFN11: Float
+  """UDFN12"""
+  uDFN12: Float
+  """UDFN13"""
+  uDFN13: Float
+  """UDFN14"""
+  uDFN14: Float
+  """UDFN15"""
+  uDFN15: Float
+  """UDFN16"""
+  uDFN16: Float
+  """UDFN17"""
+  uDFN17: Float
+  """UDFN18"""
+  uDFN18: Float
+  """UDFN19"""
+  uDFN19: Float
+  """UDFN20"""
+  uDFN20: Float
+  """UDFN21"""
+  uDFN21: Float
+  """UDFN22"""
+  uDFN22: Float
+  """UDFN23"""
+  uDFN23: Float
+  """UDFN24"""
+  uDFN24: Float
+  """UDFN25"""
+  uDFN25: Float
+  """UDFN26"""
+  uDFN26: Float
+  """UDFN27"""
+  uDFN27: Float
+  """UDFN28"""
+  uDFN28: Float
+  """UDFN29"""
+  uDFN29: Float
+  """UDFN30"""
+  uDFN30: Float
+  """UDFN31"""
+  uDFN31: Float
+  """UDFN32"""
+  uDFN32: Float
+  """UDFN33"""
+  uDFN33: Float
+  """UDFN34"""
+  uDFN34: Float
+  """UDFN35"""
+  uDFN35: Float
+  """UDFN36"""
+  uDFN36: Float
+  """UDFN37"""
+  uDFN37: Float
+  """UDFN38"""
+  uDFN38: Float
+  """UDFN39"""
+  uDFN39: Float
+  """UDFN40"""
+  uDFN40: Float
+  """Update Date"""
+  updateDate: DateTime
+  """The last date this record's fax # was updated."""
+  updateFaxDate: Date
+  """Update User"""
+  updateUser: String
+  """VIP Name"""
+  vipName: String
+  """VIP Status"""
+  vipStatus: String
+  """Extended Byte Company Name"""
+  xcompanyName: String
+  """Xenvelope Greeting"""
+  xenvelopeGreeting: String
+  """Xfirst Name"""
+  xfirstName: String
+  """Xlast Name"""
+  xlastName: String
   """Extended Byte middle name."""
   xmiddleName: String
 }
@@ -6408,6 +7913,22 @@ type BookingsReservationReservationDetailDetailsType {
   roomTypeToCharge: String
   """Room Type to Charge Description"""
   roomTypeToChargeDescription: String
+  """Scheduled Move Comments"""
+  scheduledMoveComments: String
+  """Scheduled Move In Room Type"""
+  scheduledMoveInRoomType: String
+  """Scheduled Move Out Room"""
+  scheduledMoveOutRoom: String
+  """Scheduled Move Out Room Type"""
+  scheduledMoveOutRoomType: String
+  """Scheduled Move Status"""
+  scheduledMoveStatus: String
+  """Scheduled Move Time"""
+  scheduledMoveTime: Date
+  """Scheduled Move in Room"""
+  scheduledMoveInRoom: String
+  """Scheduled Move in Room Cat"""
+  scheduledMoveInRoomCat: String
   """The original rate amount for the reservation date."""
   shareAmountOriginal: Float
   """Not used."""
@@ -7220,6 +8741,8 @@ type BookingsReservationPropertyPropertyDetailsType {
   packageLoss: String
   """Package Profit code for a particular Package"""
   packageProfit: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Market code"""
   passerbyMarket: String
   """Source code"""
@@ -8882,6 +10405,8 @@ type BookingsReservationLinkedReservationDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -9128,6 +10653,8 @@ type BookingsReservationLinkedReservationDetailsType {
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -9236,6 +10763,10 @@ type BookingsReservationLinkedReservationDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -9334,6 +10865,8 @@ type BookingsReservationLinkedReservationDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -9760,6 +11293,8 @@ type BookingsReservationLinkedReservationDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -9866,6 +11401,8 @@ type BookingsReservationLinkedReservationDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
@@ -10206,6 +11743,8 @@ type BookingsReservationSharedReservationDetailsType {
   arrivalTime: String
   """Arrivaltransportid"""
   arrivaltransportid: String
+  """Attached Date"""
+  attachedDate: Date
   """Not used."""
   authorizedBillingYN: String
   """This stores the pmsp.logged_uid who authorizes the direct bill"""
@@ -10452,6 +11991,8 @@ type BookingsReservationSharedReservationDetailsType {
   channelOrderBy: Float
   """Channelid"""
   channelid: String
+  """Check In Initiated By"""
+  checkInInitiatedBy: String
   """Duration in seconds to complete Check-In"""
   checkinDuration: Float
   """Child Bucket 1"""
@@ -10560,6 +12101,10 @@ type BookingsReservationSharedReservationDetailsType {
   departureTransportationYN: String
   """Stores the Deposit maturity preference."""
   depositMaturityType: String
+  """Detatched Date"""
+  detatchedDate: Date
+  """Detatched YN"""
+  detatchedYN: String
   """Direct Bill Verify Response"""
   directBillVerifyResponse: String
   """Directbillauthby"""
@@ -10658,6 +12203,8 @@ type BookingsReservationSharedReservationDetailsType {
   extraBeds: Float
   """FB Revenue"""
   fBRevenue: Float
+  """F&B Revenue Remaining"""
+  fBRevenueRemaining: Float
   """Fax ID"""
   faxId: Float
   """Should a confirmation be faxed for this reservation name? Y/N"""
@@ -11084,6 +12631,8 @@ type BookingsReservationSharedReservationDetailsType {
   roomResort: String
   """Room Revenue"""
   roomRevenue: Float
+  """Room Revenue Remaining"""
+  roomRevenueRemaining: Float
   """This is the Turndown room service time."""
   roomServiceTime: String
   """Room Type Description"""
@@ -11190,6 +12739,8 @@ type BookingsReservationSharedReservationDetailsType {
   totalCostOfStay: Float
   """Total Revenue"""
   totalRevenue: Float
+  """Total Revenue Remaining"""
+  totalRevenueRemaining: Float
   """Total Room Rate"""
   totalRoomRate: Float
   """Track It Groups"""
