@@ -2,7 +2,7 @@
 
 This repository stores REST API specifications and accompanying Postman collections for Oracle Hospitality APIs.
 
-For more information see [Oracle Hospitality Integration Platform](https://www.oracle.com/industries/hospitality/integration-platform/).
+For more information see [Oracle Hospitality Integration Platform](https://www.oracle.com/hospitality/integration-platform/).
 
 Want help getting started with OHIP?  Register for this free on demand webcast [Stepping Through the OHIP Journey](https://go.oracle.com/LP=105035?elqCampaignId=281803&src1=:ow:o:p:po:::&intcmp=BUMK201218P00049:ow:o:p:po).
 
@@ -34,3 +34,4 @@ See [LICENSE](LICENSE.txt) for more details.
 ## Copyright
 
 Copyright (c) 2021, 2026 Oracle and/or its affiliates.
+
