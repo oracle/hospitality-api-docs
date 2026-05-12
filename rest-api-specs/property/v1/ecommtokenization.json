@@ -1,0 +1,409 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "26.2.0.0",
+    "title": "Cloud OPI Tokenization ECommerce API",
+    "description": "ECommerce Tokenization API<br /><br /> This API allows you to process credit card tokenization via e-commerce token form. <br /><br /> Compatible with OPERA Cloud release 25.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    },
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    }
+  },
+  "basePath": "/eComm/eToken/v1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Hotels",
+      "description": "Operations related to e-commerce tokenization for OPERA Cloud Properties."
+    }
+  ],
+  "paths": {
+    "/hotels/{hotelCode}/tokenizations": {
+      "post": {
+        "operationId": "postEcommTokenization",
+        "summary": "Initiate e-commerce tokenization transaction",
+        "description": "Use this operation to initiate the processing of a tokenization transaction via e-commerce token form.\n<p><strong>OperationId:</strong>postEcommTokenization</p>",
+        "tags": [
+          "Hotels"
+        ],
+        "parameters": [
+          { "$ref": "#/parameters/authKey" },
+          { "$ref": "#/parameters/x-app-key" },
+          { "$ref": "#/parameters/hotelCode" },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/EcommTokenizationRequest" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful tokenization transaction creation",
+            "schema": { "$ref": "#/definitions/EcommTokenizationResponse" }
+          },
+          "400": {
+            "description": "The request received was invalid",
+            "schema": { "$ref": "#/definitions/ProblemDetail" },
+            "examples": {
+              "application/json": {
+                "correlationId": "MzdhODNkZmMtNzk5YS00OTYxLTg3YTMtM2ZkYTE4YjJlMzc0",
+                "detail": "There are validation errors for the object in the request",
+                "o:errorCode": "OPICS-BAD_REQUEST",
+                "o:errorDetails": [
+                  {
+                    "o:errorCode": "OPICS-0300",
+                    "o:errorPath": "locale",
+                    "title": "locale value is not allowed",
+                    "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1"
+                  }
+                ],
+                "status": 400,
+                "title": "Bad Request",
+                "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1"
+              }
+            }
+          },
+          "401": { "$ref": "#/responses/401" },
+          "403": { "$ref": "#/responses/403" },
+          "404": { "$ref": "#/responses/404" },
+          "405": { "$ref": "#/responses/405" },
+          "406": { "$ref": "#/responses/406" },
+          "415": { "$ref": "#/responses/415" },
+          "500": { "$ref": "#/responses/500" },
+          "503": { "$ref": "#/responses/503" }
+        }
+      }
+    },
+    "/hotels/{hotelCode}/tokenizations/{transactionId}": {
+      "get": {
+        "operationId": "getEcommTokenizationDetails",
+        "summary": "Fetch e-commerce tokenization transaction status and details",
+        "description": "Use this operation to fetch the final status and details of a \ntokenization transaction once it has been processed by e-commerce token form.\n<p><strong>OperationId:</strong>getEcommTokenizationDetails</p>",
+        "tags": [
+          "Hotels"
+        ],
+        "parameters": [
+          { "$ref": "#/parameters/authKey" },
+          { "$ref": "#/parameters/x-app-key" },
+          { "$ref": "#/parameters/hotelCode" },
+          { "$ref": "#/parameters/transactionId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response message containing the transaction status and details.",
+            "schema": { "$ref": "#/definitions/EcommTokenizationStatusResponse" }
+          },
+          "400": {
+            "description": "The request received was invalid",
+            "schema": { "$ref": "#/definitions/ProblemDetail" },
+            "examples": {
+              "application/json": {
+                "correlationId": "MzdhODNkZmMtNzk5YS00OTYxLTg3YTMtM2ZkYTE4YjJlMzc0",
+                "detail": "There are validation errors for the object in the request",
+                "o:errorCode": "OPICS-BAD_REQUEST",
+                "o:errorDetails": [
+                  {
+                    "o:errorCode": "OPICS-0300",
+                    "o:errorPath": "hotelId",
+                    "title": "Invalid Hotel Code",
+                    "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1"
+                  }
+                ],
+                "status": 400,
+                "title": "Bad Request",
+                "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1"
+              }
+            }
+          },
+          "401": { "$ref": "#/responses/401" },
+          "403": { "$ref": "#/responses/403" },
+          "404": { "$ref": "#/responses/404" },
+          "405": { "$ref": "#/responses/405" },
+          "406": { "$ref": "#/responses/406" },
+          "415": { "$ref": "#/responses/415" },
+          "500": { "$ref": "#/responses/500" },
+          "503": { "$ref": "#/responses/503" }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "authKey": {
+      "name": "Authorization",
+      "description": "Bearer token",
+      "in": "header",
+      "required": true,
+      "type": "string"
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "hotelCode": {
+      "name": "hotelCode",
+      "description": "OPERA Hotel Code",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "transactionId": {
+      "name": "transactionId",
+      "description": "ECommerce Transaction Identifier",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36
+    }
+  },
+  "definitions": {
+    "ProblemDetail": {
+      "description": "Problem Details for HTTP APIs",
+      "properties": {
+        "correlationId": {
+          "description": "Unique identifier value that is attached to the request that allows reference to a particular transaction",
+          "type": "string"
+        },
+        "detail": {
+          "description": "Detailed error message",
+          "type": "string"
+        },
+        "o:errorCode": {
+          "description": "Application specific error code",
+          "type": "string"
+        },
+        "o:errorDetails": {
+          "description": "Drill down to the details",
+          "items": { "$ref": "#/definitions/ProblemDetail" },
+          "type": "array"
+        },
+        "o:errorPath": {
+          "description": "JSON path to indicate where the error occurs",
+          "type": "string"
+        },
+        "status": {
+          "description": "HTTP status code",
+          "format": "int32",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Summary error message",
+          "type": "string"
+        },
+        "type": {
+          "description": "HTTP error code page",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "type"
+      ],
+      "type": "object"
+    },
+    "EcommTokenizationRequest": {
+      "type": "object",
+      "required": [
+        "originDomain",
+        "locale"
+      ],
+      "properties": {
+        "originDomain": {
+          "type": "string",
+          "pattern": "^https://[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\:\\d{2,5})?$",
+          "maxLength": 600,
+          "description": "The domain of the website that will load the token form. Must be a valid HTTPS domain.",
+          "example": "https://www.website-domain-example.com"
+        },
+        "locale": {
+          "type": "string",
+          "enum": [
+            "ar", "da", "de", "en", "es", "fi", "fr", "it", "ja", "ko", "nl", "no", "pt-BR", "pt", "ru", "sv", "th", "tr", "zh-CN", "zh-TW"
+          ],
+          "description": "The language to be used in token form.",
+          "example": "en"
+        }
+      }
+    },
+    "EcommTokenizationResponse": {
+      "type": "object",
+      "required": [
+        "tokenPageUrl",
+        "transactionId",
+        "sessionId",
+        "sessionToken",
+        "expiresAt"
+      ],
+      "properties": {
+        "tokenPageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL of the ECommerce token form for completing the tokenization transaction.",
+          "example": "https://opi-devcorp.oraclehospitality.us-phoenix-1.ocs.oc-test.com/tokenizationPage/widget.html?lang=en"
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "ECommerce Transaction Identifier",
+          "example": "5ad81936-1cb9-4a41-a52f-2f8a08ef520c"
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "ECommerce Session Identifier",
+          "example": "c52a1cf9-acc8-4c81-9c03-448bf206fbd2"
+        },
+        "sessionToken": {
+          "type": "string",
+          "description": "ECommerce Session Token",
+          "example": "eyJraWQiOiIzNmRhZTU4Yi05ZDg..3MiOiJodHRwcz"
+        },
+        "expiresAt": {
+          "type": "string",
+          "description": "Session expiration date in ISO8601 format",
+          "example": "2025-11-06T13:44:28-05:00"
+        }
+      }
+    },
+    "EcommTokenizationStatusResponse": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [ "INITIATED", "CANCELED_BY_USER", "APPROVED", "DECLINED", "ERROR" ],
+          "description": "The transaction status",
+          "example": "APPROVED"
+        },
+        "tokenInfo": {
+          "$ref": "#/definitions/TokenInfo"
+        },
+        "declineDetail": {
+          "type": "string",
+          "description": "Message containing the details of a transaction that was declined. Present when status is DECLINED.",
+          "example": "Declined by Payment Service Provider"
+        },
+        "errorDetail": {
+          "type": "string",
+          "description": "Message containing the details of a transaction that failed to be processed. Present when status is ERROR.",
+          "example": "Payment Service Provider was unavailable"
+        }
+      }
+    },
+    "TokenInfo": {
+      "type": "object",
+      "description": "Token information. Present when status is APPROVED.",
+      "required": [ "cardType", "expiryDate", "pan", "token" ],
+      "properties": {
+        "cardType": {
+          "type": "string",
+          "description": "OPERA Card Type",
+          "maxLength": 16,
+          "minLength": 2,
+          "example": "VA"
+        },
+        "expiryDate": {
+          "type": "string",
+          "description": "Expiration Date, YYMM format",
+          "example": "3012"
+        },
+        "pan": {
+          "type": "string",
+          "description": "Masked Primary Account Number (PAN)",
+          "maxLength": 19,
+          "minLength": 13,
+          "example": "XXXXXXXXXXXX4444"
+        },
+        "token": {
+          "type": "string",
+          "description": "Card Token",
+          "maxLength": 42,
+          "example": "483204890324827"
+        }
+      }
+    }
+  },
+  "responses": {
+    "401": {
+      "description": "Authentication header was not present in request"
+    },
+    "403": {
+      "description": "The Bearer Token is invalid/expired"
+    },
+    "404": {
+      "description": "The target resouce was not found",
+      "schema": { "$ref": "#/definitions/ProblemDetail" },
+      "examples": {
+        "application/json": {
+          "title": "Not Found",
+          "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5",
+          "correlationId": "MzdhODNkZmMtNzk5YS00OTYxLTg3YTMtM2ZkYTE4YjJlMzc0",
+          "detail": "Resource not found",
+          "o:errorCode": "OPICS-NOT_FOUND",
+          "status": 404
+        }
+      }
+    },
+    "405": {
+      "description": "Method not allowed for the target resource",
+      "schema": { "$ref": "#/definitions/ProblemDetail" },
+      "examples": {
+        "application/json": {
+          "correlationId": "MzdhODNkZmMtNzk5YS00OTYxLTg3YTMtM2ZkYTE4YjJlMzc0",
+          "detail": "Method not allowed for the resource",
+          "o:errorCode": "OPICS-METHOD_NOT_ALLOWED",
+          "status": 405,
+          "title": "Method Not Allowed",
+          "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.6"
+        }
+      }
+    },
+    "406": {
+      "description": "The Server cannot produce a response matching the the values in the request's content headers"
+    },
+    "415": {
+      "description": "The server refuses to accept the request because the payload format is in an unsupported format"
+    },
+    "500": {
+      "description": "The server encountered an internal error or misconfiguration and was unable to complete the request",
+      "schema": { "$ref": "#/definitions/ProblemDetail" },
+      "examples": {
+        "application/json": {
+          "correlationId": "MzdhODNkZmMtNzk5YS00OTYxLTg3YTMtM2ZkYTE4YjJlMzc0",
+          "detail": "The server encountered an internal error or misconfiguration and was unable to complete your request",
+          "o:errorCode": "OPICS-INTERNAL_SERVER_ERROR",
+          "status": 500,
+          "title": "Internal Server Error",
+          "type": "https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.1"
+        }
+      }
+    },
+    "503": {
+      "description": "The server is not ready to handle the request",
+      "schema": { "$ref": "#/definitions/ProblemDetail" },
+      "examples": {
+        "application/json": {
+          "correlationId": "MzdhODNkZmMtNzk5YS00OTYxLTg3YTMtM2ZkYTE4YjJlMzc0",
+          "detail": "Server is temporarily unavailable or busy",
+          "o:errorCode": "OPICS-SERVICE_UNAVAILABLE",
+          "status": 503,
+          "title": "Service Unavailable",
+          "type": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.5.4"
+        }
+      }
+    }
+  }
+}

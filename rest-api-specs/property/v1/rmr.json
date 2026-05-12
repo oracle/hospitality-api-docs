@@ -1,0 +1,2752 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OPERA Cloud Room Rotation Service API",
+    "description": "APIs to facilitate Room Rotation functionality in OPERA Cloud. Api provides capability to handle Room Rotation in OPERA Cloud. Room Rotation provides room ownership options for automatic inventory rotation and prioritization for owner rooms assignment and occupancy.<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.2.0.0",
+    "termsOfService": "https://www.oracle.com/legal/terms.html",
+    "contact": {
+      "email": "hospitality_apis_ww_grp@oracle.com"
+    },
+    "license": {
+      "name": "UPL",
+      "url": "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/rmr/v1",
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/hotels/{hotelId}/departureStartDate/{departureStartDate}/departureEndDate/{departureEndDate}/reservationRotationPoints": {
+      "get": {
+        "summary": "Get list of reservations and the associated rotations points",
+        "description": "This API will allow a user to retrieve list of reservations and the number of rotation points associated with a given reservation for requested hotel, departure start date, departure end date, and room numbers. <p><strong>OperationId:</strong>getReservationRotationPoints</p> <p>This API allows a time span of <strong>30</strong> days.</p>",
+        "operationId": "getReservationRotationPoints",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique Id for the Hotel"
+          },
+          {
+            "name": "departureStartDate",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date",
+            "description": "Departure Start Date of the reservation to be searched."
+          },
+          {
+            "name": "departureEndDate",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date",
+            "description": "Departure End Date of the reservation to be searched."
+          },
+          {
+            "name": "roomIds",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Ids for which to return Reservation Rotation Points.",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "confirmationNumber",
+            "in": "query",
+            "required": false,
+            "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          {
+            "name": "surname",
+            "in": "query",
+            "required": false,
+            "description": "Family name, last name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          {
+            "name": "givenName",
+            "in": "query",
+            "required": false,
+            "description": "Given name, first name or names",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          {
+              "name": "roomClasses",
+              "in": "query",
+              "required": false,
+              "type": "array",
+              "collectionFormat": "multi",
+              "description": "List of Room Classes for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters.",
+              "maxItems": 4000,
+              "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              }
+          },
+          {
+              "name": "roomTypes",
+              "in": "query",
+              "required": false,
+              "type": "array",
+              "collectionFormat": "multi",
+              "description": "List of Room Types for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters.",
+              "maxItems": 4000,
+              "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20
+              }
+          },
+          {
+              "name": "marketCodes",
+              "in": "query",
+              "required": false,
+              "type": "array",
+              "collectionFormat": "multi",
+              "description": "List of Market Codes to filter reservations. Multiple values may be provided via repeated query parameters.",
+              "maxItems": 4000,
+              "items": { 
+                  "type": "string", 
+                  "minLength": 1, 
+                  "maxLength": 40 
+              }
+          },
+          {
+              "name": "floors",
+              "in": "query",
+              "required": false,
+              "type": "array",
+              "collectionFormat": "multi",
+              "description": "List of Floors to filter reservations. Multiple values may be provided via repeated query parameters.",
+              "maxItems": 4000,
+              "items": { 
+                  "type": "string", 
+                  "minLength": 1, 
+                  "maxLength": 20 
+              }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 25,
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Reservation Rotation Points. Based on the criteria, reservations and associated rotation points are returned.",
+            "schema": {
+              "$ref": "#/definitions/getReservationRotationPoints"
+            }
+          },
+          "204": {
+            "description": "Reservation Rotation Points not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/departureStartDate/{departureStartDate}/departureEndDate/{departureEndDate}/reservationRotationPoints/searches": {
+      "post": {
+        "summary": "Get list of reservations and the associated rotations points",
+        "description": "This API will allow a user to retrieve list of reservations and the number of rotation points associated with a given reservation for requested hotel, departure start date, departure end date, and room numbers. <p><strong>OperationId:</strong>getReservationRotationPoints</p> <p>This API allows a time span of <strong>30</strong> days.</p>",
+        "operationId": "searchReservationRotationPoints",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique Id for the Hotel"
+          },
+          {
+            "name": "departureStartDate",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date",
+            "description": "Departure Start Date of the reservation to be searched."
+          },
+          {
+            "name": "departureEndDate",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date",
+            "description": "Departure End Date of the reservation to be searched."
+          },
+          {
+            "name": "searchReservationRotationPointsRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/searchReservationRotationPointsRequest"
+            },
+            "description": "Search filters for reservation rotation points."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Reservation Rotation Points. Based on the criteria, reservations and associated rotation points are returned.",
+            "schema": {
+              "$ref": "#/definitions/getReservationRotationPoints"
+            }
+          },
+          "204": {
+            "description": "Reservation Rotation Points not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/reservations/{reservationId}/rooms/{roomId}/reservationRotationPointsDetails": {
+      "get": {
+        "summary": "Get list of rotation points details associated with a reservation with adjustment log.",
+        "description": "This API will allow a user to retrieve list of rotation points details along with adjustment log for requested hotel, reservation Id and room number. <p><strong>OperationId:</strong>getReservationRotationPointsDetails</p>",
+        "operationId": "getReservationRotationPointsDetails",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique Id of the Hotel for the reservation."
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Room number of the reservation."
+          },
+          {
+            "name": "includeAdjustmentLog",
+            "in": "query",
+            "required": false,
+            "description": "Include adjustment log details in the response.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Reservation Rotation Points Details. Rotation points details with adjustment log are returned for the requested hotel, reservation Id and room number.",
+            "schema": {
+              "$ref": "#/definitions/getReservationRotationPointsDetails"
+            },
+            "examples": {
+              "application/json": {}
+            }
+          },
+          "204": {
+            "description": "Reservation Rotation Points Details not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      },
+      "put": {
+        "summary": "Update Rotation Points Details associated with a reservation.",
+        "description": "This API will allow a user to modify rotation points for the requested hotel, reservation Id and room number. <p><strong>OperationId:</strong>putReservationRotationPointsDetails</p>",
+        "operationId": "putReservationRotationPointsDetails",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique Id of the Hotel for the reservation."
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
+          },
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Room number of the reservation."
+          },
+          {
+            "name": "reservationRotationPoints",
+            "in": "body",
+            "required": true,
+            "description": "Collection of Reservation Rotation Points Details",
+            "schema": {
+              "$ref": "#/definitions/putReservationRotationPointsDetails"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "examples": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/roomRotationPoints": {
+      "get": {
+        "summary": "Get Room Rotation Points",
+        "description": "Use this API to fetch the individual units' rotation points.<p><strong>OperationId:</strong>getRoomRotationPoints</p> <p>The maximum allowable limit for this API is <strong>100</strong>.</p>",
+        "operationId": "getRoomRotationPoints",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique Id for the Hotel"
+          },
+          {
+            "name": "roomRotationPointsDate",
+            "in": "query",
+            "required": true,
+            "description": "The date for which the Room Rotation Points are being requested",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 25,
+            "required": false,
+            "description": "Indicates maximum number of records the API should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "name": "roomClasses",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Classes for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "roomTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Types for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "roomIds",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Ids for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching Room Rotation Points. Based on the criteria, Room Rotation Points information is returned",
+            "schema": {
+              "$ref": "#/definitions/getRoomRotationPoints"
+            }
+          },
+          "204": {
+            "description": "Room Rotation Points not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      },
+      "put": {
+        "summary": "Update Rotation Points by Room Numbers",
+        "description": "Use this operation to update balance forward and adjusted points of individual rooms. <p><strong>OperationId:</strong>putRoomRotationPoints</p>",
+        "operationId": "putRoomRotationPoints",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique Id for the Hotel"
+          },
+          {
+            "name": "roomRotationPointsAdjustment",
+            "in": "body",
+            "required": true,
+            "description": "Request details containing room, balance forward and adjusted points to update.",
+            "schema": {
+              "$ref": "#/definitions/roomRotationPointsAdjustment"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            },
+            "examples": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/profiles/{profileId}/roomOwnerships": {
+      "get": {
+        "summary": "Get Profile Room Owners Details",
+        "description": "Use this API to fetch profile Rooms with Room Ownership or Owner Referral records associated. <p><strong>OperationId:</strong>getRoomOwnerships</p>",
+        "operationId": "getRoomOwnerships",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique ID of profile."
+          },
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Unique Id(s) for the Hotel(s). Multiple Hotels can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "The starting value of the date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "The ending value of the date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "includeReferral",
+            "in": "query",
+            "required": false,
+            "description": "Include Owner Referral in response flag.",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "includeAvailableRoomsOnly",
+            "in": "query",
+            "required": false,
+            "description": "Flag indicating if only rooms available for booking during the date range specified should be included in response.",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for Rooms with Room Ownership or Owner Referral records. Based on the criteria, associated Owner Rooms are returned.",
+            "schema": {
+              "$ref": "#/definitions/associatedRoomOwnershipListDetails"
+            }
+          },
+          "204": {
+            "description": "Associated Room Ownership not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/roomOwners": {
+      "get": {
+        "summary": "Get Room Owners Details",
+        "description": "Get Room Ownership details for specific room(s) or owners. Hotel Id(s) and at least one other search criteria is required. <p><strong>OperationId:</strong>getRoomOwners</p>",
+        "operationId": "getRoomOwners",
+        "deprecated": true,
+        "parameters": [
+          {
+            "name": "hotelIds",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Unique Id(s) for the Hotel(s) queried.",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "surname",
+            "in": "query",
+            "required": false,
+            "description": "Family name, last name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          {
+            "name": "givenName",
+            "in": "query",
+            "required": false,
+            "description": "Given name, first name or names",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          {
+            "name": "startDateFrom",
+            "in": "query",
+            "required": false,
+            "description": "The starting value of the start date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "startDateTo",
+            "in": "query",
+            "required": false,
+            "description": "The ending value of the start date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDateFrom",
+            "in": "query",
+            "required": false,
+            "description": "The starting value of the end date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDateTo",
+            "in": "query",
+            "required": false,
+            "description": "The ending value of the end date range.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "roomClasses",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Classes for which to return Room Owners. Multiple values can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "roomTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Types for which to return Room Owners. Multiple values can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "roomIds",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "List of Room Ids for which to return Room Owners. Multiple values can be entered by adding multiple query parameters.",
+            "maxItems": 4000,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "contractNumber",
+            "in": "query",
+            "required": false,
+            "description": "Contract Number of the Ownership Record.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether to return inactive records. Records are considered inactive when the end date of the ownership record is prior to the current property business date.",
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "default": 25,
+            "required": false,
+            "description": "Indicates maximum number of records the API should return.",
+            "type": "integer",
+            "maximum": 200
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for List of Room Owners. Based on the criteria, associated List of Room Owners are returned.",
+            "schema": {
+              "$ref": "#/definitions/roomOwnersListDetails"
+            }
+          },
+          "204": {
+            "description": "Room Owners not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/roomOwners/searches": {
+      "post": {
+        "summary": "Get Room Owners Details",
+        "description": "Get Room Ownership details for specific room(s) or owners. Hotel Id(s) and at least one other search criteria is required. <p><strong>OperationId:</strong>searchRoomOwners</p>",
+        "operationId": "searchRoomOwners",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchRoomOwnersRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/searchRoomOwnersRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for List of Room Owners. Based on the criteria, associated List of Room Owners are returned.",
+            "schema": {
+              "$ref": "#/definitions/roomOwnersListDetails"
+            }
+          },
+          "204": {
+            "description": "Room Owners not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    },
+    "/services/roomrotation/status": {
+      "get": {
+        "summary": "Ping",
+        "description": "This API facilitates status check of room rotation service <p><strong>OperationId:</strong>pingRoomRotationService</p>",
+        "operationId": "pingRoomRotationService",
+        "parameters": [
+          {
+            "name": "operaPingInput",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Opera Ping request input type"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/pingDetail"
+            }
+          },
+          "204": {
+            "description": "pingRoomRotationService not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "RoomRotation"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "externalData": {
+      "name": "externalData",
+      "type": "string",
+      "description": "Pass this header as true, if payload needs DVM",
+      "in": "header"
+    },
+    "authKey": {
+      "name": "authorization",
+      "description": "Bearer token that needs to be passed which is generated post user authentication",
+      "type": "string",
+      "in": "header",
+      "required": true
+    },
+    "x-app-key": {
+      "name": "x-app-key",
+      "description": "Client or Partner's Application Key",
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in": "header",
+      "required": true
+    },
+    "x-request-id": {
+      "name": "x-request-id",
+      "type": "string",
+      "pattern": "~*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+      "description": "Request Id of an incoming request",
+      "in": "header"
+    },
+    "x-originating-application": {
+      "name": "x-originating-application",
+      "type": "string",
+      "description": "Customer's Integration Application Id",
+      "in": "header"
+    },
+    "x-hotelid": {
+      "name": "x-hotelid",
+      "type": "string",
+      "description": "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in": "header",
+      "required": true
+    },
+    "x-externalsystem": {
+      "name": "x-externalsystem",
+      "type": "string",
+      "maxLength": 40,
+      "description": "External system code.",
+      "in": "header",
+      "x-example": "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language": {
+      "name": "Accept-Language",
+      "type": "string",
+      "description": "Language code",
+      "in": "header"
+    }
+  },
+  "responses": {
+    "400": {
+      "description": "Bad Request",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "403": {
+      "description": "Forbidden"
+    },
+    "404": {
+      "description": "Resource not found",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "405": {
+      "description": "Method not allowed"
+    },
+    "406": {
+      "description": "Not acceptable."
+    },
+    "413": {
+      "description": "Request Entity Too Large"
+    },
+    "414": {
+      "description": "Request URI Too Large"
+    },
+    "415": {
+      "description": "Unsupported Media Type"
+    },
+    "500": {
+      "description": "System Error",
+      "schema": {
+        "$ref": "#/definitions/exceptionDetailType"
+      }
+    },
+    "502": {
+      "description": "Bad Gateway"
+    },
+    "503": {
+      "description": "Service Unavailable"
+    }
+  },
+  "definitions": {
+    "status": {
+      "type": "object",
+      "description": "Response Body.",
+      "properties": {
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      }
+    },
+    "warningsType": {
+      "type": "array",
+      "description": "Used in conjunction with the Success element to define a business error.",
+      "maxItems": 4000,
+      "items": {
+        "$ref": "#/definitions/warningType"
+      }
+    },
+    "warningType": {
+      "type": "object",
+      "description": "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property Value"
+        },
+        "shortText": {
+          "description": "An abbreviated version of the error in textual format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "docURL": {
+          "description": "If present, this URL refers to an online description of the error that occurred.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "tag": {
+          "description": "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "recordId": {
+          "description": "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "type": {
+          "description": "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "language": {
+          "description": "Language identification.",
+          "type": "string",
+          "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph": {
+          "description": "Reference Place Holder used as an index for this warning.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/instanceLink"
+      }
+    },
+    "instanceLink": {
+      "type": "object",
+      "description": "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties": {
+        "href": {
+          "description": "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type": "string"
+        },
+        "rel": {
+          "description": "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type": "string"
+        },
+        "templated": {
+          "description": "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type": "boolean",
+          "default": false
+        },
+        "method": {
+          "description": "HTTP method for requesting the target of the link.",
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+            "HEAD"
+          ]
+        },
+        "targetSchema": {
+          "description": "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type": "string"
+        },
+        "operationId": {
+          "description": "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Exact copy of the \"summary\" field on the linked operation.",
+          "type": "string"
+        }
+      }
+    },
+    "exceptionDetailType": {
+      "title": "Error Detail",
+      "description": "Complex type that contains error details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails": {
+          "description": "Details of the error message, consisting of a hierarchical tree structure.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/errorInstance"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "errorInstance": {
+      "title": "Error Instance Details",
+      "description": "Complex type that contains error instance details for a REST call.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status": {
+          "type": "integer",
+          "description": "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance": {
+          "type": "string",
+          "description": "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode": {
+          "type": "string",
+          "description": "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath": {
+          "type": "string",
+          "description": "Path to the problem at the resource or property level."
+        }
+      },
+      "required": [
+        "type",
+        "title"
+      ]
+    },
+    "getRoomRotationPoints": {
+      "type": "object",
+      "properties": {
+        "roomRotationPointsInfoList": {
+          "description": "List of Room Rotation Points Information.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomRotationPointsInfoType"
+          }
+        },
+        "outOfOrderServiceActive": {
+          "description": "Indicates whether Out of Order/ Out of Service Room Rotation Points is active",
+          "type": "boolean"
+        },
+        "startRoomRotationPeriodDate": {
+          "description": "Start date of the Room Rotation Period",
+          "type": "string",
+          "format": "date"
+        },
+        "endRoomRotationPeriodDate": {
+          "description": "End date of the Room Rotation Period",
+          "type": "string",
+          "format": "date"
+        },
+        "balanceForwardActive": {
+          "description": "Indicates whether the balance forward is active",
+          "type": "boolean"
+        },
+        "balanceForwardEditable": {
+          "description": "Indicates whether the user is allowed to edit balance forward points",
+          "type": "boolean"
+        },
+        "offset": {
+          "description": "Indicates the index of the next applicable set(page).",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates number of records the API can return as per the API request limit sent.",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Indicates number of records the API has returned actually as per the API request criteria.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether there are more records available to be returned as per the API request criteria or not.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Indicates total number of records available that can be returned as per the API request criteria.",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomRotationPointsInfoType": {
+      "type": "object",
+      "description": "Room Rotation Points Information",
+      "properties": {
+        "roomId": {
+          "description": "Room Number",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "outOfOrderServicePoints": {
+          "description": "Out of Order / Out of Service points",
+          "type": "number"
+        },
+        "balanceForwardPoints": {
+          "description": "Balance forward points",
+          "type": "number"
+        },
+        "roomAdjustedPoints": {
+          "description": "Room adjusted points",
+          "type": "number"
+        },
+        "reservationAdjustedPoints": {
+          "description": "Reservation adjusted points",
+          "type": "number"
+        },
+        "randomPoints": {
+          "description": "Random points",
+          "type": "number"
+        },
+        "calculatedPoints": {
+          "description": "Calculated points",
+          "type": "number"
+        },
+        "proratedAveragePoints": {
+          "description": "Prorated average points",
+          "type": "number"
+        },
+        "forecastedPoints": {
+          "description": "Forecasted points",
+          "type": "number"
+        }
+      }
+    },
+    "roomRotationPointsAdjustment": {
+      "type": "object",
+      "properties": {
+        "roomRotationPointsAdjustmentInfoTypeList": {
+          "description": "List of Room Rotation Points Information to update",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomRotationPointsAdjustmentInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomRotationPointsAdjustmentInfoType": {
+      "type": "object",
+      "description": "Room Rotation Points Update Information",
+      "properties": {
+        "roomId": {
+          "description": "Room Number",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "balanceForwardPoints": {
+          "description": "Balance forward points to update",
+          "type": "number"
+        },
+        "roomAdjustedPoints": {
+          "description": "Room adjusted points to update",
+          "type": "number"
+        }
+      }
+    },
+    "getReservationRotationPoints": {
+      "type": "object",
+      "description": "Provides Pagination Information for the REST API.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/rESTPaginationGroup"
+        }
+      ],
+      "properties": {
+        "reservationRotationPoints": {
+          "description": "Collection of reservation and associated rotation points details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/reservationRotationPointsType"
+          }
+        }
+      }
+    },
+    "rESTPaginationGroup": {
+      "type": "object",
+      "description": "Provides Pagination Information for the REST API.",
+      "properties": {
+        "offset": {
+          "description": "Indicates the index of the next applicable set(page).",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates number of records the API can return as per the API request limit sent. A maximum of 200 records can be only returned at a time.",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Indicates number of records the API has returned actually as per the API request criteria.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether there are more records available to be returned as per the API request criteria or not.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Indicates total number of records available that can be returned as per the API request criteria.",
+          "type": "integer"
+        }
+      }
+    },
+    "reservationRotationPointsType": {
+      "type": "object",
+      "description": "Individual reservation and associated rotation points information",
+      "properties": {
+        "roomId": {
+          "description": "Room Number",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "arrivalDate": {
+          "description": "Reservation arrival date",
+          "type": "string",
+          "format": "date"
+        },
+        "departureDate": {
+          "description": "Reservation departure date",
+          "type": "string",
+          "format": "date"
+        },
+        "nights": {
+          "description": "The number of nights of the reservation.",
+          "type": "integer"
+        },
+        "reservationIdList": {
+          "type": "array",
+          "description": "Unique identifier of the reservation like Reservation Name Id, Confirmation Number.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/uniqueID_Type"
+          }
+        },
+        "profileId": {
+          "description": "Unique identifier of the guest.",
+          "$ref": "#/definitions/profileId"
+        },
+        "guestName": {
+          "description": "The guest name on the reservation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "Total rotation points for the room."
+        },
+        "pointsAdjusted": {
+          "type": "boolean",
+          "description": "Whether rotation points for the room have been adjusted."
+        }
+      }
+    },
+    "profileId": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "idExtension": {
+          "description": "Additional identifying value assigned by the creating system.",
+          "type": "integer"
+        }
+      }
+    },
+    "uniqueID_Type": {
+      "type": "object",
+      "description": "An identifier used to uniquely reference an object in a system (e.g. an airline reservation reference, customer profile reference, booking confirmation number, or a reference to a previous availability quote).",
+      "properties": {
+        "id": {
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "type": {
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "associatedRoomOwnershipListDetails": {
+      "type": "object",
+      "description": "Associated Room Ownerships List",
+      "properties": {
+        "associatedRoomOwnershipInfoTypeList": {
+          "description": "List of Associated Room Ownerships",
+          "type": "array",
+          "maxItems": 2000,
+          "items": {
+            "$ref": "#/definitions/associatedRoomOwnershipInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "associatedRoomOwnershipInfoType": {
+      "type": "object",
+      "description": "Associated Room Ownership Information",
+      "properties": {
+        "roomOwnershipId": {
+          "description": "Unique Id for Room Owner record.",
+          "type": "integer"
+        },
+        "hotelId": {
+          "description": "Hotel Id",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomId": {
+          "description": "Room Number",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "Room Type",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "startDate": {
+          "description": "Start date of Room Ownership contract",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "End date of Room Ownership contract",
+          "type": "string",
+          "format": "date"
+        },
+        "ownerExclusive": {
+          "type": "boolean",
+          "description": "Whether Room is available for the exclusive use of its designated owner and owner referrals, or if it is available in general availability"
+        },
+        "associatedRoomOwnershipType": {
+          "description": "Whether the associated room is an Owner or Referral.",
+          "$ref": "#/definitions/associatedRoomOwnershipType"
+        }
+      }
+    },
+    "associatedRoomOwnershipType": {
+      "type": "string",
+      "description": "Indicates if the associated room is an Owner or Referral room.",
+      "enum": [
+        "Owner",
+        "Referral"
+      ]
+    },
+    "reservationDetailsType": {
+      "type": "object",
+      "description": "Reservation Details",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Id",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "reservationIdList": {
+          "type": "array",
+          "description": "Unique identifier of the reservation like Reservation Name Id, Confirmation Number.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/uniqueID_Type"
+          }
+        },
+        "arrival": {
+          "description": "Reservation arrival date",
+          "type": "string",
+          "format": "date"
+        },
+        "departure": {
+          "description": "Reservation departure date",
+          "type": "string",
+          "format": "date"
+        },
+        "nights": {
+          "description": "The number of nights of the reservation.",
+          "type": "integer"
+        },
+        "roomId": {
+          "description": "Room Number",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "profileId": {
+          "description": "Unique identifier of the guest.",
+          "$ref": "#/definitions/profileId"
+        },
+        "surname": {
+          "description": "Family name, last name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "givenName": {
+          "description": "Given name, first name or names",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "reservationRotationPointsDetailsType": {
+      "type": "object",
+      "description": "Rotation Points Details of a reservation",
+      "properties": {
+        "startDate": {
+          "description": "Start date of reservation",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "End date of reservation",
+          "type": "string",
+          "format": "date"
+        },
+        "type": {
+          "description": "Represents calculation type for rotation point rule.",
+          "$ref": "#/definitions/rotationRuleCalculationRuleType"
+        },
+        "currentPoints": {
+          "type": "number",
+          "description": "Current applicable points for the shown calculation rule for the reservation."
+        },
+        "adjustPointsTo": {
+          "type": "number",
+          "description": "Override the current points and enter a new value for the respective calculation rule up to 5 decimal places."
+        },
+        "adjustmentReason": {
+          "description": "Reason for the adjustment to the rotation points.",
+          "$ref": "#/definitions/reservationRotationPointsAdjustmentReasonType"
+        }
+      }
+    },
+    "rotationRuleCalculationRuleType": {
+      "type": "string",
+      "description": "Simple type for Rotation Rule Calculation Rule.",
+      "enum": [
+        "PerRevenue",
+        "PerNight",
+        "PerStay",
+        "AvgRateAmount"
+      ]
+    },
+    "reservationRotationPointsAdjustmentReasonType": {
+      "type": "object",
+      "description": "Contains adjustment reason code and description.",
+      "properties": {
+        "code": {
+          "description": "Code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "description": {
+          "description": "Description of the code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "reservationRotationPointsDetailsListType": {
+      "type": "object",
+      "description": "Reservation Rotation points details with total points.",
+      "properties": {
+        "reservationRotationPointsDetails": {
+          "description": "Collection of reservation rotation points details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/reservationRotationPointsDetailsType"
+          }
+        },
+        "totalReservationPoints": {
+          "type": "number",
+          "description": "Total points including any applied adjustments."
+        }
+      }
+    },
+    "reservationRotationPointsAdjustmentLogType": {
+      "type": "object",
+      "description": "Reservation rotation points adjustment log.",
+      "properties": {
+        "logDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time that the adjustment was made to the rotation points for the room. Uses the hotel's time zone."
+        },
+        "type": {
+          "description": "The type of the calculation rule that was overridden with a new point value.",
+          "$ref": "#/definitions/rotationRuleCalculationRuleType"
+        },
+        "userId": {
+          "description": "Unique application user ID.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "userName": {
+          "description": "Unique application login of the user who made the adjustment.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "originalPoints": {
+          "type": "number",
+          "description": "The points that were applicable for the specific calculation rule before the change of points."
+        },
+        "adjustedPointsTo": {
+          "type": "number",
+          "description": "The number of points for the specific calculation rule after the change of points."
+        },
+        "adjustmentReason": {
+          "description": "The code and description associated with the reason the adjustment was made.",
+          "$ref": "#/definitions/reservationRotationPointsAdjustmentReasonType"
+        }
+      }
+    },
+    "reservationRotationPointsAdjustmentLogListType": {
+      "type": "object",
+      "description": "Reservation rotation points adjustment log.",
+      "properties": {
+        "adjustmentLog": {
+          "description": "Collection of reservation rotation points adjustment log.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/reservationRotationPointsAdjustmentLogType"
+          }
+        }
+      }
+    },
+    "getReservationRotationPointsDetails": {
+      "type": "object",
+      "description": "Response object for Reservation Rotation Points Details.",
+      "properties": {
+        "reservationDetails": {
+          "$ref": "#/definitions/reservationDetailsType"
+        },
+        "reservationRotationPointsDetailsList": {
+          "$ref": "#/definitions/reservationRotationPointsDetailsListType"
+        },
+        "adjustmentLogList": {
+          "$ref": "#/definitions/reservationRotationPointsAdjustmentLogListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "putReservationRotationPointsDetails": {
+      "type": "object",
+      "description": "Collection of Reservation Rotation Points Details.",
+      "properties": {
+        "reservationRotationPointsDetailsList": {
+          "$ref": "#/definitions/reservationRotationPointsDetailsListType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomOwnersListDetails": {
+      "type": "object",
+      "description": "Provides Pagination Information for the REST API.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/rESTPaginationGroup"
+        }
+      ],
+      "properties": {
+        "roomOwnerInfoTypeList": {
+          "description": "Collection of Room Owners with Room Ownership details.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/roomOwnerInfoType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "roomOwnerInfoType": {
+      "type": "object",
+      "description": "Room Owners with Room Ownership details.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code of Room Ownership record.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "roomOwnershipId": {
+          "description": "Unique Id for Room Ownership record.",
+          "type": "integer"
+        },
+        "contractNumber": {
+          "description": "Contract number for Room Ownership record.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "startDate": {
+          "description": "Start Date of the Room Ownership record.",
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "description": "End Date of the Room Ownership record.",
+          "type": "string",
+          "format": "date"
+        },
+        "roomId": {
+          "description": "Room Id of Room Ownership record.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "roomType": {
+          "description": "Room Type of the Room Ownership record.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "profileId": {
+          "description": "Unique identifier of the Room Owner.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "ownerDisplayName": {
+          "description": "Display Name for the Room Owner.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "ownerExclusive": {
+          "type": "boolean",
+          "description": "Indicates whether Room is available for the exclusive use of its designated owner and owner referrals, or if it is available in general availability."
+        },
+        "inactive": {
+          "type": "boolean",
+          "description": "Indicates if the Room Owner is inactive."
+        }
+      }
+    },
+    "operaVersionNumberType": {
+      "type": "string",
+      "description": "Current Opera Version Number",
+      "minLength": 0,
+      "maxLength": 40
+    },
+    "pingDetail": {
+      "type": "object",
+      "description": "Response for Ping operation.",
+      "properties": {
+        "operaVersion": {
+          "description": "Opera version number.",
+          "$ref": "#/definitions/operaVersionNumberType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "searchReservationRotationPointsRequest": {
+      "type": "object",
+      "properties": {
+        "roomIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "description": "List of Room Ids for which to return Reservation Rotation Points."
+        },
+        "confirmationNumber": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation."
+        },
+        "surname": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Family name, last name."
+        },
+        "givenName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Given name, first name or names"
+        },
+        "roomClasses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "maxItems": 4000,
+          "description": "List of Room Classes for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters."
+        },
+        "roomTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "maxItems": 4000,
+          "description": "List of Room Types for which to return Room Rotation Points. Multiple values can be entered by adding multiple query parameters."
+        },
+        "marketCodes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "maxItems": 4000,
+          "description": "List of Market Codes to filter reservations. Multiple values may be provided via repeated query parameters."
+        },
+        "floors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "maxItems": 4000,
+          "description": "List of Floors to filter reservations. Multiple values may be provided via repeated query parameters."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "default": 25
+        },
+        "offset": {
+          "type": "integer",
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "default": 0
+        }
+      },
+      "required": [
+        "roomIds"
+      ]
+    },
+    "searchRoomOwnersRequest": {
+      "type": "object",
+      "properties": {
+        "hotelIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "minItems": 1,
+          "maxItems": 5,
+          "description": "Unique Id(s) for the Hotel(s) queried."
+        },
+        "surname": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Family name, last name."
+        },
+        "givenName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "Given name, first name or names"
+        },
+        "startDateFrom": {
+          "type": "string",
+          "format": "date",
+          "description": "The starting value of the start date range."
+        },
+        "startDateTo": {
+          "type": "string",
+          "format": "date",
+          "description": "The ending value of the start date range."
+        },
+        "endDateFrom": {
+          "type": "string",
+          "format": "date",
+          "description": "The starting value of the end date range."
+        },
+        "endDateTo": {
+          "type": "string",
+          "format": "date",
+          "description": "The ending value of the end date range."
+        },
+        "roomClasses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "maxItems": 4000,
+          "description": "List of Room Classes for which to return Room Owners. Multiple values can be entered by adding multiple query parameters."
+        },
+        "roomTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "maxItems": 4000,
+          "description": "List of Room Types for which to return Room Owners. Multiple values can be entered by adding multiple query parameters."
+        },
+        "roomIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "maxItems": 4000,
+          "description": "List of Room Ids for which to return Room Owners. Multiple values can be entered by adding multiple query parameters."
+        },
+        "contractNumber": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Contract Number of the Ownership Record."
+        },
+        "includeInactive": {
+          "type": "boolean",
+          "description": "Indicates whether to return inactive records. Records are considered inactive when the end date of the ownership record is prior to the current property business date."
+        },
+        "limit": {
+          "type": "integer",
+          "maximum": 200,
+          "description": "Indicates maximum number of records the API should return.",
+          "default": 25
+        },
+        "offset": {
+          "type": "integer",
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "default": 0
+        }
+      },
+      "required": [
+        "hotelIds"
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "RoomRotation",
+      "description": "The REST APIs allow you to perform all actions related to Room Rotation from configuring point calculations for owner rooms, adjustment options for room prioritization and automatic assignment based on owner room utilization."
+    }
+  ],
+  "externalDocs": {
+    "description": "Find out more about Oracle Hospitality",
+    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
+  }
+}
