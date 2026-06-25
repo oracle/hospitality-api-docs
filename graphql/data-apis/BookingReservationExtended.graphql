@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA BookingReservationExtended GraphQL API,
 # description : GraphQL API to cater for Provide booking reservation information with extended or additional details such as blocks, routing, etc.
-#               Compatible with OPERA Cloud RnA release 25.5.0.0.
+#               Compatible with OPERA Cloud RnA release 26.1.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 25.5.0.0
+# version : 26.1.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -89,11 +89,12 @@ input FloatRangeInput {
 # Pair - [2] 
 # 		 - reservationunifiedDetailsAgentNameId 
 # 		 - reservationunifiedDetailsBeginDate 
+# 		 - reservationunifiedDetailsBlockInsertDate 
+# 		 - reservationunifiedDetailsBlockInsertUser 
+# 		 - reservationunifiedDetailsBlockUpdateDate 
 # 		 - reservationunifiedDetailsCompanyNameId 
 # 		 - reservationunifiedDetailsContactNameId 
 # 		 - reservationunifiedDetailsEndDate 
-# 		 - reservationunifiedDetailsInsertDate 
-# 		 - reservationunifiedDetailsInsertUser 
 # 		 - reservationunifiedDetailsMasterNameId 
 # 		 - reservationunifiedDetailsOwner 
 # 		 - reservationunifiedDetailsResvActualCheckInTime 
@@ -116,6 +117,9 @@ input FloatRangeInput {
 # 		 - reservationunifiedDetailsResvFolioCloseDate 
 # 		 - reservationunifiedDetailsResvGuestprofileid 
 # 		 - reservationunifiedDetailsResvInsertActionInstanceId 
+# 		 - reservationunifiedDetailsResvInsertDate 
+# 		 - reservationunifiedDetailsResvInsertDatetime 
+# 		 - reservationunifiedDetailsResvInsertUser 
 # 		 - reservationunifiedDetailsResvNameId 
 # 		 - reservationunifiedDetailsResvNameNameId 
 # 		 - reservationunifiedDetailsResvOriginalEndDate 
@@ -126,17 +130,20 @@ input FloatRangeInput {
 # 		 - reservationunifiedDetailsResvResvcontactprofileid 
 # 		 - reservationunifiedDetailsResvRhBillingContactId 
 # 		 - reservationunifiedDetailsResvRhResvContactId 
+# 		 - reservationunifiedDetailsResvRoomCategory 
+# 		 - reservationunifiedDetailsResvRoomcategoryid 
 # 		 - reservationunifiedDetailsResvSplitFromResvNameId 
 # 		 - reservationunifiedDetailsResvSplitfromreservationid 
 # 		 - reservationunifiedDetailsResvTruncActualCheckOutDate 
 # 		 - reservationunifiedDetailsResvTruncBeginDate 
 # 		 - reservationunifiedDetailsResvTruncEndDate 
 # 		 - reservationunifiedDetailsResvUniCardId 
+# 		 - reservationunifiedDetailsResvUpdateDate 
+# 		 - reservationunifiedDetailsResvUpdateDatetime 
 # 		 - reservationunifiedDetailsShoulderBeginDate 
 # 		 - reservationunifiedDetailsShoulderEndDate 
 # 		 - reservationunifiedDetailsSourceNameId 
 # 		 - reservationunifiedDetailsSuperBlockId 
-# 		 - reservationunifiedDetailsUpdateDate 
 
 input BookingReservationExtendedQueryArgumentsType {
   """Actual Check In Date Time"""
@@ -152,17 +159,23 @@ input BookingReservationExtendedQueryArgumentsType {
   """Block ID"""
   reservationunifiedDetailsResvAllotmentid: FloatInput                  @conditionalInputPair(pair: 2)
   """Arrival Date"""
-  reservationunifiedDetailsResvTruncBeginDate: DateTimeInput            @conditionalInputPair(pair: 2)
+  reservationunifiedDetailsResvTruncBeginDate: DateInput                @conditionalInputPair(pair: 2)
   """Billing Contact ID"""
   reservationunifiedDetailsResvBillingContactId: FloatInput             @conditionalInputPair(pair: 2)
   """Billing Contact Profile ID"""
   reservationunifiedDetailsResvBillingcontactprofileid: FloatInput      @conditionalInputPair(pair: 2)
   """Block Code"""
   reservationunifiedDetailsAllotmentCode: StringInput
+  """Block Created Date"""
+  reservationunifiedDetailsBlockInsertDate: DateTimeInput               @conditionalInputPair(pair: 2)
   """Block ID"""
   reservationunifiedDetailsResvAllotmentHeaderId: StringInput           @conditionalInputPair(pair: 2)
+  """Block Insert User"""
+  reservationunifiedDetailsBlockInsertUser: FloatInput                  @conditionalInputPair(pair: 2)
   """Block Owner Code"""
   reservationunifiedDetailsOwnerCode: StringInput
+  """Block Updated Date"""
+  reservationunifiedDetailsBlockUpdateDate: DateInput                   @conditionalInputPair(pair: 2)
   """Bonus Check ID"""
   reservationunifiedDetailsResvBonusCheckId: FloatInput                 @conditionalInputPair(pair: 2)
   """Business Date Created"""
@@ -177,8 +190,6 @@ input BookingReservationExtendedQueryArgumentsType {
   reservationunifiedDetailsResvConfirmationNo: StringInput              @conditionalInputPair(pair: 2)
   """Contact Name ID"""
   reservationunifiedDetailsContactNameId: FloatInput                    @conditionalInputPair(pair: 2)
-  """Created Date"""
-  reservationunifiedDetailsInsertDate: DateInput                        @conditionalInputPair(pair: 2)
   """Custom Reference Number"""
   reservationunifiedDetailsResvCustomReference: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -201,8 +212,6 @@ input BookingReservationExtendedQueryArgumentsType {
   reservationunifiedDetailsResvGuestprofileid: FloatInput               @conditionalInputPair(pair: 2)
   """Insert Action Instance ID"""
   reservationunifiedDetailsResvInsertActionInstanceId: FloatInput       @conditionalInputPair(pair: 2)
-  """Insert User"""
-  reservationunifiedDetailsInsertUser: FloatInput                       @conditionalInputPair(pair: 2)
   """This is the Interface_id of the System which sent/Received Allotment"""
   reservationunifiedDetailsBlocksInterfaceId: StringInput
   """Award Membership ID"""
@@ -231,12 +240,22 @@ input BookingReservationExtendedQueryArgumentsType {
   reservationunifiedDetailsResvQuoteId: StringInput                     @conditionalInputPair(pair: 2)
   """Resv Contact ID"""
   reservationunifiedDetailsResvResvContactId: FloatInput                @conditionalInputPair(pair: 2)
+  """Reservation Insert Date"""
+  reservationunifiedDetailsResvInsertDate: DateTimeInput                @conditionalInputPair(pair: 2)
+  """Reservation Insert Datetime"""
+  reservationunifiedDetailsResvInsertDatetime: DateTimeInput            @conditionalInputPair(pair: 2)
+  """Reservation Insert User"""
+  reservationunifiedDetailsResvInsertUser: FloatInput                   @conditionalInputPair(pair: 2)
   """Reservation Name ID"""
   reservationunifiedDetailsResvNameId: FloatInput                       @conditionalInputPair(pair: 2)
   """Reservation Status"""
   reservationunifiedDetailsResvResvStatus: StringInput
   """Reservation Type"""
   reservationunifiedDetailsResvGuaranteeCode: StringInput
+  """Reservation Update Date"""
+  reservationunifiedDetailsResvUpdateDate: DateTimeInput                @conditionalInputPair(pair: 2)
+  """Reservation Update Datetime"""
+  reservationunifiedDetailsResvUpdateDatetime: DateTimeInput            @conditionalInputPair(pair: 2)
   """Property"""
   reservationunifiedDetailsResort: StringInput                          @conditionalInputPair(pair: 1)
   """Auto generated charge number for Point Of Sale systems to identify guests."""
@@ -247,8 +266,10 @@ input BookingReservationExtendedQueryArgumentsType {
   reservationunifiedDetailsResvRhBillingContactId: FloatInput           @conditionalInputPair(pair: 2)
   """Rh Resv Contact ID"""
   reservationunifiedDetailsResvRhResvContactId: FloatInput              @conditionalInputPair(pair: 2)
+  """Room Category"""
+  reservationunifiedDetailsResvRoomCategory: StringInput                @conditionalInputPair(pair: 2)
   """Roomcategoryid"""
-  reservationunifiedDetailsResvRoomcategoryid: StringInput
+  reservationunifiedDetailsResvRoomcategoryid: StringInput              @conditionalInputPair(pair: 2)
   """Is the guest scheduled for automatic check out?"""
   reservationunifiedDetailsResvSchedulecheckoutYn: StringInput
   """Sguest First Name"""
@@ -275,8 +296,6 @@ input BookingReservationExtendedQueryArgumentsType {
   reservationunifiedDetailsResvTruncActualCheckOutDate: DateInput       @conditionalInputPair(pair: 2)
   """Universal Card ID used by interfaces for key encoding purposes."""
   reservationunifiedDetailsResvUniCardId: StringInput                   @conditionalInputPair(pair: 2)
-  """Updated Date"""
-  reservationunifiedDetailsUpdateDate: DateInput                        @conditionalInputPair(pair: 2)
   """The primary key for this table."""
   profileallDetailsNameId: FloatInput
   """Profile is active or not."""
@@ -1413,7 +1432,7 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   """Arrival Comments"""
   arrivalComments: String
   """Arrival Date"""
-  arrivalDate: DateTime
+  arrivalDate: Date
   """Arrival Date Time"""
   arrivalDateTime: Date
   """Arrival Estimate Time"""
@@ -1476,6 +1495,10 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   blockAlias: String
   """Block Code"""
   blockCode: String
+  """The name of the user who created the record."""
+  blockCreatedBy: String
+  """Block Created Date"""
+  blockCreatedDate: DateTime
   """Block Description"""
   blockDescription: String
   """Block Dml Seq Number"""
@@ -1488,8 +1511,12 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   blockExchangeRate: Float
   """Block External Reference"""
   blockExternalReference: String
+  """Block External References List"""
+  blockExternalReferencesList: String
   """Block ID"""
   blockID: String
+  """Block Insert User"""
+  blockInsertUser: Float
   """Block Owner Code"""
   blockOwnerCode: String
   """Property this block belongs to."""
@@ -1498,6 +1525,12 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   blockStatus: String
   """Block Status Description"""
   blockStatusDescription: String
+  """Block Update User"""
+  blockUpdateUser: Float
+  """Block Updated By"""
+  blockUpdatedBy: String
+  """Block Updated Date"""
+  blockUpdatedDate: Date
   """Blocks External Reference"""
   blocksExternalReference: String
   """Bonus Check ID"""
@@ -1580,10 +1613,6 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   contactNameId: Float
   """Contact Profile ID"""
   contactProfileID: Float
-  """The name of the user who created the record."""
-  createdBy: String
-  """Created Date"""
-  createdDate: Date
   """Credit Card ID"""
   creditCardId: Float
   """Indicates if the reservation has opted-in for auto payment when credit limit overage is detected."""
@@ -1726,6 +1755,8 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   guaranteeCodePreCi: String
   """Guaranteecodeid"""
   guaranteecodeid: String
+  """Guest External References List"""
+  guestExternalReferencesList: String
   """Guest First Name"""
   guestFirstName: String
   """This is soundex of GUEST FIRST NAME - Phonotic sound."""
@@ -1754,8 +1785,6 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   inactiveDate: Date
   """Insert Action Instance ID"""
   insertActionInstanceId: Float
-  """Insert User"""
-  insertUser: Float
   """This is the Interface_id of the System which sent/Received Allotment"""
   interfaceID: String
   """Intermediary Y/N"""
@@ -1958,6 +1987,18 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   resInsertSourceType: String
   """Resv Contact ID"""
   reservationContactId: Float
+  """Reservation External References List"""
+  reservationExternalReferencesList: String
+  """Reservation Insert Date"""
+  reservationInsertDate: DateTime
+  """Reservation Insert Datetime"""
+  reservationInsertDatetime: DateTime
+  """Reservation Insert Time"""
+  reservationInsertTime: String
+  """Reservation Insert User"""
+  reservationInsertUser: Float
+  """Reservation Insert User Name"""
+  reservationInsertUserName: String
   """Reservation Name ID"""
   reservationNameID: Float
   """Reservation Status"""
@@ -1966,6 +2007,16 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   reservationType: String
   """The Description of the Guarantee code."""
   reservationTypeDescription: String
+  """Reservation Update Date"""
+  reservationUpdateDate: DateTime
+  """Reservation Update Datetime"""
+  reservationUpdateDatetime: DateTime
+  """Reservation Update Time"""
+  reservationUpdateTime: String
+  """Reservation Update User"""
+  reservationUpdateUser: Float
+  """Reservation Update User Name"""
+  reservationUpdateUserName: String
   """Reserve Inventory YN"""
   reserveInventoryYN: String
   """Property"""
@@ -2170,12 +2221,6 @@ type BookingReservationExtendedReservationUnifiedDetailsType {
   uDFC40: String
   """Universal Card ID used by interfaces for key encoding purposes."""
   uniCardId: String
-  """Update User"""
-  updateUser: Float
-  """Updated By"""
-  updatedBy: String
-  """Updated Date"""
-  updatedDate: Date
   """Upload Date"""
   uploadDate: Date
   """Incremental Upsell charges for the reservation date."""
@@ -7362,6 +7407,8 @@ type BookingReservationExtendedFinancialUnifiedDetailsType {
   guestAccountLedgerCredit: Float
   """Debit amount on the guest account"""
   guestAccountLedgerDebit: Float
+  """Guest Ext Ref List"""
+  guestExtRefList: String
   """In-House Credit"""
   inHouseCredit: Float
   """In-House Debit"""
@@ -7430,8 +7477,12 @@ type BookingReservationExtendedFinancialUnifiedDetailsType {
   packageTrxType: String
   """Passerby Name."""
   passerByName: String
+  """Payee Ext Ref List"""
+  payeeExtRefList: String
   """Name Id to which it should be routed."""
   payeeNameID: Float
+  """Payee Name Type"""
+  payeeNameType: String
   """Payee Resv Name ID"""
   payeeResvNameID: Float
   """Payment Surcharge Amount."""
