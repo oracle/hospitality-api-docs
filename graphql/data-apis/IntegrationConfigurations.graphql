@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA IntegrationConfigurations GraphQL API,
 # description : GraphQL API to cater for Exchange Configurations data including External Systems, External Databases, Business Events, Interface Setup, Interface Controls and Interface Mappings.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,79 +80,86 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - extsysresortdetailsEsCode
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - extsysresortdetailsResort 
+# Pair - [2] 
+# 		 - extsysresortdetailsCode 
+# 		 - extsysresortdetailsConsumerName 
+# 		 - extsysresortdetailsEsCode 
+# 		 - extsysresortdetailsExternalUri 
+# 		 - extsysresortdetailsJrnUpdateDttm 
 
 input IntegrationConfigurationsQueryArgumentsType {
   """Consumer Name"""
-  extsysresortdetailsConsumerName: StringInput
+  extsysresortdetailsConsumerName: StringInput                          @conditionalInputPair(pair: 2)
   """DSI"""
   extsysresortdetailsDsi: FloatInput
   """DSI"""
   extsysresortdetailsEsDsi: FloatInput
   """External System"""
-  extsysresortdetailsCode: StringInput
+  extsysresortdetailsEsCode: StringInput                                @conditionalInputPair(pair: 2)
   """External System"""
-  extsysresortdetailsEsCode: StringInput!                               @mandatoryInput
+  extsysresortdetailsCode: StringInput                                  @conditionalInputPair(pair: 2)
   """External URI"""
-  extsysresortdetailsExternalUri: StringInput
+  extsysresortdetailsExternalUri: StringInput                           @conditionalInputPair(pair: 2)
   """Inactive Date"""
   extsysresortdetailsInactiveDate: DateInput
   """JRN Update Date and Time"""
-  extsysresortdetailsJrnUpdateDttm: DateTimeInput
-  """JRN Update Date and Time"""
   extsysresortdetailsEsJrnUpdateDttm: DateTimeInput
+  """JRN Update Date and Time"""
+  extsysresortdetailsJrnUpdateDttm: DateTimeInput                       @conditionalInputPair(pair: 2)
   """Organization ID"""
   extsysresortdetailsOrganizationid: FloatInput
   """Organization ID"""
   extsysresortdetailsEsOrganizationid: FloatInput
   """Property"""
-  extsysresortdetailsResort: StringInput
+  extsysresortdetailsResort: StringInput                                @conditionalInputPair(pair: 1)
   """Chain Code"""
   interfacealldetailsDetailsMapChainCode: StringInput
   """Conversion Code"""
   interfacealldetailsDetailsConversionCode: StringInput
   """DSI"""
-  interfacealldetailsDetailsMapDsi: FloatInput
+  interfacealldetailsDetailsSuDsi: FloatInput
   """DSI"""
   interfacealldetailsDetailsDsi: FloatInput
   """DSI"""
-  interfacealldetailsDetailsSuDsi: FloatInput
+  interfacealldetailsDetailsMapDsi: FloatInput
   """External Property"""
   interfacealldetailsDetailsExternalResort: StringInput
   """External Value"""
   interfacealldetailsDetailsExtValue: StringInput
   """Interface Id"""
-  interfacealldetailsDetailsMapInterfaceId: StringInput
-  """Interface Id"""
   interfacealldetailsDetailsInterfaceId: StringInput
   """Interface Id"""
   interfacealldetailsDetailsSuInterfaceId: StringInput
+  """Interface Id"""
+  interfacealldetailsDetailsMapInterfaceId: StringInput
   """JRN Update Date and Time"""
-  interfacealldetailsDetailsMapJrnUpdateDttm: DateInput
+  interfacealldetailsDetailsSuJrnUpdateDttm: DateInput
   """JRN Update Date and Time"""
   interfacealldetailsDetailsJrnUpdateDttm: DateInput
   """JRN Update Date and Time"""
-  interfacealldetailsDetailsSuJrnUpdateDttm: DateInput
+  interfacealldetailsDetailsMapJrnUpdateDttm: DateInput
   """OPERA Property"""
   interfacealldetailsDetailsPmsResort: StringInput
   """OPERA Value"""
   interfacealldetailsDetailsPmsValue: StringInput
   """Organization ID"""
+  interfacealldetailsDetailsSuOrganizationid: FloatInput
+  """Organization ID"""
   interfacealldetailsDetailsMapOrganizationid: FloatInput
   """Organization ID"""
   interfacealldetailsDetailsOrganizationid: FloatInput
-  """Organization ID"""
-  interfacealldetailsDetailsSuOrganizationid: FloatInput
   """Parameter Name"""
   interfacealldetailsDetailsParameterName: StringInput
   """Property"""
-  interfacealldetailsDetailsResort: StringInput
-  """Property"""
   interfacealldetailsDetailsMapResort: StringInput
+  """Property"""
+  interfacealldetailsDetailsResort: StringInput
   """Action Type"""
   extdbbuseventDetailsActionType: StringInput
   """DSI"""
@@ -168,9 +175,9 @@ input IntegrationConfigurationsQueryArgumentsType {
   """External System"""
   extdbbuseventDetailsExtSystemCode: StringInput
   """JRN Update Date and Time"""
-  extdbbuseventDetailsJrnUpdateDttm: DateTimeInput
-  """JRN Update Date and Time"""
   extdbbuseventDetailsEdJrnUpdateDttm: DateTimeInput
+  """JRN Update Date and Time"""
+  extdbbuseventDetailsJrnUpdateDttm: DateTimeInput
   """Module"""
   extdbbuseventDetailsModule: StringInput
   """Organization ID"""
@@ -186,11 +193,11 @@ type IntegrationConfigurationsType {
   """External System Resort"""
   externalSystemProperties: IntegrationConfigurationsExternalSystemPropertiesType
   """Interface Setup Mapping and Parameters"""
-  interfaceMappings: IntegrationConfigurationsInterfaceMappingsType
+  interfaceSetup: IntegrationConfigurationsInterfaceSetupType
   """Interface Setup Mapping and Parameters"""
   interfaceParameters: IntegrationConfigurationsInterfaceParametersType
   """Interface Setup Mapping and Parameters"""
-  interfaceSetup: IntegrationConfigurationsInterfaceSetupType
+  interfaceMappings: IntegrationConfigurationsInterfaceMappingsType
   """External System Database Business Events"""
   businessEventConfiguration: IntegrationConfigurationsBusinessEventConfigurationType
   """External System Database Business Events"""
@@ -263,19 +270,21 @@ type IntegrationConfigurationsExternalSystemPropertiesType {
   """Status"""
   status: String
 }
-type IntegrationConfigurationsInterfaceMappingsType {
+type IntegrationConfigurationsInterfaceSetupType {
   """Chain Code"""
   chainCode: String
-  """Conversion Code"""
-  conversionCode: String
   """DSI"""
   dSI: Float
+  """Data Flow"""
+  dataFlow: String
   """Deleted Flag"""
   deletedFlag: String
-  """External To OPERA"""
-  externalToOPERA: String
-  """External Value"""
-  externalValue: String
+  """Delta Changes YN"""
+  deltaChangesYN: String
+  """Description"""
+  description: String
+  """External Property"""
+  externalProperty: String
   """Insert Date"""
   insertDate: Date
   """Interface Id"""
@@ -284,16 +293,12 @@ type IntegrationConfigurationsInterfaceMappingsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: Date
-  """OPERA To External"""
-  oPERAToExternal: String
-  """OPERA Value"""
-  oPERAValue: String
+  """OPERA Property"""
+  oPERAProperty: String
   """Organization ID"""
   organizationID: Float
   """Primary Key ID"""
   primaryKeyID: Float
-  """Property"""
-  property: String
   """RNA Insert Date"""
   rNAInsertDate: Date
   """RNA Update Date"""
@@ -339,21 +344,19 @@ type IntegrationConfigurationsInterfaceParametersType {
   """new view"""
   newView: String
 }
-type IntegrationConfigurationsInterfaceSetupType {
+type IntegrationConfigurationsInterfaceMappingsType {
   """Chain Code"""
   chainCode: String
+  """Conversion Code"""
+  conversionCode: String
   """DSI"""
   dSI: Float
-  """Data Flow"""
-  dataFlow: String
   """Deleted Flag"""
   deletedFlag: String
-  """Delta Changes YN"""
-  deltaChangesYN: String
-  """Description"""
-  description: String
-  """External Property"""
-  externalProperty: String
+  """External To OPERA"""
+  externalToOPERA: String
+  """External Value"""
+  externalValue: String
   """Insert Date"""
   insertDate: Date
   """Interface Id"""
@@ -362,12 +365,16 @@ type IntegrationConfigurationsInterfaceSetupType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: Date
-  """OPERA Property"""
-  oPERAProperty: String
+  """OPERA To External"""
+  oPERAToExternal: String
+  """OPERA Value"""
+  oPERAValue: String
   """Organization ID"""
   organizationID: Float
   """Primary Key ID"""
   primaryKeyID: Float
+  """Property"""
+  property: String
   """RNA Insert Date"""
   rNAInsertDate: Date
   """RNA Update Date"""

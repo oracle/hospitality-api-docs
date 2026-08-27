@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ProfilesContacts GraphQL API,
 # description : GraphQL API to cater for The Contacts subject area contains Room Night and Revenue statistics broken down between booked and stays reservations and can be summarized by Property, Stay Date, Business Segment and Owner.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,55 +80,74 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - contactDetailsChainCode
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - contactDetailsChainCode 
+# Pair - [2] 
+# 		 - contactDetailsActiveYn 
+# 		 - contactDetailsCompany 
+# 		 - contactDetailsCompanyGroupId 
+# 		 - contactDetailsCrsNameid 
+# 		 - contactDetailsDirectBillBatchType 
+# 		 - contactDetailsHistoryYn 
+# 		 - contactDetailsInactiveDate 
+# 		 - contactDetailsIndexName 
+# 		 - contactDetailsJrnupdatedttm 
+# 		 - contactDetailsLast 
+# 		 - contactDetailsNameCode 
+# 		 - contactDetailsNameId 
+# 		 - contactDetailsSfirst 
+# 		 - contactDetailsSname 
+# 		 - contactDetailsSrepCode 
+# 		 - contactDetailsSxfirstName 
+# 		 - contactDetailsSxname 
 
 input ProfilesContactsQueryArgumentsType {
   """Active Flag"""
-  contactDetailsActiveYn: StringInput
+  contactDetailsActiveYn: StringInput                                   @conditionalInputPair(pair: 2)
   """The unique identifier of the CRS"""
-  contactDetailsCrsNameid: FloatInput
+  contactDetailsCrsNameid: FloatInput                                   @conditionalInputPair(pair: 2)
   """Chain Code"""
-  contactDetailsChainCode: StringInput!                                 @mandatoryInput
+  contactDetailsChainCode: StringInput                                  @conditionalInputPair(pair: 1)
   """Client ID"""
-  contactDetailsNameCode: StringInput
+  contactDetailsNameCode: StringInput                                   @conditionalInputPair(pair: 2)
   """Company"""
-  contactDetailsCompany: StringInput
+  contactDetailsCompany: StringInput                                    @conditionalInputPair(pair: 2)
   """Linked internal ID for booker."""
-  contactDetailsCompanyGroupId: StringInput
+  contactDetailsCompanyGroupId: StringInput                             @conditionalInputPair(pair: 2)
   """Contact Profile ID"""
-  contactDetailsNameId: FloatInput
+  contactDetailsNameId: FloatInput                                      @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   contactDetailsDsi: FloatInput
   """Direct Bill Batch Type"""
-  contactDetailsDirectBillBatchType: StringInput
+  contactDetailsDirectBillBatchType: StringInput                        @conditionalInputPair(pair: 2)
   """History YN"""
-  contactDetailsHistoryYn: StringInput
+  contactDetailsHistoryYn: StringInput                                  @conditionalInputPair(pair: 2)
   """Inactive Date"""
-  contactDetailsInactiveDate: DateTimeInput
+  contactDetailsInactiveDate: DateTimeInput                             @conditionalInputPair(pair: 2)
   """Index Name"""
-  contactDetailsIndexName: StringInput
+  contactDetailsIndexName: StringInput                                  @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  contactDetailsJrnupdatedttm: DateTimeInput
+  contactDetailsJrnupdatedttm: DateTimeInput                            @conditionalInputPair(pair: 2)
   """Last Name"""
-  contactDetailsLast: StringInput
+  contactDetailsLast: StringInput                                       @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   contactDetailsOrganizationid: FloatInput
   """Resort for which Job is registered."""
   contactDetailsResortRegistered: StringInput
   """The Uppercase value of Last or Company."""
-  contactDetailsSname: StringInput
+  contactDetailsSname: StringInput                                      @conditionalInputPair(pair: 2)
   """Internal Indexed field for Searching by Extended Byte Name."""
-  contactDetailsSxname: StringInput
+  contactDetailsSxname: StringInput                                     @conditionalInputPair(pair: 2)
   """Uppercase value of First Name."""
-  contactDetailsSfirst: StringInput
+  contactDetailsSfirst: StringInput                                     @conditionalInputPair(pair: 2)
   """Srep Code"""
-  contactDetailsSrepCode: StringInput
+  contactDetailsSrepCode: StringInput                                   @conditionalInputPair(pair: 2)
   """Internal Indexed field for Searching by Extended Byte First Name."""
-  contactDetailsSxfirstName: StringInput
+  contactDetailsSxfirstName: StringInput                                @conditionalInputPair(pair: 2)
   """Update Date"""
   contactDetailsUpdateDate: DateTimeInput
   """The first line of street address."""
@@ -1976,6 +1995,10 @@ type ProfilesContactsProfileMembershipDetailsType {
   profileid: Float
   """Current membership ranking value for this profile possible values: 1-10."""
   ranking: Float
+  """Number of times a new member has been referred."""
+  referralCount: Float
+  """Name ID of member who referred."""
+  referredByMember: String
   """RnA Insertdate"""
   rnaInsertDate: DateTime
   """RnA Updatedate"""

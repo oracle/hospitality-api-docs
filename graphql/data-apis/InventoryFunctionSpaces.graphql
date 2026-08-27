@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA InventoryFunctionSpaces GraphQL API,
 # description : GraphQL API to cater for All Function Space Details and Configured Options Including Room Type, Occupancy, Function Type, Room Setup, Notes and Physical Dimensions.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,15 +80,35 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - functionspaceDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - functionspaceDetailsResort 
+# 		 - functionspacedetailsChainCode 
+# Pair - [2] 
+# 		 - functionspaceDetailsHkSectionCode 
+# 		 - functionspaceDetailsOrderBy 
+# 		 - functionspaceDetailsOrderBy2 
+# 		 - functionspaceDetailsOrderBy3 
+# 		 - functionspaceDetailsRoom 
+# 		 - functionspaceDetailsRoomCategory 
+# 		 - functionspaceDetailsRoomClass 
 
 input InventoryFunctionSpacesQueryArgumentsType {
+  """CHAIN_CODE"""
+  functionspacedetailsChainCode: StringInput                            @conditionalInputPair(pair: 1)
+  """Custom Order 1"""
+  functionspaceDetailsOrderBy: FloatInput                               @conditionalInputPair(pair: 2)
+  """Display sequence 2"""
+  functionspaceDetailsOrderBy2: FloatInput                              @conditionalInputPair(pair: 2)
+  """Display sequence 3"""
+  functionspaceDetailsOrderBy3: FloatInput                              @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   functionspaceDetailsDsi: FloatInput
+  """Indicates the section to which employee belongs."""
+  functionspaceDetailsHkSectionCode: StringInput                        @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
   functionspaceDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
@@ -96,9 +116,13 @@ input InventoryFunctionSpacesQueryArgumentsType {
   """Internal ID to uniquely identify the Organization"""
   functionspaceDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  functionspaceDetailsResort: StringInput!                              @mandatoryInput
+  functionspaceDetailsResort: StringInput                               @conditionalInputPair(pair: 1)
   """Room"""
-  functionspaceDetailsRoom: StringInput
+  functionspaceDetailsRoom: StringInput                                 @conditionalInputPair(pair: 2)
+  """Room Category"""
+  functionspaceDetailsRoomCategory: StringInput                         @conditionalInputPair(pair: 2)
+  """Room Class"""
+  functionspaceDetailsRoomClass: StringInput                            @conditionalInputPair(pair: 2)
   """Roomid"""
   functionspaceDetailsRoomid: StringInput
   """Roompmsref"""
@@ -672,6 +696,8 @@ type InventoryFunctionSpacesType {
   inventoryFunctionSpacesRecordCount: Int
 }
 type InventoryFunctionSpacesFunctionSpaceDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Minutes occupied that define the room as 100% utilized. Maximum is 1440 minutes."""
   _100PercentOccupancy: Float
   """Accessible YN"""

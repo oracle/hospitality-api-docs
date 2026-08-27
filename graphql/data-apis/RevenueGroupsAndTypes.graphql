@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA RevenueGroupsAndTypes GraphQL API,
 # description : GraphQL API to cater for Revenue group and type details.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,33 +80,42 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - revenuegrptypesDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - revenuegrptypesDetailsResort 
+# Pair - [2] 
+# 		 - revenuegrptypesDetailsJrnupdatedttm 
+# 		 - revenuegrptypesDetailsLocationid 
+# 		 - revenuegrptypesDetailsRevType 
+# 		 - revenuegrptypesDetailsRevenuegroupid 
+# 		 - revenuegrptypesDetailsRevenuegrouppmsref 
+# 		 - revenuegrptypesDetailsRevenuetypeid 
+# 		 - revenuegrptypesDetailsRevenuetypepmsref 
 
 input RevenueGroupsAndTypesQueryArgumentsType {
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   revenuegrptypesDetailsDsi: FloatInput
   """JRN Update Date and Time"""
-  revenuegrptypesDetailsJrnupdatedttm: DateTimeInput
+  revenuegrptypesDetailsJrnupdatedttm: DateTimeInput                    @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Property"""
-  revenuegrptypesDetailsLocationid: StringInput
+  revenuegrptypesDetailsLocationid: StringInput                         @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   revenuegrptypesDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  revenuegrptypesDetailsResort: StringInput!                            @mandatoryInput
+  revenuegrptypesDetailsResort: StringInput                             @conditionalInputPair(pair: 1)
   """Revenue Type"""
-  revenuegrptypesDetailsRevType: StringInput
+  revenuegrptypesDetailsRevType: StringInput                            @conditionalInputPair(pair: 2)
   """Revenue Group"""
-  revenuegrptypesDetailsRevenuegrouppmsref: StringInput
+  revenuegrptypesDetailsRevenuegrouppmsref: StringInput                 @conditionalInputPair(pair: 2)
   """Revenue Type"""
-  revenuegrptypesDetailsRevenuetypepmsref: StringInput
+  revenuegrptypesDetailsRevenuetypepmsref: StringInput                  @conditionalInputPair(pair: 2)
   """Revenuegroupid"""
-  revenuegrptypesDetailsRevenuegroupid: StringInput
+  revenuegrptypesDetailsRevenuegroupid: StringInput                     @conditionalInputPair(pair: 2)
   """Revenuetypeid"""
-  revenuegrptypesDetailsRevenuetypeid: StringInput
+  revenuegrptypesDetailsRevenuetypeid: StringInput                      @conditionalInputPair(pair: 2)
   """The property that the record belongs to"""
   resortDetailsResort: StringInput
   """Number format of AR account no."""

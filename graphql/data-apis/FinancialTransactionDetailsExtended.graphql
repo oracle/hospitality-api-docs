@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA FinancialTransactionDetailsExtended GraphQL API,
 # description : GraphQL API to cater for Provide financial transaction information with extended or additional details such as routing, cashiers, currency, etc.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -216,10 +216,18 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
   financialunifiedDetailsFtTrxNoAdjust: FloatInput                      @conditionalInputPair(pair: 2)
   """Transaction No Header"""
   financialunifiedDetailsFtTrxNoHeader: FloatInput                      @conditionalInputPair(pair: 2)
+  """CHAIN_CODE"""
+  transactioncodedetailsChainCode: StringInput
+  """Ar Name ID"""
+  transcodeDetailsArNameId: FloatInput
+  """Adj Trx Code"""
+  transcodeDetailsAdjTrxCode: StringInput
   """Central Xchange Date"""
   transcodeDetailsCXchangeDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   transcodeDetailsDsi: FloatInput
+  """Group"""
+  transcodeDetailsTcGroup: StringInput
   """JRN Update Date and Time"""
   transcodeDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
@@ -228,6 +236,12 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
   transcodeDetailsOrganizationid: FloatInput
   """Property"""
   transcodeDetailsResort: StringInput
+  """Trx Action ID"""
+  transcodeDetailsTrxActionId: FloatInput
+  """Transaction Code Sub-group"""
+  transcodeDetailsTcSubgroup: StringInput
+  """Transaction Code Type"""
+  transcodeDetailsTrxCodeType: StringInput
   """Transcodeid"""
   transcodeDetailsTranscodeid: StringInput
   """Trx Code"""
@@ -900,6 +914,8 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
   foliotaxDetailsOrganizationid: FloatInput
   """Payee Name used for signature generation."""
   foliotaxDetailsPayeeName: StringInput
+  """Payee Name ID"""
+  foliotaxDetailsPayeeNameId: FloatInput
   """Postit Sequence Number"""
   foliotaxDetailsPostitNo: FloatInput
   """Code to uniquely identify the Property"""
@@ -910,6 +926,8 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
   foliotaxDetailsRnaUpdatedate: DateTimeInput
   """Sequence No"""
   foliotaxDetailsSeqNo: FloatInput
+  """CHAIN_CODE"""
+  accountdetailsChainCode: StringInput
   """Account Code"""
   accountDetailsAccountCode: FloatInput
   """Account Number"""
@@ -1480,20 +1498,34 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
   resortDetailsZeroInvPurDays: FloatInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   roomDetailsDsi: FloatInput
+  """Indicates the section to which employee belongs."""
+  roomDetailsHkSectionCode: StringInput
   """JRN Update Date and Time"""
   roomDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
   roomDetailsLocationid: StringInput
+  """Display sequence 2"""
+  roomDetailsOrderBy2: FloatInput
+  """Display sequence 3"""
+  roomDetailsOrderBy3: FloatInput
   """Internal ID to uniquely identify the Organization"""
   roomDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
   roomDetailsResort: StringInput
   """Room"""
   roomDetailsRoompmsref: StringInput
+  """Room Class"""
+  roomDetailsRoomClass: StringInput
+  """Room Condition"""
+  roomDetailsAssignReason: StringInput
   """Room Number"""
   roomDetailsRoom: StringInput
+  """Room Type"""
+  roomDetailsRoomCategory: StringInput
   """Roomid"""
   roomDetailsRoomid: StringInput
+  """Sequence"""
+  roomDetailsOrderBy: FloatInput
 }
 type Query {
   """Provide financial transaction information with extended or additional details such as routing cashiers currency etc."""
@@ -1941,6 +1973,8 @@ type FinancialTransactionDetailsExtendedFinancialUnifiedDetailsType {
   vatAmount: Float
 }
 type FinancialTransactionDetailsExtendedTransactionCodeDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """AR Ledger Payments YN"""
   aRLedgerPaymentsYN: String
   """Ar Name ID"""
@@ -3029,6 +3063,8 @@ type FinancialTransactionDetailsExtendedFromReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -3079,6 +3115,8 @@ type FinancialTransactionDetailsExtendedFromReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""
@@ -6185,6 +6223,8 @@ type FinancialTransactionDetailsExtendedToReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -6235,6 +6275,8 @@ type FinancialTransactionDetailsExtendedToReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""
@@ -7627,6 +7669,10 @@ type FinancialTransactionDetailsExtendedReservationUnifiedDetailsType {
   uDFC39: String
   """UDFC40"""
   uDFC40: String
+  """Reservation user defined date 01"""
+  uDFD01: Date
+  """Reservation user defined date 02"""
+  uDFD02: Date
   """Universal Card ID used by interfaces for key encoding purposes."""
   uniCardId: String
   """Upload Date"""
@@ -9099,6 +9145,8 @@ type FinancialTransactionDetailsExtendedFolioTaxDetailsType {
   xtax9Amt: Float
 }
 type FinancialTransactionDetailsExtendedAccountDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Account Code"""
   accountCode: Float
   """Indicates if a Credit Limit amount will be required "Y" will take precedence over the credit limit amount on Profile level."""

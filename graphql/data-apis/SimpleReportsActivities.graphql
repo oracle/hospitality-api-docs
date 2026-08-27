@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA SimpleReportsActivities GraphQL API,
 # description : GraphQL API to cater for The Simple Report Activities Subject Area simplifies creating and building adhoc reports, including the ability to create new reports.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,51 +80,74 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - sractivitiesDetailsEndDate
-# 		 - sractivitiesDetailsResort
-# 		 - sractivitiesDetailsStartDate
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - sractivitiesDetailsResort 
+# 		 - sractivitiesdetailsChainCode 
+# Pair - [2] 
+# 		 - sractivitiesDetailsActId 
+# 		 - sractivitiesDetailsAssignedTo 
+# 		 - sractivitiesDetailsCategoryCode 
+# 		 - sractivitiesDetailsCompletedDate 
+# 		 - sractivitiesDetailsCreatedDate 
+# 		 - sractivitiesDetailsEndDate 
+# 		 - sractivitiesDetailsEstUotCode 
+# 		 - sractivitiesDetailsJrnUpdateDateandTime 
+# 		 - sractivitiesDetailsLocationCode 
+# 		 - sractivitiesDetailsParentActId 
+# 		 - sractivitiesDetailsPlantItemCode 
+# 		 - sractivitiesDetailsPriorityCode 
+# 		 - sractivitiesDetailsStartDate 
+# 		 - sractivitiesDetailsStatusCode 
+# 		 - sractivitiesDetailsSurveyId 
+# 		 - sractivitiesDetailsTaskCode 
+# 		 - sractivitiesDetailsTaskitemNumber 
+# 		 - sractivitiesDetailsTypeCode 
 
 input SimpleReportsActivitiesQueryArgumentsType {
+  """CHAIN_CODE"""
+  sractivitiesdetailsChainCode: StringInput                             @conditionalInputPair(pair: 1)
   """Activity ID"""
-  sractivitiesDetailsActId: FloatInput
+  sractivitiesDetailsActId: FloatInput                                  @conditionalInputPair(pair: 2)
   """Assigned To"""
-  sractivitiesDetailsAssignedTo: FloatInput
+  sractivitiesDetailsAssignedTo: FloatInput                             @conditionalInputPair(pair: 2)
   """Category Code"""
-  sractivitiesDetailsCategoryCode: StringInput
+  sractivitiesDetailsCategoryCode: StringInput                          @conditionalInputPair(pair: 2)
   """Completed Date"""
-  sractivitiesDetailsCompletedDate: DateInput
+  sractivitiesDetailsCompletedDate: DateInput                           @conditionalInputPair(pair: 2)
   """Created Date"""
-  sractivitiesDetailsCreatedDate: DateInput
+  sractivitiesDetailsCreatedDate: DateInput                             @conditionalInputPair(pair: 2)
   """End Date"""
-  sractivitiesDetailsEndDate: DateInput!                                @mandatoryInput
+  sractivitiesDetailsEndDate: DateInput                                 @conditionalInputPair(pair: 2)
   """Est Uot Code"""
-  sractivitiesDetailsEstUotCode: StringInput
+  sractivitiesDetailsEstUotCode: StringInput                            @conditionalInputPair(pair: 2)
+  """JRN Update Date and Time"""
+  sractivitiesDetailsJrnUpdateDateandTime: DateTimeInput                @conditionalInputPair(pair: 2)
   """Location Code"""
-  sractivitiesDetailsLocationCode: StringInput
+  sractivitiesDetailsLocationCode: StringInput                          @conditionalInputPair(pair: 2)
   """Parent Act ID"""
-  sractivitiesDetailsParentActId: FloatInput
+  sractivitiesDetailsParentActId: FloatInput                            @conditionalInputPair(pair: 2)
   """Plant Item Code"""
-  sractivitiesDetailsPlantItemCode: StringInput
+  sractivitiesDetailsPlantItemCode: StringInput                         @conditionalInputPair(pair: 2)
   """Priority Code"""
-  sractivitiesDetailsPriorityCode: StringInput
+  sractivitiesDetailsPriorityCode: StringInput                          @conditionalInputPair(pair: 2)
   """Code to uniquely identify the Property"""
-  sractivitiesDetailsResort: StringInput!                               @mandatoryInput
+  sractivitiesDetailsResort: StringInput                                @conditionalInputPair(pair: 1)
   """Start Date"""
-  sractivitiesDetailsStartDate: DateInput!                              @mandatoryInput
+  sractivitiesDetailsStartDate: DateInput                               @conditionalInputPair(pair: 2)
   """Status Code"""
-  sractivitiesDetailsStatusCode: StringInput
+  sractivitiesDetailsStatusCode: StringInput                            @conditionalInputPair(pair: 2)
   """Linked Survey ID"""
-  sractivitiesDetailsSurveyId: FloatInput
+  sractivitiesDetailsSurveyId: FloatInput                               @conditionalInputPair(pair: 2)
   """Task Code"""
-  sractivitiesDetailsTaskCode: FloatInput
+  sractivitiesDetailsTaskCode: FloatInput                               @conditionalInputPair(pair: 2)
   """Taskitem Number"""
-  sractivitiesDetailsTaskitemNumber: FloatInput
+  sractivitiesDetailsTaskitemNumber: FloatInput                         @conditionalInputPair(pair: 2)
   """Type Code"""
-  sractivitiesDetailsTypeCode: StringInput
+  sractivitiesDetailsTypeCode: StringInput                              @conditionalInputPair(pair: 2)
   """The property that the record belongs to"""
   resortDetailsResort: StringInput
   """Number format of AR account no."""
@@ -660,6 +683,8 @@ type SimpleReportsActivitiesType {
   simpleReportsActivitiesRecordCount: Int
 }
 type SimpleReportsActivitiesSrActivitiesDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Act Class"""
   actClass: String
   """Activity ID"""

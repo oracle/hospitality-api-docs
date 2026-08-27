@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ProfilesLoyaltyClaims GraphQL API,
 # description : GraphQL API to cater for Detailed information on the Loyalty Program providing details on the Membership, Profiles, Stay Information and the ability to track Claims.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,18 +80,34 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - membershipclaimDetailsClaimDate
-# 		 - membershipclaimDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - membershipclaimDetailsChainCode 
+# 		 - membershipclaimDetailsResort 
+# Pair - [2] 
+# 		 - membershipclaimDetailsApproveReject 
+# 		 - membershipclaimDetailsClaimDate 
+# 		 - membershipclaimDetailsClaimOwner 
+# 		 - membershipclaimDetailsClaimSource 
+# 		 - membershipclaimDetailsClaimStatus 
+# 		 - membershipclaimDetailsClaimType 
+# 		 - membershipclaimDetailsCrsBookNo 
+# 		 - membershipclaimDetailsInsertUser 
+# 		 - membershipclaimDetailsJrnupdatedttm 
+# 		 - membershipclaimDetailsMembershipCardNo 
+# 		 - membershipclaimDetailsMembershipClaimId 
+# 		 - membershipclaimDetailsNameId 
+# 		 - membershipclaimDetailsPmsResvNo 
+# 		 - membershipclaimDetailsReplyByDate 
 
 input ProfilesLoyaltyClaimsQueryArgumentsType {
   """Approval Status"""
   membershipclaimDetailsApprovalStatus: StringInput
   """Approve/Reject/None"""
-  membershipclaimDetailsApproveReject: StringInput
+  membershipclaimDetailsApproveReject: StringInput                      @conditionalInputPair(pair: 2)
   """Arrival Date"""
   membershipclaimDetailsArrivalDate: DateInput
   """Central Xchange Date"""
@@ -101,47 +117,51 @@ input ProfilesLoyaltyClaimsQueryArgumentsType {
   """name of the person who called."""
   membershipclaimDetailsCallerName: StringInput
   """Chain Code"""
-  membershipclaimDetailsChainCode: StringInput
+  membershipclaimDetailsChainCode: StringInput                          @conditionalInputPair(pair: 1)
   """Channel"""
   membershipclaimDetailsChannel: StringInput
   """Claim Adj Limit Code"""
   membershipclaimDetailsClaimAdjLimitCode: StringInput
   """Date claim was posted in the database."""
-  membershipclaimDetailsClaimDate: DateInput!                           @mandatoryInput
+  membershipclaimDetailsClaimDate: DateInput                            @conditionalInputPair(pair: 2)
   """Primary key."""
-  membershipclaimDetailsMembershipClaimId: FloatInput
+  membershipclaimDetailsMembershipClaimId: FloatInput                   @conditionalInputPair(pair: 2)
   """User defined origin of claim."""
   membershipclaimDetailsClaimOrigin: StringInput
+  """Claim Owner"""
+  membershipclaimDetailsClaimOwner: FloatInput                          @conditionalInputPair(pair: 2)
   """Source of the Claim"""
-  membershipclaimDetailsClaimSource: StringInput
+  membershipclaimDetailsClaimSource: StringInput                        @conditionalInputPair(pair: 2)
   """Status of the claim."""
-  membershipclaimDetailsClaimStatus: StringInput
+  membershipclaimDetailsClaimStatus: StringInput                        @conditionalInputPair(pair: 2)
   """User Defined Claim Types"""
-  membershipclaimDetailsClaimType: StringInput
+  membershipclaimDetailsClaimType: StringInput                          @conditionalInputPair(pair: 2)
   """Date and time cashier was closed."""
   membershipclaimDetailsCloseDate: DateInput
   """Comments"""
   membershipclaimDetailsComments: StringInput
   """Confirmation Number"""
-  membershipclaimDetailsPmsResvNo: StringInput
+  membershipclaimDetailsPmsResvNo: StringInput                          @conditionalInputPair(pair: 2)
   """Deleted Flag"""
   membershipclaimDetailsDeletedFlag: StringInput
   """Departure Date"""
   membershipclaimDetailsDepartureDate: DateInput
   """External Reference Number"""
-  membershipclaimDetailsCrsBookNo: StringInput
+  membershipclaimDetailsCrsBookNo: StringInput                          @conditionalInputPair(pair: 2)
   """Insert Date"""
   membershipclaimDetailsInsertDate: DateTimeInput
+  """Insert User"""
+  membershipclaimDetailsInsertUser: FloatInput                          @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  membershipclaimDetailsJrnupdatedttm: DateTimeInput
+  membershipclaimDetailsJrnupdatedttm: DateTimeInput                    @conditionalInputPair(pair: 2)
   """Market Code"""
   membershipclaimDetailsMarketCode: StringInput
   """Membership Claim Property"""
-  membershipclaimDetailsResort: StringInput!                            @mandatoryInput
+  membershipclaimDetailsResort: StringInput                             @conditionalInputPair(pair: 1)
   """Membership ID"""
   membershipclaimDetailsMembershipId: FloatInput
   """Membership Number"""
-  membershipclaimDetailsMembershipCardNo: StringInput
+  membershipclaimDetailsMembershipCardNo: StringInput                   @conditionalInputPair(pair: 2)
   """Membership Trx ID"""
   membershipclaimDetailsMembershipTrxId: FloatInput
   """Membership Type"""
@@ -149,7 +169,7 @@ input ProfilesLoyaltyClaimsQueryArgumentsType {
   """Name"""
   membershipclaimDetailsName: StringInput
   """Name ID"""
-  membershipclaimDetailsNameId: FloatInput
+  membershipclaimDetailsNameId: FloatInput                              @conditionalInputPair(pair: 2)
   """Origin of Booking"""
   membershipclaimDetailsOriginOfBooking: StringInput
   """Owner"""
@@ -161,7 +181,7 @@ input ProfilesLoyaltyClaimsQueryArgumentsType {
   """Record Type"""
   membershipclaimDetailsRecordType: StringInput
   """Date when the user gets a response to his/her claim."""
-  membershipclaimDetailsReplyByDate: DateInput
+  membershipclaimDetailsReplyByDate: DateInput                          @conditionalInputPair(pair: 2)
   """Reservation Status"""
   membershipclaimDetailsResvStatus: StringInput
   """Room"""
@@ -188,6 +208,8 @@ input ProfilesLoyaltyClaimsQueryArgumentsType {
   ratecodeDetailsSellSequence: FloatInput
   """End Date"""
   ratecodeDetailsEndBookingDate: DateInput
+  """Is this rate code available for GDS"""
+  ratecodeDetailsGdsAllowedYn: StringInput
   """Group Code"""
   ratecodeDetailsGroupCode: StringInput
   """JRN Update Date and Time"""
@@ -280,20 +302,34 @@ input ProfilesLoyaltyClaimsQueryArgumentsType {
   reservationpromotionsDetailsResvNameId: FloatInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   roomDetailsDsi: FloatInput
+  """Indicates the section to which employee belongs."""
+  roomDetailsHkSectionCode: StringInput
   """JRN Update Date and Time"""
   roomDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
   roomDetailsLocationid: StringInput
+  """Display sequence 2"""
+  roomDetailsOrderBy2: FloatInput
+  """Display sequence 3"""
+  roomDetailsOrderBy3: FloatInput
   """Internal ID to uniquely identify the Organization"""
   roomDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
   roomDetailsResort: StringInput
   """Room"""
   roomDetailsRoompmsref: StringInput
+  """Room Class"""
+  roomDetailsRoomClass: StringInput
+  """Room Condition"""
+  roomDetailsAssignReason: StringInput
   """Room Number"""
   roomDetailsRoom: StringInput
+  """Room Type"""
+  roomDetailsRoomCategory: StringInput
   """Roomid"""
   roomDetailsRoomid: StringInput
+  """Sequence"""
+  roomDetailsOrderBy: FloatInput
   """JRN Update Date and Time"""
   membershipclaimshistoryDetailsJrnupdatedttm: DateTimeInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -681,6 +717,8 @@ type ProfilesLoyaltyClaimsRateCodeDetailsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: DateTime
+  """Local rate code associated with offshore rate code."""
+  localRateCode: String
   """Internal ID to uniquely identify the Property"""
   locationID: String
   """Long Info"""
@@ -725,6 +763,8 @@ type ProfilesLoyaltyClaimsRateCodeDetailsType {
   occupancyBasedYn: String
   """Indicates the occupancy level for hurdle evaluation."""
   occupancyLevel: Float
+  """Indicates if rate code is an offshore rate."""
+  offshoreRateYN: String
   """The operator type to use during the calculation of base rates. (ADD_TO SUBTRACT)"""
   operatorType: String
   """Order By"""
@@ -755,6 +795,10 @@ type ProfilesLoyaltyClaimsRateCodeDetailsType {
   packages: String
   """Indicates whether the rate code is pending for approval or not"""
   pendingApprovalYn: String
+  """Allow users to use points to get discount on rate codes."""
+  pointsDiscountYN: String
+  """Posting Interval."""
+  postingInterval: String
   """Posting Rhythm"""
   postingRhythm: String
   """Number of nights for posting rhythm."""

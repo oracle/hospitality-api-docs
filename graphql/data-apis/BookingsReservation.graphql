@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA BookingsReservation GraphQL API,
 # description : GraphQL API to cater for Detailed information on reservations booked in the past and future, including market code, rate code, reservation status, guest information and associated room and revenue details.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -594,6 +594,8 @@ input BookingsReservationQueryArgumentsType {
   ratecodeDetailsSellSequence: FloatInput
   """End Date"""
   ratecodeDetailsEndBookingDate: DateInput
+  """Is this rate code available for GDS"""
+  ratecodeDetailsGdsAllowedYn: StringInput
   """Group Code"""
   ratecodeDetailsGroupCode: StringInput
   """JRN Update Date and Time"""
@@ -2715,6 +2717,8 @@ type BookingsReservationReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -2765,6 +2769,8 @@ type BookingsReservationReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""
@@ -7023,6 +7029,8 @@ type BookingsReservationRateCodeDetailsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: DateTime
+  """Local rate code associated with offshore rate code."""
+  localRateCode: String
   """Internal ID to uniquely identify the Property"""
   locationID: String
   """Long Info"""
@@ -7067,6 +7075,8 @@ type BookingsReservationRateCodeDetailsType {
   occupancyBasedYn: String
   """Indicates the occupancy level for hurdle evaluation."""
   occupancyLevel: Float
+  """Indicates if rate code is an offshore rate."""
+  offshoreRateYN: String
   """The operator type to use during the calculation of base rates. (ADD_TO SUBTRACT)"""
   operatorType: String
   """Order By"""
@@ -7097,6 +7107,10 @@ type BookingsReservationRateCodeDetailsType {
   packages: String
   """Indicates whether the rate code is pending for approval or not"""
   pendingApprovalYn: String
+  """Allow users to use points to get discount on rate codes."""
+  pointsDiscountYN: String
+  """Posting Interval."""
+  postingInterval: String
   """Posting Rhythm"""
   postingRhythm: String
   """Number of nights for posting rhythm."""
@@ -7819,6 +7833,10 @@ type BookingsReservationReservationDetailDetailsType {
   externalReference: String
   """Extra Beds"""
   extraBeds: Float
+  """FB Revenue"""
+  fBRevenue: Float
+  """FB Revenue Tax"""
+  fBRevenueTax: Float
   """Fixed Rate YN"""
   fixedRateYN: String
   """Not used."""
@@ -7853,10 +7871,22 @@ type BookingsReservationReservationDetailDetailsType {
   membershipPoints: Float
   """Not used."""
   netRoomAmt: Float
+  """Offshore Rate Amount"""
+  offshoreRateAmount: Float
+  """Offshore Rate Code"""
+  offshoreRateCode: String
+  """Offshore Rate Currency"""
+  offshoreRateCurrency: String
   """Internal ID to uniquely identify the Organization"""
   organizationID: Float
+  """Channel Code"""
+  origin: String
   """Not used."""
   originalBaseRate: Float
+  """Other Revenue"""
+  otherRevenue: Float
+  """Other Revenue Tax"""
+  otherTax: Float
   """Not used."""
   packageAmt: Float
   """Physical Quantity"""
@@ -7867,10 +7897,14 @@ type BookingsReservationReservationDetailDetailsType {
   pkgTax: Float
   """Points"""
   points: Float
+  """Posting Interval"""
+  postingInterval: String
   """Internal Primary Key ID to uniquely identify the row"""
   primaryKeyID: Float
   """Code to uniquely identify the Property"""
   property: String
+  """Purpose of Stay"""
+  purposeOfStay: String
   """Quantity"""
   quantity: Float
   """Rate"""
@@ -7903,6 +7937,10 @@ type BookingsReservationReservationDetailDetailsType {
   roomCost: Float
   """Room Instructions"""
   roomInstructions: String
+  """Room Revenue"""
+  roomRevenue: Float
+  """Room Revenue Tax"""
+  roomRevenueTax: Float
   """Room Tax"""
   roomTax: Float
   """Room Type"""
@@ -8207,6 +8245,8 @@ type BookingsReservationReservationProductsDetailsType {
   organizationID: Float
   """Override Fixed Rate Y/N"""
   overrideFixedRateYn: String
+  """The package category linked to this package."""
+  packageCategory: String
   """Package Code"""
   packageCode: String
   """Package Description"""
@@ -9261,6 +9301,8 @@ type BookingsReservationReservationPaymentMethodsDetailsType {
   centralPaymentMethodType: String
   """Central Payment Method Type Description"""
   centralPaymentMethodTypeDescription: String
+  """Indicates whether the billing window is confidential or not."""
+  confidentialFolioYN: String
   """Credit Card Authorization Date"""
   creditCardAuthorizationDate: DateTime
   """Credit Card ID"""
@@ -11097,6 +11139,8 @@ type BookingsReservationLinkedReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -11147,6 +11191,8 @@ type BookingsReservationLinkedReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: Date
   """User id who reviewed the record."""
@@ -12435,6 +12481,8 @@ type BookingsReservationSharedReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -12485,6 +12533,8 @@ type BookingsReservationSharedReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: Date
   """User id who reviewed the record."""

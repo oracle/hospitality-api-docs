@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ConfigurationChain GraphQL API,
 # description : GraphQL API to cater for The Chain Configuration Subject Area contains configuration/setting attributes from components such as Enterprise Administration, Financial Administration, Booking Administration and Client Relations Administration in OPERA.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,19 +80,22 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - chainDetailsChainCode
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - chainDetailsChainCode 
+# Pair - [2] 
+# 		 - chainDetailsJrnupdatedttm 
 
 input ConfigurationChainQueryArgumentsType {
   """Chain"""
-  chainDetailsChainCode: StringInput!                                   @mandatoryInput
+  chainDetailsChainCode: StringInput                                    @conditionalInputPair(pair: 1)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   chainDetailsDsi: FloatInput
   """JRN Update Date and Time"""
-  chainDetailsJrnupdatedttm: DateTimeInput
+  chainDetailsJrnupdatedttm: DateTimeInput                              @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   chainDetailsOrganizationid: FloatInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -964,6 +967,8 @@ type ConfigurationChainMembershipTypeDetailsType {
   randomGenerationYN: String
   """Rank"""
   rank: Float
+  """Number of days from join date of new member till when referral can be added."""
+  referralPeriod: Float
   """Requalify on Upgrade YN"""
   requalifyOnUpgradeYN: String
   """Required on Stay Period YN"""

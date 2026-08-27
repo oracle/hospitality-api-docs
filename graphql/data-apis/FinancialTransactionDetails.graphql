@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA FinancialTransactionDetails GraphQL API,
 # description : GraphQL API to cater for Detailed information on all posted transactions including net and gross amounts, currency, calendar and financial period, market and rate code.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -326,6 +326,12 @@ input FinancialTransactionDetailsQueryArgumentsType {
   eventpostingDetailsPostedBy: StringInput
   """Revenue Type"""
   eventpostingDetailsRevenueType: StringInput
+  """Transaction ID for Service Charge included Revenue."""
+  eventpostingDetailsSvcTrxNoExtra: FloatInput
+  """Transaction ID for Service Charge extra Revenue."""
+  eventpostingDetailsSvcTrxNoIncl: FloatInput
+  """Transaction No Extra"""
+  eventpostingDetailsTrxNoExtra: FloatInput
   """Accounting Year."""
   resortbudgetforecastDetailsAccountingYear: FloatInput
   """Budget Code"""
@@ -898,6 +904,8 @@ input FinancialTransactionDetailsQueryArgumentsType {
   resortDetailsWeekendDays: StringInput
   """Internal"""
   resortDetailsZeroInvPurDays: FloatInput
+  """CHAIN_CODE"""
+  accountdetailsChainCode: StringInput
   """Account Code"""
   accountDetailsAccountCode: FloatInput
   """Account Number"""
@@ -1110,6 +1118,8 @@ input FinancialTransactionDetailsQueryArgumentsType {
   foliotaxDetailsOrganizationid: FloatInput
   """Payee Name used for signature generation."""
   foliotaxDetailsPayeeName: StringInput
+  """Payee Name ID"""
+  foliotaxDetailsPayeeNameId: FloatInput
   """Postit Sequence Number"""
   foliotaxDetailsPostitNo: FloatInput
   """Code to uniquely identify the Property"""
@@ -1212,6 +1222,8 @@ input FinancialTransactionDetailsQueryArgumentsType {
   ratecodeDetailsSellSequence: FloatInput
   """End Date"""
   ratecodeDetailsEndBookingDate: DateInput
+  """Is this rate code available for GDS"""
+  ratecodeDetailsGdsAllowedYn: StringInput
   """Group Code"""
   ratecodeDetailsGroupCode: StringInput
   """JRN Update Date and Time"""
@@ -1440,20 +1452,34 @@ input FinancialTransactionDetailsQueryArgumentsType {
   revenuepackagesDetailsRnaInsertdate: DateTimeInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   roomDetailsDsi: FloatInput
+  """Indicates the section to which employee belongs."""
+  roomDetailsHkSectionCode: StringInput
   """JRN Update Date and Time"""
   roomDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
   roomDetailsLocationid: StringInput
+  """Display sequence 2"""
+  roomDetailsOrderBy2: FloatInput
+  """Display sequence 3"""
+  roomDetailsOrderBy3: FloatInput
   """Internal ID to uniquely identify the Organization"""
   roomDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
   roomDetailsResort: StringInput
   """Room"""
   roomDetailsRoompmsref: StringInput
+  """Room Class"""
+  roomDetailsRoomClass: StringInput
+  """Room Condition"""
+  roomDetailsAssignReason: StringInput
   """Room Number"""
   roomDetailsRoom: StringInput
+  """Room Type"""
+  roomDetailsRoomCategory: StringInput
   """Roomid"""
   roomDetailsRoomid: StringInput
+  """Sequence"""
+  roomDetailsOrderBy: FloatInput
   """Authemployeeid"""
   routinginstructionDetailsAuthemployeeid: FloatInput
   """Authorizer ID"""
@@ -1506,10 +1532,18 @@ input FinancialTransactionDetailsQueryArgumentsType {
   routinginstructionDetailsTransgroupid: StringInput
   """Transsubgroupid"""
   routinginstructionDetailsTranssubgroupid: StringInput
+  """CHAIN_CODE"""
+  transactioncodedetailsChainCode: StringInput
+  """Ar Name ID"""
+  transcodeDetailsArNameId: FloatInput
+  """Adj Trx Code"""
+  transcodeDetailsAdjTrxCode: StringInput
   """Central Xchange Date"""
   transcodeDetailsCXchangeDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   transcodeDetailsDsi: FloatInput
+  """Group"""
+  transcodeDetailsTcGroup: StringInput
   """JRN Update Date and Time"""
   transcodeDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
@@ -1518,6 +1552,12 @@ input FinancialTransactionDetailsQueryArgumentsType {
   transcodeDetailsOrganizationid: FloatInput
   """Property"""
   transcodeDetailsResort: StringInput
+  """Trx Action ID"""
+  transcodeDetailsTrxActionId: FloatInput
+  """Transaction Code Sub-group"""
+  transcodeDetailsTcSubgroup: StringInput
+  """Transaction Code Type"""
+  transcodeDetailsTrxCodeType: StringInput
   """Transcodeid"""
   transcodeDetailsTranscodeid: StringInput
   """Trx Code"""
@@ -2461,6 +2501,8 @@ type FinancialTransactionDetailsFinancialTransactionDetailsType {
   sourceGroupDescription: String
   """Source Group Display Sequence"""
   sourceGroupDisplaySequence: Float
+  """Source Resort where the transaction originates for cross posted transaction"""
+  sourceResort: String
   """Sourceid"""
   sourceid: String
   """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
@@ -3555,6 +3597,8 @@ type FinancialTransactionDetailsPropertyPropertyDetailsType {
   zeroInvPurDays: Float
 }
 type FinancialTransactionDetailsAccountDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Account Code"""
   accountCode: Float
   """Indicates if a Credit Limit amount will be required "Y" will take precedence over the credit limit amount on Profile level."""
@@ -6961,6 +7005,8 @@ type FinancialTransactionDetailsRateCodeDetailsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: DateTime
+  """Local rate code associated with offshore rate code."""
+  localRateCode: String
   """Internal ID to uniquely identify the Property"""
   locationID: String
   """Long Info"""
@@ -7005,6 +7051,8 @@ type FinancialTransactionDetailsRateCodeDetailsType {
   occupancyBasedYn: String
   """Indicates the occupancy level for hurdle evaluation."""
   occupancyLevel: Float
+  """Indicates if rate code is an offshore rate."""
+  offshoreRateYN: String
   """The operator type to use during the calculation of base rates. (ADD_TO SUBTRACT)"""
   operatorType: String
   """Order By"""
@@ -7035,6 +7083,10 @@ type FinancialTransactionDetailsRateCodeDetailsType {
   packages: String
   """Indicates whether the rate code is pending for approval or not"""
   pendingApprovalYn: String
+  """Allow users to use points to get discount on rate codes."""
+  pointsDiscountYN: String
+  """Posting Interval."""
+  postingInterval: String
   """Posting Rhythm"""
   postingRhythm: String
   """Number of nights for posting rhythm."""
@@ -8051,6 +8103,8 @@ type FinancialTransactionDetailsReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -8101,6 +8155,8 @@ type FinancialTransactionDetailsReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""
@@ -9317,6 +9373,8 @@ type FinancialTransactionDetailsRoutingInstructionDetailsType {
   wednesdayYN: String
 }
 type FinancialTransactionDetailsTransactionCodeDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """AR Ledger Payments YN"""
   aRLedgerPaymentsYN: String
   """Ar Name ID"""
@@ -10505,6 +10563,8 @@ type FinancialTransactionDetailsFromReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -10555,6 +10615,8 @@ type FinancialTransactionDetailsFromReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""
@@ -11843,6 +11905,8 @@ type FinancialTransactionDetailsToReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -11893,6 +11957,8 @@ type FinancialTransactionDetailsToReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""

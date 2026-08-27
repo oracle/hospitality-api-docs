@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA CateringEventPostings GraphQL API,
 # description : GraphQL API to cater for Event posting details including revenues by property, Block, Event and Revenue groups.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,15 +80,25 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - eventpostingDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - eventpostingDetailsResort 
+# Pair - [2] 
+# 		 - eventpostingDetailsBookId 
+# 		 - eventpostingDetailsEventId 
+# 		 - eventpostingDetailsPostedBy 
+# 		 - eventpostingDetailsPostedById 
+# 		 - eventpostingDetailsRevenueType 
+# 		 - eventpostingDetailsSvcTrxNoExtra 
+# 		 - eventpostingDetailsSvcTrxNoIncl 
+# 		 - eventpostingDetailsTrxNoExtra 
 
 input CateringEventPostingsQueryArgumentsType {
   """Book ID"""
-  eventpostingDetailsBookId: FloatInput
+  eventpostingDetailsBookId: FloatInput                                 @conditionalInputPair(pair: 2)
   """Central Xchange Date"""
   eventpostingDetailsCXchangeDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
@@ -96,7 +106,7 @@ input CateringEventPostingsQueryArgumentsType {
   """Event Post ID Primary Key"""
   eventpostingDetailsEvPostId: FloatInput
   """Event ID"""
-  eventpostingDetailsEventId: FloatInput
+  eventpostingDetailsEventId: FloatInput                                @conditionalInputPair(pair: 2)
   """Eventpostingid"""
   eventpostingDetailsEventpostingid: FloatInput
   """JRN Update Date and Time"""
@@ -104,13 +114,19 @@ input CateringEventPostingsQueryArgumentsType {
   """Internal ID to uniquely identify the Organization"""
   eventpostingDetailsOrganizationid: FloatInput
   """Posted By ID"""
-  eventpostingDetailsPostedById: FloatInput
+  eventpostingDetailsPostedById: FloatInput                             @conditionalInputPair(pair: 2)
   """Code to uniquely identify the Property"""
-  eventpostingDetailsResort: StringInput!                               @mandatoryInput
+  eventpostingDetailsResort: StringInput                                @conditionalInputPair(pair: 1)
   """Resource Type"""
-  eventpostingDetailsPostedBy: StringInput
+  eventpostingDetailsPostedBy: StringInput                              @conditionalInputPair(pair: 2)
   """Revenue Type"""
-  eventpostingDetailsRevenueType: StringInput
+  eventpostingDetailsRevenueType: StringInput                           @conditionalInputPair(pair: 2)
+  """Transaction ID for Service Charge included Revenue."""
+  eventpostingDetailsSvcTrxNoExtra: FloatInput                          @conditionalInputPair(pair: 2)
+  """Transaction ID for Service Charge extra Revenue."""
+  eventpostingDetailsSvcTrxNoIncl: FloatInput                           @conditionalInputPair(pair: 2)
+  """Transaction No Extra"""
+  eventpostingDetailsTrxNoExtra: FloatInput                             @conditionalInputPair(pair: 2)
   """Block ID"""
   eventDetailsAllotmentid: FloatInput
   """Block ID"""
@@ -3060,6 +3076,8 @@ type CateringEventPostingsFinancialTransactionIncRevenueTaxDetailsType {
   sourceGroupDescription: String
   """Source Group Display Sequence"""
   sourceGroupDisplaySequence: Float
+  """Source Resort where the transaction originates for cross posted transaction"""
+  sourceResort: String
   """Sourceid"""
   sourceid: String
   """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
@@ -3784,6 +3802,8 @@ type CateringEventPostingsFinancialTransactionExtraRevenueTaxDetailsType {
   sourceGroupDescription: String
   """Source Group Display Sequence"""
   sourceGroupDisplaySequence: Float
+  """Source Resort where the transaction originates for cross posted transaction"""
+  sourceResort: String
   """Sourceid"""
   sourceid: String
   """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
@@ -4508,6 +4528,8 @@ type CateringEventPostingsFinancialTransactionSvcChargeIncRevDetailsType {
   sourceGroupDescription: String
   """Source Group Display Sequence"""
   sourceGroupDisplaySequence: Float
+  """Source Resort where the transaction originates for cross posted transaction"""
+  sourceResort: String
   """Sourceid"""
   sourceid: String
   """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
@@ -5232,6 +5254,8 @@ type CateringEventPostingsFinancialTransactionSvcChargeExtraRevDetailsType {
   sourceGroupDescription: String
   """Source Group Display Sequence"""
   sourceGroupDisplaySequence: Float
+  """Source Resort where the transaction originates for cross posted transaction"""
+  sourceResort: String
   """Sourceid"""
   sourceid: String
   """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""

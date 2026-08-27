@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA StatisticsReservationsDailySummary GraphQL API,
 # description : GraphQL API to cater for Summarized information on past reservations including number of persons, rooms and revenue figures, broken down by room type, market code, rate code and periods of time.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,32 +80,42 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - resvdailysummaryDetailsBusinessDate
-# 		 - resvdailysummaryDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - reservationdailysummarydetailsChainCode 
+# 		 - resvdailysummaryDetailsResort 
+# Pair - [2] 
+# 		 - resvdailysummaryDetailsBusinessDate 
+# 		 - resvdailysummaryDetailsJrnupdatedttm 
+# 		 - resvdailysummaryDetailsMarketCode 
+# 		 - resvdailysummaryDetailsRateCode 
+# 		 - resvdailysummaryDetailsRoomCategory 
+# 		 - resvdailysummaryDetailsSourceCode 
 
 input StatisticsReservationsDailySummaryQueryArgumentsType {
+  """CHAIN_CODE"""
+  reservationdailysummarydetailsChainCode: StringInput                  @conditionalInputPair(pair: 1)
   """Business Date"""
-  resvdailysummaryDetailsBusinessDate: DateInput!                       @mandatoryInput
+  resvdailysummaryDetailsBusinessDate: DateInput                        @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   resvdailysummaryDetailsDsi: FloatInput
   """JRN Update Date and Time"""
-  resvdailysummaryDetailsJrnupdatedttm: DateTimeInput
+  resvdailysummaryDetailsJrnupdatedttm: DateTimeInput                   @conditionalInputPair(pair: 2)
   """Market Code"""
-  resvdailysummaryDetailsMarketCode: StringInput
+  resvdailysummaryDetailsMarketCode: StringInput                        @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   resvdailysummaryDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  resvdailysummaryDetailsResort: StringInput!                           @mandatoryInput
+  resvdailysummaryDetailsResort: StringInput                            @conditionalInputPair(pair: 1)
   """Rate Code"""
-  resvdailysummaryDetailsRateCode: StringInput
+  resvdailysummaryDetailsRateCode: StringInput                          @conditionalInputPair(pair: 2)
   """Room Category"""
-  resvdailysummaryDetailsRoomCategory: StringInput
+  resvdailysummaryDetailsRoomCategory: StringInput                      @conditionalInputPair(pair: 2)
   """Source Code"""
-  resvdailysummaryDetailsSourceCode: StringInput
+  resvdailysummaryDetailsSourceCode: StringInput                        @conditionalInputPair(pair: 2)
   """Business Date"""
   fiscalcalendarDetailsDaykey: DateInput
   """Calendar"""
@@ -710,6 +720,8 @@ input StatisticsReservationsDailySummaryQueryArgumentsType {
   ratecodeDetailsSellSequence: FloatInput
   """End Date"""
   ratecodeDetailsEndBookingDate: DateInput
+  """Is this rate code available for GDS"""
+  ratecodeDetailsGdsAllowedYn: StringInput
   """Group Code"""
   ratecodeDetailsGroupCode: StringInput
   """JRN Update Date and Time"""
@@ -830,20 +842,34 @@ input StatisticsReservationsDailySummaryQueryArgumentsType {
   rateseasondayDetailsBeginDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   roomDetailsDsi: FloatInput
+  """Indicates the section to which employee belongs."""
+  roomDetailsHkSectionCode: StringInput
   """JRN Update Date and Time"""
   roomDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
   roomDetailsLocationid: StringInput
+  """Display sequence 2"""
+  roomDetailsOrderBy2: FloatInput
+  """Display sequence 3"""
+  roomDetailsOrderBy3: FloatInput
   """Internal ID to uniquely identify the Organization"""
   roomDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
   roomDetailsResort: StringInput
   """Room"""
   roomDetailsRoompmsref: StringInput
+  """Room Class"""
+  roomDetailsRoomClass: StringInput
+  """Room Condition"""
+  roomDetailsAssignReason: StringInput
   """Room Number"""
   roomDetailsRoom: StringInput
+  """Room Type"""
+  roomDetailsRoomCategory: StringInput
   """Roomid"""
   roomDetailsRoomid: StringInput
+  """Sequence"""
+  roomDetailsOrderBy: FloatInput
 }
 type Query {
   """Summarized information on past reservations including number of persons rooms and revenue figures broken down by room type market code rate code and periods of time."""
@@ -879,6 +905,8 @@ type StatisticsReservationsDailySummaryType {
   statisticsReservationsDailySummaryRecordCount: Int
 }
 type StatisticsReservationsDailySummaryReservationDailySummaryDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Adults Tax Free"""
   adultsTaxFree: Float
   """Advance Food Revenue"""
@@ -2193,6 +2221,8 @@ type StatisticsReservationsDailySummaryRateCodeDetailsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: DateTime
+  """Local rate code associated with offshore rate code."""
+  localRateCode: String
   """Internal ID to uniquely identify the Property"""
   locationID: String
   """Long Info"""
@@ -2237,6 +2267,8 @@ type StatisticsReservationsDailySummaryRateCodeDetailsType {
   occupancyBasedYn: String
   """Indicates the occupancy level for hurdle evaluation."""
   occupancyLevel: Float
+  """Indicates if rate code is an offshore rate."""
+  offshoreRateYN: String
   """The operator type to use during the calculation of base rates. (ADD_TO SUBTRACT)"""
   operatorType: String
   """Order By"""
@@ -2267,6 +2299,10 @@ type StatisticsReservationsDailySummaryRateCodeDetailsType {
   packages: String
   """Indicates whether the rate code is pending for approval or not"""
   pendingApprovalYn: String
+  """Allow users to use points to get discount on rate codes."""
+  pointsDiscountYN: String
+  """Posting Interval."""
+  postingInterval: String
   """Posting Rhythm"""
   postingRhythm: String
   """Number of nights for posting rhythm."""

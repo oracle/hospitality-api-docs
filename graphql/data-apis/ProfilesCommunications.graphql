@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ProfilesCommunications GraphQL API,
 # description : GraphQL API to cater for All associated communication details including communication types and roles, which can be associated with the proper profile and profile type. 
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,11 +80,19 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - profilecommunicationDetailsChainCode
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - profilecommunicationDetailsChainCode 
+# Pair - [2] 
+# 		 - profilecommunicationDetailsInactiveDate 
+# 		 - profilecommunicationDetailsIndexPhone 
+# 		 - profilecommunicationDetailsJrnupdatedttm 
+# 		 - profilecommunicationDetailsNameId 
+# 		 - profilecommunicationDetailsPhoneId 
+# 		 - profilecommunicationDetailsPrimaryYn 
 
 input ProfilesCommunicationsQueryArgumentsType {
   """Not used."""
@@ -92,7 +100,7 @@ input ProfilesCommunicationsQueryArgumentsType {
   """Not used."""
   profilecommunicationDetailsBeginDate: DateInput
   """The Chain code of the chain for which this record belongs to."""
-  profilecommunicationDetailsChainCode: StringInput!                    @mandatoryInput
+  profilecommunicationDetailsChainCode: StringInput                     @conditionalInputPair(pair: 1)
   """The primary key for this table."""
   profilecommunicationDetailsPmsPhoneId: FloatInput
   """Role in which this phone type belongs to."""
@@ -124,11 +132,11 @@ input ProfilesCommunicationsQueryArgumentsType {
   """The first name of an individual name."""
   profilecommunicationDetailsFirst: StringInput
   """The date the record was marked as inactive"""
-  profilecommunicationDetailsInactiveDate: DateTimeInput
+  profilecommunicationDetailsInactiveDate: DateTimeInput                @conditionalInputPair(pair: 2)
   """Inactive Flag"""
   profilecommunicationDetailsInactiveFlag: StringInput
   """Index Phone"""
-  profilecommunicationDetailsIndexPhone: StringInput
+  profilecommunicationDetailsIndexPhone: StringInput                    @conditionalInputPair(pair: 2)
   """The date the record was created"""
   profilecommunicationDetailsInsertDate: DateTimeInput
   """The user that created the record"""
@@ -138,7 +146,7 @@ input ProfilesCommunicationsQueryArgumentsType {
   """The reference to the name that owns this phone."""
   profilecommunicationDetailsProfileId: FloatInput
   """JRN Update Date and Time"""
-  profilecommunicationDetailsJrnupdatedttm: DateTimeInput
+  profilecommunicationDetailsJrnupdatedttm: DateTimeInput               @conditionalInputPair(pair: 2)
   """Code to synchronize with Laptop"""
   profilecommunicationDetailsLaptopChange: FloatInput
   """The last name of the individual Profile and Search name ofr the other Types of Profiles (Group Travel Agent & Source) are stored in this column."""
@@ -148,7 +156,7 @@ input ProfilesCommunicationsQueryArgumentsType {
   """Internal ID to uniquely identify the Organization"""
   profilecommunicationDetailsOrganizationid: FloatInput
   """The primary key for this table."""
-  profilecommunicationDetailsPhoneId: FloatInput
+  profilecommunicationDetailsPhoneId: FloatInput                        @conditionalInputPair(pair: 2)
   """The type of this phone number."""
   profilecommunicationDetailsPhoneType: StringInput
   """Description of Phone Types."""
@@ -158,9 +166,9 @@ input ProfilesCommunicationsQueryArgumentsType {
   """Internal Primary Key ID to uniquely identify the row"""
   profilecommunicationDetailsPkid: FloatInput
   """Indicates the primary telephone number in the case of multiple phone numbers on a profile."""
-  profilecommunicationDetailsPrimaryYn: StringInput
+  profilecommunicationDetailsPrimaryYn: StringInput                     @conditionalInputPair(pair: 2)
   """The reference to the name that owns this phone."""
-  profilecommunicationDetailsNameId: FloatInput
+  profilecommunicationDetailsNameId: FloatInput                         @conditionalInputPair(pair: 2)
   """RnA Insertdate"""
   profilecommunicationDetailsRnaInsertdate: DateTimeInput
   """RnA Updatedate"""

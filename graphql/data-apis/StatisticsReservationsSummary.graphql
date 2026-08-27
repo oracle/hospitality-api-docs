@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA StatisticsReservationsSummary GraphQL API,
 # description : GraphQL API to cater for Summarized booking data for both on the books and past stays including rooms, revenue and occupancy details broken out by Market Code, Rate code and periods of time.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,28 +80,57 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - resvsummaryDetailsConsideredDate
-# 		 - resvsummaryDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - reservationsummarydetailsChainCode 
+# 		 - resvsummaryDetailsResort 
+# Pair - [2] 
+# 		 - resvsummaryDetailsAllotmentHeaderId 
+# 		 - resvsummaryDetailsConsideredDate 
+# 		 - resvsummaryDetailsEventType 
+# 		 - resvsummaryDetailsEventid 
+# 		 - resvsummaryDetailsJrnupdatedttm 
+# 		 - resvsummaryDetailsMarketCode 
+# 		 - resvsummaryDetailsResvInvType 
+# 		 - resvsummaryDetailsResvStatus 
+# 		 - resvsummaryDetailsRoomCategory 
+# 		 - resvsummaryDetailsRoomClass 
+# 		 - resvsummaryDetailsUpdateBusinessDate 
 
 input StatisticsReservationsSummaryQueryArgumentsType {
+  """CHAIN_CODE"""
+  reservationsummarydetailsChainCode: StringInput                       @conditionalInputPair(pair: 1)
+  """Allotment Header ID"""
+  resvsummaryDetailsAllotmentHeaderId: FloatInput                       @conditionalInputPair(pair: 2)
   """Considered Date"""
-  resvsummaryDetailsConsideredDate: DateInput!                          @mandatoryInput
+  resvsummaryDetailsConsideredDate: DateInput                           @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   resvsummaryDetailsDsi: FloatInput
+  """Event ID"""
+  resvsummaryDetailsEventid: StringInput                                @conditionalInputPair(pair: 2)
   """Event Type"""
-  resvsummaryDetailsEventType: StringInput
+  resvsummaryDetailsEventType: StringInput                              @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  resvsummaryDetailsJrnupdatedttm: DateTimeInput
+  resvsummaryDetailsJrnupdatedttm: DateTimeInput                        @conditionalInputPair(pair: 2)
+  """Market Code"""
+  resvsummaryDetailsMarketCode: StringInput                             @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   resvsummaryDetailsOrganizationid: FloatInput
   """Property"""
-  resvsummaryDetailsResort: StringInput!                                @mandatoryInput
+  resvsummaryDetailsResort: StringInput                                 @conditionalInputPair(pair: 1)
+  """Reservation Inventory Type"""
+  resvsummaryDetailsResvInvType: StringInput                            @conditionalInputPair(pair: 2)
+  """Reservation Status"""
+  resvsummaryDetailsResvStatus: StringInput                             @conditionalInputPair(pair: 2)
+  """Room Class"""
+  resvsummaryDetailsRoomClass: StringInput                              @conditionalInputPair(pair: 2)
   """Room Type"""
-  resvsummaryDetailsRoomCategory: StringInput
+  resvsummaryDetailsRoomCategory: StringInput                           @conditionalInputPair(pair: 2)
+  """Update Business Date"""
+  resvsummaryDetailsUpdateBusinessDate: DateInput                       @conditionalInputPair(pair: 2)
   """Active YN"""
   parentcompanyprofileDetailsActiveYn: StringInput
   """The unique identifier of the CRS"""
@@ -860,6 +889,8 @@ input StatisticsReservationsSummaryQueryArgumentsType {
   marketDetailsResort: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   rateclassesDetailsDsi: FloatInput
+  """End Date"""
+  rateclassesDetailsEndDate: DateInput
   """JRN Update Date and Time"""
   rateclassesDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Organization"""
@@ -870,6 +901,8 @@ input StatisticsReservationsSummaryQueryArgumentsType {
   rateclassesDetailsRateClass: StringInput
   """Property code"""
   rateclassesDetailsResortResort: StringInput
+  """Start Date"""
+  rateclassesDetailsBeginDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   sourcetableDetailsDsi: FloatInput
   """JRN Update Date and Time"""
@@ -908,8 +941,12 @@ input StatisticsReservationsSummaryQueryArgumentsType {
   nationalityDetailsOrganizationid: FloatInput
   """Title Suffix"""
   nationalityDetailsTitleSuffix: FloatInput
+  """Business Date"""
+  ratecategoriesDetailsBeginDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   ratecategoriesDetailsDsi: FloatInput
+  """End Date"""
+  ratecategoriesDetailsEndDate: DateInput
   """JRN Update Date and Time"""
   ratecategoriesDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Organization"""
@@ -938,6 +975,8 @@ input StatisticsReservationsSummaryQueryArgumentsType {
   ratecodeDetailsSellSequence: FloatInput
   """End Date"""
   ratecodeDetailsEndBookingDate: DateInput
+  """Is this rate code available for GDS"""
+  ratecodeDetailsGdsAllowedYn: StringInput
   """Group Code"""
   ratecodeDetailsGroupCode: StringInput
   """JRN Update Date and Time"""
@@ -1083,6 +1122,8 @@ type StatisticsReservationsSummaryType {
   statisticsReservationsSummaryRecordCount: Int
 }
 type StatisticsReservationsSummaryReservationSummaryDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Adults"""
   adults: Float
   """Adults Tax Free"""
@@ -3109,6 +3150,8 @@ type StatisticsReservationsSummaryReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -3159,6 +3202,8 @@ type StatisticsReservationsSummaryReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""
@@ -5029,6 +5074,8 @@ type StatisticsReservationsSummaryRateCodeDetailsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: DateTime
+  """Local rate code associated with offshore rate code."""
+  localRateCode: String
   """Internal ID to uniquely identify the Property"""
   locationID: String
   """Long Info"""
@@ -5073,6 +5120,8 @@ type StatisticsReservationsSummaryRateCodeDetailsType {
   occupancyBasedYn: String
   """Indicates the occupancy level for hurdle evaluation."""
   occupancyLevel: Float
+  """Indicates if rate code is an offshore rate."""
+  offshoreRateYN: String
   """The operator type to use during the calculation of base rates. (ADD_TO SUBTRACT)"""
   operatorType: String
   """Order By"""
@@ -5103,6 +5152,10 @@ type StatisticsReservationsSummaryRateCodeDetailsType {
   packages: String
   """Indicates whether the rate code is pending for approval or not"""
   pendingApprovalYn: String
+  """Allow users to use points to get discount on rate codes."""
+  pointsDiscountYN: String
+  """Posting Interval."""
+  postingInterval: String
   """Posting Rhythm"""
   postingRhythm: String
   """Number of nights for posting rhythm."""

@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ARAccountsReceivable GraphQL API,
 # description : GraphQL API to cater for Detailed Accounts Receivable data, including  Adjustments, Payments, Invoices and Posting for AR Accounts, with linked reservation data.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,45 +80,67 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - accountDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - accountDetailsResort 
+# 		 - accountdetailsChainCode 
+# Pair - [2] 
+# 		 - accountDetailsAccTypeFlag 
+# 		 - accountDetailsAccountCode 
+# 		 - accountDetailsAccountNo 
+# 		 - accountDetailsAccountSname 
+# 		 - accountDetailsAccountTypeId 
+# 		 - accountDetailsAccountid 
+# 		 - accountDetailsAccounttypeid 
+# 		 - accountDetailsAddressId 
+# 		 - accountDetailsBeginDate 
+# 		 - accountDetailsEmailId 
+# 		 - accountDetailsEndDate 
+# 		 - accountDetailsFaxId 
+# 		 - accountDetailsJrnupdatedttm 
+# 		 - accountDetailsLastActivityDate 
+# 		 - accountDetailsPhoneId 
+# 		 - accountDetailsProfileid 
+# 		 - accountDetailsUpperCaseName 
 
 input ARAccountsReceivableQueryArgumentsType {
+  """CHAIN_CODE"""
+  accountdetailsChainCode: StringInput                                  @conditionalInputPair(pair: 1)
   """Account Code"""
-  accountDetailsAccountCode: FloatInput
+  accountDetailsAccountCode: FloatInput                                 @conditionalInputPair(pair: 2)
   """Account Number"""
-  accountDetailsAccountNo: StringInput
+  accountDetailsAccountNo: StringInput                                  @conditionalInputPair(pair: 2)
   """Name on the account in upper case."""
-  accountDetailsAccountSname: StringInput
+  accountDetailsAccountSname: StringInput                               @conditionalInputPair(pair: 2)
   """Account Type Flag"""
-  accountDetailsAccTypeFlag: StringInput
+  accountDetailsAccTypeFlag: StringInput                                @conditionalInputPair(pair: 2)
   """Account Type ID"""
-  accountDetailsAccountTypeId: FloatInput
+  accountDetailsAccountTypeId: FloatInput                               @conditionalInputPair(pair: 2)
   """Accountid"""
-  accountDetailsAccountid: FloatInput
+  accountDetailsAccountid: FloatInput                                   @conditionalInputPair(pair: 2)
   """Address ID"""
-  accountDetailsAddressId: FloatInput
+  accountDetailsAddressId: FloatInput                                   @conditionalInputPair(pair: 2)
   """Begin Date"""
-  accountDetailsBeginDate: DateInput
+  accountDetailsBeginDate: DateInput                                    @conditionalInputPair(pair: 2)
   """Central Exchange Date"""
   accountDetailsCXchangeDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   accountDetailsDsi: FloatInput
   """Email ID"""
-  accountDetailsEmailId: FloatInput
+  accountDetailsEmailId: FloatInput                                     @conditionalInputPair(pair: 2)
   """End Date"""
-  accountDetailsEndDate: DateInput
+  accountDetailsEndDate: DateInput                                      @conditionalInputPair(pair: 2)
   """Fax ID"""
-  accountDetailsFaxId: FloatInput
+  accountDetailsFaxId: FloatInput                                       @conditionalInputPair(pair: 2)
   """Accounttypeid"""
-  accountDetailsAccounttypeid: FloatInput
+  accountDetailsAccounttypeid: FloatInput                               @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  accountDetailsJrnupdatedttm: DateTimeInput
+  accountDetailsJrnupdatedttm: DateTimeInput                            @conditionalInputPair(pair: 2)
   """Date of Last Activity on the AR Account in regards to: transfers between accounts payments applied (not unallocated) un-applied reversed and invoice compressions un-compressions on the account."""
-  accountDetailsLastActivityDate: DateTimeInput
+  accountDetailsLastActivityDate: DateTimeInput                         @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Property"""
   accountDetailsLocationid: StringInput
   """Name ID"""
@@ -126,13 +148,13 @@ input ARAccountsReceivableQueryArgumentsType {
   """Internal ID to uniquely identify the Organization"""
   accountDetailsOrganizationid: FloatInput
   """Phone ID"""
-  accountDetailsPhoneId: FloatInput
+  accountDetailsPhoneId: FloatInput                                     @conditionalInputPair(pair: 2)
   """Profileid"""
-  accountDetailsProfileid: FloatInput
+  accountDetailsProfileid: FloatInput                                   @conditionalInputPair(pair: 2)
   """Code to uniquely identify the Property"""
-  accountDetailsResort: StringInput!                                    @mandatoryInput
+  accountDetailsResort: StringInput                                     @conditionalInputPair(pair: 1)
   """Upper Case Name"""
-  accountDetailsUpperCaseName: StringInput
+  accountDetailsUpperCaseName: StringInput                              @conditionalInputPair(pair: 2)
   """Accountid"""
   artranadjdetailsDetailsAccountid: FloatInput
   """AR Led Credit"""
@@ -243,12 +265,20 @@ input ARAccountsReceivableQueryArgumentsType {
   artranadjdetailsDetailsTrxNoAdjust: FloatInput
   """Transaction No Against Package"""
   artranadjdetailsDetailsTrxNoAgainstPackage: FloatInput
+  """CHAIN_CODE"""
+  arledgerdetailsChainCode: StringInput
+  """Accountid"""
+  arledgerDetailsAccountid: FloatInput
+  """AR Led Credit"""
+  arledgerDetailsArLedCredit: FloatInput
   """AR Led Debit"""
   arledgerDetailsArLedDebit: FloatInput
   """AR Number"""
   arledgerDetailsArNumber: FloatInput
   """AR State"""
   arledgerDetailsArState: StringInput
+  """Article ID"""
+  arledgerDetailsArticleId: FloatInput
   """Authorizer ID"""
   arledgerDetailsAuthorizerId: FloatInput
   """Bill Number"""
@@ -293,6 +323,8 @@ input ARAccountsReceivableQueryArgumentsType {
   arledgerDetailsCashierid: FloatInput
   """Invoice Close Date"""
   arledgerDetailsInvoiceCloseDate: DateInput
+  """Invoice Number"""
+  arledgerDetailsInvoiceNo: FloatInput
   """JRN Update Date and Time"""
   arledgerDetailsJrnupdatedttm: DateTimeInput
   """Link Transaction No"""
@@ -1172,6 +1204,8 @@ type ARAccountsReceivableType {
   aRAccountsReceivableRecordCount: Int
 }
 type ARAccountsReceivableAccountDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Account Code"""
   accountCode: Float
   """Indicates if a Credit Limit amount will be required "Y" will take precedence over the credit limit amount on Profile level."""
@@ -1922,6 +1956,8 @@ type ARAccountsReceivableARTransactionAdjustmentDetailsDetailsType {
   vatOffsetYn: String
 }
 type ARAccountsReceivableARLedgerDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Indicates if an individual charge has been transferred to another invoice in AR. Used to disallow operations such as the transfer of same charge multiple times editing an already transferred charge etc."""
   aRChargeTransferYN: String
   """Indicates ASB transactions: Rental charge for an [A]partment Style Rental Cycle [O]ffsetting transaction for Rental charge for an Apartment Style Rental Cycle [N]ightly Rental Posting [W]aived Nights Rental Posting"""

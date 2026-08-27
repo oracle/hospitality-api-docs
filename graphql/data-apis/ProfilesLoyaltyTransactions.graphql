@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ProfilesLoyaltyTransactions GraphQL API,
 # description : GraphQL API to cater for Detailed information on the Loyalty Program providing details on the Membership, Profiles, Stay Information and the ability to track Awards.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,27 +80,56 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - membershiptransactionsDetailsBeginDate
-# 		 - membershiptransactionsDetailsEndDate
-# 		 - membershiptransactionsDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - membershiptransactionsDetailsChainCode 
+# 		 - membershiptransactionsDetailsResort 
+# Pair - [2] 
+# 		 - membershiptransactionsDetailsAdjustmentYn 
+# 		 - membershiptransactionsDetailsBaseBillingGroup 
+# 		 - membershiptransactionsDetailsBeginDate 
+# 		 - membershiptransactionsDetailsBillingGroup 
+# 		 - membershiptransactionsDetailsBonusBillingGroup 
+# 		 - membershiptransactionsDetailsDataExportedDate 
+# 		 - membershiptransactionsDetailsDataExportedYn 
+# 		 - membershiptransactionsDetailsEndDate 
+# 		 - membershiptransactionsDetailsJrnupdatedttm 
+# 		 - membershiptransactionsDetailsMemberStatementId 
+# 		 - membershiptransactionsDetailsMembershipCardNo 
+# 		 - membershiptransactionsDetailsMembershipId 
+# 		 - membershiptransactionsDetailsMembershipTrxId 
+# 		 - membershiptransactionsDetailsMembershipTrxLinkId 
+# 		 - membershiptransactionsDetailsMembershipType 
+# 		 - membershiptransactionsDetailsMultipleMembershipId 
+# 		 - membershiptransactionsDetailsNameId 
+# 		 - membershiptransactionsDetailsPmsNameId 
+# 		 - membershiptransactionsDetailsPmsResvNo 
+# 		 - membershiptransactionsDetailsPointsAcYn 
+# 		 - membershiptransactionsDetailsPointsCalculatedYn 
+# 		 - membershiptransactionsDetailsPointsExpirationDate 
+# 		 - membershiptransactionsDetailsPosCode 
+# 		 - membershiptransactionsDetailsPromotionCode2 
+# 		 - membershiptransactionsDetailsPromotionCode3 
+# 		 - membershiptransactionsDetailsRecordType 
+# 		 - membershiptransactionsDetailsStatementId 
+# 		 - membershiptransactionsDetailsStayRecordId 
 
 input ProfilesLoyaltyTransactionsQueryArgumentsType {
   """Adjustment Y/N"""
-  membershiptransactionsDetailsAdjustmentYn: StringInput
+  membershiptransactionsDetailsAdjustmentYn: StringInput                @conditionalInputPair(pair: 2)
   """Arrival Date"""
-  membershiptransactionsDetailsBeginDate: DateInput!                    @mandatoryInput
+  membershiptransactionsDetailsBeginDate: DateInput                     @conditionalInputPair(pair: 2)
   """Points calculated automatically"""
   membershiptransactionsDetailsAutomaticYn: StringInput
   """Billing group for base award points."""
-  membershiptransactionsDetailsBaseBillingGroup: StringInput
+  membershiptransactionsDetailsBaseBillingGroup: StringInput            @conditionalInputPair(pair: 2)
   """Billing Group"""
-  membershiptransactionsDetailsBillingGroup: StringInput
+  membershiptransactionsDetailsBillingGroup: StringInput                @conditionalInputPair(pair: 2)
   """Billing group for bonus award points."""
-  membershiptransactionsDetailsBonusBillingGroup: StringInput
+  membershiptransactionsDetailsBonusBillingGroup: StringInput           @conditionalInputPair(pair: 2)
   """Booked Room Label"""
   membershiptransactionsDetailsBookedRoomLabel: StringInput
   """Central Xchange Date"""
@@ -108,23 +137,23 @@ input ProfilesLoyaltyTransactionsQueryArgumentsType {
   """CRS Booking Number"""
   membershiptransactionsDetailsCrsBookNo: StringInput
   """Chain Code"""
-  membershiptransactionsDetailsChainCode: StringInput
+  membershiptransactionsDetailsChainCode: StringInput                   @conditionalInputPair(pair: 1)
   """Claim Adj Limit Code"""
   membershiptransactionsDetailsClaimAdjLimitCode: StringInput
   """Currency Code"""
   membershiptransactionsDetailsCurrencyCode: StringInput
   """Date when the record was exported."""
-  membershiptransactionsDetailsDataExportedDate: DateInput
+  membershiptransactionsDetailsDataExportedDate: DateInput              @conditionalInputPair(pair: 2)
   """Flag to indicate if record was exported."""
-  membershiptransactionsDetailsDataExportedYn: StringInput
+  membershiptransactionsDetailsDataExportedYn: StringInput              @conditionalInputPair(pair: 2)
   """Deleted Flag"""
   membershiptransactionsDetailsDeletedFlag: StringInput
   """Departure Date"""
-  membershiptransactionsDetailsEndDate: DateInput!                      @mandatoryInput
+  membershiptransactionsDetailsEndDate: DateInput                       @conditionalInputPair(pair: 2)
   """Exception Type"""
   membershiptransactionsDetailsExceptionType: StringInput
   """Point Expiration date."""
-  membershiptransactionsDetailsPointsExpirationDate: DateTimeInput
+  membershiptransactionsDetailsPointsExpirationDate: DateTimeInput      @conditionalInputPair(pair: 2)
   """This flag indicate if grace renewals was done."""
   membershiptransactionsDetailsGraceRenewalFlg: StringInput
   """Inactive Date"""
@@ -132,25 +161,25 @@ input ProfilesLoyaltyTransactionsQueryArgumentsType {
   """Insert Date"""
   membershiptransactionsDetailsInsertDate: DateTimeInput
   """JRN Update Date and Time"""
-  membershiptransactionsDetailsJrnupdatedttm: DateTimeInput
+  membershiptransactionsDetailsJrnupdatedttm: DateTimeInput             @conditionalInputPair(pair: 2)
   """Member Statement ID"""
-  membershiptransactionsDetailsMemberStatementId: FloatInput
+  membershiptransactionsDetailsMemberStatementId: FloatInput            @conditionalInputPair(pair: 2)
   """Membership Card Number"""
-  membershiptransactionsDetailsMembershipCardNo: StringInput
+  membershiptransactionsDetailsMembershipCardNo: StringInput            @conditionalInputPair(pair: 2)
   """Membership ID"""
-  membershiptransactionsDetailsMembershipId: FloatInput
+  membershiptransactionsDetailsMembershipId: FloatInput                 @conditionalInputPair(pair: 2)
   """Membership Level"""
   membershiptransactionsDetailsMembershipLevel: StringInput
   """Membership Trx ID"""
-  membershiptransactionsDetailsMembershipTrxId: FloatInput
+  membershiptransactionsDetailsMembershipTrxId: FloatInput              @conditionalInputPair(pair: 2)
   """Membership Trx Link ID"""
-  membershiptransactionsDetailsMembershipTrxLinkId: FloatInput
+  membershiptransactionsDetailsMembershipTrxLinkId: FloatInput          @conditionalInputPair(pair: 2)
   """Membership Type"""
-  membershiptransactionsDetailsMembershipType: StringInput
+  membershiptransactionsDetailsMembershipType: StringInput              @conditionalInputPair(pair: 2)
   """Multiple Membership ID"""
-  membershiptransactionsDetailsMultipleMembershipId: FloatInput
+  membershiptransactionsDetailsMultipleMembershipId: FloatInput         @conditionalInputPair(pair: 2)
   """Name ID"""
-  membershiptransactionsDetailsNameId: FloatInput
+  membershiptransactionsDetailsNameId: FloatInput                       @conditionalInputPair(pair: 2)
   """Used in membership tier upgrade rule to indicate new membership level."""
   membershiptransactionsDetailsNewMemberLevel: StringInput
   """Notes"""
@@ -162,17 +191,17 @@ input ProfilesLoyaltyTransactionsQueryArgumentsType {
   """Date when points expired before it was extended."""
   membershiptransactionsDetailsOrigPointsExpirationDate: DateTimeInput
   """PMS Reservation Number"""
-  membershiptransactionsDetailsPmsResvNo: StringInput
+  membershiptransactionsDetailsPmsResvNo: StringInput                   @conditionalInputPair(pair: 2)
   """Ref to parent transaction."""
   membershiptransactionsDetailsParentMembershipTrxId: FloatInput
   """Pms Name ID"""
-  membershiptransactionsDetailsPmsNameId: StringInput
+  membershiptransactionsDetailsPmsNameId: StringInput                   @conditionalInputPair(pair: 2)
   """Pms Resv Name ID"""
   membershiptransactionsDetailsPmsResvNameId: StringInput
   """Iindicate membership exceptions of back to back stay and multiple rooms. Valid values are YN and E."""
-  membershiptransactionsDetailsPointsAcYn: StringInput
+  membershiptransactionsDetailsPointsAcYn: StringInput                  @conditionalInputPair(pair: 2)
   """Flag to indicate if points are calculated."""
-  membershiptransactionsDetailsPointsCalculatedYn: StringInput
+  membershiptransactionsDetailsPointsCalculatedYn: StringInput          @conditionalInputPair(pair: 2)
   """Date when points were created."""
   membershiptransactionsDetailsPointsCreditDate: DateInput
   """Point reject reason."""
@@ -182,31 +211,33 @@ input ProfilesLoyaltyTransactionsQueryArgumentsType {
   """Population Method"""
   membershiptransactionsDetailsPopulationMethod: StringInput
   """Pos Code"""
-  membershiptransactionsDetailsPosCode: StringInput
+  membershiptransactionsDetailsPosCode: StringInput                     @conditionalInputPair(pair: 2)
   """Internal Primary Key ID to uniquely identify the row"""
   membershiptransactionsDetailsPkid: FloatInput
   """Any error messages generated during calculation."""
   membershiptransactionsDetailsProcessingMessages: StringInput
   """Profile Promotion 1"""
-  membershiptransactionsDetailsPromotionCode2: StringInput
+  membershiptransactionsDetailsPromotionCode2: StringInput              @conditionalInputPair(pair: 2)
   """Profile Promotion 2"""
-  membershiptransactionsDetailsPromotionCode3: StringInput
+  membershiptransactionsDetailsPromotionCode3: StringInput              @conditionalInputPair(pair: 2)
   """Code to uniquely identify the Property"""
-  membershiptransactionsDetailsResort: StringInput!                     @mandatoryInput
+  membershiptransactionsDetailsResort: StringInput                      @conditionalInputPair(pair: 1)
   """Rate Promotion Code"""
   membershiptransactionsDetailsPromotionCode1: StringInput
   """Rate Promotion Description"""
   membershiptransactionsDetailsPromotionCode1Desc: StringInput
   """Record Type Code"""
-  membershiptransactionsDetailsRecordType: StringInput
+  membershiptransactionsDetailsRecordType: StringInput                  @conditionalInputPair(pair: 2)
   """Record Type Description"""
   membershiptransactionsDetailsRecordTypeDesc: StringInput
   """Reservation Status"""
   membershiptransactionsDetailsResvStatus: StringInput
   """Room Label"""
   membershiptransactionsDetailsRoomLabel: StringInput
+  """Statement ID"""
+  membershiptransactionsDetailsStatementId: FloatInput                  @conditionalInputPair(pair: 2)
   """Stay Record ID"""
-  membershiptransactionsDetailsStayRecordId: FloatInput
+  membershiptransactionsDetailsStayRecordId: FloatInput                 @conditionalInputPair(pair: 2)
   """Type of action performed."""
   membershiptransactionsDetailsTierAction: StringInput
   """Transaction date."""
@@ -215,6 +246,8 @@ input ProfilesLoyaltyTransactionsQueryArgumentsType {
   membershiptransactionsDetailsTransactionType: StringInput
   """Update Date"""
   membershiptransactionsDetailsUpdateDate: DateTimeInput
+  """Chain Code"""
+  loyaltyprofilemembershipDetailsChainCode: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   loyaltyprofilemembershipDetailsDsi: FloatInput
   """Device Code"""
@@ -976,6 +1009,8 @@ type ProfilesLoyaltyTransactionsMembershipTransactionsDetailsType {
   recordTypeDescription: String
   """Reference"""
   reference: String
+  """Name ID of member referred."""
+  referredMember: String
   """Reservation Name ID"""
   reservationNameID: Float
   """Reservation Status"""
@@ -1262,6 +1297,10 @@ type ProfilesLoyaltyTransactionsLoyaltyProfileMembershipDetailsType {
   rankValue: Float
   """Ranking"""
   ranking: Float
+  """Number of times a new member has been referred."""
+  referralCount: Float
+  """Name ID of member who referred."""
+  referredByMember: String
   """RnA Insertdate"""
   rnaInsertDate: DateTime
   """RnA Updatedate"""

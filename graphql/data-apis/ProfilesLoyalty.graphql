@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ProfilesLoyalty GraphQL API,
 # description : GraphQL API to cater for Detailed information on the Loyalty Program providing details on the Membership, Profiles, Stay Information and the ability to  track Awards and Claims.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,39 +80,54 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - loyaltyprofilemembershipDetailsMembershipType
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - loyaltyprofilemembershipDetailsChainCode 
+# 		 - loyaltyprofilemembershipDetailsMembershipType 
+# Pair - [2] 
+# 		 - loyaltyprofilemembershipDetailsDeviceCode 
+# 		 - loyaltyprofilemembershipDetailsInactiveDate 
+# 		 - loyaltyprofilemembershipDetailsJrnupdatedttm 
+# 		 - loyaltyprofilemembershipDetailsMembershipCardNo 
+# 		 - loyaltyprofilemembershipDetailsMembershipClass 
+# 		 - loyaltyprofilemembershipDetailsMembershipId 
+# 		 - loyaltyprofilemembershipDetailsMembershipLevel 
+# 		 - loyaltyprofilemembershipDetailsNameId 
+# 		 - loyaltyprofilemembershipDetailsPartnerMembershipId 
+# 		 - loyaltyprofilemembershipDetailsUpdateDate 
 
 input ProfilesLoyaltyQueryArgumentsType {
+  """Chain Code"""
+  loyaltyprofilemembershipDetailsChainCode: StringInput                 @conditionalInputPair(pair: 1)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   loyaltyprofilemembershipDetailsDsi: FloatInput
   """Device Code"""
-  loyaltyprofilemembershipDetailsDeviceCode: StringInput
+  loyaltyprofilemembershipDetailsDeviceCode: StringInput                @conditionalInputPair(pair: 2)
   """Inactive Date"""
-  loyaltyprofilemembershipDetailsInactiveDate: DateTimeInput
+  loyaltyprofilemembershipDetailsInactiveDate: DateTimeInput            @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  loyaltyprofilemembershipDetailsJrnupdatedttm: DateTimeInput
+  loyaltyprofilemembershipDetailsJrnupdatedttm: DateTimeInput           @conditionalInputPair(pair: 2)
   """Membership Card Number"""
-  loyaltyprofilemembershipDetailsMembershipCardNo: StringInput
+  loyaltyprofilemembershipDetailsMembershipCardNo: StringInput          @conditionalInputPair(pair: 2)
   """Primary key of this table"""
-  loyaltyprofilemembershipDetailsMembershipClass: StringInput
+  loyaltyprofilemembershipDetailsMembershipClass: StringInput           @conditionalInputPair(pair: 2)
   """Membership ID"""
-  loyaltyprofilemembershipDetailsMembershipId: FloatInput
+  loyaltyprofilemembershipDetailsMembershipId: FloatInput               @conditionalInputPair(pair: 2)
   """Membership Level"""
-  loyaltyprofilemembershipDetailsMembershipLevel: StringInput
+  loyaltyprofilemembershipDetailsMembershipLevel: StringInput           @conditionalInputPair(pair: 2)
   """Membership Type"""
-  loyaltyprofilemembershipDetailsMembershipType: StringInput!           @mandatoryInput
+  loyaltyprofilemembershipDetailsMembershipType: StringInput            @conditionalInputPair(pair: 1)
   """Name ID"""
-  loyaltyprofilemembershipDetailsNameId: FloatInput
+  loyaltyprofilemembershipDetailsNameId: FloatInput                     @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   loyaltyprofilemembershipDetailsOrganizationid: FloatInput
   """Membership ID that accrues Miles."""
-  loyaltyprofilemembershipDetailsPartnerMembershipId: FloatInput
+  loyaltyprofilemembershipDetailsPartnerMembershipId: FloatInput        @conditionalInputPair(pair: 2)
   """Update Date"""
-  loyaltyprofilemembershipDetailsUpdateDate: DateTimeInput
+  loyaltyprofilemembershipDetailsUpdateDate: DateTimeInput              @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
   membershipbenefitsDetailsJrnupdatedttm: DateTimeInput
   """Approval Status"""
@@ -139,6 +154,8 @@ input ProfilesLoyaltyQueryArgumentsType {
   membershipclaimDetailsMembershipClaimId: FloatInput
   """User defined origin of claim."""
   membershipclaimDetailsClaimOrigin: StringInput
+  """Claim Owner"""
+  membershipclaimDetailsClaimOwner: FloatInput
   """Source of the Claim"""
   membershipclaimDetailsClaimSource: StringInput
   """Status of the claim."""
@@ -159,6 +176,8 @@ input ProfilesLoyaltyQueryArgumentsType {
   membershipclaimDetailsCrsBookNo: StringInput
   """Insert Date"""
   membershipclaimDetailsInsertDate: DateTimeInput
+  """Insert User"""
+  membershipclaimDetailsInsertUser: FloatInput
   """JRN Update Date and Time"""
   membershipclaimDetailsJrnupdatedttm: DateTimeInput
   """Market Code"""
@@ -317,6 +336,8 @@ input ProfilesLoyaltyQueryArgumentsType {
   membershiptransactionsDetailsResvStatus: StringInput
   """Room Label"""
   membershiptransactionsDetailsRoomLabel: StringInput
+  """Statement ID"""
+  membershiptransactionsDetailsStatementId: FloatInput
   """Stay Record ID"""
   membershiptransactionsDetailsStayRecordId: FloatInput
   """Type of action performed."""
@@ -606,6 +627,10 @@ type ProfilesLoyaltyLoyaltyProfileMembershipDetailsType {
   rankValue: Float
   """Ranking"""
   ranking: Float
+  """Number of times a new member has been referred."""
+  referralCount: Float
+  """Name ID of member who referred."""
+  referredByMember: String
   """RnA Insertdate"""
   rnaInsertDate: DateTime
   """RnA Updatedate"""
@@ -1204,6 +1229,8 @@ type ProfilesLoyaltyMembershipTransactionsDetailsType {
   recordTypeDescription: String
   """Reference"""
   reference: String
+  """Name ID of member referred."""
+  referredMember: String
   """Reservation Name ID"""
   reservationNameID: Float
   """Reservation Status"""

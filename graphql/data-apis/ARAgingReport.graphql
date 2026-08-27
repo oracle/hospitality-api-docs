@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ARAgingReport GraphQL API,
 # description : GraphQL API to cater for Detailed information on accounts receivable transactions including aging bucket of invoices, open transaction amounts, folio information and the account details.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,24 +80,62 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - aragingreportDetailsResort
-# 		 - aragingreportDetailsTrxDate
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - aragingreportDetailsResort 
+# 		 - aragingreportdetailsChainCode 
+# Pair - [2] 
+# 		 - aragingreportDetailsAccountCode 
+# 		 - aragingreportDetailsArTransferDate 
+# 		 - aragingreportDetailsBusinessDate 
+# 		 - aragingreportDetailsFolioNo 
+# 		 - aragingreportDetailsInvoiceNo 
+# 		 - aragingreportDetailsInvoiceStatus 
+# 		 - aragingreportDetailsJrnupdatedttm 
+# 		 - aragingreportDetailsResvNameId 
+# 		 - aragingreportDetailsTrxDate 
+# 		 - aragingreportDetailsTrxNo 
 
 input ARAgingReportQueryArgumentsType {
+  """CHAIN_CODE"""
+  aragingreportdetailsChainCode: StringInput                            @conditionalInputPair(pair: 1)
+  """Account Code"""
+  aragingreportDetailsAccountCode: FloatInput                           @conditionalInputPair(pair: 2)
+  """AR Transfer Date"""
+  aragingreportDetailsArTransferDate: DateInput                         @conditionalInputPair(pair: 2)
+  """Business Date"""
+  aragingreportDetailsBusinessDate: DateInput                           @conditionalInputPair(pair: 2)
+  """Folio Number"""
+  aragingreportDetailsFolioNo: FloatInput                               @conditionalInputPair(pair: 2)
+  """Invoice Number"""
+  aragingreportDetailsInvoiceNo: FloatInput                             @conditionalInputPair(pair: 2)
+  """Invoice Status"""
+  aragingreportDetailsInvoiceStatus: StringInput                        @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  aragingreportDetailsJrnupdatedttm: DateTimeInput
+  aragingreportDetailsJrnupdatedttm: DateTimeInput                      @conditionalInputPair(pair: 2)
   """Code to uniquely identify the Property"""
-  aragingreportDetailsResort: StringInput!                              @mandatoryInput
+  aragingreportDetailsResort: StringInput                               @conditionalInputPair(pair: 1)
+  """Resv Name ID"""
+  aragingreportDetailsResvNameId: FloatInput                            @conditionalInputPair(pair: 2)
   """Transaction Date"""
-  aragingreportDetailsTrxDate: DateInput!                               @mandatoryInput
+  aragingreportDetailsTrxDate: DateInput                                @conditionalInputPair(pair: 2)
+  """Transaction No"""
+  aragingreportDetailsTrxNo: FloatInput                                 @conditionalInputPair(pair: 2)
+  """CHAIN_CODE"""
+  transactioncodedetailsChainCode: StringInput
+  """Ar Name ID"""
+  transcodeDetailsArNameId: FloatInput
+  """Adj Trx Code"""
+  transcodeDetailsAdjTrxCode: StringInput
   """Central Xchange Date"""
   transcodeDetailsCXchangeDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   transcodeDetailsDsi: FloatInput
+  """Group"""
+  transcodeDetailsTcGroup: StringInput
   """JRN Update Date and Time"""
   transcodeDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Property"""
@@ -106,6 +144,12 @@ input ARAgingReportQueryArgumentsType {
   transcodeDetailsOrganizationid: FloatInput
   """Property"""
   transcodeDetailsResort: StringInput
+  """Trx Action ID"""
+  transcodeDetailsTrxActionId: FloatInput
+  """Transaction Code Sub-group"""
+  transcodeDetailsTcSubgroup: StringInput
+  """Transaction Code Type"""
+  transcodeDetailsTrxCodeType: StringInput
   """Transcodeid"""
   transcodeDetailsTranscodeid: StringInput
   """Trx Code"""
@@ -292,6 +336,8 @@ input ARAgingReportQueryArgumentsType {
   financialtransDetailsTrxNoHeader: FloatInput
   """User ID"""
   financialtransDetailsAuthorizerId: FloatInput
+  """CHAIN_CODE"""
+  accountdetailsChainCode: StringInput
   """Account Code"""
   accountDetailsAccountCode: FloatInput
   """Account Number"""
@@ -386,12 +432,20 @@ input ARAgingReportQueryArgumentsType {
   financialperioddayDetailsStartDate: DateInput
   """Year ID"""
   financialperioddayDetailsYearId: FloatInput
+  """CHAIN_CODE"""
+  arledgerdetailsChainCode: StringInput
+  """Accountid"""
+  arledgerDetailsAccountid: FloatInput
+  """AR Led Credit"""
+  arledgerDetailsArLedCredit: FloatInput
   """AR Led Debit"""
   arledgerDetailsArLedDebit: FloatInput
   """AR Number"""
   arledgerDetailsArNumber: FloatInput
   """AR State"""
   arledgerDetailsArState: StringInput
+  """Article ID"""
+  arledgerDetailsArticleId: FloatInput
   """Authorizer ID"""
   arledgerDetailsAuthorizerId: FloatInput
   """Bill Number"""
@@ -436,6 +490,8 @@ input ARAgingReportQueryArgumentsType {
   arledgerDetailsCashierid: FloatInput
   """Invoice Close Date"""
   arledgerDetailsInvoiceCloseDate: DateInput
+  """Invoice Number"""
+  arledgerDetailsInvoiceNo: FloatInput
   """JRN Update Date and Time"""
   arledgerDetailsJrnupdatedttm: DateTimeInput
   """Link Transaction No"""
@@ -1087,6 +1143,8 @@ type ARAgingReportType {
   aRAgingReportRecordCount: Int
 }
 type ARAgingReportARAgingReportDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """AR Ledger Debit"""
   aRLedgerDebit: Float
   """Account Code"""
@@ -1235,6 +1293,8 @@ type ARAgingReportARAgingReportDetailsType {
   trxNumber: Float
 }
 type ARAgingReportTransactionCodeDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """AR Ledger Payments YN"""
   aRLedgerPaymentsYN: String
   """Ar Name ID"""
@@ -2265,6 +2325,8 @@ type ARAgingReportFinancialTransactionDetailsType {
   sourceGroupDescription: String
   """Source Group Display Sequence"""
   sourceGroupDisplaySequence: Float
+  """Source Resort where the transaction originates for cross posted transaction"""
+  sourceResort: String
   """Sourceid"""
   sourceid: String
   """Stores the type of split performed: [A]mount [Q]uantity [P]ercent."""
@@ -2393,6 +2455,8 @@ type ARAgingReportFinancialTransactionDetailsType {
   vendorTranID: String
 }
 type ARAgingReportAccountDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Account Code"""
   accountCode: Float
   """Indicates if a Credit Limit amount will be required "Y" will take precedence over the credit limit amount on Profile level."""
@@ -2731,6 +2795,8 @@ type ARAgingReportFinancialPeriodDayDetailsType {
   yearsetupid: Float
 }
 type ARAgingReportARLedgerDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Indicates if an individual charge has been transferred to another invoice in AR. Used to disallow operations such as the transfer of same charge multiple times editing an already transferred charge etc."""
   aRChargeTransferYN: String
   """Indicates ASB transactions: Rental charge for an [A]partment Style Rental Cycle [O]ffsetting transaction for Rental charge for an Apartment Style Rental Cycle [N]ightly Rental Posting [W]aived Nights Rental Posting"""

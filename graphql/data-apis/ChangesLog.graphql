@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ChangesLog GraphQL API,
 # description : GraphQL API to cater for Provides detailed information on actions and the users who completed the action, including date, time, activity type, and description. Also providing the capability to combine with reservation, block and profile data.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,43 +80,63 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - actionDetailsInsertDate
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - actionDetailsChangeGroup 
+# 		 - actionDetailsResort 
+# Pair - [2] 
+# 		 - actionDetailsActionId 
+# 		 - actionDetailsActionType 
+# 		 - actionDetailsActivityId 
+# 		 - actionDetailsAllotmentHeaderId 
+# 		 - actionDetailsBookId 
+# 		 - actionDetailsEventId 
+# 		 - actionDetailsFinActionId 
+# 		 - actionDetailsInsertDate 
+# 		 - actionDetailsJrnupdatedttm 
+# 		 - actionDetailsModuleType 
+# 		 - actionDetailsNameId 
+# 		 - actionDetailsParentActionInstanceId 
+# 		 - actionDetailsRateCode 
 
 input ChangesLogQueryArgumentsType {
   """Action Date"""
-  actionDetailsInsertDate: DateInput!                                   @mandatoryInput
+  actionDetailsInsertDate: DateInput                                    @conditionalInputPair(pair: 2)
   """Action ID"""
-  actionDetailsActionId: FloatInput
+  actionDetailsActionId: FloatInput                                     @conditionalInputPair(pair: 2)
   """Action Type"""
-  actionDetailsActionType: StringInput
+  actionDetailsActionType: StringInput                                  @conditionalInputPair(pair: 2)
   """Activity ID that logs the changes."""
-  actionDetailsActivityId: FloatInput
+  actionDetailsActivityId: FloatInput                                   @conditionalInputPair(pair: 2)
   """Block ID"""
-  actionDetailsAllotmentHeaderId: FloatInput
+  actionDetailsAllotmentHeaderId: FloatInput                            @conditionalInputPair(pair: 2)
   """Book ID"""
-  actionDetailsBookId: FloatInput
+  actionDetailsBookId: FloatInput                                       @conditionalInputPair(pair: 2)
+  """Change Group"""
+  actionDetailsChangeGroup: StringInput                                 @conditionalInputPair(pair: 1)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   actionDetailsDsi: FloatInput
   """Event ID"""
-  actionDetailsEventId: FloatInput
+  actionDetailsEventId: FloatInput                                      @conditionalInputPair(pair: 2)
   """Action Id."""
-  actionDetailsFinActionId: FloatInput
+  actionDetailsFinActionId: FloatInput                                  @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  actionDetailsJrnupdatedttm: DateTimeInput
+  actionDetailsJrnupdatedttm: DateTimeInput                             @conditionalInputPair(pair: 2)
   """Module Type"""
-  actionDetailsModuleType: StringInput
+  actionDetailsModuleType: StringInput                                  @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   actionDetailsOrganizationid: FloatInput
   """Parent Action Instance ID"""
-  actionDetailsParentActionInstanceId: FloatInput
+  actionDetailsParentActionInstanceId: FloatInput                       @conditionalInputPair(pair: 2)
   """Profile ID"""
-  actionDetailsNameId: FloatInput
+  actionDetailsNameId: FloatInput                                       @conditionalInputPair(pair: 2)
+  """Code to uniquely identify the Property"""
+  actionDetailsResort: StringInput                                      @conditionalInputPair(pair: 1)
   """Rate Code"""
-  actionDetailsRateCode: StringInput
+  actionDetailsRateCode: StringInput                                    @conditionalInputPair(pair: 2)
   """Actual Check In Date Time"""
   reservationDetailsActualCheckInDateTime: DateTimeInput
   """Actual Check Out Date Time"""
@@ -391,6 +411,8 @@ input ChangesLogQueryArgumentsType {
   eventDetailsUpdateDate: DateTimeInput
   """Activity Completed"""
   workordersDetailsCompletedYn: StringInput
+  """Activity Completion Date"""
+  workordersDetailsAssignedTo: FloatInput
   """Activity Created On"""
   workordersDetailsCreatedDate: DateTimeInput
   """Activity End Date"""
@@ -403,6 +425,10 @@ input ChangesLogQueryArgumentsType {
   workordersDetailsPriorityCode: StringInput
   """Activity Start Date"""
   workordersDetailsStartDate: DateTimeInput
+  """Category Code"""
+  workordersDetailsCategoryCode: StringInput
+  """Chain Code"""
+  workordersDetailsChainCode: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   workordersDetailsDsi: FloatInput
   """Est Uot Code"""
@@ -1074,6 +1100,8 @@ type ChangesLogActionDetailsType {
   eventID: Float
   """Action Id."""
   financialActionId: Float
+  """Insert Date Time"""
+  insertDateTime: Date
   """Ip Address"""
   ipAddress: String
   """JRN Update Date"""
@@ -1902,6 +1930,8 @@ type ChangesLogReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -1952,6 +1982,8 @@ type ChangesLogReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""

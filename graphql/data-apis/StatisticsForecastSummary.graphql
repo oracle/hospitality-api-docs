@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA StatisticsForecastSummary GraphQL API,
 # description : GraphQL API to cater for Future on the books information including rooms, revenue and persons with breakdowns by room types, market code, source code and periods of time.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,28 +80,54 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - forecastsummaryDetailsConsideredDate
-# 		 - forecastsummaryDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - forecastsummaryDetailsResort 
+# 		 - forecastsummarydetailsChainCode 
+# Pair - [2] 
+# 		 - forecastsummaryDetailsAllotmentHeaderId 
+# 		 - forecastsummaryDetailsConsideredDate 
+# 		 - forecastsummaryDetailsEventType 
+# 		 - forecastsummaryDetailsJrnupdatedttm 
+# 		 - forecastsummaryDetailsMarketCode 
+# 		 - forecastsummaryDetailsResvInvType 
+# 		 - forecastsummaryDetailsResvStatus 
+# 		 - forecastsummaryDetailsRoomCategory 
+# 		 - forecastsummaryDetailsRoomClass 
+# 		 - forecastsummaryDetailsUpdateBusinessDate 
 
 input StatisticsForecastSummaryQueryArgumentsType {
+  """CHAIN_CODE"""
+  forecastsummarydetailsChainCode: StringInput                          @conditionalInputPair(pair: 1)
+  """Allotment Header ID"""
+  forecastsummaryDetailsAllotmentHeaderId: FloatInput                   @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   forecastsummaryDetailsDsi: FloatInput
   """Event Type"""
-  forecastsummaryDetailsEventType: StringInput
+  forecastsummaryDetailsEventType: StringInput                          @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  forecastsummaryDetailsJrnupdatedttm: DateTimeInput
+  forecastsummaryDetailsJrnupdatedttm: DateTimeInput                    @conditionalInputPair(pair: 2)
+  """Market Code"""
+  forecastsummaryDetailsMarketCode: StringInput                         @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   forecastsummaryDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  forecastsummaryDetailsResort: StringInput!                            @mandatoryInput
+  forecastsummaryDetailsResort: StringInput                             @conditionalInputPair(pair: 1)
+  """Reservation Inventory Type"""
+  forecastsummaryDetailsResvInvType: StringInput                        @conditionalInputPair(pair: 2)
+  """Reservation Status"""
+  forecastsummaryDetailsResvStatus: StringInput                         @conditionalInputPair(pair: 2)
   """Room Category"""
-  forecastsummaryDetailsRoomCategory: StringInput
+  forecastsummaryDetailsRoomCategory: StringInput                       @conditionalInputPair(pair: 2)
+  """Room Class"""
+  forecastsummaryDetailsRoomClass: StringInput                          @conditionalInputPair(pair: 2)
   """Stay Date"""
-  forecastsummaryDetailsConsideredDate: DateInput!                      @mandatoryInput
+  forecastsummaryDetailsConsideredDate: DateInput                       @conditionalInputPair(pair: 2)
+  """Update Business Date"""
+  forecastsummaryDetailsUpdateBusinessDate: DateInput                   @conditionalInputPair(pair: 2)
   """Active YN"""
   parentcompanyprofileDetailsActiveYn: StringInput
   """The unique identifier of the CRS"""
@@ -750,6 +776,8 @@ input StatisticsForecastSummaryQueryArgumentsType {
   marketDetailsResort: StringInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   rateclassesDetailsDsi: FloatInput
+  """End Date"""
+  rateclassesDetailsEndDate: DateInput
   """JRN Update Date and Time"""
   rateclassesDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Organization"""
@@ -760,6 +788,8 @@ input StatisticsForecastSummaryQueryArgumentsType {
   rateclassesDetailsRateClass: StringInput
   """Property code"""
   rateclassesDetailsResortResort: StringInput
+  """Start Date"""
+  rateclassesDetailsBeginDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   sourcetableDetailsDsi: FloatInput
   """JRN Update Date and Time"""
@@ -798,8 +828,12 @@ input StatisticsForecastSummaryQueryArgumentsType {
   nationalityDetailsOrganizationid: FloatInput
   """Title Suffix"""
   nationalityDetailsTitleSuffix: FloatInput
+  """Business Date"""
+  ratecategoriesDetailsBeginDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   ratecategoriesDetailsDsi: FloatInput
+  """End Date"""
+  ratecategoriesDetailsEndDate: DateInput
   """JRN Update Date and Time"""
   ratecategoriesDetailsJrnupdatedttm: DateTimeInput
   """Internal ID to uniquely identify the Organization"""
@@ -828,6 +862,8 @@ input StatisticsForecastSummaryQueryArgumentsType {
   ratecodeDetailsSellSequence: FloatInput
   """End Date"""
   ratecodeDetailsEndBookingDate: DateInput
+  """Is this rate code available for GDS"""
+  ratecodeDetailsGdsAllowedYn: StringInput
   """Group Code"""
   ratecodeDetailsGroupCode: StringInput
   """JRN Update Date and Time"""
@@ -973,6 +1009,8 @@ type StatisticsForecastSummaryType {
   statisticsForecastSummaryRecordCount: Int
 }
 type StatisticsForecastSummaryForecastSummaryDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Adults"""
   adults: Float
   """Adults Tax Free"""
@@ -3639,6 +3677,8 @@ type StatisticsForecastSummaryRateCodeDetailsType {
   jRNUpdateDate: Date
   """JRN Update Date and Time"""
   jRNUpdateDateAndTime: DateTime
+  """Local rate code associated with offshore rate code."""
+  localRateCode: String
   """Internal ID to uniquely identify the Property"""
   locationID: String
   """Long Info"""
@@ -3683,6 +3723,8 @@ type StatisticsForecastSummaryRateCodeDetailsType {
   occupancyBasedYn: String
   """Indicates the occupancy level for hurdle evaluation."""
   occupancyLevel: Float
+  """Indicates if rate code is an offshore rate."""
+  offshoreRateYN: String
   """The operator type to use during the calculation of base rates. (ADD_TO SUBTRACT)"""
   operatorType: String
   """Order By"""
@@ -3713,6 +3755,10 @@ type StatisticsForecastSummaryRateCodeDetailsType {
   packages: String
   """Indicates whether the rate code is pending for approval or not"""
   pendingApprovalYn: String
+  """Allow users to use points to get discount on rate codes."""
+  pointsDiscountYN: String
+  """Posting Interval."""
+  postingInterval: String
   """Posting Rhythm"""
   postingRhythm: String
   """Number of nights for posting rhythm."""

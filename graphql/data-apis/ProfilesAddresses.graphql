@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA ProfilesAddresses GraphQL API,
 # description : GraphQL API to cater for All associated addresses including primary and secondary addresses, and address types which can be associated with the proper profile and profile type.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,11 +80,20 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - profileaddressDetailsChainCode
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - profileaddressDetailsChainCode 
+# Pair - [2] 
+# 		 - profileaddressDetailsAddressId 
+# 		 - profileaddressDetailsCity 
+# 		 - profileaddressDetailsCountry 
+# 		 - profileaddressDetailsInsertDate 
+# 		 - profileaddressDetailsJrnupdatedttm 
+# 		 - profileaddressDetailsNameId 
+# 		 - profileaddressDetailsPrimaryYn 
 
 input ProfilesAddressesQueryArgumentsType {
   """The first line of street address."""
@@ -96,7 +105,7 @@ input ProfilesAddressesQueryArgumentsType {
   """The fourth line of street address."""
   profileaddressDetailsAddress4: StringInput
   """The primary key for this table."""
-  profileaddressDetailsAddressId: FloatInput
+  profileaddressDetailsAddressId: FloatInput                            @conditionalInputPair(pair: 2)
   """Address Language"""
   profileaddressDetailsLanguageCode: StringInput
   """Description for each language code."""
@@ -114,9 +123,9 @@ input ProfilesAddressesQueryArgumentsType {
   """Central State Description"""
   profileaddressDetailsRepState: StringInput
   """The Chain code of the chain for which this record belongs to."""
-  profileaddressDetailsChainCode: StringInput!                          @mandatoryInput
+  profileaddressDetailsChainCode: StringInput                           @conditionalInputPair(pair: 1)
   """The city for this address."""
-  profileaddressDetailsCity: StringInput
+  profileaddressDetailsCity: StringInput                                @conditionalInputPair(pair: 2)
   """The Timestamp when this record was cleansed."""
   profileaddressDetailsCleansedDatetime: DateTimeInput
   """The error message why this record was not cleansed."""
@@ -132,11 +141,11 @@ input ProfilesAddressesQueryArgumentsType {
   """Country ."""
   profileaddressDetailsCountryCode: StringInput
   """Country name."""
-  profileaddressDetailsCountry: StringInput
+  profileaddressDetailsCountry: StringInput                             @conditionalInputPair(pair: 2)
   """The user that created the record"""
   profileaddressDetailsInsertUser: FloatInput
   """The date the record was created"""
-  profileaddressDetailsInsertDate: DateTimeInput
+  profileaddressDetailsInsertDate: DateTimeInput                        @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   profileaddressDetailsDsi: FloatInput
   """Deleted Y/n"""
@@ -156,7 +165,7 @@ input ProfilesAddressesQueryArgumentsType {
   """Organization ID"""
   profileaddressDetailsOrganizationId: FloatInput
   """JRN Update Date and Time"""
-  profileaddressDetailsJrnupdatedttm: DateTimeInput
+  profileaddressDetailsJrnupdatedttm: DateTimeInput                     @conditionalInputPair(pair: 2)
   """Code to synchronize with Laptop. (not used)"""
   profileaddressDetailsLaptopChange: FloatInput
   """Last property that updated this record."""
@@ -172,11 +181,11 @@ input ProfilesAddressesQueryArgumentsType {
   """Internal Primary Key ID to uniquely identify the row"""
   profileaddressDetailsPkid: FloatInput
   """Profile having Multiple Addresses Need to have one Primary Address for each Type."""
-  profileaddressDetailsPrimaryYn: StringInput
+  profileaddressDetailsPrimaryYn: StringInput                           @conditionalInputPair(pair: 2)
   """The primary key for this table."""
   profileaddressDetailsProfileAddressId: FloatInput
   """The reference to the NAME record that owns this address."""
-  profileaddressDetailsNameId: FloatInput
+  profileaddressDetailsNameId: FloatInput                               @conditionalInputPair(pair: 2)
   """The reference to the NAME record that owns this address."""
   profileaddressDetailsProfileId: FloatInput
   """Province."""

@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA RevenueFixedCharges GraphQL API,
 # description : GraphQL API to cater for Details on fixed charges including amount, frequency, and transaction code and the linked reservations.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,49 +80,63 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - fixedchargesDetailsFixedchargeenddate
-# 		 - fixedchargesDetailsFixedchargestartdate
-# 		 - fixedchargesDetailsResort
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - fixedchargesDetailsResort 
+# Pair - [2] 
+# 		 - fixedchargesDetailsAccountCode 
+# 		 - fixedchargesDetailsAccountid 
+# 		 - fixedchargesDetailsCXchangeDate 
+# 		 - fixedchargesDetailsFixedChargesId 
+# 		 - fixedchargesDetailsFixedchargeenddate 
+# 		 - fixedchargesDetailsFixedchargesid 
+# 		 - fixedchargesDetailsFixedchargespmsref 
+# 		 - fixedchargesDetailsFixedchargestartdate 
+# 		 - fixedchargesDetailsJrnupdatedttm 
+# 		 - fixedchargesDetailsLocationid 
+# 		 - fixedchargesDetailsReservationid 
+# 		 - fixedchargesDetailsResvNameId 
+# 		 - fixedchargesDetailsTransactionCode 
+# 		 - fixedchargesDetailsTranscodeid 
 
 input RevenueFixedChargesQueryArgumentsType {
   """Account Code"""
-  fixedchargesDetailsAccountCode: FloatInput
+  fixedchargesDetailsAccountCode: FloatInput                            @conditionalInputPair(pair: 2)
   """Accountid"""
-  fixedchargesDetailsAccountid: FloatInput
+  fixedchargesDetailsAccountid: FloatInput                              @conditionalInputPair(pair: 2)
   """Business Date"""
-  fixedchargesDetailsFixedchargestartdate: DateInput!                   @mandatoryInput
+  fixedchargesDetailsFixedchargestartdate: DateInput                    @conditionalInputPair(pair: 2)
   """Central Xchange Date"""
-  fixedchargesDetailsCXchangeDate: DateInput
+  fixedchargesDetailsCXchangeDate: DateInput                            @conditionalInputPair(pair: 2)
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   fixedchargesDetailsDsi: FloatInput
   """End Date"""
-  fixedchargesDetailsFixedchargeenddate: DateInput!                     @mandatoryInput
+  fixedchargesDetailsFixedchargeenddate: DateInput                      @conditionalInputPair(pair: 2)
   """Unique number to identify the entry."""
-  fixedchargesDetailsFixedChargesId: FloatInput
+  fixedchargesDetailsFixedChargesId: FloatInput                         @conditionalInputPair(pair: 2)
   """Fixedchargespmsref"""
-  fixedchargesDetailsFixedchargespmsref: FloatInput
+  fixedchargesDetailsFixedchargespmsref: FloatInput                     @conditionalInputPair(pair: 2)
   """Fixedchargesid"""
-  fixedchargesDetailsFixedchargesid: FloatInput
+  fixedchargesDetailsFixedchargesid: FloatInput                         @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  fixedchargesDetailsJrnupdatedttm: DateTimeInput
+  fixedchargesDetailsJrnupdatedttm: DateTimeInput                       @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Property"""
-  fixedchargesDetailsLocationid: StringInput
+  fixedchargesDetailsLocationid: StringInput                            @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Organization"""
   fixedchargesDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  fixedchargesDetailsResort: StringInput!                               @mandatoryInput
+  fixedchargesDetailsResort: StringInput                                @conditionalInputPair(pair: 1)
   """Resv Name ID"""
-  fixedchargesDetailsResvNameId: FloatInput
+  fixedchargesDetailsResvNameId: FloatInput                             @conditionalInputPair(pair: 2)
   """Reservationid"""
-  fixedchargesDetailsReservationid: FloatInput
+  fixedchargesDetailsReservationid: FloatInput                          @conditionalInputPair(pair: 2)
   """Rate transaction code"""
-  fixedchargesDetailsTransactionCode: StringInput
+  fixedchargesDetailsTransactionCode: StringInput                       @conditionalInputPair(pair: 2)
   """Transcodeid"""
-  fixedchargesDetailsTranscodeid: StringInput
+  fixedchargesDetailsTranscodeid: StringInput                           @conditionalInputPair(pair: 2)
   """The property that the record belongs to"""
   resortDetailsResort: StringInput
   """Number format of AR account no."""
@@ -2170,6 +2184,8 @@ type RevenueFixedChargesReservationDetailsType {
   packageForecastGroup: String
   """Package Forecast Group Description"""
   packageForecastGroupDescription: String
+  """Parent Org Code"""
+  parentOrgCode: String
   """Parent Resv Name ID"""
   parentReservationNameId: Float
   """Parentreservationid"""
@@ -2220,6 +2236,8 @@ type RevenueFixedChargesReservationDetailsType {
   postStayChargingYN: String
   """Posting Allowed YN"""
   postingAllowedYN: String
+  """Posting Interval"""
+  postingInterval: String
   """This date flags if and when the record was reviewed from pre-arrival screen."""
   preArrReviewedDt: DateTime
   """User id who reviewed the record."""

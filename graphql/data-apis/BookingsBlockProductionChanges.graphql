@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA BookingsBlockProductionChanges GraphQL API,
 # description : GraphQL API to cater for Detailed information on blocks and any changes to the number of rooms or revenue, by stay date, property and Block Owner.
-#               Compatible with OPERA Cloud RnA release 26.1.0.0.
+#               Compatible with OPERA Cloud RnA release 26.3.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.1.0.0
+# version : 26.3.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -80,34 +80,43 @@ input FloatRangeInput {
   end: Float!
 }
 
-# Mandatory filters:
-# The following filters are mandatory required filters. 
-# Please ensure the request includes all the below fields. 
-# 		 - allotmentchangesnetDetailsResort
-# 		 - allotmentchangesnetDetailsStayDate
 
+# Conditional Mandatory filters:
+# At least one filter from each required filter pair must be provided. 
+# Please ensure the request includes at least one filter from each required pair. 
+# Pair - [1] 
+# 		 - allotmentchangesnetDetailsResort 
+# 		 - blockchangesnetdetailsChainCode 
+# Pair - [2] 
+# 		 - allotmentchangesnetDetailsAllotChangeNetId 
+# 		 - allotmentchangesnetDetailsAllotmentHeaderId 
+# 		 - allotmentchangesnetDetailsInsertDate 
+# 		 - allotmentchangesnetDetailsJrnupdatedttm 
+# 		 - allotmentchangesnetDetailsStayDate 
 
 input BookingsBlockProductionChangesQueryArgumentsType {
+  """CHAIN_CODE"""
+  blockchangesnetdetailsChainCode: StringInput                          @conditionalInputPair(pair: 1)
   """Block ID"""
-  allotmentchangesnetDetailsAllotmentHeaderId: FloatInput
+  allotmentchangesnetDetailsAllotmentHeaderId: FloatInput               @conditionalInputPair(pair: 2)
   """System generated number that uniquely identifies a record in this table."""
-  allotmentchangesnetDetailsAllotChangeNetId: FloatInput
+  allotmentchangesnetDetailsAllotChangeNetId: FloatInput                @conditionalInputPair(pair: 2)
   """Central Xchange Date"""
   allotmentchangesnetDetailsCXchangeDate: DateInput
   """DSI Internal Data Source ID to identify Opera Chain and instance"""
   allotmentchangesnetDetailsDsi: FloatInput
   """Insert Date"""
-  allotmentchangesnetDetailsInsertDate: DateTimeInput
+  allotmentchangesnetDetailsInsertDate: DateTimeInput                   @conditionalInputPair(pair: 2)
   """JRN Update Date and Time"""
-  allotmentchangesnetDetailsJrnupdatedttm: DateTimeInput
+  allotmentchangesnetDetailsJrnupdatedttm: DateTimeInput                @conditionalInputPair(pair: 2)
   """Internal ID to uniquely identify the Property"""
   allotmentchangesnetDetailsLocationid: StringInput
   """Internal ID to uniquely identify the Organization"""
   allotmentchangesnetDetailsOrganizationid: FloatInput
   """Code to uniquely identify the Property"""
-  allotmentchangesnetDetailsResort: StringInput!                        @mandatoryInput
+  allotmentchangesnetDetailsResort: StringInput                         @conditionalInputPair(pair: 1)
   """Stay Date"""
-  allotmentchangesnetDetailsStayDate: DateInput!                        @mandatoryInput
+  allotmentchangesnetDetailsStayDate: DateInput                         @conditionalInputPair(pair: 2)
   """The property that the record belongs to"""
   resortDetailsResort: StringInput
   """Number format of AR account no."""
@@ -721,6 +730,8 @@ type BookingsBlockProductionChangesType {
   bookingsBlockProductionChangesRecordCount: Int
 }
 type BookingsBlockProductionChangesBlockChangesNetDetailsType {
+  """CHAIN_CODE"""
+  chainCode: String
   """Block ID"""
   blockID: Float
   """System generated number that uniquely identifies a record in this table."""
