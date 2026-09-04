@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Accounts Receivables API",
-    "description": "APIs to cater for Accounts Receivables functionality in OPERA Cloud. <br /><br The OPERA Cloud Accounts Receivable module enables you to manage debtors' accounts, invoices, and remittance.<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs to cater for Accounts Receivables functionality in OPERA Cloud. <br /><br The OPERA Cloud Accounts Receivable module enables you to manage debtors' accounts, invoices, and remittance.<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -5634,7 +5634,7 @@
             "name": "traceOn",
             "in": "query",
             "required": false,
-            "description": "Date of the trace.",
+            "description": "Date of the trace. Uses the hotel's time zone.",
             "type": "string",
             "format": "date-time"
           },
@@ -6082,6 +6082,227 @@
           },
           "204": {
             "description": "ARAgingCycles not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "AccountsReceivables"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/arHoldings/transfer": {
+      "get": {
+        "summary": "Fetch the details of total number of invoices found and total of the transactions between given date range. ",
+        "description": "This operation fetches the details of total number of invoices found and total of the transactions. This operation is used to fetch the details of AR holdings that are settled to Direct Bill before Accounts Receivables Control is enabled for a property.<p><strong>OperationId:</strong>getTransferARHoldingsSummary</p>",
+        "operationId": "getTransferARHoldingsSummary",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Details of AR holdings for transfer between date range.",
+            "schema": {
+              "$ref": "#/definitions/totalTransferARHoldings"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "AccountsReceivables"
+        ]
+      },
+      "post": {
+        "summary": "Request to submit a job to process the AR invoices within the specified date range and settle them one by one. This API would be needed before Accounts Receivables Control is enabled for a property.",
+        "description": "Request to submit a job to process the AR invoices within the specified date range and settle them one by one. This API would be needed before Accounts Receivables Control is enabled for a property. <p><strong>OperationId:</strong>postTransferARHoldings</p>",
+        "operationId": "postTransferARHoldings",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Unique ID of the hotel"
+          },
+          {
+            "name": "transferARHoldingsProcess",
+            "in": "body",
+            "required": true,
+            "description": "Request to submit a job to settle AR holdings settled to Direct Bill before Accounts Receivables Control is enabled ",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/transferARHoldingsProcess"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response for Transfer AR Holdings request.",
+            "schema": {
+              "$ref": "#/definitions/transferARHoldingsProcessDetails"
+            }
           },
           "400": {
             "$ref": "#/responses/400"
@@ -12505,7 +12726,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -12516,7 +12737,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -12784,12 +13005,12 @@
       "description": "Holds the Arrival and Departure Time Information",
       "properties": {
         "reservationExpectedArrivalTime": {
-          "description": "Arrival Time",
+          "description": "Arrival Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
         "reservationExpectedDepartureTime": {
-          "description": "Departure Time",
+          "description": "Departure Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -13203,7 +13424,7 @@
           "$ref": "#/definitions/anonymizationStatusType"
         },
         "anonymizationDate": {
-          "description": "Date and Time when the guest was anonymized.",
+          "description": "Date and Time when the guest was anonymized. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -13655,7 +13876,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -13666,7 +13887,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -13859,7 +14080,7 @@
           "maxLength": 100
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -13870,7 +14091,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -14114,7 +14335,7 @@
       "description": "Information regarding the message sent to guest.",
       "properties": {
         "sentTime": {
-          "description": "Time the text was last sent to the user.",
+          "description": "Time the text was last sent to the user. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -15059,7 +15280,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -15070,7 +15291,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -15119,7 +15340,7 @@
           "type": "boolean"
         },
         "expectedReturnTime": {
-          "description": "Expected Return Time",
+          "description": "Expected Return Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -15909,7 +16130,7 @@
           "$ref": "#/definitions/commentType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -15920,7 +16141,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -16025,7 +16246,7 @@
           "maxLength": 8
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -16036,7 +16257,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -16127,7 +16348,7 @@
           "type": "integer"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -16138,7 +16359,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -16164,7 +16385,7 @@
           "$ref": "#/definitions/dateTimeSpanType"
         },
         "traceOn": {
-          "description": "Date of the trace.",
+          "description": "Date of the trace. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -17837,7 +18058,7 @@
           "$ref": "#/definitions/commentType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -17848,7 +18069,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -18621,7 +18842,7 @@
           "type": "integer"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -18632,7 +18853,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -20937,13 +21158,12 @@
       "type": "object",
       "description": "Details of the Statement to generate.",
       "properties": {
-        "invoicesCount": {
-          "description": "Total number of invoices found between the date range.",
-          "type": "integer"
-        },
-        "total": {
-          "description": "The total of the AR invoices for the selected date range along with the currency code that was defined in the property details as local currency ",
-          "$ref": "#/definitions/currencyAmountType"
+        "summariesByTrxYear": {
+          "description": "Summary details grouped by transaction year.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transferARHoldingsSummaryByTrxYear"
+          }
         },
         "links": {
           "$ref": "#/definitions/links"
@@ -21125,6 +21345,34 @@
         "guestName": {
           "type": "string",
           "description": "Guest Name set for the invoice."
+        }
+      }
+    },
+    "transferARHoldingsSummaryByTrxYear": {
+      "type": "object",
+      "description": "Summary details for a transaction year.",
+      "properties": {
+        "trxYear": {
+          "description": "Transaction year for the record.",
+          "type": "integer"
+        },
+        "minTrxDate": {
+          "description": "Minimum transaction date for the transaction year.",
+          "type": "string",
+          "format": "date"
+        },
+        "maxTrxDate": {
+          "description": "Maximum transaction date for the transaction year.",
+          "type": "string",
+          "format": "date"
+        },
+        "invoiceCount": {
+          "description": "Total number of invoices found for the transaction year.",
+          "type": "integer"
+        },
+        "total": {
+          "description": "The total of the AR invoices for the transaction year along with the property local currency code.",
+          "$ref": "#/definitions/currencyAmountType"
         }
       }
     }

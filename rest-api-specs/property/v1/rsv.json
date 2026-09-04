@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Reservation API",
-    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs to cater for Reservation functionality in OPERA Cloud. <br /><br />OPERA Cloud Reservations provides a complete set of capabilities for creating and updating reservations. Reservations are a central feature of OPERA Cloud. As a key source of information, the reservation specifies a guest's arrival date, departure date, room type, rate, packages, and many other details. It is also a gateway to dozens of other functions that contribute to the guest's experience.  All reservations in OPERA Cloud require a guest profile.  <br /><br /> You can create profiles while booking a reservation. If a profile already exists, you can look it up (using getProfiles in CRM module) and attach it to the reservation during the reservation booking process using the Profile ID.<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -1349,7 +1349,8 @@
                 "OpenBalance",
                 "AutoFolioSettlement",
                 "Routing",
-                "PlayerSnapshot"
+                "PlayerSnapshot",
+                "IncludeDetachedGuest"
               ]
             },
             "required": false
@@ -3215,7 +3216,8 @@
                 "RoomAssignedByAI",
                 "DailySummary",
                 "OffshoreRates",
-                "PostingIntervals"
+                "PostingIntervals",
+                "AgeThresholds"
               ]
             },
             "required": false
@@ -6348,7 +6350,8 @@
               "FiscalInfo",
               "CorrectionPostings",
               "Vouchers",
-              "ScheduledRoomMoves"
+              "ScheduledRoomMoves",
+              "PayByLinks"
             ],
             "description": "Represents Reservation search type Player Snapshot."
           },
@@ -6901,7 +6904,8 @@
                 "Room",
                 "RoomType",
                 "QueuePriority",
-                "QueueDurationTime"
+                "QueueDurationTime",
+                "ConfirmationNo"
               ]
             },
             "required": false
@@ -7111,6 +7115,7 @@
                 "FiscalInfo",
                 "CommissionsInfo",
                 "DepartureReservationInfo",
+                "Vouchers",
                 "MultipleMemberships",
                 "FetchChildAges",
                 "OffshoreRates",
@@ -7489,7 +7494,8 @@
                 "OpenBalance",
                 "AutoFolioSettlement",
                 "Routing",
-                "PlayerSnapshot"
+                "PlayerSnapshot",
+                "IncludeDetachedGuest"
               ]
             },
             "required": false
@@ -11148,7 +11154,6 @@
                 "Reservation",
                 "Comments",
                 "ReservationMembershipAwards",
-                "ReservationIdentification",
                 "GuestComments",
                 "Packages",
                 "TotalCostOfStay",
@@ -11200,7 +11205,8 @@
                 "ReservationProtection",
                 "PostingIntervals",
                 "PreArrivals",
-                "PackageAllowance"
+                "PackageAllowance",
+                "AgeThresholds"
               ]
             },
             "required": false
@@ -15498,9 +15504,16 @@
             "description": "Unique OPERA reservation ID which is used to find reservation from OPERA. This ID is a primary identification of a reservation in OPERA."
           },
           {
+            "name": "autoInsertSeededFlexCodes",
+            "in": "query",
+            "type": "boolean",
+            "required": false,
+            "description": "Indicates whether to automatically insert seeded flex codes."
+          },
+          {
             "name": "flexFieldValueInfo",
             "in": "body",
-            "required": true,
+            "required": false,
             "description": "Request object to create a new flex field",
             "schema": {
               "allOf": [
@@ -22634,7 +22647,6 @@
                 "Reservation",
                 "Comments",
                 "ReservationMembershipAwards",
-                "ReservationIdentification",
                 "GuestComments",
                 "Packages",
                 "TotalCostOfStay",
@@ -27736,7 +27748,8 @@
                 "RateAmount",
                 "RateCode",
                 "Room",
-                "RoomType"
+                "RoomType",
+                "ConfirmationNo"
               ]
             },
             "required": false
@@ -27917,6 +27930,7 @@
                 "TaxType",
                 "GuestDeviceNotification",
                 "RoomAssignedByAI",
+                "Vouchers",
                 "FetchChildAges",
                 "OffshoreRates",
                 "PostingIntervals",
@@ -33336,6 +33350,10 @@
           "description": "Flag to determine if the credit card was swiped/manually entered , This element is only used when PAYMENT SERVICE DIRECTIVE(PSD) Opera Control is active.",
           "type": "boolean"
         },
+        "vcc": {
+          "description": "Flag to determine if the credit card is a Virtual Credit Card.",
+          "type": "boolean"
+        },
         "cardOrToken": {
           "description": "This contains information on whether credit card is tokenized (token enabled). A value of 'Token' indicates credit card is token enabled and 'CardNumber' indicates non token environment for this payment card type.",
           "$ref": "#/definitions/cardNumberTypeType"
@@ -34095,6 +34113,10 @@
           "type": "number",
           "minLength": 0,
           "maxLength": 40
+        },
+        "hasPayByLinks": {
+          "description": "Resolves whether reservation has Pay By Links.",
+          "type": "boolean"
         }
       }
     },
@@ -35397,6 +35419,10 @@
           "description": "Indicates to Override the Room Out Of Service Check if applicable.",
           "type": "boolean"
         },
+        "overrideExternallyExcludedPkgRestrictions": {
+          "description": "When enabled (true), packages managed by external systems can be added, removed, or updated on a reservation. When disabled or not specified (default is false), such packages cannot be added, removed, or updated.",
+          "type": "boolean"
+        },
         "overrideRotationRoom": {
           "description": "Override the rotation room that is next in the sequence with the room currently assigned to this reservation. This is applicable when Room Rotation OPERA Control is active.",
           "type": "boolean",
@@ -35413,14 +35439,6 @@
           "maxItems": 4000,
           "items": {
             "$ref": "#/definitions/reservationMembershipAwardType"
-          }
-        },
-        "resvIdentifications": {
-          "description": "List of identification of the customer.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/resvIdentificationInfoType"
           }
         },
         "overrideRoomFeatures": {
@@ -35613,6 +35631,18 @@
         "scheduledRoomMoveRoomPending": {
           "type": "boolean",
           "description": "Pending Scheduled Move Room."
+        },
+        "ageThresholdPrimaryGuestExceeded": {
+          "type": "boolean",
+          "description": "Returns as true if the primary guest on the reservation has a DOB which exceeds the configured minimum age threshold of the property. Returns as False if the DOB of the guest does not exceed the age threshold of the property."
+        },
+        "ageThresholdAllGuestsExceeded": {
+          "type": "boolean",
+          "description": "Returns as true if all guests on the reservation have a DOB which exceeds the configured minimum age threshold of the property. Returns as False if there are valid DOBs for all guests on the reservation, but 1 or more does not exceed the configured age threshold of the property."
+        },
+        "ageThresholdAnyGuestsExceeded": {
+          "type": "boolean",
+          "description": "Returns as true if 1 or more guests on the reservation has a DOB which exceeds the configured age threshold of the property."
         }
       }
     },
@@ -40435,6 +40465,12 @@
         "externallyExcluded": {
           "type": "boolean",
           "description": "Flag to indicate if a package is configured as Externally Excluded."
+        },
+        "packageCategory": {
+          "type": "string",
+          "description": "Package Category.",
+          "minLength": 0,
+          "maxLength": 20
         }
       }
     },
@@ -43986,7 +44022,6 @@
         "Comments",
         "GuestComments",
         "ReservationMembershipAwards",
-        "ReservationIdentification",
         "Packages",
         "InventoryItems",
         "ReservationPaymentMethods",
@@ -44796,14 +44831,6 @@
             "$ref": "#/definitions/commentInfoType"
           }
         },
-        "resvIdentifications": {
-          "description": "List of identification of the customer.",
-          "type": "array",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/resvIdentificationInfoType"
-          }
-        },
         "guestComments": {
           "description": "List of Notes for the Guest related to the profile.",
           "type": "array",
@@ -45158,6 +45185,10 @@
         },
         "overrideOutOfServiceCheck": {
           "description": "Indicates to Override the Room Out Of Service Check if applicable.",
+          "type": "boolean"
+        },
+        "overrideExternallyExcludedPkgRestrictions": {
+          "description": "When enabled (true), packages managed by external systems can be added, removed, or updated on a reservation. When disabled or not specified (default is false), such packages cannot be added, removed, or updated.",
           "type": "boolean"
         },
         "overrideRotationRoom": {
@@ -46366,6 +46397,14 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/definitions/routingInstructionType"
+                  }
+                },
+                "compAccountingInfos": {
+                  "description": "List of authorizers associated to the routing instructions.",
+                  "type": "array",
+                  "maxItems": 4000,
+                  "items": {
+                    "$ref": "#/definitions/compAccountingType"
                   }
                 }
               }
@@ -49992,6 +50031,15 @@
             "$ref": "#/definitions/reservationPackageType"
           }
         },
+        "overrideInventoryItemAvailabilty": {
+          "default": false,
+          "type": "boolean",
+          "description": "When enabled (true), inventory item availability can be overridden when an inventory item based on a package is not available. When disabled or not specified (default is false), item inventory availability cannot be overridden."
+        },
+        "overrideExternallyExcludedPkgRestrictions": {
+          "description": "When enabled (true), packages managed by external systems can be added, removed, or updated on a reservation. When disabled or not specified (default is false), such packages cannot be added, removed, or updated.",
+          "type": "boolean"
+        },
         "links": {
           "$ref": "#/definitions/links"
         },
@@ -51263,6 +51311,16 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "segmentStartDateTime": {
+          "description": "Start date-time of the reservation segment currently displayed in the room calendar timeline. This value is returned when Advance Daily Detail OPERA Control is active.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "segmentEndDateTime": {
+          "description": "End date-time of the reservation segment currently displayed in the room calendar timeline. This value is returned when Advance Daily Detail OPERA Control is active.",
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -53542,6 +53600,10 @@
           "default": false,
           "type": "boolean",
           "description": "Indicates if Availablity should be overriden when an Inventory Item based on a package is not available."
+        },
+        "overrideExternallyExcludedPkgRestrictions": {
+          "description": "When enabled (true), packages managed by external systems can be added, removed, or updated on a reservation. When disabled or not specified (default is false), such packages cannot be added, removed, or updated.",
+          "type": "boolean"
         }
       }
     },
@@ -54528,32 +54590,6 @@
         "Modified"
       ]
     },
-    "resvIdentificationInfoType": {
-      "type": "object",
-      "description": "Information on the identification of the customer.",
-      "properties": {
-        "resvIdentification": {
-          "description": "Detailed information on the identification of the customer.",
-          "$ref": "#/definitions/identificationType"
-        },
-        "id": {
-          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 80
-        },
-        "type": {
-          "description": "A reference to the type of object defined by the UniqueID element.",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 40
-        },
-        "profileId": {
-          "description": "Unique owner profile information.",
-          "$ref": "#/definitions/profileId"
-        }
-      }
-    },
     "reservationStatusEnum": {
       "type": "string",
       "enum": [
@@ -55458,7 +55494,8 @@
         "RateAmount",
         "RateCode",
         "Room",
-        "RoomType"
+        "RoomType",
+        "ConfirmationNo"
       ]
     },
     "sortOrder": {
@@ -55483,6 +55520,13 @@
         "TaxType",
         "GuestDeviceNotification",
         "RoomAssignedByAI",
+        "SwapShiftRooms",
+        "ReservationPreferences",
+        "FiscalInfo",
+        "CommissionsInfo",
+        "DepartureReservationInfo",
+        "Vouchers",
+        "MultipleMemberships",
         "FetchChildAges",
         "OffshoreRates",
         "PostingIntervals",
@@ -56412,7 +56456,8 @@
         "FiscalInfo",
         "CorrectionPostings",
         "Vouchers",
-        "ScheduledRoomMoves"
+        "ScheduledRoomMoves",
+        "PayByLinks"
       ]
     },
     "hotelReservationStatusType": {
@@ -56441,7 +56486,8 @@
         "Room",
         "RoomType",
         "QueuePriority",
-        "QueueDurationTime"
+        "QueueDurationTime",
+        "ConfirmationNo"
       ]
     },
     "sortOrderEnum": {
@@ -56471,6 +56517,7 @@
         "FiscalInfo",
         "CommissionsInfo",
         "DepartureReservationInfo",
+        "Vouchers",
         "MultipleMemberships",
         "FetchChildAges",
         "OffshoreRates",
@@ -57122,7 +57169,8 @@
         "RateAmount",
         "RateCode",
         "Room",
-        "RoomType"
+        "RoomType",
+        "ConfirmationNo"
       ]
     },
     "externalReservationStatusType": {

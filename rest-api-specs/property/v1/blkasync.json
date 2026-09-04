@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block Reservation Asynchronous API",
-    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs to cater Block Reservation related asynchronous functionality in OPERA.<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -2254,7 +2254,8 @@
                                 "SubAllocResv",
                                 "CutoffDate",
                                 "ForecastRooms",
-                                "ForecastRates"
+                                "ForecastRates",
+                                "ChildRates"
                             ]
                         },
                         "required": false
@@ -2503,6 +2504,253 @@
                     },
                     "204": {
                         "description": "getBlockProcessInfo not found."
+                    }
+                },
+                "consumes": [
+                    "application/json;charset=UTF-8"
+                ],
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ],
+                "tags": [
+                    "BlockAsync"
+                ]
+            }
+        },
+        "/hotels/{hotelId}/blocks/{blockId}/applyChangesTo": {
+            "post": {
+                "summary": "This API facilitates the Apply Changes To process for block reservations asynchronously.",
+                "description": "Use this API to run the Apply Changes To operation for block reservations asynchronously based upon changes made to a reference reservation. The target mode is controlled by reservationFilter.applyChangesTo. <p><strong>OperationId:</strong>startBlockApplyChangesToProcess</p>",
+                "operationId": "startBlockApplyChangesToProcess",
+                "x-interaction": [
+                    "async-polling"
+                ],
+                "parameters": [
+                    {
+                        "name": "hotelId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Hotel ID which is used to find a Hotel from OPERA. This ID is a primary identification of a Hotel in OPERA."
+                    },
+                    {
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+                    },
+                    {
+                        "name": "blockReservationsToChange",
+                        "in": "body",
+                        "required": true,
+                        "description": "The request object for the Apply Changes To operation based upon changes made to a reference reservation. The reservationFilter.applyChangesTo criteria controls whether the change is applied to all reservations, selected reservations, same-arrival reservations, checked-in reservations, or reservations staying within a date range.",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/blockReservationsToChange"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/authKey"
+                    },
+                    {
+                        "$ref": "#/parameters/externalData"
+                    },
+                    {
+                        "$ref": "#/parameters/x-app-key"
+                    },
+                    {
+                        "$ref": "#/parameters/x-request-id"
+                    },
+                    {
+                        "$ref": "#/parameters/x-originating-application"
+                    },
+                    {
+                        "$ref": "#/parameters/x-hotelid"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept-Language"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            },
+                            "Location": {
+                                "type": "string",
+                                "description": "Location of process status resource"
+                            }
+                        },
+                        "description": "Apply Changes To process accepted. Use the Location header to poll for process status."
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/responses/403"
+                    },
+                    "404": {
+                        "$ref": "#/responses/404"
+                    },
+                    "405": {
+                        "$ref": "#/responses/405"
+                    },
+                    "406": {
+                        "$ref": "#/responses/406"
+                    },
+                    "413": {
+                        "$ref": "#/responses/413"
+                    },
+                    "414": {
+                        "$ref": "#/responses/414"
+                    },
+                    "415": {
+                        "$ref": "#/responses/415"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    },
+                    "502": {
+                        "$ref": "#/responses/502"
+                    },
+                    "503": {
+                        "$ref": "#/responses/503"
+                    }
+                },
+                "consumes": [
+                    "application/json;charset=UTF-8"
+                ],
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ],
+                "tags": [
+                    "BlockAsync"
+                ]
+            }
+        },
+        "/hotels/{hotelId}/blocks/{blockId}/applyChangesTo/{requestId}": {
+            "get": {
+                "summary": "This API returns results of the asynchronous Apply Changes To process.",
+                "description": "This API returns results of the asynchronous Apply Changes To process. <p><strong>OperationId:</strong>getBlockApplyChangesToProcessResults</p>",
+                "operationId": "getBlockApplyChangesToProcessResults",
+                "parameters": [
+                    {
+                        "name": "hotelId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Hotel ID which is used to find a Hotel from OPERA. This ID is a primary identification of a Hotel in OPERA."
+                    },
+                    {
+                        "name": "blockId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Unique OPERA Block ID which is used to find a Block from OPERA. This ID is a primary identification of a Block in OPERA."
+                    },
+                    {
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000,
+                        "description": "Async job request id"
+                    },
+                    {
+                        "$ref": "#/parameters/authKey"
+                    },
+                    {
+                        "$ref": "#/parameters/externalData"
+                    },
+                    {
+                        "$ref": "#/parameters/x-app-key"
+                    },
+                    {
+                        "$ref": "#/parameters/x-request-id"
+                    },
+                    {
+                        "$ref": "#/parameters/x-originating-application"
+                    },
+                    {
+                        "$ref": "#/parameters/x-hotelid"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept-Language"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Audience language",
+                                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                                "x-example": "en-GB"
+                            }
+                        },
+                        "description": "The response object contains block reservations that were changed for a block along with the status of each block reservation change.",
+                        "schema": {
+                            "$ref": "#/definitions/changedBlockReservations"
+                        }
+                    },
+                    "204": {
+                        "description": "Apply Changes To process results not found."
+                    },
+                    "400": {
+                        "$ref": "#/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/responses/403"
+                    },
+                    "404": {
+                        "$ref": "#/responses/404"
+                    },
+                    "405": {
+                        "$ref": "#/responses/405"
+                    },
+                    "406": {
+                        "$ref": "#/responses/406"
+                    },
+                    "413": {
+                        "$ref": "#/responses/413"
+                    },
+                    "414": {
+                        "$ref": "#/responses/414"
+                    },
+                    "415": {
+                        "$ref": "#/responses/415"
+                    },
+                    "500": {
+                        "$ref": "#/responses/500"
+                    },
+                    "502": {
+                        "$ref": "#/responses/502"
+                    },
+                    "503": {
+                        "$ref": "#/responses/503"
                     }
                 },
                 "consumes": [
@@ -2875,7 +3123,7 @@
                     "type": "integer"
                 },
                 "cancellationDate": {
-                    "description": "Cancellation Date.",
+                    "description": "Cancellation Date. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -2940,7 +3188,7 @@
                     "maxLength": 20
                 },
                 "createDateTime": {
-                    "description": "The business date the block was created.",
+                    "description": "The business date the block was created. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -2963,7 +3211,7 @@
                     "maxLength": 20
                 },
                 "lastModifiedDate": {
-                    "description": "Date Time when the block was modified last.",
+                    "description": "Date Time when the block was modified last. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -3484,6 +3732,10 @@
                     "description": "Indicates the rate amount values per person occupancy.",
                     "$ref": "#/definitions/blockGridRatesType"
                 },
+                "childRate": {
+                    "description": "Indicates the child rate amount values per age bucket. This element is reserved for future child rate functionality and is not yet available for use.",
+                    "$ref": "#/definitions/blockGridChildRatesType"
+                },
                 "start": {
                     "description": "The starting value of the date range.",
                     "type": "string",
@@ -3791,7 +4043,8 @@
                 "SubAllocResv",
                 "CutoffDate",
                 "ForecastRooms",
-                "ForecastRates"
+                "ForecastRates",
+                "ChildRates"
             ]
         },
         "blockRangeModeType": {
@@ -3853,6 +4106,10 @@
                 "blockRates": {
                     "description": "Rate details for range operation.",
                     "$ref": "#/definitions/blockGridRatesType"
+                },
+                "childRates": {
+                    "description": "Indicates the child rate amount values per age bucket. This element is reserved for future child rate functionality and is not yet available for use.",
+                    "$ref": "#/definitions/blockGridChildRatesType"
                 },
                 "cutoffDate": {
                     "description": "Date after which unused block rooms should be returned to house.",
@@ -5502,7 +5759,7 @@
                     "type": "boolean"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -5513,7 +5770,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -6120,7 +6377,7 @@
                     "type": "integer"
                 },
                 "offsetDropTime": {
-                    "description": "Time on offset day the cancellation penalties applies.",
+                    "description": "Time on offset day the cancellation penalties applies. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -6543,12 +6800,12 @@
                     }
                 },
                 "arrivalTime": {
-                    "description": "Indicates the approximate check in time for the reservations made for the block.",
+                    "description": "Indicates the approximate check in time for the reservations made for the block. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
                 "departureTime": {
-                    "description": "Indicates the approximate check out time for the reservations made for the block.",
+                    "description": "Indicates the approximate check out time for the reservations made for the block. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -7429,7 +7686,7 @@
                     "$ref": "#/definitions/dateTimeSpanType"
                 },
                 "traceOn": {
-                    "description": "Date of the trace.",
+                    "description": "Date of the trace. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -7451,11 +7708,13 @@
             "properties": {
                 "startDateTime": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "Start date and time of the time span.  Uses the hotel's time zone."
                 },
                 "endDateTime": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "End date and time of the time span.  Uses the hotel's time zone."
                 }
             }
         },
@@ -8151,7 +8410,7 @@
                     "type": "boolean"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -8162,7 +8421,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -8450,7 +8709,7 @@
             "description": "Information regarding the message sent to guest.",
             "properties": {
                 "sentTime": {
-                    "description": "Time the text was last sent to the user.",
+                    "description": "Time the text was last sent to the user. Uses database time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -9480,12 +9739,12 @@
             "description": "Holds the Arrival and Departure Time Information",
             "properties": {
                 "reservationExpectedArrivalTime": {
-                    "description": "Arrival Time",
+                    "description": "Arrival Time. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
                 "reservationExpectedDepartureTime": {
-                    "description": "Departure Time",
+                    "description": "Departure Time. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 }
@@ -10474,7 +10733,7 @@
                     "type": "boolean"
                 },
                 "expectedReturnTime": {
-                    "description": "Expected Return Time",
+                    "description": "Expected Return Time. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -13053,6 +13312,10 @@
                     "description": "Indicates the rate amount values per person occupancy.",
                     "$ref": "#/definitions/blockGridRatesType"
                 },
+                "childRate": {
+                    "description": "Indicates the child rate amount values per age bucket. This element is reserved for future child rate functionality and is not yet available for use.",
+                    "$ref": "#/definitions/blockGridChildRatesType"
+                },
                 "roomType": {
                     "description": "Indicates the room type for which the inventory or rate values are applicable.",
                     "type": "string",
@@ -14588,7 +14851,7 @@
                     "type": "boolean"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -14599,7 +14862,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -15178,7 +15441,7 @@
                     "maxLength": 20
                 },
                 "lastChangeDateTime": {
-                    "description": "Last change date and time for this block.",
+                    "description": "Last change date and time for this block. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -16747,7 +17010,7 @@
                     "type": "boolean"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -16758,7 +17021,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -18106,7 +18369,7 @@
                     "maxLength": 20
                 },
                 "openDate": {
-                    "description": "The date-time in which the service request was opened.",
+                    "description": "The date-time in which the service request was opened. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -18135,12 +18398,12 @@
                     "maxLength": 100
                 },
                 "completionDate": {
-                    "description": "The date-time in which the service request was completed.",
+                    "description": "The date-time in which the service request was completed. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
                 "closedDate": {
-                    "description": "The date-time in which the service request was closed.",
+                    "description": "The date-time in which the service request was closed. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -18723,7 +18986,7 @@
                     "type": "integer"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -18734,7 +18997,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -18818,7 +19081,7 @@
                     "maxLength": 2000
                 },
                 "messageDate": {
-                    "description": "Date the message was created",
+                    "description": "Date the message was created. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -20100,7 +20363,7 @@
                     "type": "number"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -20111,7 +20374,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -21158,7 +21421,7 @@
                     "$ref": "#/definitions/prepaidCardDetailsType"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -21169,7 +21432,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -21381,7 +21644,7 @@
                     "type": "integer"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -21392,7 +21655,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -21814,7 +22077,7 @@
                     "$ref": "#/definitions/sentConfirmationStatus"
                 },
                 "lastAttempted": {
-                    "description": "Date of last attempt to send confirmation letter.",
+                    "description": "Date of last attempt to send confirmation letter. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -22265,7 +22528,7 @@
                     "type": "number"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -22276,7 +22539,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -23943,7 +24206,7 @@
                     "type": "boolean"
                 },
                 "createDateTime": {
-                    "description": "Time stamp of the creation.",
+                    "description": "Time stamp of the creation. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -23954,7 +24217,7 @@
                     "maxLength": 200
                 },
                 "lastModifyDateTime": {
-                    "description": "Time stamp of last modification.",
+                    "description": "Time stamp of last modification. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 },
@@ -24047,7 +24310,7 @@
                     "$ref": "#/definitions/userInfoType"
                 },
                 "logDateTime": {
-                    "description": "User Log Changes Time Stamp details",
+                    "description": "User Log Changes Time Stamp details. Uses the hotel's time zone.",
                     "type": "string",
                     "format": "date-time"
                 }
@@ -24858,7 +25121,8 @@
                 "SubAllocResv",
                 "CutoffDate",
                 "ForecastRooms",
-                "ForecastRates"
+                "ForecastRates",
+                "ChildRates"
             ]
         },
         "blockGridType": {
@@ -26528,16 +26792,34 @@
                     "maxLength": 20
                 }
             }
+        },
+        "blockGridChildRatesType": {
+            "type": "object",
+            "description": "Indicates the child rate amount values defined per age buckets. This type is introduced to support future child rate functionality and is not yet available for use.",
+            "properties": {
+                "ageBucket1": {
+                    "description": "Indicates the rate amount for the first age bucket.",
+                    "type": "number"
+                },
+                "ageBucket2": {
+                    "description": "Indicates the rate amount for the second age bucket.",
+                    "type": "number"
+                },
+                "ageBucket3": {
+                    "description": "Indicates the rate amount for the third age bucket.",
+                    "type": "number"
+                }
+            }
         }
-  },
-  "tags": [
-    {
-      "name": "BlockAsync",
-      "description": "The Block Async Service Web Service provides capability to implement block related asynchronous operations in OPERA Cloud."
+    },
+    "tags": [
+        {
+            "name": "BlockAsync",
+            "description": "The Block Async Service Web Service provides capability to implement block related asynchronous operations in OPERA Cloud."
+        }
+    ],
+    "externalDocs": {
+        "description": "Find out more about Oracle Hospitality",
+        "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
     }
-  ],
-  "externalDocs": {
-    "description": "Find out more about Oracle Hospitality",
-    "url": "https://docs.oracle.com/en/industries/hospitality/integration_platforms.html"
-  }
 }

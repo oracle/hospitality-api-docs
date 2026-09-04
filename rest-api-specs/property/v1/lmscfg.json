@@ -1,0 +1,5850 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "OPERA Cloud Leisure Management Configuration API",
+    "description" : "This API enables developers and integrators to build applications or interfaces that interact with the leisure management system's core features and data.<br /><br />Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p>",
+    "version" : "26.3.0.0",
+    "termsOfService" : "https://www.oracle.com/legal/terms.html",
+    "contact" : {
+      "email" : "hospitality-integrations_ww@oracle.com"
+    },
+    "license" : {
+      "name" : "UPL",
+      "url" : "https://opensource.org/licenses/upl"
+    }
+  },
+  "schemes" : [ "https" ],
+  "basePath" : "/lms/config/v1",
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/hotels/{hotelId}/availableResourceFeatures" : {
+      "get" : {
+        "summary" : "Get the list of available features.",
+        "description" : "Use this API to get the list of available features. <p><strong>OperationId:</strong>getAvailableResourceFeatures</p>",
+        "operationId" : "getAvailableResourceFeatures",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "leisureResourceCode",
+          "in" : "query",
+          "type" : "string",
+          "required" : false,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Resource."
+        }, {
+          "name" : "resourceType",
+          "in" : "query",
+          "required" : false,
+          "maxLength" : 20,
+          "description" : "Resource Type of the Leisure Resource.",
+          "type" : "string"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching available resource features.",
+            "schema" : {
+              "$ref" : "#/definitions/availableResourceFeatures"
+            }
+          },
+          "204" : {
+            "description" : "AvailableResourceFeatures not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperience" : {
+      "get" : {
+        "summary" : "Returns the list of leisure experiences",
+        "description" : "This API returns the list of leisure experiences that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureExperiences</p>",
+        "operationId" : "getLeisureExperiences",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique identifier of the hotel for which leisure experiences are being retrieved."
+        }, {
+          "name" : "experienceCode",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Filter leisure experiences by experience code.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "Flag to include inactive leisure experiences in the response.",
+          "type" : "boolean"
+        }, {
+          "name" : "experienceDescription",
+          "in" : "query",
+          "type" : "string",
+          "maxLength" : 2000,
+          "description" : "Filter leisure experiences by experience description.",
+          "required" : false
+        }, {
+          "name" : "locations",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Filter leisure experiences by location type.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "experienceTypes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Filter leisure experiences by experience type.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Maximum number of leisure experiences to return in the response.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index of the first leisure experience to return in the response.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Experience.",
+            "schema" : {
+              "$ref" : "#/definitions/experiencesInfo"
+            }
+          },
+          "204" : {
+            "description" : "No leisure experiences found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create a new leisure experience",
+        "description" : "This API creates a new leisure experience for the specified hotel. <p><strong>OperationId:</strong>postLeisureExperience</p>",
+        "operationId" : "postLeisureExperience",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique identifier of the hotel for which the leisure experience is being created."
+        }, {
+          "name" : "experience",
+          "in" : "body",
+          "required" : true,
+          "description" : "Details of the leisure experience to be created.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/experience"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperience/{experienceCode}" : {
+      "put" : {
+        "summary" : "Update an existing leisure experience",
+        "description" : "This API updates an existing leisure experience for the specified hotel. <p><strong>OperationId:</strong>putLeisureExperience</p>",
+        "operationId" : "putLeisureExperience",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique identifier of the hotel for which the leisure experience is being updated."
+        }, {
+          "name" : "experienceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Code of the leisure experience to be updated."
+        }, {
+          "name" : "experience",
+          "in" : "body",
+          "required" : true,
+          "description" : "Updated details of the leisure experience.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/experience"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete a leisure experience",
+        "description" : "This API deletes a leisure experience for the specified hotel. <p><strong>OperationId:</strong>deleteLeisureExperience</p>",
+        "operationId" : "deleteLeisureExperience",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique identifier of the hotel for which the leisure experience is being deleted."
+        }, {
+          "name" : "experienceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Code of the leisure experience to be deleted."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "get" : {
+        "summary" : "Retrieve a leisure experience",
+        "description" : "This API retrieves a leisure experience for the specified hotel. <p><strong>OperationId:</strong>getLeisureExperienceDetails</p>",
+        "operationId" : "getLeisureExperienceDetails",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique identifier of the hotel for which the leisure experience is being retrieved."
+        }, {
+          "name" : "experienceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Code of the leisure experience to be retrieved."
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Language of the response content.",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Leisure experience retrieved successfully.",
+            "schema" : {
+              "$ref" : "#/definitions/experienceDetails"
+            }
+          },
+          "204" : {
+            "description" : "Leisure experience not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperience/{experienceCode}/primaryResourceFeatureTypes" : {
+      "get" : {
+        "summary" : "Returns the list of leisure resource feature types of associated primary resource on experience.",
+        "description" : "This API returns the list of leisure resource feature types of the resource configured as primary for the leisure experience. <p><strong>OperationId:</strong>getPrimaryResourceFeatureTypesForExperience</p>",
+        "operationId" : "getPrimaryResourceFeatureTypesForExperience",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "type" : "string",
+          "required" : true,
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "experienceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Experience."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching configured Primary Leisure Resource Feature Types.",
+            "schema" : {
+              "$ref" : "#/definitions/primaryResourceFeatureTypesInfo"
+            }
+          },
+          "204" : {
+            "description" : "Primary Resource Feature Types not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureLocation/{leisureLocationCode}" : {
+      "put" : {
+        "summary" : "Change Leisure Location.",
+        "description" : "Use this API to update Leisure Location. <p><strong>OperationId:</strong>putLeisureLocation</p>",
+        "operationId" : "putLeisureLocation",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel",
+          "x-example" : ""
+        }, {
+          "name" : "leisureLocationCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Location."
+        }, {
+          "name" : "leisureLocationInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing Leisure Location Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureLocation"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created leisure location"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Leisure Location",
+        "description" : "Use this API to delete Leisure Location. <p><strong>OperationId:</strong>deleteLeisureLocation</p>",
+        "operationId" : "deleteLeisureLocation",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel",
+          "x-example" : ""
+        }, {
+          "name" : "leisureLocationCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Location."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created leisure location"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "get" : {
+        "summary" : "Returns the leisure location and its schedule information.",
+        "description" : "This API returns the leisure location and its schedules that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureLocation</p>",
+        "operationId" : "getLeisureLocation",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel",
+          "x-example" : ""
+        }, {
+          "name" : "leisureLocationCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Location."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Leisure Location.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureLocation"
+            }
+          },
+          "204" : {
+            "description" : "Leisure Location not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureLocations" : {
+      "get" : {
+        "summary" : "Returns the list of leisure locations",
+        "description" : "This API returns the list of leisure locations that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureLocations</p>",
+        "operationId" : "getLeisureLocations",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel",
+          "x-example" : "BHOTEL"
+        }, {
+          "name" : "leisureLocationCode",
+          "in" : "query",
+          "type" : "array",
+          "maxItems" : 40,
+          "collectionFormat" : "multi",
+          "description" : "Leisure Location to be searched.",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "required" : false
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "required" : false,
+          "description" : "Description of the Leisure Location.",
+          "type" : "string"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "Determines wether to include inactive records or not.",
+          "type" : "boolean"
+        }, {
+          "name" : "locationTypes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure Location Type to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Leisure Location.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureLocations"
+            }
+          },
+          "204" : {
+            "description" : "Leisure Location not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Location",
+        "description" : "Use this API to create Leisure Location. <p><strong>OperationId:</strong>postLeisureLocation</p>",
+        "operationId" : "postLeisureLocation",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel",
+          "x-example" : ""
+        }, {
+          "name" : "leisureLocationInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating Leisure Location.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureLocation"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created leisure location"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureResource/{leisureResourceCode}" : {
+      "put" : {
+        "summary" : "Change Leisure Resource.",
+        "description" : "Use this API to update Leisure Resource. <p><strong>OperationId:</strong>putLeisureResource</p>",
+        "operationId" : "putLeisureResource",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "leisureResourceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Resource."
+        }, {
+          "name" : "leisureResourceInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing Leisure Resource.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResource"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Leisure Resource",
+        "description" : "Use this API to delete Leisure Resource. <p><strong>OperationId:</strong>deleteLeisureResource</p>",
+        "operationId" : "deleteLeisureResource",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "leisureResourceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Resource."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "get" : {
+        "summary" : "Returns the details of leisure resource",
+        "description" : "This API returns the details of leisure resource that have been configured for the leisure planner functionality.<p><strong>OperationId:</strong>getLeisureResource</p>",
+        "operationId" : "getLeisureResource",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "leisureResourceCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Resource."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Leisure Resource.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureResourcesType"
+            }
+          },
+          "204" : {
+            "description" : "leisureResource not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/hotels/{hotelId}/leisureResources" : {
+      "get" : {
+        "summary" : "Returns the list of leisure resources",
+        "description" : "This API returns the list of leisure resources that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureResources</p>",
+        "operationId" : "getLeisureResources",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "leisureResourceCodes",
+          "in" : "query",
+          "type" : "array",
+          "maxItems" : 200,
+          "collectionFormat" : "multi",
+          "description" : "Leisure Resource to be searched.",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "required" : false
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "required" : false,
+          "description" : "Description of the Leisure Resource.",
+          "type" : "string"
+        }, {
+          "name" : "locationId",
+          "in" : "query",
+          "required" : false,
+          "description" : "Leisure location code associated with the resource.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        }, {
+          "name" : "resourceCategory",
+          "in" : "query",
+          "required" : false,
+          "description" : "Leisure resource category code.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        }, {
+          "name" : "resourceTypes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure resource types to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "locations",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure location codes associated with the resource.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "Determines wether to include inactive records or not.",
+          "type" : "boolean"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Leisure Resource.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureResources"
+            }
+          },
+          "204" : {
+            "description" : "leisureResource not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Resource",
+        "description" : "Use this API to create Leisure Resource. <p><strong>OperationId:</strong>postLeisureResource</p>",
+        "operationId" : "postLeisureResource",
+        "parameters" : [ {
+          "name" : "hotelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique ID of the hotel"
+        }, {
+          "name" : "leisureResourceInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating Leisure Resource.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResource"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureExperienceGroups" : {
+      "get" : {
+        "summary" : "Returns the list of leisure experience groups",
+        "description" : "This API returns the list of leisure experience groups that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureExperienceGroups</p>",
+        "operationId" : "getLeisureExperienceGroups",
+        "parameters" : [ {
+          "name" : "experienceGroupCodes",
+          "in" : "query",
+          "type" : "array",
+          "maxItems" : 40,
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Experience Group Codes to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "type" : "string",
+          "maxLength" : 2000,
+          "description" : "Experience Group Description to be searched.",
+          "required" : false
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "If true this boolean will set the criteria to return Inactive records along with active records.",
+          "type" : "boolean"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Experience Groups.",
+            "schema" : {
+              "$ref" : "#/definitions/experienceGroupsInfo"
+            }
+          },
+          "204" : {
+            "description" : "ExperienceGroups not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Creates Leisure Experience Group",
+        "description" : "You can use this API to create Leisure Experience Group. <p><strong>OperationId:</strong>postLeisureExperienceGroup</p>",
+        "operationId" : "postLeisureExperienceGroup",
+        "parameters" : [ {
+          "name" : "leisureExperienceGroup",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating new Experience Group.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureExperienceGroup"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureExperienceGroups/{experienceGroupCode}" : {
+      "put" : {
+        "summary" : "Changes Leisure Experience Group",
+        "description" : "You can use this API to change configured Leisure Experience Group. <p><strong>OperationId:</strong>putLeisureExperienceGroup</p>",
+        "operationId" : "putLeisureExperienceGroup",
+        "parameters" : [ {
+          "name" : "experienceGroupCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Experience Group Code."
+        }, {
+          "name" : "leisureExperienceGroup",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing configured Experience Group.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureExperienceGroup"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Configured Leisure Experience Group",
+        "description" : "You can use this API to delete configured Leisure Experience Group. <p><strong>OperationId:</strong>deleteLeisureExperienceGroup</p>",
+        "operationId" : "deleteLeisureExperienceGroup",
+        "parameters" : [ {
+          "name" : "experienceGroupCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Experience Group Code."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureExperienceTypes" : {
+      "get" : {
+        "summary" : "Returns the list of leisure experience types",
+        "description" : "This API returns the list of leisure experience types that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureExperienceTypes</p>",
+        "operationId" : "getLeisureExperienceTypes",
+        "parameters" : [ {
+          "name" : "experienceTypeCodes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure Experience Type Code to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "If true this boolean will set the criteria to return Inactive records along with active records.",
+          "type" : "boolean"
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "type" : "string",
+          "maxLength" : 2000,
+          "description" : "Leisure Experience Type Description to be searched.",
+          "required" : false
+        }, {
+          "name" : "experienceGroups",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure Experience Group Code to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "locationTypes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure Location Type Code to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching configured Leisure Experience Types.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureExperienceTypesInfo"
+            }
+          },
+          "204" : {
+            "description" : "LeisureExperienceTypes not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Experience Type",
+        "description" : "You can use this API to create a Leisure Experience Type. <p><strong>OperationId:</strong>postLeisureExperienceType</p>",
+        "operationId" : "postLeisureExperienceType",
+        "parameters" : [ {
+          "name" : "leisureExperienceType",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating new Leisure Experience Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureExperienceType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureExperienceTypes/{leisureExperienceTypeCode}" : {
+      "put" : {
+        "summary" : "Change Configured Leisure Experience Type",
+        "description" : "You can use this API to change configured Leisure Experience Type. <p><strong>OperationId:</strong>putLeisureExperienceType</p>",
+        "operationId" : "putLeisureExperienceType",
+        "parameters" : [ {
+          "name" : "leisureExperienceTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Experience Type Code to be changed."
+        }, {
+          "name" : "leisureExperienceType",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing configured Leisure Experience Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureExperienceType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Leisure Experience Type",
+        "description" : "You can use this API to delete Leisure Experience Type. <p><strong>OperationId:</strong>deleteLeisureExperienceType</p>",
+        "operationId" : "deleteLeisureExperienceType",
+        "parameters" : [ {
+          "name" : "leisureExperienceTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Experience Type Code to be deleted."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureLocationTypes" : {
+      "get" : {
+        "summary" : "Returns the list of leisure location types",
+        "description" : "This API returns the list of leisure location types that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureLocationTypes</p>",
+        "operationId" : "getLeisureLocationTypes",
+        "parameters" : [ {
+          "name" : "leisureLocationTypeCode",
+          "in" : "query",
+          "type" : "array",
+          "collectionFormat" : "multi",
+          "description" : "Leisure Location Type to be searched.",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "required" : false
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "required" : false,
+          "description" : "Description of the Leisure Location Type .",
+          "type" : "string"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "Determines wether to include inactive records or not.",
+          "type" : "boolean"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Leisure Location Type.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureLocationTypes"
+            }
+          },
+          "204" : {
+            "description" : "Leisure Location Type not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Location Type",
+        "description" : "Use this API to create Leisure Location Type. <p><strong>OperationId:</strong>postLeisureLocationType</p>",
+        "operationId" : "postLeisureLocationType",
+        "parameters" : [ {
+          "name" : "leisureLocationTypeInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating Leisure Location Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureLocationType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created leisure location type"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureLocationTypes/{leisureLocationTypeCode}" : {
+      "put" : {
+        "summary" : "Change Leisure Location Type.",
+        "description" : "Use this API to update Leisure Location Type. <p><strong>OperationId:</strong>putLeisureLocationType</p>",
+        "operationId" : "putLeisureLocationType",
+        "parameters" : [ {
+          "name" : "leisureLocationTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Location Type."
+        }, {
+          "name" : "leisureLocationTypeInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing Leisure Location Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureLocationType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created leisure location type"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Leisure Location Type",
+        "description" : "Use this API to delete Leisure Location Type. <p><strong>OperationId:</strong>deleteLeisureLocationType</p>",
+        "operationId" : "deleteLeisureLocationType",
+        "parameters" : [ {
+          "name" : "leisureLocationTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Location Type."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created leisure location type"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureResourceFeatureTypes" : {
+      "get" : {
+        "summary" : "Returns the list of leisure resource feature types",
+        "description" : "This API returns the list of leisure resource feature types that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureResourceFeatureTypes</p>",
+        "operationId" : "getLeisureResourceFeatureTypes",
+        "parameters" : [ {
+          "name" : "resourceFeatureTypeCodes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Leisure Resource Feature Type Codes to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "If true this boolean will set the criteria to return Inactive records along with active records.",
+          "type" : "boolean"
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "type" : "string",
+          "maxLength" : 2000,
+          "description" : "Leisure Resource Feature Type Description to be searched.",
+          "required" : false
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching configured Leisure Resource Feature Types.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureResourceFeatureTypesInfo"
+            }
+          },
+          "204" : {
+            "description" : "LeisureResourceFeatureTypes not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Resource Feature Type",
+        "description" : "You can use this API to create a Leisure Resource Feature Type. <p><strong>OperationId:</strong>postLeisureResourceFeatureType</p>",
+        "operationId" : "postLeisureResourceFeatureType",
+        "parameters" : [ {
+          "name" : "leisureResourceFeatureType",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating new Leisure Resource Feature Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResourceFeatureType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureResourceFeatureTypes/{leisureResourceFeatureTypeCode}" : {
+      "put" : {
+        "summary" : "Change Configured Leisure Resource Feature Type",
+        "description" : "You can use this API to change configured Leisure Resource Feature Type. <p><strong>OperationId:</strong>putLeisureResourceFeatureType</p>",
+        "operationId" : "putLeisureResourceFeatureType",
+        "parameters" : [ {
+          "name" : "leisureResourceFeatureTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Resource Feature Type Code to be changed."
+        }, {
+          "name" : "leisureResourceFeatureType",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing configured Leisure Resource Feature Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResourceFeatureType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Leisure Resource Feature Type",
+        "description" : "You can use this API to delete Leisure Resource Feature Type. <p><strong>OperationId:</strong>deleteLeisureResourceFeatureType</p>",
+        "operationId" : "deleteLeisureResourceFeatureType",
+        "parameters" : [ {
+          "name" : "leisureResourceFeatureTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Resource Feature Type Code to be deleted."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureResourceFeatures" : {
+      "get" : {
+        "summary" : "Returns the list of leisure resource features",
+        "description" : "This API returns the list of leisure resource features that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureResourceFeatures</p>",
+        "operationId" : "getLeisureResourceFeatures",
+        "parameters" : [ {
+          "name" : "resourceFeatureCode",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Resource Feature Code to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "If true this boolean will set the criteria to return Inactive records along with active records.",
+          "type" : "boolean"
+        }, {
+          "name" : "resourceFeatureDescription",
+          "in" : "query",
+          "type" : "string",
+          "maxLength" : 2000,
+          "description" : "Resource Feature Description to be searched.",
+          "required" : false
+        }, {
+          "name" : "featureTypes",
+          "in" : "query",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "description" : "Feature types to be searched.",
+          "required" : false,
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Resource Feature.",
+            "schema" : {
+              "$ref" : "#/definitions/resourceFeaturesInfo"
+            }
+          },
+          "204" : {
+            "description" : "Resource Feature not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Resource Feature",
+        "description" : "You can use this API to create Leisure Resource Feature. <p><strong>OperationId:</strong>postLeisureResourceFeature</p>",
+        "operationId" : "postLeisureResourceFeature",
+        "parameters" : [ {
+          "name" : "leisureResourceFeature",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating new Resource Feature.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResourceFeature"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureResourceFeatures/{resourceFeatureCode}" : {
+      "put" : {
+        "summary" : "Change Configured Leisure Resource Feature ",
+        "description" : "You can use this API to change configured Leisure Resource Feature . <p><strong>OperationId:</strong>putLeisureResourceFeature</p>",
+        "operationId" : "putLeisureResourceFeature",
+        "parameters" : [ {
+          "name" : "resourceFeatureCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Resource Feature Code."
+        }, {
+          "name" : "leisureResourceFeature",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing configured Resource Feature .",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResourceFeature"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Configured Leisure Resource Feature ",
+        "description" : "You can use this API to delete configured Leisure Resource Feature. <p><strong>OperationId:</strong>deleteLeisureResourceFeature</p>",
+        "operationId" : "deleteLeisureResourceFeature",
+        "parameters" : [ {
+          "name" : "resourceFeatureCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Leisure Resource Feature Code."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureResourceType/{leisureResourceTypeCode}" : {
+      "put" : {
+        "summary" : "Change Leisure Resource Type.",
+        "description" : "Use this API to update Leisure Resource Type. <p><strong>OperationId:</strong>putLeisureResourceType</p>",
+        "operationId" : "putLeisureResourceType",
+        "parameters" : [ {
+          "name" : "leisureResourceTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Resource Type."
+        }, {
+          "name" : "leisureResourceTypeInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for changing Leisure Resource Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResourceType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "Response Body.",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "delete" : {
+        "summary" : "Delete Leisure Resource Type",
+        "description" : "Use this API to delete Leisure Resource Type. <p><strong>OperationId:</strong>deleteLeisureResourceType</p>",
+        "operationId" : "deleteLeisureResourceType",
+        "parameters" : [ {
+          "name" : "leisureResourceTypeCode",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20,
+          "description" : "Unique Code of Leisure Resource Type."
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/leisureResourceTypes" : {
+      "get" : {
+        "summary" : "Returns the list of leisure resource types",
+        "description" : "This API returns the list of leisure resource types that have been configured for the leisure planner functionality. <p><strong>OperationId:</strong>getLeisureResourceTypes</p>",
+        "operationId" : "getLeisureResourceTypes",
+        "parameters" : [ {
+          "name" : "leisureResourceTypeCodes",
+          "in" : "query",
+          "type" : "array",
+          "maxItems" : 40,
+          "collectionFormat" : "multi",
+          "description" : "Leisure Resource Type to be searched.",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "required" : false
+        }, {
+          "name" : "description",
+          "in" : "query",
+          "required" : false,
+          "description" : "Description of the Leisure Resource Type .",
+          "type" : "string"
+        }, {
+          "name" : "includeInactive",
+          "in" : "query",
+          "required" : false,
+          "description" : "Determines wether to include inactive records or not.",
+          "type" : "boolean"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "default" : 0,
+          "required" : false,
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response object for fetching Leisure Resource Type.",
+            "schema" : {
+              "$ref" : "#/definitions/leisureResourceTypes"
+            }
+          },
+          "204" : {
+            "description" : "leisureResourceType not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      },
+      "post" : {
+        "summary" : "Create Leisure Resource Type",
+        "description" : "Use this API to create Leisure Resource Type. <p><strong>OperationId:</strong>postLeisureResourceType</p>",
+        "operationId" : "postLeisureResourceType",
+        "parameters" : [ {
+          "name" : "leisureResourceTypeInfo",
+          "in" : "body",
+          "required" : true,
+          "description" : "Request object for creating Leisure Resource Type.",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/leisureResourceType"
+            } ]
+          }
+        }, {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "201" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              },
+              "Location" : {
+                "type" : "string",
+                "description" : "Location of newly created resource"
+              }
+            },
+            "description" : "HATEOAS links which help the consumer to navigate to resources",
+            "schema" : {
+              "$ref" : "#/definitions/status"
+            }
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    },
+    "/services/leisureManagement/status" : {
+      "get" : {
+        "summary" : "Operation to ping.",
+        "description" : " <p><strong>OperationId:</strong>pingLeisureManagementServices</p>",
+        "operationId" : "pingLeisureManagementServices",
+        "parameters" : [ {
+          "$ref" : "#/parameters/authKey"
+        }, {
+          "$ref" : "#/parameters/externalData"
+        }, {
+          "$ref" : "#/parameters/x-app-key"
+        }, {
+          "$ref" : "#/parameters/x-request-id"
+        }, {
+          "$ref" : "#/parameters/x-originating-application"
+        }, {
+          "$ref" : "#/parameters/x-hotelid"
+        }, {
+          "$ref" : "#/parameters/x-externalsystem"
+        }, {
+          "$ref" : "#/parameters/Accept-Language"
+        } ],
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Content-Language" : {
+                "type" : "string",
+                "description" : "Audience language",
+                "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example" : "en-GB"
+              }
+            },
+            "description" : "Response for Ping operation.",
+            "schema" : {
+              "$ref" : "#/definitions/operaVersion"
+            }
+          },
+          "204" : {
+            "description" : "pingLeisureManagementServices not found."
+          },
+          "400" : {
+            "$ref" : "#/responses/400"
+          },
+          "401" : {
+            "$ref" : "#/responses/401"
+          },
+          "403" : {
+            "$ref" : "#/responses/403"
+          },
+          "404" : {
+            "$ref" : "#/responses/404"
+          },
+          "405" : {
+            "$ref" : "#/responses/405"
+          },
+          "406" : {
+            "$ref" : "#/responses/406"
+          },
+          "413" : {
+            "$ref" : "#/responses/413"
+          },
+          "414" : {
+            "$ref" : "#/responses/414"
+          },
+          "415" : {
+            "$ref" : "#/responses/415"
+          },
+          "500" : {
+            "$ref" : "#/responses/500"
+          },
+          "502" : {
+            "$ref" : "#/responses/502"
+          },
+          "503" : {
+            "$ref" : "#/responses/503"
+          }
+        },
+        "consumes" : [ "application/json;charset=UTF-8" ],
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "tags" : [ "LMSConfig" ]
+      }
+    }
+  },
+  "parameters" : {
+    "externalData" : {
+      "name" : "externalData",
+      "type" : "string",
+      "description" : "Pass this header as true, if payload needs DVM",
+      "in" : "header"
+    },
+    "authKey" : {
+      "name" : "authorization",
+      "description" : "Bearer token that needs to be passed which is generated post user authentication",
+      "type" : "string",
+      "in" : "header",
+      "required" : true
+    },
+    "x-app-key" : {
+      "name" : "x-app-key",
+      "description" : "Client or Partner's Application Key",
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+      "in" : "header",
+      "required" : true
+    },
+    "x-request-id" : {
+      "name" : "x-request-id",
+      "type" : "string",
+      "pattern" : "~*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+      "description" : "Request Id of an incoming request",
+      "in" : "header"
+    },
+    "x-originating-application" : {
+      "name" : "x-originating-application",
+      "type" : "string",
+      "description" : "Customer's Integration Application Id",
+      "in" : "header"
+    },
+    "x-hotelid" : {
+      "name" : "x-hotelid",
+      "type" : "string",
+      "description" : "Mandatory parameter to identify the hotel code where the end user is logged in",
+      "in" : "header",
+      "required" : true
+    },
+    "x-externalsystem" : {
+      "name" : "x-externalsystem",
+      "type" : "string",
+      "maxLength" : 40,
+      "description" : "External system code.",
+      "in" : "header",
+      "x-example" : "EXTERNALSYSTEMCODE"
+    },
+    "x-externalsystemreq" : {
+      "name" : "x-externalsystem",
+      "type" : "string",
+      "required" : true,
+      "maxLength" : 80,
+      "description" : "External system code.",
+      "in" : "header",
+      "x-example" : "EXTERNALSYSTEMCODE"
+    },
+    "Accept-Language" : {
+      "name" : "Accept-Language",
+      "type" : "string",
+      "description" : "Language code",
+      "in" : "header"
+    },
+    "x-hubid" : {
+      "name" : "x-hubid",
+      "type" : "string",
+      "description" : "x-hubid is a logical grouping of multiple properties that allows api consumers to manage data from a group of properties. This x-hubid is a valid list of hub codes configured in OPERA to which the user has access. Rest APIs without hotelId in the operation path can support hub level integration using x-hubid",
+      "in" : "header"
+    }
+  },
+  "responses" : {
+    "400" : {
+      "description" : "Bad Request",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "401" : {
+      "description" : "Unauthorized"
+    },
+    "403" : {
+      "description" : "Forbidden"
+    },
+    "404" : {
+      "description" : "Resource not found",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "405" : {
+      "description" : "Method not allowed"
+    },
+    "406" : {
+      "description" : "Not acceptable."
+    },
+    "413" : {
+      "description" : "Request Entity Too Large"
+    },
+    "414" : {
+      "description" : "Request URI Too Large"
+    },
+    "415" : {
+      "description" : "Unsupported Media Type"
+    },
+    "500" : {
+      "description" : "System Error",
+      "schema" : {
+        "$ref" : "#/definitions/exceptionDetailType"
+      }
+    },
+    "502" : {
+      "description" : "Bad Gateway"
+    },
+    "503" : {
+      "description" : "Service Unavailable"
+    }
+  },
+  "definitions" : {
+    "operaVersion" : {
+      "type" : "object",
+      "description" : "Response for Ping operation.",
+      "properties" : {
+        "operaVersion" : {
+          "description" : "Opera version number.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 40
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "exceptionDetailType" : {
+      "title" : "Error Detail",
+      "description" : "Complex type that contains error details for a REST call.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail" : {
+          "type" : "string",
+          "description" : "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode" : {
+          "type" : "string",
+          "description" : "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath" : {
+          "type" : "string",
+          "description" : "Path to the problem at the resource or property level."
+        },
+        "o:errorDetails" : {
+          "description" : "Details of the error message, consisting of a hierarchical tree structure.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/errorInstance"
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        }
+      },
+      "required" : [ "type", "title" ]
+    },
+    "errorInstance" : {
+      "title" : "Error Instance Details",
+      "description" : "Complex type that contains error instance details for a REST call.",
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Absolute URI [RFC3986] that identifies the problem type.  When dereferenced, it SHOULD provide a human-readable summary of the problem (for example, using HTML)."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Short, human-readable summary of the problem.  The summary SHOULD NOT change for subsequent occurrences of the problem, except for purposes of localization."
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "HTTP status code for this occurrence of the problem, set by the origin server."
+        },
+        "detail" : {
+          "type" : "string",
+          "description" : "Human-readable description specific to this occurrence of the problem."
+        },
+        "instance" : {
+          "type" : "string",
+          "description" : "Absolute URI that identifies the specific occurrence of the problem.  It may or may not provide additional information if dereferenced."
+        },
+        "o:errorCode" : {
+          "type" : "string",
+          "description" : "Application error code, which is different from HTTP error code."
+        },
+        "o:errorPath" : {
+          "type" : "string",
+          "description" : "Path to the problem at the resource or property level."
+        }
+      },
+      "required" : [ "type", "title" ]
+    },
+    "instanceLink" : {
+      "type" : "object",
+      "description" : "Metadata describing link description objects that MAY appear in the JSON instance representation.",
+      "properties" : {
+        "href" : {
+          "description" : "URI [RFC3986] or URI Template [RFC6570]. If the value is set to URI Template, then the \"templated\" property must be set to true.",
+          "type" : "string"
+        },
+        "rel" : {
+          "description" : "Name of the link relation that, in addition to the type property, can be used to retrieve link details. For example, href or profile.",
+          "type" : "string"
+        },
+        "templated" : {
+          "description" : "Boolean flag that specifies that \"href\" property is a URI or URI Template. If the property is a URI template, set this value to true. By default, this value is false.",
+          "type" : "boolean",
+          "default" : false
+        },
+        "method" : {
+          "description" : "HTTP method for requesting the target of the link.",
+          "type" : "string",
+          "enum" : [ "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD" ]
+        },
+        "targetSchema" : {
+          "description" : "Link to the metadata of the resource, such as JSON-schema, that describes the resource expected when dereferencing the target resource..",
+          "type" : "string"
+        },
+        "operationId" : {
+          "description" : "The operationId of the path you can call to follow this link.  This allows you to look up not only the path and method, but the description of that path and any parameters you need to supply.",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Exact copy of the \"summary\" field on the linked operation.",
+          "type" : "string"
+        }
+      }
+    },
+    "links" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/instanceLink"
+      }
+    },
+    "warningsType" : {
+      "type" : "array",
+      "description" : "Used in conjunction with the Success element to define a business error.",
+      "maxItems" : 4000,
+      "items" : {
+        "$ref" : "#/definitions/warningType"
+      }
+    },
+    "warningType" : {
+      "type" : "object",
+      "description" : "Used when a message has been successfully processed to report any warnings or business errors that occurred.",
+      "properties" : {
+        "value" : {
+          "type" : "string",
+          "description" : "Property Value"
+        },
+        "shortText" : {
+          "description" : "An abbreviated version of the error in textual format.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "code" : {
+          "description" : "If present, this refers to a table of coded values exchanged between applications to identify errors or warnings.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "docURL" : {
+          "description" : "If present, this URL refers to an online description of the error that occurred.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "status" : {
+          "description" : "If present, recommended values are those enumerated in the ErrorRS, (NotProcessed Incomplete Complete Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "tag" : {
+          "description" : "If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "recordId" : {
+          "description" : "If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.",
+          "type" : "string",
+          "maxLength" : 2000
+        },
+        "type" : {
+          "description" : "The Warning element MUST contain the Type attribute that uses a recommended set of values to indicate the warning type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type =\"Unknown\".",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "language" : {
+          "description" : "Language identification.",
+          "type" : "string",
+          "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+        },
+        "rph" : {
+          "description" : "Reference Place Holder used as an index for this warning.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 8
+        }
+      }
+    },
+    "status" : {
+      "type" : "object",
+      "description" : "Response Body.",
+      "properties" : {
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        }
+      }
+    },
+    "leisureExperienceTypesInfo" : {
+      "type" : "object",
+      "description" : "Response object for fetching configured Leisure Experience Types.",
+      "properties" : {
+        "leisureExperienceTypes" : {
+          "type" : "array",
+          "description" : "Collection of configured Leisure Experience Types.",
+          "items" : {
+            "$ref" : "#/definitions/leisureExperienceTypeInfo"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "experienceGroupsInfo" : {
+      "type" : "object",
+      "description" : "Response object for fetching configured Leisure Experience Groups.",
+      "properties" : {
+        "experienceGroups" : {
+          "type" : "array",
+          "description" : "Collection of configured Leisure Experience Groups.",
+          "items" : {
+            "$ref" : "#/definitions/experienceGroupType"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureExperienceGroup" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure experience group.",
+      "properties" : {
+        "experienceGroup" : {
+          "description" : "experience group details.",
+          "$ref" : "#/definitions/experienceGroupType"
+        }
+      }
+    },
+    "experienceGroupType" : {
+      "type" : "object",
+      "description" : "Base type provides information about leisure Experience Group.",
+      "properties" : {
+        "experienceGroupCode" : {
+          "description" : "Experience Group Code.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Experience Group code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "inactive" : {
+          "description" : "if true, record will be considered as inactive.",
+          "type" : "boolean"
+        },
+        "displayOrder" : {
+          "description" : "Leisure Experience Group record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        }
+      }
+    },
+    "leisureExperienceType" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure experience type.",
+      "properties" : {
+        "leisureExperienceType" : {
+          "description" : "leisure experience type details.",
+          "$ref" : "#/definitions/leisureExperienceTypeInfo"
+        }
+      }
+    },
+    "leisureExperienceTypeInfo" : {
+      "type" : "object",
+      "description" : "Base type provides information about Leisure Experience Type.",
+      "properties" : {
+        "leisureExperienceTypeCode" : {
+          "description" : "Leisure Experience Type Code.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Experience Type code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "longDescription" : {
+          "description" : "Long Description of the Leisure Experience Type code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "locationType" : {
+          "description" : "Leisure Experience Type Location.",
+          "type" : "string",
+          "maxLength" : 20
+        },
+        "inactive" : {
+          "description" : "if true, record will be considered as inactive.",
+          "type" : "boolean"
+        },
+        "displayOrder" : {
+          "description" : "Leisure Experience Type record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "leisureExperienceGroupCode" : {
+          "description" : "Leisure Experience Group code.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "externalYN" : {
+          "description" : "Indicates whether the leisure experience type is external.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "leisureResourceTypes" : {
+      "type" : "object",
+      "description" : "Response object for fetching Leisure Resource Types.",
+      "properties" : {
+        "leisureResourceTypesInfo" : {
+          "description" : "Collection of Leisure Resource Types Info.",
+          "$ref" : "#/definitions/leisureResourceTypesInfo"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureResourceTypesInfo" : {
+      "type" : "object",
+      "description" : "List of Leisure Resource Type.",
+      "properties" : {
+        "leisureResourceTypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/leisureResourceTypeType"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        }
+      }
+    },
+    "leisureResourceType" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure resource type.",
+      "properties" : {
+        "leisureResourceType" : {
+          "description" : "leisure resource type details.",
+          "$ref" : "#/definitions/leisureResourceTypeType"
+        }
+      }
+    },
+    "leisureResourceTypeType" : {
+      "type" : "object",
+      "description" : "Leisure Resource Type entity details.",
+      "properties" : {
+        "resourceTypeCode" : {
+          "description" : "Leisure Resource Type unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Resource Type code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "resourceCategoryCode" : {
+          "description" : "Leisure Resource Type unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "featureTypes" : {
+          "type" : "array",
+          "description" : "List of feature types associated with the resource type.",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20
+          },
+          "maxItems" : 1000
+        },
+        "inventoryYn" : {
+          "description" : "Indicates if the Resources under this Type need to maintain inventory.",
+          "type" : "boolean"
+        },
+        "displayOrder" : {
+          "description" : "Leisure Resource Type record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "type" : "boolean",
+          "description" : "Flag to specify if Leisure Resource Type is inactive."
+        }
+      }
+    },
+    "experience" : {
+      "type" : "object",
+      "description" : "Details of a leisure experience to be created or updated.",
+      "properties" : {
+        "experience" : {
+          "description" : "Details of the leisure experience.",
+          "$ref" : "#/definitions/experienceInfo"
+        },
+        "experienceResources" : {
+          "type" : "array",
+          "description" : "List of resources associated with the leisure experience.",
+          "items" : {
+            "$ref" : "#/definitions/experienceResourceInfo"
+          },
+          "maxItems" : 1000
+        }
+      }
+    },
+    "experienceDetails" : {
+      "type" : "object",
+      "description" : "Details of a leisure experience.",
+      "properties" : {
+        "experience" : {
+          "$ref" : "#/definitions/experienceInfo"
+        },
+        "experienceResources" : {
+          "type" : "array",
+          "description" : "List of resources associated with the leisure experience.",
+          "items" : {
+            "$ref" : "#/definitions/experienceResourceInfo"
+          },
+          "maxItems" : 1000
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "experienceResourceInfo" : {
+      "type" : "object",
+      "description" : "Details of a resource associated with a leisure experience.",
+      "properties" : {
+        "resourceType" : {
+          "description" : "Type of resource (e.g. equipment, staff).",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "resourceCode" : {
+          "description" : "Code of the resource.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "experienceResourceFeatures" : {
+          "type" : "array",
+          "description" : "List of features associated with the resource.",
+          "items" : {
+            "$ref" : "#/definitions/resourceFeatures"
+          },
+          "maxItems" : 1000
+        },
+        "quantity" : {
+          "description" : "Quantity of the resource required.",
+          "type" : "number",
+          "maximum" : 1000
+        },
+        "inventory" : {
+          "type" : "boolean",
+          "description" : "Flag indicating whether the resource is tracked in inventory."
+        },
+        "prepTime" : {
+          "description" : "Preparation time required for the resource.",
+          "type" : "number"
+        },
+        "turnOverTime" : {
+          "description" : "Turnover time required for the resource.",
+          "type" : "number"
+        },
+        "duration" : {
+          "description" : "Duration of the resource usage.",
+          "type" : "number"
+        },
+        "shared" : {
+          "type" : "boolean",
+          "description" : "Flag indicating whether the resource is shared."
+        },
+        "maxCapacity" : {
+          "description" : "Maximum capacity of shared resource.",
+          "type" : "number",
+          "maximum" : 10000
+        },
+        "primary" : {
+          "description" : "Flag indicating whether the resource is primary. Primary resource can be filtered by features for availability. (Maximum one resource can be configured as primary per experience.)",
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "experiencesInfo" : {
+      "type" : "object",
+      "description" : "List of leisure experiences with pagination details.",
+      "properties" : {
+        "experiences" : {
+          "type" : "array",
+          "description" : "List of leisure experiences.",
+          "items" : {
+            "$ref" : "#/definitions/experienceInfo"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "total number of pages based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index of the first leisure experience in the response.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Maximum number of leisure experiences to return in the response.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Flag indicating whether there are more leisure experiences available.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of leisure experiences available.",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Number of leisure experiences in the response.",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "experienceInfo" : {
+      "type" : "object",
+      "description" : "Details of a leisure experience.",
+      "properties" : {
+        "hotelId" : {
+          "description" : "Unique identifier of the hotel associated with the leisure experience.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "experienceCode" : {
+          "description" : "Code of the leisure experience.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "experienceName" : {
+          "description" : "Experience name of the leisure experience.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "experienceType" : {
+          "description" : "Type of leisure experience.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "experienceDesc" : {
+          "description" : "Description of the leisure experience.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "experienceLongDesc" : {
+          "description" : "Long description of the leisure experience.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "location" : {
+          "description" : "Location of the leisure experience.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "prepTime" : {
+          "description" : "Preparation time required for the leisure experience.",
+          "type" : "number"
+        },
+        "turnOverTime" : {
+          "description" : "Turnover time required for the leisure experience.",
+          "type" : "number"
+        },
+        "duration" : {
+          "description" : "Duration of the leisure experience.",
+          "type" : "number"
+        },
+        "pricePackage" : {
+          "description" : "Price package attached to the leisure experience.",
+          "type" : "string",
+          "maxLength" : 20
+        },
+        "orderBy" : {
+          "description" : "Order in which the leisure experience is displayed.",
+          "type" : "number"
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "description" : "Flag indicating whether the leisure experience is inactive.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "managedByOptions" : {
+      "description" : "Describes of the Configuration is Managed by Enterprise or Property.",
+      "type" : "string",
+      "enum" : [ "EnterpriseManaged", "PropertyManaged", "EnterpriseEnforced", "PropertyOverridden" ]
+    },
+    "translationTextType2000" : {
+      "type" : "object",
+      "description" : "Contains Multiple translated texts and language codes.",
+      "properties" : {
+        "defaultText" : {
+          "description" : "Default text with Character length from 0 to 2000.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 2000
+        },
+        "translatedTexts" : {
+          "description" : "List of translated text and language codes.",
+          "$ref" : "#/definitions/translationsTextType"
+        }
+      }
+    },
+    "translationsTextType" : {
+      "type" : "array",
+      "description" : "Language code for the translation.",
+      "maxItems" : 4000,
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string",
+            "description" : "Used for Character Strings, length 0 to 2000.",
+            "minLength" : 0,
+            "maxLength" : 2000
+          },
+          "language" : {
+            "description" : "Language identification.",
+            "type" : "string",
+            "pattern" : "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*"
+          }
+        },
+        "description" : "Language code for the translation."
+      }
+    },
+    "leisureResources" : {
+      "type" : "object",
+      "description" : "Response object for fetching Leisure Resources.",
+      "properties" : {
+        "leisureResourcesInfo" : {
+          "description" : "Collection of Leisure Resources Info.",
+          "$ref" : "#/definitions/leisureResourcesInfo"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureResourcesInfo" : {
+      "type" : "object",
+      "description" : "List of Leisure Resource.",
+      "properties" : {
+        "leisureResources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/leisureResourceCode"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        }
+      }
+    },
+    "leisureResource" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure resource.",
+      "properties" : {
+        "leisureResourceType" : {
+          "description" : "leisure resource details.",
+          "$ref" : "#/definitions/leisureResourcesType"
+        }
+      }
+    },
+    "leisureResourceCode" : {
+      "type" : "object",
+      "description" : "Leisure Resource Code Primary details.",
+      "properties" : {
+        "hotelId" : {
+          "description" : "Unique Opera Hotel Code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "resourceCode" : {
+          "description" : "Leisure Resource unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Resource code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "resourceType" : {
+          "description" : "Leisure Resource Type unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "quantity" : {
+          "description" : "Number of Leisure Resource Available.",
+          "type" : "number",
+          "maximum" : 2000
+        },
+        "displayOrder" : {
+          "description" : "Leisure Resource record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "type" : "boolean",
+          "description" : "Flag to specify if Leisure Resource is inactive."
+        }
+      }
+    },
+    "leisureResourcesType" : {
+      "type" : "object",
+      "description" : "Leisure Resource entity details.",
+      "properties" : {
+        "hotelId" : {
+          "description" : "Unique Opera Hotel Code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "resourceCode" : {
+          "description" : "Leisure Resource unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Resource code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "resourceType" : {
+          "description" : "Leisure Resource Type unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "quantity" : {
+          "description" : "Number of Leisure Resource Available.",
+          "type" : "number",
+          "maximum" : 2000
+        },
+        "displayOrder" : {
+          "description" : "Leisure Resource record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "turnoverTime" : {
+          "description" : "Leisure Resource turnover time.",
+          "type" : "number"
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "type" : "boolean",
+          "description" : "Flag to specify if Leisure Resource is inactive."
+        },
+        "leisureResourceFeatures" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/resourceFeatures"
+          },
+          "maxItems" : 1000
+        },
+        "leisureResourceLocations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/resourceLocations"
+          },
+          "maxItems" : 1000
+        }
+      }
+    },
+    "resourceFeatures" : {
+      "type" : "object",
+      "description" : "Leisure Features attached to Leisure Resource grouped by Feature Type.",
+      "properties" : {
+        "featureCodes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/resourceFeatureCodeType"
+          },
+          "maxItems" : 1000
+        },
+        "featureType" : {
+          "description" : "Leisure Resource unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "resourceFeatureCodeType" : {
+      "type" : "object",
+      "description" : "Leisure Features attached to Leisure Resource grouped by Feature Type.",
+      "properties" : {
+        "featureCode" : {
+          "description" : "Leisure Resource unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "featureDescription" : {
+          "description" : "Leisure Resource unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "availableResourceFeatures" : {
+      "type" : "object",
+      "description" : "Response object for fetching available Resource Features.",
+      "properties" : {
+        "availableResourceFeatures" : {
+          "description" : "Collection of Resource Features.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/resourceFeatures"
+          },
+          "maxItems" : 1000
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "resourceLocations" : {
+      "type" : "object",
+      "description" : "Leisure Locations attached to Leisure Resource.",
+      "properties" : {
+        "leisureLocationScheduleId" : {
+          "description" : "Leisure Resource Location Schedule Id.",
+          "type" : "number"
+        },
+        "leisureLocationCode" : {
+          "description" : "Leisure Resource Location unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "sunday" : {
+          "type" : "boolean"
+        },
+        "monday" : {
+          "type" : "boolean"
+        },
+        "tuesday" : {
+          "type" : "boolean"
+        },
+        "wednesday" : {
+          "type" : "boolean"
+        },
+        "thursday" : {
+          "type" : "boolean"
+        },
+        "friday" : {
+          "type" : "boolean"
+        },
+        "saturday" : {
+          "type" : "boolean"
+        },
+        "startDateTime" : {
+          "description" : "Start Date-Time of the leisure resource at the location.",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "endDateTime" : {
+          "description" : "End Date-Time of the leisure resource at the location.",
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "leisureResourceFeatureTypesInfo" : {
+      "type" : "object",
+      "description" : "Response object for fetching configured Leisure Resource Feature Types.",
+      "properties" : {
+        "leisureResourceFeatureTypes" : {
+          "type" : "array",
+          "description" : "Collection of configured Leisure Resource Feature Types.",
+          "items" : {
+            "$ref" : "#/definitions/leisureResourceFeatureTypeInfo"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureResourceFeatureType" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure resource feature type.",
+      "properties" : {
+        "leisureResourceFeatureType" : {
+          "description" : "leisure resource feature type details.",
+          "$ref" : "#/definitions/leisureResourceFeatureTypeInfo"
+        }
+      }
+    },
+    "leisureResourceFeatureTypeInfo" : {
+      "type" : "object",
+      "description" : "Base type provides information about Leisure Resource Feature Type.",
+      "properties" : {
+        "leisureResourceFeatureTypeCode" : {
+          "description" : "Leisure Resource Feature Type Code.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Resource Feature Type code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "inactive" : {
+          "description" : "if true, record will be considered as inactive.",
+          "type" : "boolean"
+        },
+        "displayOrder" : {
+          "description" : "Leisure Resource Feature Type record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        }
+      }
+    },
+    "leisureResourceFeature" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure resource feature.",
+      "properties" : {
+        "resourceFeature" : {
+          "description" : "Feature details.",
+          "$ref" : "#/definitions/leisureResourceFeatureInfo"
+        }
+      }
+    },
+    "resourceFeaturesInfo" : {
+      "type" : "object",
+      "description" : "Response object for fetching configured Resource Features.",
+      "properties" : {
+        "leisureResourceFeatures" : {
+          "type" : "array",
+          "description" : "Collection of configured Resource Feature .",
+          "items" : {
+            "$ref" : "#/definitions/leisureResourceFeatureInfo"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureResourceFeatureInfo" : {
+      "type" : "object",
+      "description" : "Base type provides information about Leisure Resource Feature .",
+      "properties" : {
+        "resourceFeatureCode" : {
+          "description" : "Resource Feature Code.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "resourceFeatureType" : {
+          "description" : "Resource Feature Type.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "leisureActivityTypes" : {
+          "description" : "Leisure Activity Types.",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 20
+          }
+        },
+        "resourceFeatureDesc" : {
+          "description" : "Resource Feature Description.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "resourceFeatureLongDesc" : {
+          "description" : "Resource Feature Long Description.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "orderBy" : {
+          "description" : "Leisure Resource Feature  Sequence.",
+          "type" : "number",
+          "maximum" : 9999,
+          "minimum" : 0
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "description" : "if true, record will be marked as inactive.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "leisureLocationTypes" : {
+      "type" : "object",
+      "description" : "Response object for fetching Leisure Location Types.",
+      "properties" : {
+        "leisureLocationTypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/leisureLocationTypeType"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureLocationType" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure location type.",
+      "properties" : {
+        "leisureLocationType" : {
+          "description" : "leisure location type details.",
+          "$ref" : "#/definitions/leisureLocationTypeType"
+        }
+      }
+    },
+    "leisureLocationTypeType" : {
+      "type" : "object",
+      "description" : "Leisure Location Type entity details.",
+      "properties" : {
+        "leisureLocationTypeCode" : {
+          "description" : "Leisure Location Type unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Location Type code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "displayOrder" : {
+          "description" : "Leisure Location Type record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "type" : "boolean",
+          "description" : "Flag to specify if Leisure Location Type is inactive."
+        }
+      }
+    },
+    "leisureLocations" : {
+      "type" : "object",
+      "description" : "Response object for fetching Leisure Locations.",
+      "properties" : {
+        "leisureLocations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/leisureLocationInfo"
+          },
+          "maxItems" : 1000
+        },
+        "totalPages" : {
+          "description" : "Evaluated total page count based on the requested max fetch count.",
+          "type" : "integer"
+        },
+        "offset" : {
+          "description" : "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type" : "integer"
+        },
+        "limit" : {
+          "description" : "Indicates maximum number of records a Web Service should return.",
+          "type" : "integer"
+        },
+        "hasMore" : {
+          "description" : "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type" : "boolean"
+        },
+        "totalResults" : {
+          "description" : "Total number of rows queried",
+          "type" : "integer"
+        },
+        "count" : {
+          "description" : "Total number of rows returned",
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureLocation" : {
+      "type" : "object",
+      "description" : "Request object for changing/creating leisure location.",
+      "properties" : {
+        "leisureLocation" : {
+          "description" : "leisure location details.",
+          "$ref" : "#/definitions/leisureLocationInfo"
+        }
+      }
+    },
+    "leisureLocationInfo" : {
+      "type" : "object",
+      "description" : "Leisure Location entity details.",
+      "properties" : {
+        "locationCode" : {
+          "description" : "Leisure Location unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "description" : {
+          "description" : "Description of the Leisure Location code.",
+          "$ref" : "#/definitions/translationTextType2000"
+        },
+        "leisureLocationTypeCode" : {
+          "description" : "Leisure Location Type unique code.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "displayOrder" : {
+          "description" : "Leisure Location Type record sequence number.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 9999
+        },
+        "managedBy" : {
+          "$ref" : "#/definitions/managedByOptions"
+        },
+        "inactive" : {
+          "type" : "boolean",
+          "description" : "Flag to specify if Leisure Location Type is inactive."
+        },
+        "schedules" : {
+          "description" : "Schedules attached to this Leisure Location.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/leisureLocationSchedule"
+          },
+          "maxItems" : 1000
+        }
+      }
+    },
+    "leisureLocationSchedule" : {
+      "type" : "object",
+      "description" : "Base type provides information about Leisure Location Schedule.",
+      "properties" : {
+        "startDate" : {
+          "description" : "Start date and time of the schedule",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "endDate" : {
+          "description" : "End date and time of the schedule",
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "daysofWeek" : {
+          "$ref" : "#/definitions/daysOfWeek"
+        }
+      }
+    },
+    "daysOfWeek" : {
+      "type" : "object",
+      "description" : "Base type object for storing selected days of the week information.",
+      "properties" : {
+        "sundayYN" : {
+          "description" : "if true, sunday will be marked as selected.",
+          "type" : "boolean"
+        },
+        "mondayYN" : {
+          "description" : "if true, monday will be marked as selected.",
+          "type" : "boolean"
+        },
+        "tuesdayYN" : {
+          "description" : "if true, tuesday will be marked as selected.",
+          "type" : "boolean"
+        },
+        "wednesdayYN" : {
+          "description" : "if true, wednesday will be marked as selected.",
+          "type" : "boolean"
+        },
+        "thursdayYN" : {
+          "description" : "if true, thursday will be marked as selected.",
+          "type" : "boolean"
+        },
+        "fridayYN" : {
+          "description" : "if true, friday will be marked as selected.",
+          "type" : "boolean"
+        },
+        "saturdayYN" : {
+          "description" : "if true, saturday will be marked as selected.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "primaryResourceFeatureTypesInfo" : {
+      "type" : "object",
+      "description" : "Response object for fetching configured Feature Types of Primary Resource on Leisure Activity.",
+      "properties" : {
+        "primaryResourceFeatureTypes" : {
+          "type" : "array",
+          "description" : "Collection of configured Leisure Resource Feature Types.",
+          "items" : {
+            "$ref" : "#/definitions/leisureResourceFeatureTypeInfo"
+          },
+          "maxItems" : 1000
+        },
+        "primaryResourceType" : {
+          "type" : "string",
+          "description" : "Unique Resource Type configured on primary resource."
+        },
+        "primaryResourceCode" : {
+          "type" : "string",
+          "description" : "Unique Resource code configured on primary resource.",
+          "maxLength" : 20
+        },
+        "inventory" : {
+          "type" : "boolean",
+          "description" : "Flag to indicate if primary resource type is inventory type."
+        },
+        "primaryResourceFeatures" : {
+          "type" : "array",
+          "description" : "The configured feature codes on primary resource.",
+          "maxItems" : 100,
+          "items" : {
+            "type" : "string",
+            "description" : "Unique resource feature code.",
+            "maxLength" : 20
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/links"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/warningsType"
+        }
+      }
+    }
+  },
+  "tags" : [ {
+    "name" : "LMSConfig",
+    "description" : "This API enables developers and integrators to build applications or interfaces that interact with the leisure management system's core features and data."
+  } ]
+}

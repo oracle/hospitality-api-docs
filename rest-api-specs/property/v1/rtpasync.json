@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "Opera Cloud Rate Plan Asynchronous Service API",
-    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs catering to the Rate Plan asynchronous related functionality in a hotel.  This includes adding/updating daily rates&apos; pricing schedules and best available rates by day or length of stay. <p>This API follows an async pattern where</p><ul><li>You make an initial request, which returns a Location header</li><li>You poll HEAD on the Location header returned to obtain the status of the process</li><li>Once the process completes HEAD will return in the Location header the URL that must be called to obtain the results of the process</li><li>You call the URL to obtain the results of the process</li></ul><br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -2538,7 +2538,146 @@
             },
             "tags": ["RatePlanAsync"]
           }
-        }
+        },
+        "/hotels/{hotelId}/ratePlans/{ratePlanCode}/schedules/set": {
+      "post": {
+        "summary": "Set rate plan schedules asynchronously.",
+        "description": "Starts an async job to create or update rate plan schedules for a single rate plan. The request payload mirrors the synchronous setRatePlanSchedules contract so the same scheduling semantics are preserved while execution moves to the async DB flow.<p><strong>OperationId:</strong>startSetRatePlanSchedulesProcess</p>",
+        "operationId": "startSetRatePlanSchedulesProcess",
+        "x-interaction": ["async-polling"],
+        "responses": {
+          "202": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of process status resource"
+              }
+            },
+            "description": "Location of process status resource"
+          }
+        },
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Hotel ID"
+          },
+          {
+            "name": "ratePlanCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Rate plan code"
+          },
+          {
+            "name": "ratePlanSchedulesToSet",
+            "in": "body",
+            "required": true,
+            "description": "Request object to set rate plan schedules asynchronously.",
+            "schema": {
+              "$ref": "#/definitions/ratePlanSchedulesToSet"
+            }
+          },
+          { "$ref": "#/parameters/authKey" },
+          { "$ref": "#/parameters/x-app-key" },
+          { "$ref": "#/parameters/x-request-id" }
+        ],
+        "consumes": ["application/json;charset=UTF-8"],
+        "produces": ["application/json;charset=UTF-8"],
+        "tags": ["RatePlanAsync"]
+      }
+    },
+    "/hotels/{hotelId}/ratePlans/{ratePlanCode}/schedules/set/{requestId}": {
+      "head": {
+        "summary": "Check status of set rate plan schedules process.",
+        "description": "Check status of the async set rate plan schedules process.<p><strong>OperationId:</strong>headSetRatePlanSchedulesProcessStatus</p>",
+        "operationId": "headSetRatePlanSchedulesProcessStatus",
+        "parameters": [
+          { "name": "hotelId", "in": "path", "required": true, "type": "string", "description": "Hotel ID" },
+          { "name": "ratePlanCode", "in": "path", "required": true, "type": "string", "description": "Rate plan code" },
+          { "name": "requestId", "in": "path", "required": true, "type": "string", "description": "Async job request id" },
+          { "$ref": "#/parameters/authKey" }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Processing",
+                  "Invalid"
+                ]
+              },
+              "Cache-Control": {
+                "type": "string",
+                "description": "number of seconds to wait before polling again.",
+                "x-example": "max-age=10"
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          },
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Status": {
+                "type": "string",
+                "description": "Status of the requested process.",
+                "enum": [
+                  "Completed"
+                ]
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource once the status of process run is Complete."
+              }
+            },
+            "description": "Response for status of scheduled asynchronous process."
+          }
+        },
+        "tags": ["RatePlanAsync"]
+      },
+      "get": {
+        "summary": "Get result of set rate plan schedules async process.",
+        "description": "API to fetch result of the async set rate plan schedules process.<p><strong>OperationId:</strong>getSetRatePlanSchedulesProcessSummary</p>",
+        "operationId": "getSetRatePlanSchedulesProcessSummary",
+        "parameters": [
+          { "name": "hotelId", "in": "path", "required": true, "type": "string", "description": "Hotel ID" },
+          { "name": "ratePlanCode", "in": "path", "required": true, "type": "string", "description": "Rate plan code" },
+          { "name": "requestId", "in": "path", "required": true, "type": "string", "description": "Async job request id" },
+          { "$ref": "#/parameters/authKey" }
+        ],
+        "responses": {
+          "200": {
+            "schema": { "$ref": "#/definitions/setRatePlanSchedulesProcessSummaryType" },
+            "description": "Process Summary"
+          },
+          "204": {
+            "description": "Rate plan schedules process summary not found."
+          }
+        },
+        "tags": ["RatePlanAsync"]
+      }
+    }
   },
   "parameters": {
     "externalData": {
@@ -3811,6 +3950,471 @@
             }
           },
           "required": ["syncMode"]
+        },
+        "ratePlanSchedulesToSet": {
+            "type": "object",
+            "description": "Request object to set rate plan schedules asynchronously.",
+            "properties": {
+                "hotelId": {
+                    "description": "Hotel code of the rate plan schedule.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "ratePlanCode": {
+                    "description": "Rate plan code of the rate plan schedule.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "ratePlanScheduleList": {
+                    "description": "List of rate plan schedules to be created or updated.",
+                    "type": "array",
+                    "maxItems": 4000,
+                    "items": {
+                        "$ref": "#/definitions/ratePlanScheduleDetailType"
+                    }
+                }
+            }
+        },
+        "setRatePlanSchedulesProcessSummaryType": {
+            "type": "object",
+            "description": "Summary response for the async set rate plan schedules process.",
+            "properties": {
+                "setRatePlanSchedulesOutcomes": {
+                    "$ref": "#/definitions/setRatePlanSchedulesOutcomesType"
+                },
+                "warnings": {
+                    "description": "Business or technical warnings.",
+                    "$ref": "#/definitions/warningsType"
+                },
+                "links": {
+                    "$ref": "#/definitions/links"
+                }
+            }
+        },
+        "setRatePlanSchedulesOutcomesType": {
+            "type": "array",
+            "description": "Collection of per-schedule outcomes for the async set rate plan schedules process.",
+            "maxItems": 4000,
+            "items": {
+                "$ref": "#/definitions/setRatePlanSchedulesOutcomeType"
+            }
+        },
+        "setRatePlanSchedulesOutcomeType": {
+            "type": "object",
+            "description": "Outcome for a single rate plan schedule in the async set rate plan schedules process.",
+            "properties": {
+                "start": {
+                    "description": "Schedule start date.",
+                    "type": "string",
+                    "format": "date",
+                    "maxLength": 10
+                },
+                "end": {
+                    "description": "Schedule end date.",
+                    "type": "string",
+                    "format": "date",
+                    "maxLength": 10
+                },
+                "roomTypeList": {
+                    "description": "Room types included in the schedule request.",
+                    "$ref": "#/definitions/roomTypeListType"
+                },
+                "sunday": {
+                    "type": "boolean"
+                },
+                "monday": {
+                    "type": "boolean"
+                },
+                "tuesday": {
+                    "type": "boolean"
+                },
+                "wednesday": {
+                    "type": "boolean"
+                },
+                "thursday": {
+                    "type": "boolean"
+                },
+                "friday": {
+                    "type": "boolean"
+                },
+                "saturday": {
+                    "type": "boolean"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Processing status for the schedule.",
+                    "enum": [
+                        "Success",
+                        "Fail"
+                    ]
+                },
+                "outcomeMessages": {
+                    "description": "Detail messages for this schedule outcome.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/outcomeMessageType"
+                    }
+                }
+            }
+        },
+        "ratePlanScheduleDetailType": {
+            "type": "object",
+            "description": "Details of rate plan schedule including room type list and days of week of the schedule.",
+            "properties": {
+                "rateAmounts": {
+                    "description": "Rate amounts for the rate plan schedule.",
+                    "$ref": "#/definitions/scheduleRateAmountsType"
+                },
+                "advancedBaseRateOffset": {
+                    "description": "Rate plan schedule based on an offset from its Base Rate or BAR Rate.",
+                    "$ref": "#/definitions/advancedBaseRateOffsetType"
+                },
+                "rateAmountBoundaries": {
+                    "description": "Rate amount boundaries for the rate plan schedule.",
+                    "$ref": "#/definitions/rateAmountBoundariesType"
+                },
+                "classifications": {
+                    "description": "Rate plan schedule grouping details.",
+                    "$ref": "#/definitions/ratePlanScheduleClassificationsType"
+                },
+                "occupantThresholdPricing": {
+                    "description": "Occupant threshold pricing for the rate plan schedule.",
+                    "$ref": "#/definitions/occupantThresholdPricingType"
+                },
+                "adjustmentDetails": {
+                    "description": "The adjustment code details for the rate plan schedule.",
+                    "$ref": "#/definitions/scheduleAdjustmentDetailsType"
+                },
+                "rateSchedulePackages": {
+                    "description": "List of packages attached to the rate plan schedule.",
+                    "$ref": "#/definitions/ratePackagesType"
+                },
+                "tierID": {
+                    "description": "Tier that the rate plan schedule belongs to.",
+                    "$ref": "#/definitions/tierIDType"
+                },
+                "seasonCode": {
+                    "description": "Season code attached to the rate plan schedule.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "start": {
+                    "description": "Start date of the rate plan schedule.",
+                    "type": "string",
+                    "format": "date",
+                    "maxLength": 8
+                },
+                "end": {
+                    "description": "End date of the rate plan schedule.",
+                    "type": "string",
+                    "format": "date",
+                    "maxLength": 8
+                },
+                "roomTypeList": {
+                    "description": "List of room types that are for the rate plan schedule.",
+                    "$ref": "#/definitions/roomTypeListType"
+                },
+                "advancedDailyBaseRatePlanCode": {
+                    "description": "The Base Rate Plan Code which will be used to look up for and configure the Pricing Schedule for the main Rate Plan Code.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "sunday": {
+                    "type": "boolean"
+                },
+                "monday": {
+                    "type": "boolean"
+                },
+                "tuesday": {
+                    "type": "boolean"
+                },
+                "wednesday": {
+                    "type": "boolean"
+                },
+                "thursday": {
+                    "type": "boolean"
+                },
+                "friday": {
+                    "type": "boolean"
+                },
+                "saturday": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "tierIDType": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "advancedBaseRateOffsetType": {
+            "type": "object",
+            "description": "A Rate which is of Advanced Dynamic Base Rate can have rate schedule based on an offset from its Base Rate or BAR Rate.",
+            "properties": {
+                "offset": {
+                    "description": "offset amount for the advanced dynamic base rate schedule.",
+                    "type": "number"
+                },
+                "flatOrPercentage": {
+                    "description": "It signifies offset amount is of Flat or Percentage type. Valid Values are F/P.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1
+                },
+                "applyBar": {
+                    "description": "Should this schedule be Advanced dynamically based on BAR rate.",
+                    "type": "boolean"
+                },
+                "barBaseAmount": {
+                    "description": "Offset amount for the advanced dynamic base rate schedule from its BAR Rate.",
+                    "type": "number"
+                },
+                "barFlatOrPercentage": {
+                    "description": "It signifies whether Bar Base Amount is of Flat or Percentage type. Valid Values are F/P.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1
+                },
+                "barRounding": {
+                    "description": "Rounding style used for the calculated rate amounts.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 1
+                }
+            }
+        },
+        "rateAmountBoundariesType": {
+            "type": "object",
+            "description": "Rate amount boundaries for the rate plan schedule.",
+            "properties": {
+                "minimum": {
+                    "description": "Minimum rate amounts for one and/or two adults.",
+                    "$ref": "#/definitions/rateAmountBoundaryType"
+                },
+                "maximum": {
+                    "description": "Maximum rate amounts for one and/or two adults.",
+                    "$ref": "#/definitions/rateAmountBoundaryType"
+                }
+            }
+        },
+        "rateAmountBoundaryType": {
+            "type": "object",
+            "description": "Set of rate amounts for one and/or two adults.",
+            "properties": {
+                "onePersonRate": {
+                    "description": "One person rate amount for the rate boundary.",
+                    "type": "number"
+                },
+                "twoPersonRate": {
+                    "description": "Two person rate amount for the rate boundary.",
+                    "type": "number"
+                }
+            }
+        },
+        "ratePlanScheduleClassificationsType": {
+            "type": "object",
+            "properties": {
+                "marketCode": {
+                    "description": "Market code for the rate schedule.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "sourceCode": {
+                    "description": "Source code for the rate schedule.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                }
+            }
+        },
+        "scheduleAdjustmentDetailsType": {
+            "type": "array",
+            "description": "The list of adjustment codes for the rate plan schedule.",
+            "maxItems": 4000,
+            "items": {
+                "$ref": "#/definitions/adjustmentDetailType"
+            }
+        },
+        "adjustmentDetailType": {
+            "type": "object",
+            "description": "The adjustment code details for the rate schedule.",
+            "properties": {
+                "overriddenAmount": {
+                    "description": "The amount with which the actual adjustment will be overridden.",
+                    "type": "number"
+                },
+                "adjustmentCode": {
+                    "description": "The adjustment code that needs to be attached to the rate schedule.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "deleteAdjustment": {
+                    "description": "Should this adjustment code be deleted?",
+                    "type": "boolean"
+                }
+            }
+        },
+        "roomTypeListType": {
+            "type": "array",
+            "description": "Room Type.",
+            "maxItems": 4000,
+            "items": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 20
+            }
+        },
+        "occupantThresholdPricingType": {
+            "type": "object",
+            "description": "Definition for creating pricing for a rate schedule, based on occupants threshold level.",
+            "properties": {
+                "adults": {
+                    "description": "Threshold for Adults in the room.",
+                    "type": "object",
+                    "properties": {
+                        "threshold": {
+                            "description": "Threshold value, after it is reached the corresponding amount will be charged.",
+                            "type": "integer"
+                        },
+                        "amount": {
+                            "description": "Amount to be charged after the threshold is reached.",
+                            "type": "number"
+                        }
+                    }
+                },
+                "children": {
+                    "description": "Threshold for Children in the room.",
+                    "type": "object",
+                    "properties": {
+                        "threshold": {
+                            "description": "Threshold value, after it is reached the corresponding amount will be charged.",
+                            "type": "integer"
+                        },
+                        "amount": {
+                            "description": "Amount to be charged after the threshold is reached.",
+                            "type": "number"
+                        },
+                        "excludeBucket1": {
+                            "description": "When rates are defined by age buckets, should the 1st bucket children count be excluded from threshold pricing.",
+                            "type": "boolean"
+                        },
+                        "excludeBucket2": {
+                            "description": "When rates are defined by age buckets, should the 2nd bucket children count be excluded from threshold pricing.",
+                            "type": "boolean"
+                        },
+                        "excludeBucket3": {
+                            "description": "When rates are defined by age buckets, should the 3rd bucket children count be excluded from threshold pricing.",
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "occupants": {
+                    "description": "Threshold for Occupants in the room.",
+                    "type": "object",
+                    "properties": {
+                        "threshold": {
+                            "description": "Threshold value, after it is reached the corresponding amount will be charged.",
+                            "type": "integer"
+                        },
+                        "amount": {
+                            "description": "Amount to be charged after the threshold is reached.",
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "ratePackagesType": {
+            "type": "object",
+            "description": "List of package codes and package groups attached to the rate plan schedule.",
+            "properties": {
+                "packages": {
+                    "description": "A collection of packages attached to the rate schedule.",
+                    "$ref": "#/definitions/ratePackageCodeListType"
+                },
+                "packageGroups": {
+                    "description": "Package group details attached to the rate schedule.",
+                    "type": "array",
+                    "maxItems": 4000,
+                    "items": {
+                        "$ref": "#/definitions/ratePackageGroupType"
+                    }
+                }
+            }
+        },
+        "ratePackageCodeListType": {
+            "type": "array",
+            "description": "Rate package information.",
+            "maxItems": 4000,
+            "items": {
+                "$ref": "#/definitions/ratePackageCodeType"
+            }
+        },
+        "ratePackageCodeType": {
+            "type": "object",
+            "description": "Package code details applied to a rate plan schedule.",
+            "properties": {
+                "hotelId": {
+                    "description": "Hotel code for the package.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "code": {
+                    "description": "Package code.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "description": {
+                    "description": "Package description.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 2000
+                },
+                "group": {
+                    "description": "Indicates if it is a package group or not.",
+                    "type": "boolean"
+                },
+                "quantity": {
+                    "description": "Quantity of the package code included in the rate schedule.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ratePackageGroupType": {
+            "type": "object",
+            "description": "Information about a package group attached to a rate plan schedule.",
+            "properties": {
+                "code": {
+                    "description": "Package group code.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                "description": {
+                    "description": "Package group description.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 2000
+                },
+                "shortDescription": {
+                    "description": "Package group short description.",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 40
+                },
+                "packages": {
+                    "description": "List of package group members for a rate schedule.",
+                    "$ref": "#/definitions/ratePackageCodeListType"
+                }
+            }
         },
         "ratePlanSchedulesSyncSummaryType": {
           "type": "object",

@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Customer Relationship Management API",
-    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.<br /><br /> There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much  more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",    
-    "version": "26.2.0.0",
+    "description": "APIs to cater for Customer Relationship Management (profile) functionality in OPERA Cloud.<br /><br /> There are different types of profiles in OPERA Cloud, including Guest, Company, Travel Agent, Source, Group, and Contact profile types.  A profile can store and display a wide range of information about the guest, company, travel agent etc., depending upon the type of profile.  For example, a guest profile can store the guest name, address, contact information, details on billing, membership benefits, preferences and much  more.  All profiles in OPERA when created are assigned a ProfileID.  This ID will be used throughout the CRM APIs.<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -8626,6 +8626,126 @@
         ]
       }
     },
+    "/memberships/{membershipId}/badges": {
+      "get": {
+        "summary": "Get membership badges",
+        "description": "Returns the details of badges available within a program for a specific membership. <p><strong>OperationId:</strong>getMembershipBadges</p> <p>When no page value is sent or if it is invalid, source defaults to first page. If requested page is out of range, API returns an empty badges list.</p>",
+        "operationId": "getMembershipBadges",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Membership identifier for which badges are requested."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 10,
+            "description": "Indicates maximum number of records to return. Source API defaults to 10 and supports a maximum of 25.",
+            "type": "integer",
+            "maximum": 25
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page index being requested. If omitted or invalid source API returns the first page; out-of-range values return an empty badges list.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching membership badges. Empty badges list is returned when page is out of range.",
+            "schema": {
+              "$ref": "#/definitions/membershipBadges"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileMembership"
+        ]
+      }
+    },
     "/memberships/{membershipId}/claims": {
       "get": {
         "summary": "Get membership claims",
@@ -9800,6 +9920,109 @@
         ]
       }
     },
+    "/memberships/{membershipId}/segments": {
+      "get": {
+        "summary": "Get membership segments",
+        "description": "Returns membership segment details from the external loyalty source. <p><strong>OperationId:</strong>getMembershipSegments</p>",
+        "operationId": "getMembershipSegments",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Membership identifier for which segments are requested."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Collection of membership segment details.",
+            "schema": {
+              "$ref": "#/definitions/membershipSegmentsDetails"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileMembership"
+        ]
+      }
+    },
     "/memberships/{membershipId}/transactions": {
       "get": {
         "summary": "Get membership transactions ",
@@ -9974,6 +10197,117 @@
             "description": "HATEOAS links which help the consumer to navigate to resources",
             "schema": {
               "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "ProfileMembership"
+        ]
+      }
+    },
+    "/memberships/{membershipId}/usableCoupons": {
+      "get": {
+        "summary": "Get membership usable coupons",
+        "description": "Returns usable reward coupons for a specific membership from external loyalty source. <p><strong>OperationId:</strong>getMembershipUsableCoupons</p>",
+        "operationId": "getMembershipUsableCoupons",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Membership identifier for which usable coupons are requested."
+          },
+          {
+            "name": "expired",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "description": "Indicates whether expired but unused coupons should be included.",
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching membership usable coupons.",
+            "schema": {
+              "$ref": "#/definitions/membershipUsableCoupons"
             }
           },
           "400": {
@@ -14338,7 +14672,8 @@
                                 "createDateTime": "2019-09-03T14:56:18.227Z",
                                 "creatorId": "a",
                                 "lastModifyDateTime": "2019-09-03T14:56:18.228Z",
-                                "lastModifierId": "a"
+                                "lastModifierId": "a",
+                                "municipalityCode": "010014"
                               }
                             }
                           ]
@@ -14782,7 +15117,8 @@
                               "createDateTime": "2019-09-18T21:09:36.498Z",
                               "creatorId": "12883",
                               "lastModifyDateTime": "2019-09-18T21:09:36.498Z",
-                              "lastModifierId": "12883"
+                              "lastModifierId": "12883",
+                              "municipalityCode": "010014"
                             }
                           }
                         ]
@@ -26771,6 +27107,12 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 200
+        },
+        "municipalityCode": {
+          "description": "The Municipality code for the address.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
         }
       }
     },
@@ -29728,7 +30070,7 @@
           "maxLength": 20
         },
         "birthDate": {
-          "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format.",
+          "description": "Indicates the date of birth as indicated in the document, in ISO 8601 prescribed format. When masked birthdate will be shown as 1800/01/01",
           "type": "string",
           "format": "date",
           "maxLength": 8
@@ -32774,7 +33116,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -32785,7 +33127,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -33047,12 +33389,12 @@
       "description": "Holds the Arrival and Departure Time Information",
       "properties": {
         "reservationExpectedArrivalTime": {
-          "description": "Arrival Time",
+          "description": "Arrival Time. Uses the hotel's local time zone.",
           "type": "string",
           "format": "date-time"
         },
         "reservationExpectedDepartureTime": {
-          "description": "Departure Time",
+          "description": "Departure Time. Uses the hotel's local time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -34059,7 +34401,7 @@
       "description": "Information regarding the message sent to guest.",
       "properties": {
         "sentTime": {
-          "description": "Time the text was last sent to the user.",
+          "description": "Time the text was last sent to the user. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -34913,7 +35255,7 @@
           "type": "boolean"
         },
         "expectedReturnTime": {
-          "description": "Expected Return Time",
+          "description": "Expected Return Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -35644,7 +35986,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -35655,7 +35997,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -35869,7 +36211,8 @@
         "RoomType",
         "RateCode",
         "OutOfOrderReason",
-        "Block"
+        "Block",
+        "MembershipType"
       ]
     },
     "profile": {
@@ -37315,6 +37658,14 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 50
+        },
+        "personName": {
+          "description": "Detailed name information for the customer.",
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/definitions/personNameType"
+          }
         }
       }
     },
@@ -37370,6 +37721,12 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "membershipTypeDescription": {
+          "description": "Membership Type description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         },
         "membershipLevel": {
           "description": "The current level of the membership.",
@@ -38392,6 +38749,13 @@
           "description": "Collection of member award list.",
           "$ref": "#/definitions/membershipAwardsListType"
         },
+        "masterInfoList": {
+          "description": "Lists of LOV details for code and description.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/masterInfoType"
+          }
+        },
         "totalPages": {
           "description": "Evaluated total page count based on the requested max fetch count.",
           "type": "integer"
@@ -38723,6 +39087,12 @@
           "type": "string",
           "minLength": 0,
           "maxLength": 20
+        },
+        "membershipTypeDescription": {
+          "description": "Membership Type description.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
         },
         "membershipId": {
           "description": "Indicates membership card number of the guest.",
@@ -39981,7 +40351,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -39992,7 +40362,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -40885,7 +41255,7 @@
           "type": "integer"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -40896,7 +41266,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -40916,7 +41286,7 @@
           "$ref": "#/definitions/dateTimeSpanType"
         },
         "traceOn": {
-          "description": "Date of the trace.",
+          "description": "Date of the trace. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -42430,7 +42800,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -42441,7 +42811,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -44753,7 +45123,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -44764,7 +45134,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -45448,7 +45818,7 @@
           "$ref": "#/definitions/commentType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -45459,7 +45829,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47702,6 +48072,12 @@
           "minLength": 0,
           "maxLength": 20
         },
+        "membershipTypeDescription": {
+          "description": "The description of the membership type.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
         "cardNumber": {
           "description": "The membership card number.",
           "type": "string",
@@ -49194,11 +49570,11 @@
           "minLength": 0,
           "maxLength": 4000
         },
-        "errorDescription" : {
-          "description" : "Error message describing the cause of failure in processing the given staged profile.",
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 4000
+        "errorDescription": {
+          "description": "Error message describing the cause of failure in processing the given staged profile.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
         }
       }
     },
@@ -49440,7 +49816,7 @@
         "dateTime": {
           "type": "string",
           "format": "date-time",
-          "description": "Date and time when log entry was created/completed."
+          "description": "Date and time when log entry was created/completed. Uses database time zone"
         },
         "user": {
           "type": "string",
@@ -50142,95 +50518,95 @@
       }
     },
     "orphanStayRecord": {
-        "type": "object",
-        "description": "The request element used to update orphan stay record elements.",
-        "properties": {
-          "orphanStayRecord": {
-            "description": "This object stores the elements which user wants to update.",
-            "$ref": "#/definitions/orphanStayRecordType"
-          },
-          "links": {
-            "$ref": "#/definitions/links"
-          },
-          "warnings": {
-            "$ref": "#/definitions/warningsType"
-          }
+      "type": "object",
+      "description": "The request element used to update orphan stay record elements.",
+      "properties": {
+        "orphanStayRecord": {
+          "description": "This object stores the elements which user wants to update.",
+          "$ref": "#/definitions/orphanStayRecordType"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
-      },
-      "orphanStayRecordType": {
-        "type": "object",
-        "description": "This object stores the elements which user wants to update.",
-        "properties": {
-          "bookedRoomLabel": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 50,
-            "description" : "Indicates the booked room type for the Stay Record."
-          },
-          "crsBookNo": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 50,
-            "description" : "Indicates the Central Reservation System (CRS) Booking Number"
-          },
-          "guestNameId": {
-            "type" : "number",
-            "description" : "Indicates the internal Profile ID for the guest."
-          },
-          "numberOfNights": {
-            "type" : "number",
-            "description" : "Indicates the Number of nights for the given stay"
-          },
-          "pmsCompanyId": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 20,
-            "description" : "Indicates the internal Company Profile Id linked to the reservation (stay)."
-          },
-          "pmsNameId": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 20,
-            "description" : "Indicates the internal Profile Id."
-          },
-          "pmsResvNo": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 50,
-            "description" : "Indicates the Property (PMS) Reservation Number."
-          },
-          "pmsResvNameId": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 50,
-            "description" : "Indicates the internal Property (PMS) Reservation Id."
-          },
-          "pmsTravelId": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 240,
-            "description" : "Indicates the internal Travel Agent Profile Id linked to the reservation (stay)."
-          },
-          "pmsWholesalerId": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 20,
-            "description" : "Indicates the internal Wholesaler Profile Id linked to the reservation (stay)."
-          },
-          "roomLabel": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 50,
-            "description" : "Indicates the room type for the Stay Record."
-          },
-          "udfc10": {
-            "type" : "string",
-            "minLength" : 0,
-            "maxLength" : 200,
-            "description" : "Indicates the character UDF 10 for the Stay Record."
-          }
+      }
+    },
+    "orphanStayRecordType": {
+      "type": "object",
+      "description": "This object stores the elements which user wants to update.",
+      "properties": {
+        "bookedRoomLabel": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "description": "Indicates the booked room type for the Stay Record."
+        },
+        "crsBookNo": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "description": "Indicates the Central Reservation System (CRS) Booking Number"
+        },
+        "guestNameId": {
+          "type": "number",
+          "description": "Indicates the internal Profile ID for the guest."
+        },
+        "numberOfNights": {
+          "type": "number",
+          "description": "Indicates the Number of nights for the given stay"
+        },
+        "pmsCompanyId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Indicates the internal Company Profile Id linked to the reservation (stay)."
+        },
+        "pmsNameId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Indicates the internal Profile Id."
+        },
+        "pmsResvNo": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "description": "Indicates the Property (PMS) Reservation Number."
+        },
+        "pmsResvNameId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "description": "Indicates the internal Property (PMS) Reservation Id."
+        },
+        "pmsTravelId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 240,
+          "description": "Indicates the internal Travel Agent Profile Id linked to the reservation (stay)."
+        },
+        "pmsWholesalerId": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20,
+          "description": "Indicates the internal Wholesaler Profile Id linked to the reservation (stay)."
+        },
+        "roomLabel": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "description": "Indicates the room type for the Stay Record."
+        },
+        "udfc10": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200,
+          "description": "Indicates the character UDF 10 for the Stay Record."
         }
-      },
+      }
+    },
     "searchStagedProfilesRequest": {
       "type": "object",
       "properties": {
@@ -50379,6 +50755,377 @@
           "type": "boolean",
           "description": "Indicates code is enabled/disabled for the profile.",
           "default": false
+        }
+      }
+    },
+    "membershipBadges": {
+      "type": "object",
+      "description": "Response object for fetching membership badges.",
+      "properties": {
+        "badges": {
+          "type": "array",
+          "maxItems": 4000,
+          "description": "Collection of membership badges.",
+          "items": {
+            "$ref": "#/definitions/membershipBadgeType"
+          }
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "earnedLifetime": {
+          "description": "Number of badges earned by the member regardless of badge state.",
+          "type": "integer"
+        },
+        "earnedUnique": {
+          "description": "Number of unique badges the member has earned.",
+          "type": "integer"
+        },
+        "earnedTotal": {
+          "description": "Number of badges the member has earned, inclusive of state.",
+          "type": "integer"
+        },
+        "unearned": {
+          "description": "Number of badges available to the member to earn.",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipBadgeType": {
+      "type": "object",
+      "description": "Information related to a membership badge.",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the badge.",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Internal unique name of the badge.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "title": {
+          "description": "Public name of the badge.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "state": {
+          "description": "The state of the badge for the member.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50
+        },
+        "description": {
+          "description": "Public description of the badge state.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 4000
+        },
+        "imageUrl": {
+          "description": "URL of the badge state image.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "dateStart": {
+          "description": "Date on which the badge earn starts. Uses the hotel's time zone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateEnd": {
+          "description": "Date on which the badge earn ends. Uses the hotel's time zone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "displayDateStart": {
+          "description": "Date on which the badge starts being displayed to a member. Uses the hotel's time zone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "displayDateEnd": {
+          "description": "Date on which the badge stops being displayed to a member. Uses the hotel's time zone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "badgeExtraData": {
+          "description": "Extra key-value pairs configured at the badge level.",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "earnCount": {
+          "description": "Number of times the member has earned the badge.",
+          "type": "integer"
+        },
+        "frequency": {
+          "description": "Details the frequency at which a member can earn the badge.",
+          "$ref": "#/definitions/membershipBadgeFrequencyType"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags linked to the badge for organization.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/membershipBadgeTagType"
+          }
+        },
+        "earnLatest": {
+          "description": "Details of the most recently earned badge.",
+          "$ref": "#/definitions/membershipBadgeEarnLatestType"
+        }
+      }
+    },
+    "membershipBadgeFrequencyType": {
+      "type": "object",
+      "description": "Frequency details for a badge.",
+      "properties": {
+        "freqCap": {
+          "description": "Number of times a member can earn the badge within the frequency period.",
+          "type": "integer"
+        },
+        "freqPeriodId": {
+          "description": "Identifier of the frequency period.",
+          "type": "integer"
+        },
+        "freqPeriodName": {
+          "description": "Name of the frequency period.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80
+        },
+        "freqMax": {
+          "description": "Maximum number of times a member can earn the badge.",
+          "type": "integer"
+        }
+      }
+    },
+    "membershipBadgeTagType": {
+      "type": "object",
+      "description": "Tag details linked to a badge.",
+      "properties": {
+        "tagName": {
+          "description": "Name of the linked tag.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        },
+        "tagId": {
+          "description": "Identifier of the linked tag.",
+          "type": "integer"
+        },
+        "badgeExtraData": {
+          "description": "Extra key-value pairs configured at badge level.",
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "membershipBadgeEarnLatestType": {
+      "type": "object",
+      "description": "Details of the latest earned badge entry.",
+      "properties": {
+        "earnId": {
+          "description": "Unique ID of the earned badge entry.",
+          "type": "integer"
+        },
+        "dateEarned": {
+          "description": "Date when the badge was earned. Uses the hotel's time zone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateCreated": {
+          "description": "Date when the earned badge was processed. Uses the hotel's time zone.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "customData": {
+          "description": "Client-provided custom data unique to the earned badge.",
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "memberLoyaltyPremiumProfileSegmentType": {
+      "type": "object",
+      "description": "Segment details associated with member profile.",
+      "properties": {
+        "subscriptionId": {
+          "description": "Segment subscription identifier.",
+          "type": "integer"
+        },
+        "name": {
+          "description": "Segment name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 500
+        },
+        "dateEntered": {
+          "description": "Date member entered the segment.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "membershipUsableCoupons": {
+      "type": "object",
+      "description": "Response object for fetching membership usable coupons.",
+      "properties": {
+        "coupons": {
+          "type": "array",
+          "maxItems": 4000,
+          "description": "Collection of usable coupons available for the member.",
+          "items": {
+            "$ref": "#/definitions/membershipUsableCouponType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "membershipUsableCouponType": {
+      "type": "object",
+      "description": "Information related to a usable membership coupon.",
+      "properties": {
+        "rewardId": {
+          "description": "Reward identifier.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "rewardCategoryId": {
+          "description": "Reward category identifier.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "redeemOrderId": {
+          "description": "Redemption order identifier.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "redeemOrderCouponId": {
+          "description": "Redemption order coupon identifier.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "totalPointsRedeemed": {
+          "description": "Total points redeemed for the coupon.",
+          "type": "number"
+        },
+        "endingBalance": {
+          "description": "Ending balance after redemption.",
+          "type": "number"
+        },
+        "quantity": {
+          "description": "Quantity redeemed.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "code": {
+          "description": "Coupon code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "rewardTitle": {
+          "description": "Reward title.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "couponCategoryId": {
+          "description": "Coupon category identifier.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "couponCategoryName": {
+          "description": "Coupon category name.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "couponCategoryExpirationDays": {
+          "description": "Coupon category expiration days.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "batchNum": {
+          "description": "Coupon batch number.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "dateToExpire": {
+          "description": "Coupon expiration date.",
+          "type": "string",
+          "format": "date"
+        },
+        "orderDateCreated": {
+          "description": "Date when order was created.",
+          "type": "string",
+          "format": "date"
+        },
+        "couponDateCreated": {
+          "description": "Date when coupon was created.",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "membershipSegmentsDetails": {
+      "type": "object",
+      "description": "Response object for fetching membership segment details.",
+      "properties": {
+        "segments": {
+          "type": "array",
+          "description": "Collection of membership segment details.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/memberLoyaltyPremiumProfileSegmentType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
         }
       }
     }

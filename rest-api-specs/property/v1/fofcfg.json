@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Front Desk Configuration API",
-    "description": "APIs to cater for Front Desk Configuration in OPERA Cloud. Here you can find operations to get, post, put and delete front desk codes such as commission codes, transaction groups, codes & subgroups, articles, payment methods and credit card types.<br /><br />Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p>This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2023 Oracle and/or its affiliates.</p><br /><br /> Compatible with OPERA Cloud release 20.99.99.99.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs to cater for Front Desk Configuration in OPERA Cloud. Here you can find operations to get, post, put and delete front desk codes such as commission codes, transaction groups, codes & subgroups, articles, payment methods and credit card types.<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -3228,6 +3228,206 @@
         ]
       }
     },
+    "/bulk/transactionCodes": {
+      "get": {
+        "summary": "Operation to fetch TransactionCodes for resync.",
+        "description": "Use this API to return transaction codes in bulk. By default the response returns transaction code summary details. When query fetchInstructions includes Generates, the response returns transaction code details enriched with generates setup. <p><strong>OperationId:</strong>getBulkTransactionCodes</p>",
+        "operationId": "getBulkTransactionCodes",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "description": "Unique ID that identifies a single hotel property.",
+            "required": true,
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1
+          },
+          {
+            "name": "compTransactionCodes",
+            "in": "query",
+            "x-example": "false",
+            "required": false,
+            "description": "Flag to indicate whether comp accounting transaction codes are being requested. If true, only comp accounting transaction codes will be returned. If false, only standard transaction codes will be returned.",
+            "type": "boolean"
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "x-example": "false",
+            "required": false,
+            "description": "Inactive flag used to include/exclude inactive transaction codes from the search result",
+            "type": "boolean"
+          },
+          {
+            "name": "earnMembershipPoints",
+            "in": "query",
+            "x-example": "false",
+            "required": false,
+            "description": "This flag indicates that the transaction is eligible to earn points (guest can earn points on the revenue posted to this transaction code)",
+            "type": "boolean"
+          },
+          {
+            "name": "transactionGroupCodes",
+            "in": "query",
+            "type": "array",
+            "maxItems": 4000,
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "transactionSubgroupsCodes",
+            "in": "query",
+            "type": "array",
+            "maxItems": 4000,
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "transactionCodes",
+            "in": "query",
+            "type": "array",
+            "maxItems": 4000,
+            "collectionFormat": "multi",
+            "description": "Codes to be searched.",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "name": "wildCard",
+            "in": "query",
+            "required": false,
+            "description": "Wildcard search on the code.",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "description": "Description of the Transaction code.",
+            "type": "string"
+          },
+          {
+            "name": "brandCode",
+            "in": "query",
+            "required": false,
+            "description": "Property associated with the corporate information brand code in the search criteria",
+            "type": "string"
+          },
+          {
+            "name": "universalProductCode",
+            "in": "query",
+            "required": false,
+            "description": "Unique Universal product code search criteria.",
+            "type": "string"
+          },
+          {
+            "name": "fetchInstructions",
+            "in": "query",
+            "required": false,
+            "description": "Fetch instruction to request optional bulk enrichments. Pass Generates to include generates setup in transaction code details.",
+            "type": "string",
+            "x-example": "Generates"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching transaction codes in bulk (summary by default, enriched details when fetchInstructions=Generates).",
+            "schema": {
+              "$ref": "#/definitions/entityDetails"
+            }
+          },
+          "204": {
+            "description": "TransactionCodes not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CashieringConfig"
+        ]
+      }
+    },
     "/cardReaderDelimiters": {
       "get": {
         "summary": "Operation to fetch CardReaderDelimiters.",
@@ -3939,7 +4139,7 @@
         ]
       }
     },
-    "/cashierDetails/cashiers/search": {
+    "/cashierDetails/cashiers/searches": {
       "post": {
         "summary": "Operation to fetch Cashiers.",
         "description": "Use this API to return Chashier information based on search criteria such as cashierIDs, limit, name. <p><strong>OperationId:</strong>searchCashiers</p> <p>The maximum allowable limit for this API is <strong>20</strong>.</p>",
@@ -7311,6 +7511,110 @@
       }
     },
     "/creditCardTypes/validate": {
+      "post": {
+        "summary": "Operation to validate a credit card type.",
+        "description": " <p><strong>OperationId:</strong>validateCreditCardTypeDetails</p>",
+        "operationId": "validateCreditCardTypeDetails",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "validateCreditCardTypeDetailsRequest",
+            "description": "Request body for validating a credit card type.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/validateCreditCardTypeDetailsRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "The result element from validating a credit card number against its vendor's format requirements.",
+            "schema": {
+              "$ref": "#/definitions/creditCardTypeValidationStatus"
+            }
+          },
+          "204": {
+            "description": "Valid credit card type not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CreditCard"
+        ]
+      },
       "get": {
         "summary": "Operation to validate CreditCardType.",
         "description": " <p><strong>OperationId:</strong>validateCreditCardType</p>",
@@ -7617,7 +7921,7 @@
             "name": "emailFolioInfoCreateDateTime",
             "in": "query",
             "required": false,
-            "description": "Time stamp of the creation.",
+            "description": "Time stamp of the creation. Uses database time zone.",
             "type": "string",
             "format": "date-time"
           },
@@ -7658,7 +7962,7 @@
             "name": "emailFolioInfoLastModifyDateTime",
             "in": "query",
             "required": false,
-            "description": "Time stamp of last modification.",
+            "description": "Time stamp of last modification. Uses database time zone.",
             "type": "string",
             "format": "date-time"
           },
@@ -9411,6 +9715,7 @@
         "summary": "Operation to fetch DefaultPaymentMethodRule.",
         "description": "Operation to fetch payment method rule. <p><strong>OperationId:</strong>getDefaultPaymentMethodRule</p> <p>The maximum allowable limit for this API is <strong>50</strong>.</p>",
         "operationId": "getDefaultPaymentMethodRule",
+        "deprecated": true,
         "parameters": [
           {
             "name": "hotelIds",
@@ -9514,6 +9819,112 @@
               }
             },
             "description": "Response for fetching default payment method rule.",
+            "schema": {
+              "$ref": "#/definitions/defaultPaymentMethodRule"
+            }
+          },
+          "204": {
+            "description": "DefaultPaymentMethodRule not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CashieringConfig"
+        ]
+      }
+    },
+    "/defaultPaymentMethodRules/searches": {
+      "post": {
+        "summary": "Operation to fetch DefaultPaymentMethodRule.",
+        "description": "Operation to fetch payment method rule. <p><strong>OperationId:</strong>searchDefaultPaymentMethodRules</p> <p>The maximum allowable limit for this API is <strong>50</strong>.</p>",
+        "operationId": "searchDefaultPaymentMethodRules",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchDefaultPaymentMethodRulesRequest",
+            "description": "Request body for search default payment method rules",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/searchDefaultPaymentMethodRulesRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetching payment methods.",
             "schema": {
               "$ref": "#/definitions/defaultPaymentMethodRule"
             }
@@ -17883,6 +18294,7 @@
         "summary": "Operation to fetch PaymentMethods.",
         "description": "Operation to fetch payment methods. <p><strong>OperationId:</strong>getPaymentMethods</p>",
         "operationId": "getPaymentMethods",
+        "deprecated": true,
         "parameters": [
           {
             "name": "hotelIds",
@@ -18103,6 +18515,112 @@
             "schema": {
               "$ref": "#/definitions/status"
             }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CashieringConfig"
+        ]
+      }
+    },
+    "/hotelPaymentMethods/searches": {
+      "post": {
+        "summary": "Operation to fetch Payment Methods.",
+        "description": "Operation to fetch payment methods. <p><strong>OperationId:</strong>searchPaymentMethods</p>",
+        "operationId": "searchPaymentMethods",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchPaymentMethodsRequest",
+            "description": "Request body for search payment methods",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/searchPaymentMethodsRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetching payment methods.",
+            "schema": {
+              "$ref": "#/definitions/paymentMethodsInfo"
+            }
+          },
+          "204": {
+            "description": "PaymentMethods not found."
           },
           "400": {
             "$ref": "#/responses/400"
@@ -19772,7 +20290,7 @@
         ]
       }
     },
-    "/hotels/{hotelId}/compAuthorizers/search": {
+    "/hotels/{hotelId}/compAuthorizers/searches": {
       "post": {
         "summary": "Operation to fetch CompAuthorizers.",
         "description": "Operation to fetch Authorizer Groups. <p><strong>OperationId:</strong>searchCompAuthorizers</p>",
@@ -30086,7 +30604,7 @@
         ]
       }
     },
-    "/prepaidCard/search": {
+    "/prepaidCard/searches": {
       "post": {
         "summary": "Operation to fetch Prepaid Card.",
         "description": " <p><strong>OperationId:</strong>searchPrepaidCard</p>",
@@ -30339,7 +30857,7 @@
         ]
       }
     },
-    "/prepaidCardBalance/search": {
+    "/prepaidCardBalance/searches": {
       "post": {
         "summary": "Operation to fetch prepaid card balance.",
         "description": " <p><strong>OperationId:</strong>searchPrepaidCardBalance</p>",
@@ -30450,6 +30968,7 @@
         "summary": "Operation to fetch PrepaidCards.",
         "description": " <p><strong>OperationId:</strong>getPrepaidCards</p>",
         "operationId": "getPrepaidCards",
+        "deprecated": true,
         "parameters": [
           {
             "name": "hotelId",
@@ -30521,6 +31040,112 @@
             "required": false,
             "description": "First name search criteria.",
             "type": "string"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for fetch Prepaid cards operation",
+            "schema": {
+              "$ref": "#/definitions/prepaidCards"
+            }
+          },
+          "204": {
+            "description": "PrepaidCards not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CreditCard"
+        ]
+      }
+    },
+    "/prepaidCards/searches": {
+      "post": {
+        "summary": "Operation to search for Prepaid Cards.",
+        "description": " <p><strong>OperationId:</strong>searchPrepaidCards</p>",
+        "operationId": "searchPrepaidCards",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchPrepaidCardsRequest",
+            "description": "Request body for search prepaid cards",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/searchPrepaidCardsRequest"
+            }
           },
           {
             "$ref": "#/parameters/authKey"
@@ -41957,6 +42582,117 @@
         ]
       }
     },
+    "/upsert/exchangeRates/set": {
+      "put": {
+        "summary": "Operation to set ExchangeRates.",
+        "description": "The operation sets exchange rates. <p><strong>OperationId:</strong>setUpsertExchangeRates</p>",
+        "operationId": "setUpsertExchangeRates",
+        "parameters": [
+          {
+            "name": "exchangeRates",
+            "in": "body",
+            "required": true,
+            "description": "Exchange Rates to be Set.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/exchangeRates"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Response Body.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "CashieringConfig"
+        ]
+      }
+    },
     "/upsert/fiscalFolioParameters": {
       "put": {
         "summary": "Operation to create/change FiscalFolioParameters.",
@@ -47780,7 +48516,7 @@
           "maxLength": 100
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47791,7 +48527,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47888,7 +48624,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47899,7 +48635,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47982,7 +48718,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47993,7 +48729,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48020,7 +48756,7 @@
           "$ref": "#/definitions/commentType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48031,7 +48767,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48136,7 +48872,7 @@
           "maxLength": 8
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48147,7 +48883,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48238,7 +48974,7 @@
           "type": "integer"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48249,7 +48985,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -48275,7 +49011,7 @@
           "$ref": "#/definitions/dateTimeSpanType"
         },
         "traceOn": {
-          "description": "Date of the trace.",
+          "description": "Date of the trace. Uses the hotel's time zone for defaulting and is converted to database time zone when persisted.",
           "type": "string",
           "format": "date-time"
         },
@@ -48296,10 +49032,12 @@
       "description": "Allows for a choice in description of the amount of time spanned by this type. EndDate specifies a specific date, while Duration provides a measure of time to add to the StartDate to yield end date.",
       "properties": {
         "startDateTime": {
+          "description": "Start date and time. Uses the hotel's time zone for validation and is converted to database time zone when persisted for trace span scheduling.",
           "type": "string",
           "format": "date-time"
         },
         "endDateTime": {
+          "description": "End date and time. Uses the hotel's time zone for validation and is converted to database time zone when persisted for trace span scheduling.",
           "type": "string",
           "format": "date-time"
         }
@@ -49116,7 +49854,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -49127,7 +49865,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -49425,12 +50163,12 @@
       "description": "Holds the Arrival and Departure Time Information",
       "properties": {
         "reservationExpectedArrivalTime": {
-          "description": "Arrival Time",
+          "description": "Expected arrival date and time for the reservation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
         "reservationExpectedDepartureTime": {
-          "description": "Departure Time",
+          "description": "Expected departure date and time for the reservation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -49826,7 +50564,7 @@
           "$ref": "#/definitions/anonymizationStatusType"
         },
         "anonymizationDate": {
-          "description": "Date and Time when the guest was anonymized.",
+          "description": "Date and time when the guest was anonymized. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -50132,6 +50870,10 @@
         },
         "cardPresent": {
           "description": "Flag to determine if the credit card was swiped/manually entered , This element is only used when PAYMENT SERVICE DIRECTIVE(PSD) Opera Control is active.",
+          "type": "boolean"
+        },
+        "vcc": {
+          "description": "Flag to determine if the credit card is a Virtual Credit Card.",
           "type": "boolean"
         },
         "cardOrToken": {
@@ -50461,7 +51203,7 @@
       "description": "Information regarding the message sent to guest.",
       "properties": {
         "sentTime": {
-          "description": "Time the text was last sent to the user.",
+          "description": "Time the text was last sent to the user. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -51353,7 +52095,7 @@
           "type": "boolean"
         },
         "expectedReturnTime": {
-          "description": "Expected Return Time",
+          "description": "Expected return date and time for advance check-in. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52724,7 +53466,7 @@
           "$ref": "#/definitions/codeDescriptionType"
         },
         "beginDate": {
-          "description": "Date on which the rate is to become active.",
+          "description": "Date on which the rate is to become active. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52751,6 +53493,9 @@
         "status": {
           "description": "Status past, present, or future.",
           "$ref": "#/definitions/statusTypes"
+        },
+        "managedBy": {
+          "$ref": "#/definitions/managedByOptions"
         }
       }
     },
@@ -53961,8 +54706,8 @@
           "type": "boolean"
         },
         "debitNote": {
-            "description": "To indicate if the folio type is to be used for a Debit Note folio, used in Poland.",
-            "type": "boolean"
+          "description": "To indicate if the folio type is to be used for a Debit Note folio, used in Poland.",
+          "type": "boolean"
         },
         "managedBy": {
           "$ref": "#/definitions/managedByOptions"
@@ -54116,7 +54861,8 @@
       "enum": [
         "Daily",
         "Monthly",
-        "PerTransaction"
+        "PerTransaction",
+        "PerStay"
       ]
     },
     "currencyHandlingType": {
@@ -59530,7 +60276,7 @@
           "$ref": "#/definitions/prepaidCardDetailsType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -59541,7 +60287,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -59644,7 +60390,7 @@
           "$ref": "#/definitions/currencyAmountType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -59655,7 +60401,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -61348,6 +62094,7 @@
       "type": "string",
       "enum": [
         "CheckOut",
+        "DataGeneration",
         "FolioGeneration",
         "PostPayment"
       ]
@@ -61971,6 +62718,224 @@
         "cardNumber"
       ]
     },
+    "cashSurchargeRangeType": {
+      "type": "object",
+      "description": "Cash Surcharge identification details",
+      "properties": {
+        "hotel": {
+          "description": "Property associated with Cash Surcharge Range",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "cashSurchargeType": {
+          "description": "Cash Surcharge type",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "amountFrom": {
+          "description": "Start value of Cash Surcharge range",
+          "type": "number"
+        },
+        "amountTo": {
+          "description": "End value of Cash Surcharge range",
+          "type": "number"
+        },
+        "percentage": {
+          "description": "Percentage of local currency",
+          "type": "number"
+        },
+        "surchargeFlatAmt": {
+          "description": "Surcharge Flat amount for this range.",
+          "type": "number"
+        }
+      }
+    },
+    "cashSurchargeRanges": {
+      "type": "object",
+      "properties": {
+        "cashSurchargeRanges": {
+          "type": "array",
+          "description": "List of Cash Surcharge Ranges",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/cashSurchargeRangeType"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "searchPrepaidCardsRequest": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "type": "string",
+          "description": "Hotel code."
+        },
+        "includeCardDetails": {
+          "type": "boolean",
+          "description": "Configuring this flag to be TRUE will fetch and return card details from vendor interface.",
+          "x-example": false
+        },
+        "cardNumber": {
+          "type": "string",
+          "description": "Prepaid card number."
+        },
+        "reservationId": {
+          "type": "string",
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation."
+        },
+        "reservationIdExtension": {
+          "type": "integer",
+          "description": "Additional identifying value assigned by the creating system."
+        },
+        "reservationIdContext": {
+          "type": "string",
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "x-example": "OPERA"
+        },
+        "reservationIdType": {
+          "type": "string",
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "x-example": "Reservation"
+        },
+        "roomId": {
+          "type": "string",
+          "description": "Room number search criteria."
+        },
+        "nameWildCard": {
+          "type": "string",
+          "description": "Last name search criteria."
+        },
+        "firstNameWildCard": {
+          "type": "string",
+          "description": "First name search criteria."
+        }
+      },
+      "required": [
+        "hotelId"
+      ]
+    },
+    "searchPaymentMethodsRequest": {
+      "type": "object",
+      "properties": {
+        "hotelIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 4000,
+          "description": "Hotel code."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Indicates maximum number of records a Web Service should return."
+        },
+        "offset": {
+          "type": "integer",
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "default": 0
+        },
+        "transactionCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 4000,
+          "description": "Transaction codes."
+        },
+        "paymentMethods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 4000,
+          "description": "Payment methods."
+        },
+        "fetchInstructions": {
+          "type": "array",
+          "description": "Payment method fetch instructions.",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/paymentMethodsInstructionsType"
+          },
+          "x-example": [
+            "CardRanges"
+          ]
+        }
+      },
+      "required": [
+        "hotelIds"
+      ]
+    },
+    "paymentMethodsInstructionsType": {
+      "type": "string",
+      "description": "The types of fetch instructions that can be used for payment methods.",
+      "enum": [
+        "CardRanges"
+      ]
+    },
+    "searchDefaultPaymentMethodRulesRequest": {
+      "type": "object",
+      "properties": {
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment method"
+        }
+      },
+      "required": [
+        "paymentMethod"
+      ]
+    },
+    "searchCashiersRequest": {
+      "type": "object",
+      "properties": {
+        "cashierIDs": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 4000,
+          "description": "Numberic code for cashier ID.",
+          "x-example": [
+            54
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Indicates maximum number of records a Web Service should return."
+        },
+        "offset": {
+          "type": "integer",
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "default": 0
+        },
+        "name": {
+          "type": "string",
+          "description": "Partial name of a cashier."
+        },
+        "includeInactive": {
+          "type": "boolean",
+          "description": "Indicator that tells whether to include inactive cashiers in search results.",
+          "x-example": false
+        },
+        "appUser": {
+          "type": "string",
+          "description": "Name of the application user associated with the cashier id",
+          "minLength": 0,
+          "maxLength": 250
+        }
+      },
+      "required": [
+        "cashierIDs"
+      ]
+    },
     "searchCompAuthorizersRequest": {
       "type": "object",
       "properties": {
@@ -62024,99 +62989,98 @@
         }
       }
     },
-    "searchCashiersRequest": {
+    "validateCreditCardTypeDetailsRequest": {
       "type": "object",
       "properties": {
-        "cashierIDs": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          },
-          "maxItems": 4000,
-          "description": "Numberic code for cashier ID.",
-          "x-example": [
-            54
-          ]
+        "hotelId": {
+          "type": "string",
+          "description": "Hotel code."
         },
-        "limit": {
+        "reservationId": {
+          "type": "string",
+          "description": "A unique identifying value assigned by the creating system. The ID attribute may be used to reference a primary-key value within a database or in a particular implementation."
+        },
+        "reservationIdExtension": {
           "type": "integer",
-          "description": "Indicates maximum number of records a Web Service should return."
+          "description": "Additional identifying value assigned by the creating system."
         },
-        "offset": {
-          "type": "integer",
-          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
-          "default": 0
-        },
-        "name": {
+        "reservationIdContext": {
           "type": "string",
-          "description": "Partial name of a cashier."
+          "description": "Used to identify the source of the identifier (e.g., IATA, ABTA).",
+          "x-example": "OPERA"
         },
-        "includeInactive": {
-          "type": "boolean",
-          "description": "Indicator that tells whether to include inactive cashiers in search results.",
-          "x-example": false
-        },
-        "appUser": {
+        "reservationIdType": {
           "type": "string",
-          "description": "Name of the application user associated with the cashier id",
-          "minLength": 0,
-          "maxLength": 250
-        }
-      },
-      "required": [
-        "cashierIDs"
-      ]
-    },
-    "cashSurchargeRangeType": {
-      "type": "object",
-      "description": "Cash Surcharge identification details",
-      "properties": {
-        "hotel": {
-          "description": "Property associated with Cash Surcharge Range",
+          "description": "A reference to the type of object defined by the UniqueID element.",
+          "x-example": "Reservation"
+        },
+        "cardNumber": {
+          "type": "string"
+        },
+        "cardType": {
+          "description": "Indicates the type of Credit Card associated with this payment method.",
+          "$ref": "#/definitions/cardTypeType",
+          "x-example": "Va"
+        },
+        "userDefinedCardType": {
           "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+          "description": "Indicates the user defined credit card type if credit card type from a defined list is not provided."
         },
-        "cashSurchargeType": {
-          "description": "Cash Surcharge type",
-          "type": "string",
-          "minLength": 0,
-          "maxLength": 20
+        "swiped": {
+          "type": "boolean"
         },
-        "amountFrom": {
-          "description": "Start value of Cash Surcharge range",
-          "type": "number"
+        "paymentMethod": {
+          "type": "string"
         },
-        "amountTo": {
-          "description": "End value of Cash Surcharge range",
-          "type": "number"
-        },
-        "percentage": {
-          "description": "Percentage of local currency",
-          "type": "number"
-        },
-        "surchargeFlatAmt": {
-          "description": "Surcharge Flat amount for this range.",
-          "type": "number"
+        "transactionType": {
+          "$ref": "#/definitions/creditCardTransactionType",
+          "x-example": "Billing"
         }
       }
     },
-    "cashSurchargeRanges": {
+    "creditCardTransactionType": {
+      "type": "string",
+      "description": "Currently supported transaction type categories used for credit card authorization.",
+      "enum": [
+        "Additional",
+        "ArPayment",
+        "Batch",
+        "BatchDeposit",
+        "BatchDepositRefund",
+        "Billing",
+        "CheckIn",
+        "CheckInManualAuth",
+        "Deposit",
+        "EndOfDay",
+        "EndOfDayDeposit",
+        "Manual",
+        "Other",
+        "PasserBy",
+        "PostIt",
+        "PreCheckIn",
+        "Refund",
+        "Scheduled"
+      ]
+    },
+    "entityDetails": {
       "type": "object",
+      "description": "Entity Response.",
       "properties": {
-        "cashSurchargeRanges": {
-          "type": "array",
-          "description": "List of Cash Surcharge Ranges",
-          "maxItems": 4000,
-          "items": {
-            "$ref": "#/definitions/cashSurchargeRangeType"
-          }
+        "entityName": {
+          "description": "Entity name.",
+          "type": "string"
         },
-        "links": {
-          "$ref": "#/definitions/links"
+        "payload": {
+          "description": "Response of Requested Entity name.",
+          "type": "string"
         },
-        "warnings": {
-          "$ref": "#/definitions/warningsType"
+        "hotelId": {
+          "description": "Hotel Id.",
+          "type": "string"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
         }
       }
     }

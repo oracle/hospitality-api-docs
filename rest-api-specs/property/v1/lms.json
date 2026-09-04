@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Leisure Management API",
-    "description": "APIs to cater for external Leisure Management functionality integrated with OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs to cater for external Leisure Management functionality integrated with OPERA Cloud.<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -1869,6 +1869,1636 @@
         ]
       }
     },
+    "/hotels/{hotelId}/availableLeisureExperiences": {
+      "get": {
+        "summary": "Retrieves all available leisure experiences available for scheduling, grouped by types, groups and filtered by search criteria.",
+        "description": "Retrieves a comprehensive list of leisure experiences offered by the hotel, organized by groups and types. The search criteria can be used to further filter the leisure experiences.<p><strong>OperationId:</strong>getAvailableLeisureExperiences</p>",
+        "operationId": "getAvailableLeisureExperiences",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "description": "Hotel code of the property to fetch the leisure experiences from.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "leisureExperienceCode",
+            "description": "The code of the leisure experience for which availability and details to be fetched. Used together with fetchMode - Detail.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "beginDate",
+            "description": "The start date to fetch the availability slots from.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "endDate",
+            "description": "The end date to fetch the availability slots upto.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "beginTime",
+            "description": "The preferred start time for time slot availability. Expects HH:MM 24hour format. e.g., 14:30",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "description": "The preferred end time for time slot availability. Expects HH:MM 24hour format. e.g., 14:30",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "resourceFeatures",
+            "description": "The preferred features to filter available resources by.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "resourceCode",
+            "description": "The preferred primary resource on the leisure experience.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "spaceCode",
+            "description": "The preferred space category resource on the leisure experience.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "excludeExperienceIds",
+            "description": "Unique scheduled experience ids. When passed, the resources held by these schedules will be considered available.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "maxItems": 200
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching available leisure experiences.",
+            "schema": {
+              "$ref": "#/definitions/availableLeisureExperiencesType"
+            },
+            "examples": {}
+          },
+          "204": {
+            "description": "Content not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/bulkLeisureExperiences": {
+      "post": {
+        "summary": "Create Leisure Experiences in Bulk.",
+        "description": "This API enables you to add new leisure experiences in bulk and returns a response to lookup the scheduled experiences.<p><strong>OperationId:</strong>postLeisureExperiences</p>",
+        "operationId": "postLeisureExperiences",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperiences",
+            "in": "body",
+            "required": true,
+            "description": "Request object that is used when creating leisure experiences in bulk.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/createLeisureExperiences"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Self-contained response object that is used when creating experiences in bulk.",
+            "schema": {
+              "$ref": "#/definitions/leisureExperiencesResponse"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperiences": {
+      "get": {
+        "summary": "Retrieves all experiences .",
+        "operationId": "getLeisureExperiences",
+        "description": "Retrieves a comprehensive list of leisure experiences.",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Hotel code"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "Filter experiences starting on or after this date."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "Filter experiences ending on or before this date."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Reserved",
+                "CheckedIn",
+                "Cancelled",
+                "NoShow",
+                "CheckedOut"
+              ]
+            },
+            "description": "Filter by experience status."
+          },
+          {
+            "name": "profileId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "OPERA internal profile ID which is used to uniquely identify the profile in OPERA. This ID is a primary identification of a profile in OPERA."
+          },
+          {
+            "name": "reservationId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Reservation Id"
+          },
+          {
+            "name": "confirmationNo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Filter by confirmation number."
+          },
+          {
+            "name": "cancellationNo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Filter by cancellation number."
+          },
+          {
+            "name": "leisureExperienceCode",
+            "description": "The code of the leisure experience for which availability and details to be fetched. Used together with fetchMode - Detail.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "locationId",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Locaiton Id"
+          },
+          {
+            "name": "locationType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Filter by leisure location type."
+          },
+          {
+            "name": "experienceType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Experience Type code."
+          },
+          {
+            "name": "experienceGroup",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Experience Group code."
+          },
+          {
+            "name": "firstName",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "First Name for the profile that needs to be matched."
+          },
+          {
+            "name": "lastName",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Last Name for the profile that needs to be matched."
+          },
+          {
+            "name": "fetchInstructions",
+            "in": "query",
+            "type": "array",
+            "collectionFormat": "multi",
+            "description": "Fetch Instructions",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Resource"
+              ]
+            },
+            "required": false
+          },
+          {
+            "name": "includeOnHoldExperiences",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "Flag to include onhold leisure experiences"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum number of records to return (default 50, max 200)."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of records to skip for pagination."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of experiences with headers and details",
+            "schema": {
+              "$ref": "#/definitions/leisureExperiencesResponse"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "tags": [
+          "LeisureManagement"
+        ]
+      },
+      "post": {
+        "summary": "Create a Leisure Experience",
+        "description": "This API enables you to add new leisure experience.<p><strong>OperationId:</strong>postLeisureExperience</p>",
+        "operationId": "postLeisureExperience",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Hotel Id"
+          },
+          {
+            "name": "experience",
+            "in": "body",
+            "required": true,
+            "description": "Request object for creation of leisure experience.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/newLeisureExperience"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      },
+      "put": {
+        "summary": "Change Leisure Experiences",
+        "description": "This API allows you to change leisure experiences in bulk.<p><strong>OperationId:</strong>putLeisureExperiences</p>",
+        "operationId": "putLeisureExperiences",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperiences",
+            "in": "body",
+            "required": true,
+            "description": "Request object that is used when updating leisure experiences in bulk.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changeLeisureExperiences"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of updated resource"
+              }
+            },
+            "description": "Self-contained response object that is used when updating experiences in bulk.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperiences/{leisureExperienceCode}/availableResources": {
+      "get": {
+        "summary": "Fetch Available Leisure Experience Resources.",
+        "operationId": "getAvailableResourcesByExperience",
+        "description": "Retrieves the available resources for a leisure experience.<p><strong>OperationId:</strong>getAvailableResourcesByExperience</p>",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceCode",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Unique Leisure Experience Code"
+          },
+          {
+            "name": "resourceType",
+            "description": "Resource Type of the available resources to be fetched.",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "description": "The date-time start value of time slot. Uses the hotel's time zone.",
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": true,
+            "description": "The date-time end value of the time slot. Uses the hotel's time zone.",
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "features",
+            "description": "The preferred features to filter available resources by..",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 20
+            }
+          },
+          {
+            "name": "excludeExperienceIds",
+            "description": "Unique scheduled experience ids. When passed, the resources held by these schedules will be considered available.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "maxItems": 200
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available resources.",
+            "schema": {
+              "$ref": "#/definitions/availableResourcesResponse"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperiences/{leisureExperienceId}": {
+      "get": {
+        "summary": "Get Leisure Experience",
+        "description": "This API allows you to get the details of a leisure experience<p><strong>OperationId:</strong>getLeisureExperience</p>",
+        "operationId": "getLeisureExperience",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Leisure Experience ID"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for fetching detailed information of scheduled experience.",
+            "schema": {
+              "$ref": "#/definitions/experienceRsType"
+            }
+          },
+          "204": {
+            "description": "Leisure Experience not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      },
+      "put": {
+        "summary": "Change Leisure Experience",
+        "description": "This API allows you to change leisure experience details <p><strong>OperationId:</strong>putLeisureExperience</p>",
+        "operationId": "putLeisureExperience",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Leisure Experience ID"
+          },
+          {
+            "name": "experience",
+            "in": "body",
+            "required": true,
+            "description": "Request object that is used when updating Leisure Experiences.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/changeLeisureExperience"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "Self-contained response object that is used when Updating experiences.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      },
+      "delete": {
+        "summary": "Delete Leisure Experience",
+        "description": "This API enables you to delete leisure experience that is on hold and cancel leisure experience that has been confirmed.<p><strong>OperationId:</strong>deleteLeisureExperience</p>",
+        "operationId": "deleteLeisureExperience",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Leisure Experience ID"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Leisure experience deleted from the reservation.",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "204": {
+            "description": "Leisure experience not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperiences/{leisureExperienceId}/checkIns": {
+      "post": {
+        "summary": "Checks in Leisure Experiences",
+        "description": "This API enables you to check-in leisure experiences. The payload accepts one or more experiences to be checked-in in a single call.<p><strong>OperationId:</strong>postLeisureExperiencesCheckIn</p>",
+        "operationId": "postLeisureExperiencesCheckIn",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Leisure Experience ID"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperiences/{leisureExperienceId}/checkOuts": {
+      "post": {
+        "summary": "Checks out Leisure Experiences",
+        "description": "This API enables you to check-out leisure experiences. The payload accepts experience to be checked-out in a single call.<p><strong>OperationId:</strong>postLeisureExperiencesCheckOut</p>",
+        "operationId": "postLeisureExperiencesCheckOut",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Leisure Experience ID"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/hotels/{hotelId}/leisureExperiences/{leisureExperienceId}/log": {
+      "get": {
+        "summary": "Fetch Leisure Experience log",
+        "operationId": "getLeisureExperienceLog",
+        "description": "Retrieves the changes logged for a leisure experience.<p><strong>OperationId:</strong>getLeisureExperienceLog</p>",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Unique OPERA Hotel code"
+          },
+          {
+            "name": "leisureExperienceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Leisure Experience ID"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indicates maximum number of records a Web Service should return.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of experience logs",
+            "schema": {
+              "$ref": "#/definitions/leisureExperienceChanges"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
     "/hotels/{hotelId}/profiles/{profileId}/activityBookings": {
       "post": {
         "summary": "Send a response to Creation of Activity Booking",
@@ -2639,6 +4269,182 @@
         ]
       }
     },
+    "/hotels/{hotelId}/reservations/{reservationId}/leisureExperiences": {
+      "get": {
+        "summary": "Retrieves all experiences based on reservation.",
+        "operationId": "getLeisureExperiencesByReservation",
+        "description": "Retrieves a comprehensive list of leisure experiences based on reservation.",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Hotel code"
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Reservation Id"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "Filter experiences starting on or after this date."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "Filter experiences ending on or before this date."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Reserved",
+                "CheckedIn",
+                "Cancelled",
+                "NoShow",
+                "CheckedOut"
+              ]
+            },
+            "description": "Filter by experience status."
+          },
+          {
+            "name": "confirmationNo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Filter by confirmation number."
+          },
+          {
+            "name": "cancellationNo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Filter by cancellation number."
+          },
+          {
+            "name": "leisureExperienceCode",
+            "description": "The code of the leisure experience for which availability and details to be fetched. Used together with fetchMode - Detail.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "locationType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Filter by leisure location type."
+          },
+          {
+            "name": "includeOnHoldExperiences",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "Flag to include onhold leisure experiences"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum number of records to return (default 50, max 200)."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of records to skip for pagination."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of experiences with headers and details",
+            "schema": {
+              "$ref": "#/definitions/leisureExperiencesResponse"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
     "/hotels/{hotelId}/reservations/{reservationId}/locationNotifications": {
       "post": {
         "summary": "Send a response to Location Notification",
@@ -2703,6 +4509,545 @@
         ],
         "responses": {
           "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/leisureExperiences/confirmations": {
+      "post": {
+        "summary": "Confirms Leisure Experiences",
+        "description": "This API enables you to confirm leisure experiences.<p><strong>OperationId:</strong>postLeisureExperienceConfirmation</p>",
+        "operationId": "postLeisureExperiencesConfirmation",
+        "parameters": [
+          {
+            "name": "leisureExperiences",
+            "in": "body",
+            "required": true,
+            "description": "Request object that is used when confirming leisure experiences.",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/confirmLeisureExperiences"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystemreq"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/leisureExperiences/searches": {
+      "get": {
+        "summary": "Searches leisure experiences filtered by experience group, experience types, experience code, and experience name.",
+        "description": "This API returns the list of leisure experiences and allows filtering by hotel, experience group, experience types, experience code, and experience name. <p><strong>OperationId:</strong>searchLeisureExperiences</p>",
+        "operationId": "searchLeisureExperiences",
+        "parameters": [
+          {
+            "name": "hotelId",
+            "in": "query",
+            "type": "array",
+            "maxItems": 100,
+            "collectionFormat": "multi",
+            "description": "Hotel code(s) to search leisure experiences. To search across multiple hotels, repeat the parameter. Example: hotelId=PROP1&hotelId=PROP2.",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "experienceGroup",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Leisure experience group code to filter experiences."
+          },
+          {
+            "name": "experienceTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "maxItems": 10,
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 20
+            },
+            "description": "Leisure experience type codes to filter experiences."
+          },
+          {
+            "name": "experience",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Leisure experience code to filter experiences."
+          },
+          {
+            "name": "experienceName",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Leisure experience name to filter experiences. Performs a case-insensitive search."
+          },
+          {
+            "name": "includeInactive",
+            "in": "query",
+            "required": false,
+            "description": "Flag to include inactive leisure experiences in the response.",
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of leisure experiences to return in the response.",
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "default": 0,
+            "required": false,
+            "description": "Index of the first leisure experience to return in the response.",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response object for searching leisure experiences by group and type.",
+            "schema": {
+              "$ref": "#/definitions/leisureExperiencesByGroupAndTypeInfo"
+            }
+          },
+          "204": {
+            "description": "No leisure experiences found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/profile/{profileId}/leisureExperiences": {
+      "get": {
+        "summary": "Retrieves all experiences based on prfoile.",
+        "operationId": "getLeisureExperiencesByProfile",
+        "description": "Retrieves a comprehensive list of leisure experiences based on profile.",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "OPERA internal profile ID which is used to uniquely identify the profile in OPERA. This ID is a primary identification of a profile in OPERA."
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "Filter experiences starting on or after this date."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date",
+            "description": "Filter experiences ending on or before this date."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Reserved",
+                "CheckedIn",
+                "Cancelled",
+                "NoShow",
+                "CheckedOut"
+              ]
+            },
+            "description": "Filter by experience status."
+          },
+          {
+            "name": "confirmationNo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Filter by confirmation number."
+          },
+          {
+            "name": "cancellationNo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Filter by cancellation number."
+          },
+          {
+            "name": "leisureExperienceCode",
+            "description": "The code of the leisure experience for which availability and details to be fetched. Used together with fetchMode - Detail.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          {
+            "name": "locationType",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Filter by leisure location type."
+          },
+          {
+            "name": "includeOnHoldExperiences",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "description": "Flag to include onhold leisure experiences"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Maximum number of records to return (default 50, max 200)."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of records to skip for pagination."
+          },
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of experiences with headers and details",
+            "schema": {
+              "$ref": "#/definitions/leisureExperiencesResponse"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "tags": [
+          "LeisureManagement"
+        ]
+      }
+    },
+    "/services/leisureManagement/cache": {
+      "delete": {
+        "summary": "Clear Cache for the Leisure Management Service",
+        "description": "Operation to clear cache <p><strong>OperationId:</strong>deleteLeisureManagementServiceCache</p>",
+        "operationId": "deleteLeisureManagementServiceCache",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
             "headers": {
               "Content-Language": {
                 "type": "string",
@@ -2862,6 +5207,295 @@
         ],
         "tags": [
           "LeisureManagement"
+        ]
+      }
+    },
+    "/services/leisureManagementConfig/cache": {
+      "delete": {
+        "summary": " clear cache",
+        "description": "Delete Leisure Management Configuration Cache <p><strong>OperationId:</strong>deleteLeisureManagementConfigCache</p>",
+        "operationId": "deleteLeisureManagementConfigCache",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              },
+              "Location": {
+                "type": "string",
+                "description": "Location of newly created resource"
+              }
+            },
+            "description": "HATEOAS links which help the consumer to navigate to resources",
+            "schema": {
+              "$ref": "#/definitions/status"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagementConfig"
+        ]
+      }
+    },
+    "/services/leisureManagementConfig/status": {
+      "get": {
+        "summary": "Send a response to a ping",
+        "description": "Get Leisure Management Configuration Services Status <p><strong>OperationId:</strong>getLeisureManagementConfigServicesStatus</p>",
+        "operationId": "getLeisureManagementConfigServicesStatus",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "200": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response for Ping operation.",
+            "schema": {
+              "$ref": "#/definitions/operaVersion"
+            }
+          },
+          "204": {
+            "description": "LeisureManagementConfigServicesStatus not found."
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagementConfig"
+        ]
+      }
+    },
+    "/services/registerPermissions": {
+      "post": {
+        "summary": "Operation to register LMS module service permissions.",
+        "description": "Register LMS module service permissions for current Opera Cloud version. <p><strong>OperationId:</strong>registerLMSServicePermissions</p>",
+        "operationId": "registerLMSServicePermissions",
+        "parameters": [
+          {
+            "$ref": "#/parameters/authKey"
+          },
+          {
+            "$ref": "#/parameters/externalData"
+          },
+          {
+            "$ref": "#/parameters/x-app-key"
+          },
+          {
+            "$ref": "#/parameters/x-request-id"
+          },
+          {
+            "$ref": "#/parameters/x-originating-application"
+          },
+          {
+            "$ref": "#/parameters/x-hotelid"
+          },
+          {
+            "$ref": "#/parameters/x-externalsystem"
+          },
+          {
+            "$ref": "#/parameters/Accept-Language"
+          }
+        ],
+        "responses": {
+          "201": {
+            "headers": {
+              "Content-Language": {
+                "type": "string",
+                "description": "Audience language",
+                "pattern": "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*",
+                "x-example": "en-GB"
+              }
+            },
+            "description": "Response Object for registering LMS module service permissions.",
+            "schema": {
+              "$ref": "#/definitions/serviceRegistrationDetails"
+            }
+          },
+          "400": {
+            "$ref": "#/responses/400"
+          },
+          "401": {
+            "$ref": "#/responses/401"
+          },
+          "403": {
+            "$ref": "#/responses/403"
+          },
+          "404": {
+            "$ref": "#/responses/404"
+          },
+          "405": {
+            "$ref": "#/responses/405"
+          },
+          "406": {
+            "$ref": "#/responses/406"
+          },
+          "413": {
+            "$ref": "#/responses/413"
+          },
+          "414": {
+            "$ref": "#/responses/414"
+          },
+          "415": {
+            "$ref": "#/responses/415"
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          },
+          "502": {
+            "$ref": "#/responses/502"
+          },
+          "503": {
+            "$ref": "#/responses/503"
+          }
+        },
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "tags": [
+          "LeisureManagementConfig"
         ]
       }
     },
@@ -4857,6 +7491,1096 @@
         "EnterpriseEnforced",
         "PropertyOverridden"
       ]
+    },
+    "taxedPrice": {
+      "type": "object",
+      "description": "The total price amount including base price and charges breakdown.",
+      "properties": {
+        "basePrice": {
+          "description": "The base price on attached package.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "charges": {
+          "type": "array",
+          "description": "Charges that will be posted based from the package.",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/definitions/postingCharge"
+          }
+        },
+        "totalAmount": {
+          "description": "The full amount that would be charged.",
+          "type": "number"
+        }
+      }
+    },
+    "postingCharge": {
+      "type": "object",
+      "description": "Additional charge that will be posted against the transaction code based from the package attached.",
+      "properties": {
+        "transactionCode": {
+          "description": "The associated transaction code of the charge.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "description": "Description of the transaction code.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "level": {
+          "description": "Defines the level from which the transaction generates was created.",
+          "$ref": "#/definitions/generateLevelType"
+        },
+        "amount": {
+          "description": "The amount that will be posted against the transaction code.",
+          "type": "number"
+        },
+        "formula": {
+          "description": "The formula that is used to calculate the generates.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "generateLevelType": {
+      "type": "string",
+      "description": "Defines the level from which the generates was created.",
+      "enum": [
+        "Group",
+        "SubGroup",
+        "TransactionCode"
+      ]
+    },
+    "serviceRegistrationDetails": {
+      "type": "object",
+      "description": "Response object for Service Permission registration.",
+      "properties": {
+        "serviceName": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "permissions": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 20
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "logUserInfoType": {
+      "type": "object",
+      "properties": {
+        "userInfo": {
+          "description": "User details for Log changes",
+          "$ref": "#/definitions/userInfoType"
+        },
+        "logDateTime": {
+          "description": "User Log Changes Time Stamp details",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "userInfoType": {
+      "type": "object",
+      "description": "Opera User Information",
+      "properties": {
+        "userId": {
+          "description": "User Id of the Opera User",
+          "type": "integer"
+        },
+        "userName": {
+          "description": "Name of the Opera User",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "description": "Information about the resource for a leisure experience.",
+      "properties": {
+        "scheduledResourceId": {
+          "description": "Unique identifier of the resource scheduled.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "resourceCode": {
+          "description": "Resource code of the resource.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the resource.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the resource.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the resource.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "quantity": {
+          "description": "Quantity of the resources boooked for the leisure activity.",
+          "type": "integer"
+        },
+        "timeSpan": {
+          "description": "Holds the Start and End Time Information of the resource scheduled for a leisure activity",
+          "$ref": "#/definitions/activityExpectedTimesType"
+        },
+        "inventory": {
+          "type": "boolean",
+          "description": "Flag to indicate if the resource is an Inventory item."
+        }
+      }
+    },
+    "activityExpectedTimesType": {
+      "type": "object",
+      "description": "Holds the Start and End Time Information of leisure activity",
+      "properties": {
+        "startTime": {
+          "description": "Start Time of leisure activity",
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "description": "End Time of leisure activity",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "codeDescriptionType": {
+      "type": "object",
+      "description": "Holds header information of resource",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Code",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "Resource Name",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "resourceMasterInfo": {
+      "type": "object",
+      "description": "Object holding additional information of a resource",
+      "properties": {
+        "code": {
+          "description": "Resource ccde",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "type": {
+          "type": "string",
+          "description": "Resouce Type.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "category": {
+          "type": "string",
+          "description": "Resource Category.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "Resource Description.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "inventory": {
+          "type": "string",
+          "description": "Inventory Y N.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "Resource Quantity.",
+          "minLength": 0,
+          "maxLength": 20
+        }
+      }
+    },
+    "availabilitySlot": {
+      "type": "object",
+      "description": "The leisure activity availability slot object. Contains the details of date, day and price along with the available time slots on the date when a leisure activity can be scheduled.",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date on which the leisure activity slots are available for scheduling."
+        },
+        "price": {
+          "description": "The price of the leisure activity in given slots.",
+          "$ref": "#/definitions/taxedPrice"
+        },
+        "availableTimeSlots": {
+          "type": "array",
+          "description": "The list of time slots in which the leisure activity is available for scheduling.",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/definitions/leisureTimeSlot"
+          }
+        }
+      }
+    },
+    "leisureTimeSlot": {
+      "type": "object",
+      "description": "The leisure activity time slot used for scheduling. Contains details of the slot start time, resources available during the slot and count of total activities that can be scheduled in the time slot.",
+      "properties": {
+        "startTime": {
+          "type": "string",
+          "description": "The start time of the time slot. Follows HH:MI 24 hour format."
+        },
+        "endTime": {
+          "type": "string",
+          "description": "The end time of the time slot. Follows HH:MI 24 hour format."
+        },
+        "availabilityCount": {
+          "type": "number",
+          "description": "Count of the availability on the time slot i.e., number of overlapping activities can be scheduled in same time slot.",
+          "minimum": 0,
+          "maximum": 999
+        }
+      }
+    },
+    "locationInfo": {
+      "type": "object",
+      "description": "The object for leisure activity location details.",
+      "properties": {
+        "locationCode": {
+          "type": "string",
+          "description": "The location code.",
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "The location description. Used as the name or label of the location.",
+          "maxLength": 2000
+        }
+      }
+    },
+    "preferredFeature": {
+      "type": "object",
+      "description": "The preferred feature details on scheduled activity.",
+      "properties": {
+        "featureType": {
+          "type": "string",
+          "description": "The type of the preferred leisure activity resource feature.",
+          "maxLength": 20
+        },
+        "featureCode": {
+          "type": "string",
+          "description": "The preferred leisure activity resource feature code.",
+          "maxLength": 20
+        }
+      }
+    },
+    "leisureExperiencesByGroupAndTypeInfo": {
+      "type": "object",
+      "description": "Grouped leisure experience catalog response.",
+      "properties": {
+        "experienceGroups": {
+          "type": "array",
+          "description": "Leisure experiences grouped by experience group and type.",
+          "items": {
+            "$ref": "#/definitions/experienceGroupCatalogInfo"
+          },
+          "maxItems": 2000
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "experienceGroupCatalogInfo": {
+      "type": "object",
+      "description": "Experience group details with associated experience types.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Experience group code.",
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "Experience group description.",
+          "maxLength": 2000
+        },
+        "experienceTypes": {
+          "type": "array",
+          "description": "Experience types within the group.",
+          "items": {
+            "$ref": "#/definitions/experienceTypeCatalogInfo"
+          },
+          "maxItems": 2000
+        }
+      }
+    },
+    "experienceTypeCatalogInfo": {
+      "type": "object",
+      "description": "Experience type details with associated experiences.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Experience type code.",
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "Experience type description.",
+          "maxLength": 2000
+        },
+        "experiences": {
+          "type": "array",
+          "description": "Experiences within the experience type.",
+          "items": {
+            "$ref": "#/definitions/leisureExperienceCatalogInfo"
+          },
+          "maxItems": 2000
+        }
+      }
+    },
+    "leisureExperienceCatalogInfo": {
+      "type": "object",
+      "description": "Leisure experience catalog information.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Leisure experience code.",
+          "maxLength": 20
+        },
+        "experienceName": {
+          "type": "string",
+          "description": "Leisure experience name.",
+          "maxLength": 40
+        },
+        "description": {
+          "type": "string",
+          "description": "Leisure experience description.",
+          "maxLength": 2000
+        },
+        "longDescription": {
+          "type": "string",
+          "description": "Leisure experience long description.",
+          "maxLength": 4000
+        },
+        "duration": {
+          "type": "number",
+          "description": "Leisure experience duration."
+        },
+        "price": {
+          "description": "Price of leisure experience",
+          "$ref": "#/definitions/currencyAmountType"
+        }
+      }
+    },
+    "availableLeisureExperiencesType": {
+      "type": "object",
+      "description": "Response object for fetching available leisure experiences. The response object contains the leisure experiences grouped by leisure experience groups and further by leisure experience types.",
+      "properties": {
+        "availableLeisureExperiences": {
+          "type": "array",
+          "description": "The list of available leisure experiences.",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/definitions/leisureExperience"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "leisureExperiencesResponse": {
+      "type": "object",
+      "description": "Response wrapper for fetching leisure experiences as a flat list of experience objects.",
+      "properties": {
+        "experiences": {
+          "type": "array",
+          "description": "List of experiences containing header and details.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/leisureExperienceListItem"
+          }
+        },
+        "masterInfo": {
+          "description": "Holds the additional information about the experiences.",
+          "$ref": "#/definitions/experienceMasterInfo"
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
+    },
+    "newLeisureExperience": {
+      "type": "object",
+      "description": "Object holding details of a leisure experience to be created.",
+      "properties": {
+        "bookedBy": {
+          "description": "Profile, that will be linked to leisure experience.",
+          "$ref": "#/definitions/experienceProfile"
+        },
+        "reservation": {
+          "description": "Unique identifier of reservation.",
+          "$ref": "#/definitions/experienceReservation"
+        },
+        "experience": {
+          "type": "object",
+          "$ref": "#/definitions/newLeisureExperienceType"
+        }
+      }
+    },
+    "changeLeisureExperiences": {
+      "type": "object",
+      "description": "Object holding details of leisure experiences to be modified in bulk.",
+      "properties": {
+        "experiences": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/definitions/leisureExperienceListItem"
+          }
+        }
+      }
+    },
+    "createLeisureExperiences": {
+      "type": "object",
+      "description": "Object holding details of leisure experiences to be created in bulk.",
+      "properties": {
+        "experiences": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/definitions/leisureExperienceListItem"
+          }
+        },
+        "splitExperiences": {
+          "type": "boolean",
+          "description": "Flag to indicate whether user wants to split group experiences into multiple schedules based on resource availability."
+        },
+        "individualExperiences": {
+          "type": "boolean",
+          "description": "Flag to indiciate the experiences are not part of same group. (When experiences in the request belong to different resort/leisure experience/time slot or have different preferred features/resource.)"
+        }
+      }
+    },
+    "experienceRsType": {
+      "type": "object",
+      "description": "Information about leisure experience.",
+      "properties": {
+        "experience": {
+          "type": "object",
+          "$ref": "#/definitions/experience"
+        }
+      }
+    },
+    "changeLeisureExperience": {
+      "type": "object",
+      "description": "Object holding details of a leisure experience to be modified.",
+      "properties": {
+        "experience": {
+          "type": "object",
+          "$ref": "#/definitions/leisureExperienceListItem"
+        }
+      }
+    },
+    "leisureExperienceChanges": {
+      "type": "object",
+      "description": "Response object for fetching leisure experience change logs.",
+      "properties": {
+        "experienceChanges": {
+          "description": "Leisure Experience Changes Log.",
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/leisureExperienceChangeInfoType"
+          }
+        },
+        "totalPages": {
+          "description": "Evaluated total page count based on the requested max fetch count.",
+          "type": "integer"
+        },
+        "offset": {
+          "description": "Index or initial index of the set(page) being requested. If the index goes out of the bounds of the total set count then no data will be returned.",
+          "type": "integer"
+        },
+        "limit": {
+          "description": "Indicates maximum number of records a Web Service should return.",
+          "type": "integer"
+        },
+        "hasMore": {
+          "description": "Indicates whether all the records are included in the response or not. Absence of the attribute values should be consider as all rows fetched in the response.",
+          "type": "boolean"
+        },
+        "totalResults": {
+          "description": "Total number of rows queried",
+          "type": "integer"
+        },
+        "count": {
+          "description": "Total number of rows returned",
+          "type": "integer"
+        }
+      }
+    },
+    "confirmLeisureExperiences": {
+      "type": "object",
+      "properties": {
+        "experiences": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/confirmLeisureExperienceType"
+          }
+        }
+      }
+    },
+    "leisureExperience": {
+      "type": "object",
+      "description": "The leisure experience object. Contains details of the leisure experience group and the leisure experience types of the group.",
+      "properties": {
+        "experienceDetail": {
+          "description": "The leisure experience details.",
+          "$ref": "#/definitions/leisureExperienceInfo"
+        },
+        "availability": {
+          "type": "array",
+          "description": "List of the available time slots for the leisure experience.",
+          "items": {
+            "$ref": "#/definitions/availabilitySlot"
+          }
+        },
+        "experienceGroup": {
+          "description": "The leisure experience group.",
+          "$ref": "#/definitions/experienceGroupInfo"
+        },
+        "experienceType": {
+          "description": "The leisure experience type.",
+          "$ref": "#/definitions/experienceTypesInfo"
+        },
+        "locationDetail": {
+          "description": "The leisure experience location.",
+          "$ref": "#/definitions/locationInfo"
+        }
+      }
+    },
+    "leisureExperienceListItem": {
+      "type": "object",
+      "description": "Leisure experiences with header and details.",
+      "properties": {
+        "bookedBy": {
+          "description": "Profile, that will be linked to leisure experience.",
+          "$ref": "#/definitions/experienceProfile"
+        },
+        "reservation": {
+          "description": "Unique identifier of reservation.",
+          "$ref": "#/definitions/experienceReservation"
+        },
+        "header": {
+          "description": "Object holding header level details of leisure experience",
+          "$ref": "#/definitions/experienceHeader"
+        },
+        "details": {
+          "description": "Object holding details of leisure experience",
+          "$ref": "#/definitions/experienceDetails"
+        },
+        "resources": {
+          "description": "Holds information related to features",
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/resource"
+          }
+        },
+        "criteria": {
+          "description": "Object holding user preferences on primary resource of leisure experience.",
+          "$ref": "#/definitions/experienceCriteria"
+        }
+      }
+    },
+    "experienceMasterInfo": {
+      "type": "object",
+      "description": "Holds the additional information about the experiences.",
+      "properties": {
+        "resources": {
+          "type": "array",
+          "description": "Additional information of the resources.",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/definitions/resourceMasterInfo"
+          }
+        }
+      }
+    },
+    "experienceProfile": {
+      "type": "object",
+      "description": "Basic information about profile on leisure experience.",
+      "properties": {
+        "profileId": {
+          "description": "Unique identifier of profile.",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "profileName": {
+          "description": "Name of the profile.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "experienceReservation": {
+      "type": "object",
+      "description": "Basic information about reservation on leisure experience.",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel id of the resort.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "reservationId": {
+          "description": "Unique identifier of reservation.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "newLeisureExperienceType": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "description": "Object holding header level details of leisure experience",
+          "$ref": "#/definitions/experienceHeader"
+        },
+        "details": {
+          "description": "Object holding details of leisure experience",
+          "$ref": "#/definitions/experienceDetails"
+        },
+        "criteria": {
+          "description": "Object holding user preferences on features required to create leisure experience",
+          "$ref": "#/definitions/experienceCriteria"
+        }
+      }
+    },
+    "experience": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "description": "Object holding header level details of leisure experience",
+          "$ref": "#/definitions/experienceHeader"
+        },
+        "details": {
+          "description": "Object holding details of leisure experience",
+          "$ref": "#/definitions/experienceDetails"
+        },
+        "resources": {
+          "description": "Object holding details of leisure experience",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/resource"
+          }
+        },
+        "location": {
+          "description": "Experience Location.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "price": {
+          "description": "Price of leisure experience",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "preferences": {
+          "description": "Preferred resource and features of leisure experience.",
+          "$ref": "#/definitions/experienceCriteria"
+        }
+      }
+    },
+    "leisureExperienceChangeInfoType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "HotelCode associated with the event",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "changeId": {
+          "description": "Unique Experience Change Identifier",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "experienceId": {
+          "description": "Unique Identifier of Scheduled Experience",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "resourceId": {
+          "description": "Unique Identifier of Scheduled Resource",
+          "$ref": "#/definitions/uniqueID_Type"
+        },
+        "experienceCode": {
+          "description": "Experience Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "resourceCode": {
+          "description": "Resource code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "category": {
+          "type": "string",
+          "description": "Category, to hold either Experience or Resource Category",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "action": {
+          "description": "Action performed",
+          "type": "string"
+        },
+        "changeUserInfo": {
+          "description": "Log time and detiails of the user who made changes",
+          "$ref": "#/definitions/logUserInfoType"
+        },
+        "changeDetailList": {
+          "type": "array",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/leisureExperienceChangeDetailType"
+          }
+        }
+      }
+    },
+    "confirmLeisureExperienceType": {
+      "type": "object",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel id of the resort.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "experienceId": {
+          "description": "Unique identifier of experience.",
+          "$ref": "#/definitions/uniqueID_Type"
+        }
+      }
+    },
+    "leisureExperienceInfo": {
+      "type": "object",
+      "description": "The object for leisure experience type details.",
+      "properties": {
+        "experienceCode": {
+          "type": "string",
+          "description": "The leisure experience code.",
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "The leisure experience description. Used as the name or label of the experience.",
+          "maxLength": 2000
+        },
+        "longDescription": {
+          "type": "string",
+          "description": "The leisure experience long description. Describes the leisure experience.",
+          "maxLength": 4000
+        },
+        "duration": {
+          "type": "number",
+          "description": "The leisure experience duration time in minutes.",
+          "minimum": 0,
+          "maximum": 9999
+        },
+        "prepTime": {
+          "type": "number",
+          "description": "The preparation time for leisure experience in minutes.",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "turnOverTime": {
+          "type": "number",
+          "description": "The turnover time before leisure experience is available again.",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "minimumPrice": {
+          "description": "The minimum price of the leisure experience.",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "maximumPrice": {
+          "description": "The maximum price of the leisure experience.",
+          "$ref": "#/definitions/currencyAmountType"
+        }
+      }
+    },
+    "experienceGroupInfo": {
+      "type": "object",
+      "description": "The object for leisure experience group details.",
+      "properties": {
+        "groupCode": {
+          "type": "string",
+          "description": "The leisure experience group code.",
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "The leisure experience group description. Used as the name of the experience group.",
+          "maxLength": 2000
+        }
+      }
+    },
+    "experienceTypesInfo": {
+      "type": "object",
+      "description": "The object for leisure experience type details.",
+      "properties": {
+        "typeCode": {
+          "type": "string",
+          "description": "The leisure experience type code.",
+          "maxLength": 20
+        },
+        "description": {
+          "type": "string",
+          "description": "The leisure experience type description. Used as the name of the experience type.",
+          "maxLength": 2000
+        },
+        "longDescription": {
+          "type": "string",
+          "description": "The leisure experience type long description. Describes the experience type.",
+          "maxLength": 4000
+        }
+      }
+    },
+    "experienceHeader": {
+      "type": "object",
+      "description": "Object holding header level details of leisure experience",
+      "properties": {
+        "hotelId": {
+          "description": "Hotel Code",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "experienceCode": {
+          "type": "string",
+          "description": "Code of the leisure experience.",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "experienceName": {
+          "type": "string",
+          "description": "Name of the leisure experience.",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "experienceDescription": {
+          "type": "string",
+          "description": "Description of the leisure experience.",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "experienceIds": {
+          "description": "Unique identifier(s) of experience.",
+          "$ref": "#/definitions/uniqueIDListType"
+        }
+      }
+    },
+    "experienceDetails": {
+      "type": "object",
+      "description": "Object holding details of leisure experience",
+      "properties": {
+        "guest": {
+          "description": "Profile, that will be linked to leisure experience.",
+          "$ref": "#/definitions/experienceProfile"
+        },
+        "timeSpan": {
+          "description": "The expected start and end times of the leisure experience.",
+          "$ref": "#/definitions/experienceExpectedTimesType"
+        },
+        "experienceComment": {
+          "description": "Comment of the leisure experience.",
+          "$ref": "#/definitions/experienceCommentType"
+        },
+        "price": {
+          "description": "Price of leisure experience",
+          "$ref": "#/definitions/currencyAmountType"
+        },
+        "location": {
+          "description": "Experience Location.",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "status": {
+          "description": "Indicates the current status of the booked leisure experience.",
+          "$ref": "#/definitions/experienceStatusType"
+        }
+      }
+    },
+    "experienceCriteria": {
+      "type": "object",
+      "description": "Holds user preferences on resources/features required to create leisure experience",
+      "properties": {
+        "resource": {
+          "description": "Preference of resource, to be assigned to leisure experience.",
+          "$ref": "#/definitions/codeDescriptionType"
+        },
+        "features": {
+          "description": "Holds information related to features",
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "$ref": "#/definitions/preferredFeature"
+          }
+        }
+      }
+    },
+    "leisureExperienceChangeDetailType": {
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "description": "List of Field Names for the Type(s) Selection",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "oldValue": {
+          "description": "Old Value of the respective field",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        },
+        "newValue": {
+          "description": "New Value of the respective field",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2000
+        }
+      }
+    },
+    "experienceExpectedTimesType": {
+      "type": "object",
+      "description": "Holds the Start and End Time Information of leisure experience",
+      "properties": {
+        "startTime": {
+          "description": "Start Time of leisure experience",
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "description": "End Time of leisure experience",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "experienceCommentType": {
+      "type": "object",
+      "description": "Holds the Comment of leisure experience",
+      "properties": {
+        "comment": {
+          "description": "Comments about leisure experience",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      }
+    },
+    "experienceStatusType": {
+      "type": "string",
+      "description": "Current persisted status of the booked leisure experience returned by the API. OnHold is returned only when includeOnHoldExperiences is set to true.",
+      "enum": [
+        "OnHold",
+        "Reserved",
+        "CheckedIn",
+        "Cancelled",
+        "NoShow",
+        "CheckedOut"
+      ]
+    },
+    "availableResourcesResponse": {
+      "type": "object",
+      "description": "Response wrapper for fetching available resources for a leisure experience.",
+      "properties": {
+        "resources": {
+          "type": "array",
+          "description": "List of available resources.",
+          "maxItems": 4000,
+          "items": {
+            "$ref": "#/definitions/resource"
+          }
+        },
+        "warnings": {
+          "$ref": "#/definitions/warningsType"
+        }
+      }
     }
   },
   "tags": [

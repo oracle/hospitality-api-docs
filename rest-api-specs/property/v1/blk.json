@@ -2,11 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "OPERA Cloud Block API",
-    "description": "APIs to cater for Business Block functionality in OPERA Cloud. <br /><br /> A block is a group of rooms held for guests who are attending an event, meeting, or function. You can create blocks for family reunions, business conferences, weddings, and so on. You can also set aside rooms for the event (block).<br /><br /> Compatible with OPERA Cloud release 26.2.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
-    "version": "26.2.0.0",
+    "description": "APIs to cater for Business Block functionality in OPERA Cloud. <br /><br /> A block is a group of rooms held for guests who are attending an event, meeting, or function. You can create blocks for family reunions, business conferences, weddings, and so on. You can also set aside rooms for the event (block).<br /><br /> Compatible with OPERA Cloud release 26.3.0.0.<br /><br /><p> This document and all content within is available under the Universal Permissive License v 1.0 (https://oss.oracle.com/licenses/upl). Copyright (c) 2020, 2026 Oracle and/or its affiliates.</p>",
+    "version": "26.3.0.0",
     "termsOfService": "https://www.oracle.com/legal/terms.html",
     "contact": {
-      "email": "hospitality_apis_ww_grp@oracle.com"
+      "email": "hospitality-integrations_ww@oracle.com"
     },
     "license": {
       "name": "UPL",
@@ -1258,6 +1258,13 @@
             "required": false
           },
           {
+            "name": "blocksWithRoomInventory",
+            "in": "query",
+            "required": false,
+            "description": "Filter blocks with room inventory. Only blocks with room inventory are returned when true.",
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/authKey"
           },
           {
@@ -2065,6 +2072,13 @@
               ]
             },
             "required": false
+          },
+          {
+            "name": "blocksWithRoomInventory",
+            "in": "query",
+            "required": false,
+            "description": "Statistics for blocks with room inventory are returned when true.",
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/authKey"
@@ -21019,7 +21033,8 @@
                 "SubAllocResv",
                 "CutoffDate",
                 "ForecastRooms",
-                "ForecastRates"
+                "ForecastRates",
+                "ChildRates"
               ]
             },
             "required": false
@@ -29854,7 +29869,8 @@
                 "SubAllocResv",
                 "CutoffDate",
                 "ForecastRooms",
-                "ForecastRates"
+                "ForecastRates",
+                "ChildRates"
               ]
             },
             "required": false
@@ -35053,7 +35069,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -35064,7 +35080,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -39000,7 +39016,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -39011,7 +39027,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -39260,12 +39276,12 @@
       "description": "Holds the Arrival and Departure Time Information",
       "properties": {
         "reservationExpectedArrivalTime": {
-          "description": "Arrival Time",
+          "description": "Arrival Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
         "reservationExpectedDepartureTime": {
-          "description": "Departure Time",
+          "description": "Departure Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -40342,7 +40358,7 @@
       "description": "Information regarding the message sent to guest.",
       "properties": {
         "sentTime": {
-          "description": "Time the text was last sent to the user.",
+          "description": "Time the text was last sent to the user. Uses database time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -41231,7 +41247,7 @@
           "type": "boolean"
         },
         "expectedReturnTime": {
-          "description": "Expected Return Time",
+          "description": "Expected Return Time. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -42726,12 +42742,12 @@
           }
         },
         "arrivalTime": {
-          "description": "Indicates the approximate check in time for the reservations made for the block.",
+          "description": "Indicates the approximate check in time for the reservations made for the block. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
         "departureTime": {
-          "description": "Indicates the approximate check out time for the reservations made for the block.",
+          "description": "Indicates the approximate check out time for the reservations made for the block. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -44060,6 +44076,10 @@
           "description": "Indicates the rate amount values per person occupancy.",
           "$ref": "#/definitions/blockGridRatesType"
         },
+        "childRate": {
+          "description": "Indicates the child rate amount values per age bucket. This element is reserved for future child rate functionality and is not yet available for use.",
+          "$ref": "#/definitions/blockGridChildRatesType"
+        },
         "roomType": {
           "description": "Indicates the room type for which the inventory or rate values are applicable.",
           "type": "string",
@@ -44153,7 +44173,8 @@
         "SubAllocResv",
         "CutoffDate",
         "ForecastRooms",
-        "ForecastRates"
+        "ForecastRates",
+        "ChildRates"
       ]
     },
     "roomAllocationMasterInfoType": {
@@ -44468,7 +44489,7 @@
           "$ref": "#/definitions/dateTimeSpanType"
         },
         "traceOn": {
-          "description": "Date of the trace.",
+          "description": "Date of the trace. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -44490,11 +44511,13 @@
       "properties": {
         "startDateTime": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Start date and time of the time span.  Uses the hotel's time zone."
         },
         "endDateTime": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "description": "End date and time of the time span. Uses the hotel's time zone."
         }
       }
     },
@@ -46505,7 +46528,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -46516,7 +46539,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47775,7 +47798,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -47786,7 +47809,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -49521,7 +49544,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -49532,7 +49555,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -50311,7 +50334,7 @@
           "maxLength": 20
         },
         "openDate": {
-          "description": "The date-time in which the service request was opened.",
+          "description": "The date-time in which the service request was opened. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -50340,12 +50363,12 @@
           "maxLength": 100
         },
         "completionDate": {
-          "description": "The date-time in which the service request was completed.",
+          "description": "The date-time in which the service request was completed. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
         "closedDate": {
-          "description": "The date-time in which the service request was closed.",
+          "description": "The date-time in which the service request was closed. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -50612,7 +50635,7 @@
           "$ref": "#/definitions/prepaidCardDetailsType"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -50623,7 +50646,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -51362,7 +51385,7 @@
           "type": "number"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -51373,7 +51396,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52187,7 +52210,7 @@
           "type": "integer"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52198,7 +52221,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52387,7 +52410,7 @@
           "$ref": "#/definitions/sentConfirmationStatus"
         },
         "lastAttempted": {
-          "description": "Date of last attempt to send confirmation letter.",
+          "description": "Date of last attempt to send confirmation letter. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52797,7 +52820,7 @@
           "type": "integer"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52808,7 +52831,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -52837,7 +52860,7 @@
           "maxLength": 2000
         },
         "messageDate": {
-          "description": "Date the message was created",
+          "description": "Date the message was created. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -54193,7 +54216,7 @@
           "$ref": "#/definitions/userInfoType"
         },
         "logDateTime": {
-          "description": "User Log Changes Time Stamp details",
+          "description": "User Log Changes Time Stamp details. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         }
@@ -55808,7 +55831,7 @@
           "type": "boolean"
         },
         "createDateTime": {
-          "description": "Time stamp of the creation.",
+          "description": "Time stamp of the creation. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -55819,7 +55842,7 @@
           "maxLength": 200
         },
         "lastModifyDateTime": {
-          "description": "Time stamp of last modification.",
+          "description": "Time stamp of last modification. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -55977,6 +56000,10 @@
         "rate": {
           "description": "Indicates the rate amount values per person occupancy.",
           "$ref": "#/definitions/blockGridRatesType"
+        },
+        "childRate": {
+          "description": "Indicates the child rate amount values per age bucket. This element is reserved for future child rate functionality and is not yet available for use.",
+          "$ref": "#/definitions/blockGridChildRatesType"
         },
         "start": {
           "description": "The starting value of the date range.",
@@ -56158,6 +56185,10 @@
         "blockRates": {
           "description": "Rate details for range operation.",
           "$ref": "#/definitions/blockGridRatesType"
+        },
+        "childRates": {
+          "description": "Indicates the child rate amount values per age bucket. This element is reserved for future child rate functionality and is not yet available for use.",
+          "$ref": "#/definitions/blockGridChildRatesType"
         },
         "cutoffDate": {
           "description": "Date after which unused block rooms should be returned to house.",
@@ -58159,7 +58190,7 @@
           "maxLength": 20
         },
         "lastChangeDateTime": {
-          "description": "Last change date and time for this block.",
+          "description": "Last change date and time for this block. Uses the hotel's time zone.",
           "type": "string",
           "format": "date-time"
         },
@@ -59000,6 +59031,10 @@
           },
           "maxItems": 40,
           "description": "Filter blocks based on source code, If not provided all the blocks will be returned."
+        },
+        "blocksWithRoomInventory": {
+          "type": "boolean",
+          "description": "Filter blocks with room inventory. Only blocks with room inventory are returned when true."
         }
       }
     },
@@ -59165,6 +59200,24 @@
         "saturday": {
           "description": "If true, a trace will be created for every Saturday on the reservation.",
           "type": "boolean"
+        }
+      }
+    },
+    "blockGridChildRatesType": {
+      "type": "object",
+      "description": "Indicates the child rate amount values defined per age buckets. This type is introduced to support future child rate functionality and is not yet available for use.",
+      "properties": {
+        "ageBucket1": {
+          "description": "Indicates the rate amount for the first age bucket.",
+          "type": "number"
+        },
+        "ageBucket2": {
+          "description": "Indicates the rate amount for the second age bucket.",
+          "type": "number"
+        },
+        "ageBucket3": {
+          "description": "Indicates the rate amount for the third age bucket.",
+          "type": "number"
         }
       }
     }
