@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA InventoryHousekeepingManagementRoom GraphQL API,
 # description : GraphQL API to cater for Details on Tasks, Task Sheets and Credits and providing Information on Rooms, Room Attributes and Statuses for the current date.
-#               Compatible with OPERA Cloud RnA release 26.3.0.0.
+#               Compatible with OPERA Cloud RnA release 26.4.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.3.0.0
+# version : 26.4.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -138,6 +138,8 @@ input InventoryHousekeepingManagementRoomQueryArgumentsType {
   roomDetailsOrderBy: FloatInput
   """The primary key for this table."""
   hkreservationguestDetailsNameId: FloatInput
+  """JRN Update Date and Time"""
+  hkreservationguestDetailsJrnupdatedttm: DateTimeInput
   """Profile is active or not."""
   hkreservationguestDetailsActiveYn: StringInput
   """This is a  name_id (Profile number) of profiles that exist in a Central database in a typical CRS environment."""
@@ -160,8 +162,6 @@ input InventoryHousekeepingManagementRoomQueryArgumentsType {
   hkreservationguestDetailsInactiveDate: DateTimeInput
   """Index Name"""
   hkreservationguestDetailsIndexName: StringInput
-  """JRN Update Date and Time"""
-  hkreservationguestDetailsJrnupdatedttm: DateTimeInput
   """The type of Profile."""
   hkreservationguestDetailsNameType: StringInput
   """The primary key for this table."""
@@ -719,7 +719,7 @@ input InventoryHousekeepingManagementRoomQueryArgumentsType {
 }
 type Query {
   """Details on Tasks Task Sheets and Credits and providing Information on Rooms Room Attributes and Statuses for the current date"""
-  inventoryHousekeepingManagementRoom(limit: Int offset: Int input: InventoryHousekeepingManagementRoomQueryArgumentsType!): [InventoryHousekeepingManagementRoomType]
+  inventoryHousekeepingManagementRoom(input: InventoryHousekeepingManagementRoomQueryArgumentsType!): [InventoryHousekeepingManagementRoomType]
 }
 type InventoryHousekeepingManagementRoomType {
   """House Keeping Daily Task Room"""
@@ -735,9 +735,9 @@ type InventoryHousekeepingManagementRoomType {
   """HK Task and Facility Codes"""
   houseKeepingTasksRoomCategoryFacilityCodesDetails: InventoryHousekeepingManagementRoomHouseKeepingTasksRoomCategoryFacilityCodesDetailsType
   """HK Task and Employee Points"""
-  houseKeepingEmployeePointsDetails: InventoryHousekeepingManagementRoomHouseKeepingEmployeePointsDetailsType
-  """HK Task and Employee Points"""
   houseKeepingDailyTaskDetails: InventoryHousekeepingManagementRoomHouseKeepingDailyTaskDetailsType
+  """HK Task and Employee Points"""
+  houseKeepingEmployeePointsDetails: InventoryHousekeepingManagementRoomHouseKeepingEmployeePointsDetailsType
   """Resort Details"""
   propertyPropertyDetails: InventoryHousekeepingManagementRoomPropertyPropertyDetailsType
   """Date Calendar"""
@@ -2624,62 +2624,6 @@ type InventoryHousekeepingManagementRoomHouseKeepingTasksRoomCategoryFacilityCod
   """VIP Levels Description"""
   vIPLevelsDescription: String
 }
-type InventoryHousekeepingManagementRoomHouseKeepingEmployeePointsDetailsType {
-  """App User ID"""
-  appUserId: Float
-  """Indicates if Employee is available for task assignment."""
-  available: String
-  """Building"""
-  building: String
-  """Day1"""
-  day1: String
-  """Day2"""
-  day2: String
-  """Day3"""
-  day3: String
-  """Day4"""
-  day4: String
-  """Day5"""
-  day5: String
-  """Day6"""
-  day6: String
-  """Day7"""
-  day7: String
-  """Deleted Flag"""
-  deletedFlag: String
-  """Name of the employee"""
-  empName: String
-  """Floor"""
-  floor: String
-  """Floor Description"""
-  floorDesc: String
-  """Indicates the section to which employee belongs."""
-  housekeepingSectionCode: String
-  """Inactive Date"""
-  inactiveDate: Date
-  """Job Code"""
-  jobCode: String
-  """Phone no."""
-  phoneNo: String
-  """Points"""
-  points: Float
-  """Date the points were allocated"""
-  pointsDate: Date
-  """Internal Primary Key ID to uniquely identify the row"""
-  primaryKeyID: Float
-  """Reporting Floor Desc"""
-  repFloorDescription: String
-  """RnA Insertdate"""
-  rnaInsertDate: DateTime
-  """RnA Updatedate"""
-  rnaUpdateDate: DateTime
-  """Description of the section"""
-  sectionDesc: String
-  """Status"""
-  status: String
-  """User Name"""
-  userName: String
-}
 type InventoryHousekeepingManagementRoomHouseKeepingDailyTaskDetailsType {
   """Application User"""
   applicationUser: String
@@ -2825,6 +2769,62 @@ type InventoryHousekeepingManagementRoomHouseKeepingDailyTaskDetailsType {
   totalTravellingSectionCredits: Float
   """Total traveling credits for this task sheet based on change of floors"""
   travelingCredits: Float
+}
+type InventoryHousekeepingManagementRoomHouseKeepingEmployeePointsDetailsType {
+  """App User ID"""
+  appUserId: Float
+  """Indicates if Employee is available for task assignment."""
+  available: String
+  """Building"""
+  building: String
+  """Day1"""
+  day1: String
+  """Day2"""
+  day2: String
+  """Day3"""
+  day3: String
+  """Day4"""
+  day4: String
+  """Day5"""
+  day5: String
+  """Day6"""
+  day6: String
+  """Day7"""
+  day7: String
+  """Deleted Flag"""
+  deletedFlag: String
+  """Name of the employee"""
+  empName: String
+  """Floor"""
+  floor: String
+  """Floor Description"""
+  floorDesc: String
+  """Indicates the section to which employee belongs."""
+  housekeepingSectionCode: String
+  """Inactive Date"""
+  inactiveDate: Date
+  """Job Code"""
+  jobCode: String
+  """Phone no."""
+  phoneNo: String
+  """Points"""
+  points: Float
+  """Date the points were allocated"""
+  pointsDate: Date
+  """Internal Primary Key ID to uniquely identify the row"""
+  primaryKeyID: Float
+  """Reporting Floor Desc"""
+  repFloorDescription: String
+  """RnA Insertdate"""
+  rnaInsertDate: DateTime
+  """RnA Updatedate"""
+  rnaUpdateDate: DateTime
+  """Description of the section"""
+  sectionDesc: String
+  """Status"""
+  status: String
+  """User Name"""
+  userName: String
 }
 type InventoryHousekeepingManagementRoomPropertyPropertyDetailsType {
   """The property that the record belongs to"""
