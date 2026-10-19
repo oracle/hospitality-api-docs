@@ -1,10 +1,10 @@
 
 # title : OPERA Cloud RnA FinancialTransactionDetailsExtended GraphQL API,
 # description : GraphQL API to cater for Provide financial transaction information with extended or additional details such as routing, cashiers, currency, etc.
-#               Compatible with OPERA Cloud RnA release 26.3.0.0.
+#               Compatible with OPERA Cloud RnA release 26.4.0.0.
 #               This document and all content within is available under the Universal Permissive License v 1.0 
 #               (https://oss.oracle.com/licenses/upl). Copyright (c) 2020,2026 Oracle and/or its affiliates
-# version : 26.3.0.0
+# version : 26.4.0.0
 # termsOfService : https://www.oracle.com/legal/terms.html
 # contact_email : hospitality_apis_ww_grp@oracle.com
 # license : https://opensource.org/licenses/upl
@@ -121,6 +121,7 @@ input FloatRangeInput {
 # 		 - financialunifiedDetailsFtTrxNoAdjust 
 # 		 - financialunifiedDetailsFtTrxNoAgainstPackage 
 # 		 - financialunifiedDetailsFtTrxNoHeader 
+# 		 - financialunifiedDetailsFtUpdateDate 
 # 		 - financialunifiedDetailsResvNameId 
 
 input FinancialTransactionDetailsExtendedQueryArgumentsType {
@@ -216,6 +217,8 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
   financialunifiedDetailsFtTrxNoAdjust: FloatInput                      @conditionalInputPair(pair: 2)
   """Transaction No Header"""
   financialunifiedDetailsFtTrxNoHeader: FloatInput                      @conditionalInputPair(pair: 2)
+  """Update Date"""
+  financialunifiedDetailsFtUpdateDate: DateTimeInput                    @conditionalInputPair(pair: 2)
   """CHAIN_CODE"""
   transactioncodedetailsChainCode: StringInput
   """Ar Name ID"""
@@ -1529,7 +1532,7 @@ input FinancialTransactionDetailsExtendedQueryArgumentsType {
 }
 type Query {
   """Provide financial transaction information with extended or additional details such as routing cashiers currency etc."""
-  financialTransactionDetailsExtended(limit: Int offset: Int input: FinancialTransactionDetailsExtendedQueryArgumentsType!): [FinancialTransactionDetailsExtendedType]
+  financialTransactionDetailsExtended(input: FinancialTransactionDetailsExtendedQueryArgumentsType!): [FinancialTransactionDetailsExtendedType]
 }
 type FinancialTransactionDetailsExtendedType {
   """Financial Unified"""
@@ -1585,6 +1588,8 @@ type FinancialTransactionDetailsExtendedFinancialUnifiedDetailsType {
   advancedGenerateYN: String
   """Advgen Ttrans Code ID"""
   advgenTtransCodeID: String
+  """Alternate transaction reference associated with the financial transaction"""
+  alternateTransRef: String
   """Arrangement Code"""
   arrangementCode: String
   """Arrangement Description for the Transaction Code."""
@@ -1649,6 +1654,8 @@ type FinancialTransactionDetailsExtendedFinancialUnifiedDetailsType {
   covers: String
   """Credit Card ID"""
   creditCardId: Float
+  """Last four digits of the credit card number associated with the financial transaction"""
+  creditCardNumber4Digits: String
   """Fee (surcharge) amount for a credit card transaction."""
   creditCardSurcharge: Float
   """Credit YN"""
